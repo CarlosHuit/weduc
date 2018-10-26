@@ -1,19 +1,33 @@
 <div class="container">
+  <div class="c-detail-letter hide" [class.show]="show">
 
-  <div class="c-detail-letter hide" [class.show]="show" >
-    <mat-card class="card-letter">
-
-      <div class="c-cat" (click)="listenMsg()">
-        <app-cat></app-cat>
-      </div>
-
-      <div class="c-letter" (click)="listenLetter()">
-        <h1>{{letter}}</h1>
-      </div>
-
-      <button mat-raised-button class="button-next" color="warn" >Siguiente</button>
-
+    <mat-card>
+      
     </mat-card>
-  </div>
 
+
+
+    <div class="c-letter-presentation" [class.hide]="hideTarget" >
+      <mat-card class="card-letter">
+
+        <div class="c-cat" (click)="listenMsg()">
+          <app-cat></app-cat>
+        </div>
+
+        <div class="c-letter" (click)="listenLetter()">
+          <h1>{{letter}}</h1>
+        </div>
+
+        <button 
+          mat-raised-button
+          class="button-next"
+          color="warn"
+          (click)="next()"
+          >
+          Siguiente
+        </button>
+
+      </mat-card>
+    </div>
+  </div>
 </div>

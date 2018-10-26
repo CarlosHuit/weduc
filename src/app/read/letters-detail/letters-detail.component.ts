@@ -14,6 +14,7 @@ export class LettersDetailComponent implements OnInit, OnDestroy {
   letter:      string;
   letters:     string[];
   show:        boolean;
+  hideTarget: boolean;
 
   constructor(
     private _route: ActivatedRoute,
@@ -55,6 +56,11 @@ export class LettersDetailComponent implements OnInit, OnDestroy {
     const type = this.letter === this.letter.toLowerCase() ? 'minúscula' : 'mayúscula';
     const msg = `${t} ... ${type}`;
     this._speech.speak(msg, 0.9);
+  }
+
+  next = () => {
+    this.hideTarget = true;
+    setTimeout(e => this.hideTarget = false, 1500);
   }
 
 }
