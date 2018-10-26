@@ -1,0 +1,112 @@
+.container-signin {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  overflow: auto;
+  background-color: #343434;
+}
+
+.resize {
+  margin: 0;
+  max-width: 400px;
+  margin-bottom: 15px;
+  width: 80%;
+  margin: 15px auto;
+  height: max-content;
+  margin: auto;
+  box-shadow: none;
+  border-radius: 5px;
+  padding: 40px 16px;
+  z-index: 20;
+  position: relative;
+}
+
+.icon-login {
+  width: 100;
+  display: flex;
+  justify-content: center;
+}
+
+.icon-login img {
+  width: 110px;
+  height: 110px;
+}
+
+
+form {
+  display: flex;
+  flex-direction: column;
+  width: 95%;
+  margin: 0px auto;
+  padding: 0;
+}
+
+
+.title {
+  text-align: center;
+  margin-bottom: 4px;
+  font-weight: normal;
+  font-family: sans-serif, 'Noto Sans', sans-serif;
+  font-size: 24px;
+}
+
+
+button {
+  margin-top: 20px;
+  font-size: 20px;
+  font-weight: bold;
+  background: #fa7e29;
+  background: linear-gradient(180deg, #fa7e29 0%, #F6682F 80%, #F6682F 100%);
+}
+
+.signup-link {
+  margin: 4px auto;
+  margin-top: 15px;
+  text-align: center;
+  margin-top: 30px;
+}
+
+.signup-link a,
+.signup-link span {
+  font-size: 18px;
+  font-family: sans-serif;
+}
+
+@media (min-width: 320px) and (orientation: landscape) {
+
+
+  .resize {
+    padding: 0;
+    width: 80%;
+    height: 90%;
+    max-width: 480px;
+    min-height: 290px;
+    max-height: 335px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+
+  .icon-login {
+    position: absolute;
+    top: 25%;
+    /* display: none; */
+    opacity: .2;
+  }
+
+  .title {
+    margin-top: unset;
+    margin: 10px !important;
+  }
+
+  form {
+    width: 75%;
+  }
+
+  .signup-link {
+    margin-top: 10px
+  }
+
+}

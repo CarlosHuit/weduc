@@ -1,0 +1,35 @@
+<div class="container" *ngIf="!loading" >
+    <div 
+      [class.container-slider]="isMobile() === false"
+      [class.container-slider-mobile]="isMobile() === true"
+      >
+      <div 
+        class="slider"
+        [class.show-board]="showBoard === true"
+        >
+  
+        <div class="box one">
+          <app-handwriting
+            [letter]="currentLetter"
+            [coordinates]="currentCoordinates"
+            (propagar)="showBoardC($event)"
+            >
+          </app-handwriting>
+        </div>
+  
+        <div class="box two">
+          <app-board
+            [letter]="currentLetter"
+            (showHandwriting)="showHandWriting($event)"
+            (next)="next($event)"
+            >
+          </app-board>
+        </div>
+  
+      </div>
+    </div>
+  
+    <app-spinner *ngIf="loading"></app-spinner>
+    <app-success-animation *ngIf="success"></app-success-animation>
+  
+  </div>

@@ -1,0 +1,95 @@
+.container {
+  overflow: auto;
+  display: block;
+}
+
+.c-search {
+  width: 95%;
+  display: flex;
+  justify-content: center;
+  margin: 5px auto;
+  margin-top: 10px;
+}
+
+.c-search .search {
+  width: 90%;
+  max-width: 540px;
+  height: 45px;
+  display: flex;
+  background-color: white;
+  padding: 0 0 0 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
+}
+
+.c-search .input-search{
+  width: calc(100% - 40px);
+  height: 100%;
+  border: none;
+  padding: 0;
+  outline: none;
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 16px;
+}
+.c-search .icon-search{
+  width: 45px;
+  height: 100%;
+  font-size: 32px;
+  border-radius:  4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.c-cards {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 300px);
+  justify-content: space-evenly;
+  align-content: start;
+}
+
+
+.card-course {
+  width: 100%;
+  padding: 3px;
+  box-sizing: border-box;
+  height: 80px;
+  margin: 2.5px auto;
+  display: flex;
+  padding: 0;
+}
+
+.card-course .c-icon {
+  width: 80px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-course .c-title {
+  width: calc(100% - 80px);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.card-course .c-title .title {
+  width: 100%;
+  display: flex;
+  font-weight: bold;
+  font-family: 'Noto Sans';
+  font-size: 25px;
+  padding-left: 10px;
+  align-items: center;
+  text-align: left;
+}
+
+@media (min-width: 600px) and (orientation: landscape) {
+
+  .card-course {
+    width: 100%;
+  }
+
+}

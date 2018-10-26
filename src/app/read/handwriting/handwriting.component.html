@@ -1,0 +1,17 @@
+<div class="container-handwriting">
+
+    <div class="container-canvas">
+      <canvas id="canvasEl" #canvasDraw></canvas>
+    </div>
+  
+    <div class="btn-reload">
+      <button 
+      class="reloadSingle"
+      (click)="startExample()"
+      >
+    </button>
+    <!-- [disabled]="stateDisabled" -->
+    </div>
+    <button class="arrow hand press" (click)="hide()"></button>
+  
+  </div>

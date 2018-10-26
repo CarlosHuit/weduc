@@ -1,0 +1,200 @@
+.container-handwriting {
+  background: linear-gradient(to top, #1c3643 0%, #245675 25%, #1877ad 100%);
+  height: 100%;
+  /* max-height: 600px; */
+  width: 100%;
+  /* max-width: 600px; */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 10px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.container-canvas {
+  width: 300px;
+  height: 300px;
+  background-color: rgb(236, 235, 235);
+  z-index: 2;
+  border: 3px solid black;
+  border-radius: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+/* Animation spinner */
+.container-spinner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
+  background-color: rgba(0, 0, 0, .4);
+}
+
+.spinner {
+  width: 120px;
+  text-align: center;
+  position: relative;
+}
+
+.spinner>div {
+  width: 18px;
+  height: 18px;
+  background-color: white;
+  margin: 5px;
+
+  border-radius: 100%;
+  display: inline-block;
+  animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+}
+
+.spinner .bounce1 {
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+}
+
+.spinner .bounce2 {
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+}
+
+@-webkit-keyframes sk-bouncedelay {
+
+  0%,
+  80%,
+  100% {
+    -webkit-transform: scale(0)
+  }
+
+  40% {
+    -webkit-transform: scale(1.0)
+  }
+}
+
+@keyframes sk-bouncedelay {
+
+  0%,
+  80%,
+  100% {
+    transform: scale(0);
+  }
+
+  40% {
+    transform: scale(1.0);
+  }
+}
+
+
+.arrow.hand {
+  width: 70px;
+  height: 70px;
+  transform: scale(.8);
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  outline: none;
+}
+
+.arrow.hand:active {
+  transform: scale(.75);
+}
+
+
+/* -- Reload Single -- */
+
+.btn-reload {
+  position: absolute;
+  left: 15px;
+  bottom: 15px;
+  background-color: rgb(255, 166, 0);
+  padding: 6px;
+  border-radius: 50%;
+  box-shadow: 0 0 10px 5px rgba(0, 0, 0, .4);
+  border: 2px solid white;
+  transition: 100ms;
+}
+
+
+.btn-reload:active {
+  transform: scale(.95)
+}
+
+
+.reloadSingle {
+  outline: none;
+  background: transparent;
+  border: none;
+  font-size: 125% !important;
+  font-weight: bolder;
+  display: inline-block;
+  position: relative;
+  height: 2em;
+  padding: 0.25em;
+  width: 2em;
+  box-sizing: border-box;
+}
+
+.reloadSingle:before,
+.reloadSingle:after {
+  content: "";
+  display: block;
+  box-sizing: border-box;
+}
+
+.reloadSingle:before {
+  border-color: transparent white white white;
+  border-radius: 50%;
+  border-style: solid;
+  border-width: 0.125em;
+  height: 1.5em;
+  width: 1.5em;
+  transform: rotate(45deg);
+}
+
+.reloadSingle:after {
+  border-color: transparent transparent transparent white;
+  border-style: solid;
+  border-width: 0.3125em 0 0.3125em 0.5em;
+  height: 0;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 0;
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.rotate {
+  animation: rotate 1.5s linear;
+}
+
+@media (min-width: 320px) and (orientation: landscape) {
+
+  .modal.hand {
+    flex-direction: row;
+  }
+
+
+  .buttons {
+    width: unset;
+    height: 90%;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  .buttons button {
+    margin-top: 15px;
+  }
+
+}

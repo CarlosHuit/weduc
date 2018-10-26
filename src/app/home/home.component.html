@@ -1,0 +1,59 @@
+<div #contGrid class="container">
+
+  <div class="c-search" *ngIf="!loading">
+      
+    <div class="search">
+      <input 
+        #searchBox
+        class="input-search"
+        (keyup)="searchCourses(searchBox.value)"
+        type="search"
+        placeholder="¿Qué quieres aprender hoy?"
+        >
+      <mat-icon
+        class="icon-search" 
+        matSuffix
+        >
+        search
+      </mat-icon>
+    </div>
+
+  </div>
+
+  <div *ngIf="!loading" [ngStyle]="genCols(contGrid)" class="c-cards" >
+
+    <mat-card
+      class="card-course"
+      *ngFor="let item of filterCourses()"
+      (click)="redirect(item.subtitle)"
+      >
+
+      <div class="c-icon">
+        <img [src]="genUrl(item.title)" width="65" height="65">
+      </div>
+
+      <div class="c-title">
+
+        <span class="title">
+          {{item.title}}
+        </span>
+
+      </div>
+
+
+    </mat-card>
+
+  </div>
+
+  <div
+    *ngIf="loading"
+    id="loading"
+    style="
+      display:flex;
+      justify-content:center;
+      align-items:center
+    "
+    >
+  </div>
+
+</div>

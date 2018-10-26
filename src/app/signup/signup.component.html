@@ -1,0 +1,161 @@
+<div class="container-signup">
+  <mat-card class="resize" >
+
+    <div class="icon-signup">
+      <img src="/assets/icons/books-signup-min.png" alt="">
+    </div>
+
+    <h1 class="signup-title">Registrarse</h1>
+  
+    <form
+      [formGroup]="signupForm"
+      (ngSubmit)="onSubmit()"
+      >
+  
+      <mat-form-field>
+        <input 
+          id="firstName"
+          matInput
+          placeholder="Nombre"
+          formControlName="firstName"
+          [errorStateMatcher]="matcher"
+          >
+
+          <mat-error
+            *ngIf="signupForm.controls.firstName.hasError('minlength') &&
+                  !signupForm.controls.firstName.hasError('required')"
+            >
+            El nombre no puede tener menos de 3 letras.
+          </mat-error>
+
+          <mat-error
+            *ngIf="signupForm.controls.firstName.hasError('required')"
+            >
+            El nombre es requerido.
+          </mat-error>
+          
+      </mat-form-field>
+  
+      <mat-form-field>
+        <input 
+          id="lastName"
+          matInput  
+          placeholder="Apellido"
+          formControlName="lastName"
+          [errorStateMatcher]="matcher"
+          >
+
+        <mat-error
+          *ngIf="signupForm.controls.lastName.hasError('minlength') &&
+                !signupForm.controls.lastName.hasError('required')"
+          >
+          El apellido no puede tener menos de 3 letras.
+        </mat-error>
+
+        <mat-error
+          *ngIf="signupForm.controls.lastName.hasError('required')"
+          >
+          El apellido es requerido.
+        </mat-error>
+      </mat-form-field>
+  
+      <mat-form-field>
+        <input
+          id="email"
+          matInput
+          placeholder="Correo electrónico"
+          formControlName="email"
+          [errorStateMatcher]="matcher"
+          >
+
+        <mat-error
+          *ngIf="signupForm.controls.email.hasError('email') &&
+                !signupForm.controls.email.hasError('required')"
+          >
+          Por favor ingresa una direccion de correo válido.
+        </mat-error>
+
+        <mat-error
+          *ngIf="signupForm.controls.email.hasError('required')"
+          >
+          Correo electrónico es <strong>obligatorio.</strong>
+        </mat-error>
+
+      </mat-form-field>
+  
+      <mat-form-field>
+        <input 
+          id="password"
+          type="password"
+          ngInit="text=''"
+          ngFocus="text = xxxxxx"
+          matInput 
+          placeholder="Contraseña"
+          autocomplete="true" 
+          formControlName="password"
+          [errorStateMatcher]="matcher"
+          >
+
+        <mat-error
+          *ngIf="
+            signupForm.controls.password.hasError('pattern')   &&
+            !signupForm.controls.password.hasError('required') &&
+            !signupForm.controls.password.hasError('minlength')
+          ">
+          Tu contraseña debe tener mínimo 8 carateres, una letra mayúscula y un número.
+        </mat-error>
+
+        <mat-error
+          *ngIf="signupForm.controls.password.hasError('minlength')"
+          >
+          Tu contraseña debe tener un mínimo de 8 carateres.
+        </mat-error>
+
+        <mat-error *ngIf="signupForm.controls.password.hasError('required')">
+          Ingresa tu contraseña.
+        </mat-error>
+
+      </mat-form-field>
+
+      <div style="height: 15px; width:10px"></div>
+
+      <mat-form-field>
+        <input 
+          id="password2"
+          type="password"
+          matInput
+          placeholder="Repite tu contraseña"
+          autocomplete="true"
+          formControlName="password2"
+          [errorStateMatcher]="matcher"
+          >
+
+
+        <mat-error>
+          Las contraseñas no coinciden.
+        </mat-error>
+
+      </mat-form-field>
+  
+
+      <button
+        type="submit"
+        mat-raised-button
+        color="accent"
+        >
+        Registrarse
+      </button>
+
+      <a
+        class="redirect-signup"
+        mat-button color="primary"
+        routerLink="/signin"
+        >
+        Ya tengo una cuenta
+      </a>
+
+    </form>
+  
+  </mat-card>
+</div>
+  

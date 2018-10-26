@@ -1,0 +1,93 @@
+<div class="toolbar" *ngIf="isLoggedIn()" >
+
+  <div class="center">
+
+    <mat-icon
+      (click)="snav.toggle()"
+      style="font-size: 40px; width: 40px; height: 40px"
+      >
+      menu
+    </mat-icon>
+  
+    <span
+      class="title-toolbar"
+      routerLink=""
+      >
+      WEDUC
+    </span>
+  </div>
+
+  <div
+    *ngIf="isLoggedIn()"
+    class="center"
+    >
+
+    <mat-icon
+      [matMenuTriggerFor]="menu"
+      style="font-size: 45px; width: 45px; height: 45px"
+      >
+      account_circle
+    </mat-icon>
+
+    <mat-menu 
+      #menu="matMenu"
+      >
+      <button 
+        mat-menu-item
+        (click)="redirect()"
+        >
+        {{ fullName() | uppercase}}
+      </button>
+      <button
+        mat-menu-item
+        (click)="logout()"
+        >
+        Salir
+      </button>
+    </mat-menu>
+
+  </div>
+
+</div>
+
+
+<!-- [mode]="over" -->
+<mat-sidenav-container>
+  <mat-sidenav
+    #snav 
+    [fixedInViewport]="mobileQuery.matches"
+    fixedTopGap="56"
+    >
+    <mat-nav-list *ngIf="!isLoggedIn()">
+      <a 
+        mat-list-item
+        routerLink="signin"
+        (click)="snav.toggle()"
+        >
+        Iniciar Sesion
+      </a>
+      <mat-divider></mat-divider>
+      <a
+        mat-list-item
+        routerLink="signup"
+        (click)="snav.toggle()"
+        >
+        Registrarse
+      </a>
+    </mat-nav-list>
+
+    <mat-nav-list *ngIf="isLoggedIn()">
+      <a 
+        mat-list-item
+        (click)="snav.toggle()">
+        Home
+      </a>
+
+    </mat-nav-list>
+
+  </mat-sidenav>
+</mat-sidenav-container>
+
+
+
+<!-- <h1>hola</h1> -->

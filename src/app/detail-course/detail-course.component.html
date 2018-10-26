@@ -1,0 +1,52 @@
+<div class="container" style="display: block" >
+
+  <div *ngIf="!loading" style="overflow: auto">
+
+    <div #cBackgroundVideo [class.unsetHeight]="unsetHeight === true" class="container-background-video">
+      <div class="c-video" [ngStyle]="genSizes(cBackgroundVideo)">
+        <iframe
+          style="
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;"
+          width="1012"
+          height="569"
+          [src]="videoUrl"
+          frameborder="0"
+          allow="autoplay; encrypted-media"
+          allowfullscreen
+          >
+        </iframe>
+    
+      </div>
+    </div>
+
+    <mat-card class="c-detail" >
+      <div class="title-course" >
+        <img [src]="genUrlImg()" alt="">
+        <h1 class="" style="text-transform: capitalize" >{{data.title}}</h1>
+      </div>
+      <div class="c-description">
+        <p>{{data.description}}</p>
+      </div>
+      <div class="c-button">
+        <!-- <button mat-raised-button>Regresar</button> -->
+        <button (click)="redirect(data.title, data.subtitle)" mat-flat-button color="warn">Empezar Curso</button>
+      </div>
+    </mat-card>
+
+  </div>
+
+  <div
+    *ngIf="loading"
+    id="loading"
+    style=" display:flex; justify-content:center; align-items:center "
+  >
+  </div>
+
+
+
+
+</div>

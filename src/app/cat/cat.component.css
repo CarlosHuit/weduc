@@ -1,0 +1,164 @@
+@keyframes blink {
+  0% { transform: scaleY(1); }
+
+  50% { transform: scaleY(1); }
+
+  51% { transform: scaleY(0); }
+
+  52% { transform: scaleY(1); }
+}
+
+@keyframes whiskerShake {
+  0% { transform: rotate(-3deg); }
+
+  50% { transform: rotate(3deg); }
+
+  100% { transform: rotate(-3deg); }
+}
+
+.cat {
+  width: 100%;
+  position: relative;
+  perspective: 70vh;
+}
+
+.cat div {
+  position: relative;
+}
+
+.cat svg {
+  width: 100%;
+}
+
+.cat .head {
+  width: 100%;
+  z-index: 2;
+  perspective: 70vh;
+}
+
+.cat .head>svg {
+  z-index: -1;
+}
+
+.cat .head .marking {
+  z-index: 3;
+}
+
+.cat .head .ears {
+  z-index: -2;
+}
+
+.cat .head path {
+  fill: #fab801;
+}
+
+.cat .eyes {
+  position: absolute;
+  z-index: 3;
+  top: 25%;
+  width: 45%;
+  left: 27.5%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.cat .eyes .eye {
+  width: 22.5%;
+  fill: #5e5f5e;
+}
+
+.cat .eyes .eye svg {
+  animation: blink 5s infinite linear;
+}
+
+.cat .marking {
+  position: absolute;
+  top: 0;
+  z-index: 3;
+  width: 30%;
+  left: 35%;
+  transform-origin: 50% 0;
+}
+
+.cat .marking path {
+  fill: #cd8d46;
+}
+
+.cat .whiskers {
+  position: absolute;
+  width: 130%;
+  left: -15%;
+  top: 40%;
+  display: flex;
+  justify-content: space-between;
+  z-index: 3;
+}
+
+.cat .whiskers .whisker {
+  width: 30%;
+  fill: none;
+  stroke: #cd8d46;
+  stroke-width: 6%;
+  stroke-linecap: round;
+}
+
+.cat .whiskers .whisker:nth-child(1) svg {
+  animation-delay: 1.5s;
+  transform-origin: 100% 50%;
+}
+
+.cat .whiskers .whisker svg {
+  transform: rotate(-3deg);
+  transform-origin: 0% 50%;
+  animation: whiskerShake 3s infinite ease-in-out;
+}
+
+.cat .nose {
+  position: absolute;
+  top: 50%;
+  width: 55%;
+  left: 22.5%;
+  z-index: 3;
+}
+
+.cat .nose .st0 {
+  fill: #cd8d46;
+}
+
+.cat .nose .st1 {
+  fill: none;
+  stroke: #cd8d46;
+  stroke-width: 6%;
+}
+
+.cat .ears {
+  position: absolute;
+  width: 100%;
+  top: -15%;
+  left: 0;
+  display: flex;
+  justify-content: space-between;
+  z-index: -1;
+}
+
+.cat .ears .ear {
+  width: 25%;
+}
+
+.cat .ears .ear:nth-child(1) svg {
+  transform: scaleX(-1);
+}
+
+.cat .ears .ear .st1 {
+  fill: #fab801;
+}
+
+.cat .ears .ear .st2 {
+  fill: #cd8d46;
+}
+
+.test {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+}

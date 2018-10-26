@@ -1,0 +1,42 @@
+.toolbar {
+  background: linear-gradient(to top left, #195677 0%, #1e5475 25%, #186794 100%);
+  color: white;
+  display: flex;
+  height: 56px;
+  width: 100vw;
+  font-size: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+  box-sizing: border-box;
+  position: fixed;
+}
+
+.title-toolbar {
+  font-weight: bolder;
+  font-size: 30px;
+  cursor: pointer;
+  letter-spacing: 1.5px;
+  outline: none;
+}
+
+
+
+mat-sidenav {
+  background-color: rgba(0, 0, 0, .95);
+  width: 100vw
+}
+
+
+mat-nav-list a {
+  color: white !important;
+  border-bottom: 0.5px solid rgba(255, 255, 255, .4);
+  font-size: 19px;
+  font-weight: bold;
+}
+
+div.cdk-overlay-connected-position-bounding-box {
+  position: initial !important;
+  width: 100vw !important;
+}
