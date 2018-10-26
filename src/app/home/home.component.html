@@ -1,6 +1,6 @@
 <div #contGrid class="container">
 
-  <div class="c-search" *ngIf="!loading">
+  <div class="c-search hide" *ngIf="!loading" [class.show]="!loading">
       
     <div class="search">
       <input 
@@ -20,7 +20,7 @@
 
   </div>
 
-  <div *ngIf="!loading" [ngStyle]="genCols(contGrid)" class="c-cards" >
+  <div *ngIf="!loading" [ngStyle]="genCols(contGrid)" [class.show]="!loading" class="c-cards hide" >
 
     <mat-card
       class="card-course"

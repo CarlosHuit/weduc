@@ -32,9 +32,13 @@ body {
   position: relative;
 }
 
+.hide {
+  opacity: 0;
+  transition: 200ms;
+}
+
 .show {
-  transform: translateX(0px);
-  transition: 750ms cubic-bezier(0.075, 0.82, 0.165, 1.15);
+  opacity: 1
 }
 
 .center {

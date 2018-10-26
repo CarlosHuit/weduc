@@ -1,6 +1,6 @@
 <div #contGrid class="container">
 
-  <div *ngIf="!loading" class="m-c-title" (click)="instructions()"> El Abecedario </div>
+  <div [class.show]="!loading" *ngIf="!loading" class="m-c-title hide" (click)="instructions()"> El Abecedario </div>
 
   <div class="c-cards" [ngStyle]="genCols(contGrid)" *ngIf="!loading">
 
@@ -24,25 +24,30 @@
         >
 
 
-        <div
-          class="upper"
-          >
-          <button>{{letter | uppercase}}</button>
+        <div class="upper" >
+          <button
+            [class.highlight]="selections[letter] === letter"
+            >
+            {{letter | uppercase}}
+          </button>
         </div>
-        <div
-          class="lower"
-          >
-          <button>{{letter | lowercase}}</button>
+        <div class="lower">
+          <button
+            [class.highlight]="selections[letter] === letter"
+            >
+            {{letter | lowercase}}
+          </button>
         </div>
 
         <i *ngIf="learned[letter] === letter" class="star resize"></i>
 
       </div>
 
-      <div class="image"
-      (click)="openModal(letter)"
-      >
-        <img [src]="getImage(letter)" alt="">
+      <div
+        class="image"
+        (click)="openModal(letter)"
+        >
+        <img [src]="getImage(letter)">
       </div>
 
     </mat-card>

@@ -348,7 +348,7 @@ const letters = {
     u: '"u .."',
     ú: '"u .."',
     v: '"uve"',
-    w: '"doble u"',
+    w: '"doble ve"',
     x: '".. equis"',
     y: 'ihe"',
     z: 'seta'

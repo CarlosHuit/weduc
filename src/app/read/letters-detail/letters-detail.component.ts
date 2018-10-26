@@ -11,8 +11,9 @@ import { SpeechSynthesisService } from 'src/app/services/speech-synthesis.servic
 export class LettersDetailComponent implements OnInit, OnDestroy {
 
   letterParam: string;
-  letters: string[];
-  letter: string;
+  letter:      string;
+  letters:     string[];
+  show:        boolean;
 
   constructor(
     private _route: ActivatedRoute,
@@ -23,6 +24,8 @@ export class LettersDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    setTimeout(e => this.show = true, 0);
+    this.listenMsg();
 
   }
 
@@ -40,11 +43,18 @@ export class LettersDetailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() { }
 
-  listen = () => {
+  listenMsg = () => {
     const t = JSON.parse(localStorage.getItem('letter_sounds'))[this.letterParam.toLowerCase()];
     const type = this.letter === this.letter.toLowerCase() ? 'minúscula' : 'mayúscula';
     const msg = `Esta es la letra: ... ${t} ... ${type}`;
     this._speech.speak(msg);
+  }
+
+  listenLetter = () => {
+    const t = JSON.parse(localStorage.getItem('letter_sounds'))[this.letterParam.toLowerCase()];
+    const type = this.letter === this.letter.toLowerCase() ? 'minúscula' : 'mayúscula';
+    const msg = `${t} ... ${type}`;
+    this._speech.speak(msg, 0.9);
   }
 
 }

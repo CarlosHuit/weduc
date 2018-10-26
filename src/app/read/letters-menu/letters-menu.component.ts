@@ -30,11 +30,12 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
   userData:       MenuData = {};
   count = 0;
   soundsLetters = {};
-  showBackGround: boolean;
+  selections = {};
 
   wordsUrl = {};
 
   learned = {};
+  selected: boolean;
 
   constructor(
     private getData:         GetDataService,
@@ -111,35 +112,15 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
   }
 
-  getImage = (letter) => {
-    return `/assets/img100X100/${this.wordsUrl[letter]}-min.png`;
-  }
+  getImage = (letter) => `/assets/img100X100/${this.wordsUrl[letter]}-min.png`;
 
-  genUrl = (word: string) => {
-    return `/assets/img100X100/${word}-min.png`;
-  }
+  genUrl = (word: string) => `/assets/img100X100/${word}-min.png`;
 
   getCombinations = (letter: string) => {
-    const combinations = JSON.parse(localStorage.getItem('combinations'));
 
+    const combinations = JSON.parse(localStorage.getItem('combinations'));
     return combinations[letter];
 
-  }
-
-  toPractice = () => {
-
-    this.addSuccessTime();
-    this.send();
-    const msg = `Bien, aprendamos más sobre la letra: ${this.soundsLetters[this.currentLetter]}`;
-    const l   = this.speechSynthesis.speak(msg, .9);
-    l.addEventListener('end', this.redirect);
-
-  }
-
-
-  redirect = () => {
-    const url = `/leer/encontrar-letra/${this.currentLetter}`;
-    this.router.navigateByUrl(url);
   }
 
 
@@ -165,7 +146,7 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
 
   instructions = (type?: string) => {
-    const msg1 = `Estas son las letras del abecedario. Presiona sobre ellas para conocer mas.`;
+    const msg1 = `Este es el abecedario. Selecciona una letra para aprender mas.`;
     const msg2 = '"El abecedario"';
     const msg  = type ? msg1 : msg2;
 
@@ -224,13 +205,11 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
 
   /* Eventos del modal que contiene los detalles de la letra seleccionada */
-  openModal = (letter: string) => {
+  openModal = (letter: string) => !this.selected ? this.redirect(letter) : null;
 
-
-    // this.findData(letter);
-    // this.showModal = true;
-    // setTimeout(() => this.showBackGround = true, 100);
-
+  redirect = (letter: string) => {
+    this.selected = true;
+    this.selections[letter] = letter;
     const msg    = `Bien, Seleccionaste la letra: ... ${this.soundsLetters[letter]}`;
     const speech = this.speechSynthesis.speak(msg, .95);
     speech.addEventListener('end', () => {
@@ -239,17 +218,12 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
       this.router.navigateByUrl(url);
 
     });
-
-    // this.addInfoSelection(letter);
-
-
   }
 
 
   closeModal = () => {
 
     this.showModal = false;
-    this.showBackGround = false;
     this.speechSynthesis.cancel();
     this.addCancelTime();
     // console.log(this.userData);

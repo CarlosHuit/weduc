@@ -1,6 +1,6 @@
 <div class="container" style="display: block" >
 
-  <div *ngIf="!loading" style="overflow: auto">
+  <div class="hide" [class.show]="!loading"  *ngIf="!loading" style="overflow: auto">
 
     <div #cBackgroundVideo [class.unsetHeight]="unsetHeight === true" class="container-background-video">
       <div class="c-video" [ngStyle]="genSizes(cBackgroundVideo)">

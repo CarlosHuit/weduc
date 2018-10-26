@@ -1,13 +1,13 @@
 <div class="container">
 
-  <div class="c-detail-letter">
+  <div class="c-detail-letter hide" [class.show]="show" >
     <mat-card class="card-letter">
 
-      <div class="c-cat" (click)="listen()">
+      <div class="c-cat" (click)="listenMsg()">
         <app-cat></app-cat>
       </div>
 
-      <div class="c-letter" (click)="listen()">
+      <div class="c-letter" (click)="listenLetter()">
         <h1>{{letter}}</h1>
       </div>
 
