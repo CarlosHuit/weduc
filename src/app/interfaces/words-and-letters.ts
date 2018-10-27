@@ -7,11 +7,17 @@ export interface Letters {
 }
 
 export interface Words {
-    letter: string;
-    words: string[];
+    l: string;
+    w: string[];
+}
+
+export interface SimilatLetters {
+  l: string;
+  m: string;
 }
 
 export interface WordsAndLetters {
     words: Words[];
     letters: Letters;
+    similarLetters: SimilatLetters[];
 }

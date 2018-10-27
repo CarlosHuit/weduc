@@ -10,11 +10,19 @@ const debug = new Debug(`${nameProject}: similarLetters`)
 app.get('/', async (req, res) => {
 
   try {
-
+    const t = [];
     const similarLetters = await SimilarLetters.find({}, {_id: 0, __v: 0})
+    
+    for (let i = 0; i < similarLetters.length; i++) {
+      const el = similarLetters[i];
+      const d = {};
+      d['l'] = el.letter;
+      d['sm'] = el.similarLetters;
+      t.push(d)
+    }
 
     debug('Se muestran todos los registros de letras similares');
-    res.status(200).json(similarLetters)
+    res.status(200).json(t)
 
   } catch (error) {
 

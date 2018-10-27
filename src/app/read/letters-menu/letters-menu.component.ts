@@ -78,24 +78,34 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
   setInitialData = (data: WordsAndLetters) => {
 
-    const words = data.words;
-    const letters = data.letters;
+    const words          = data.words;
+    const letters        = data.letters;
+    const similarLetters = data.similarLetters;
 
-    words.forEach(e => this.wordsUrl[e.letter] = e.words[this.randomInt(0, e.words.length)]);
+    /* Se selecciona la imagen */
+    words.forEach(e => this.wordsUrl[e.l] = e.w[this.randomInt(0, e.w.length)]);
 
     this.letters = letters.alphabet.split('');
     this.soundsLetters = letters.sound_letters;
 
     if (Storage) {
 
-      localStorage.setItem('alphabet', JSON.stringify(letters.alphabet));
-      localStorage.setItem('consonants', JSON.stringify(letters.consonants));
-      localStorage.setItem('vocals', JSON.stringify(letters.vocals));
-      localStorage.setItem('combinations', JSON.stringify(letters.combinations));
+      localStorage.setItem('alphabet',      JSON.stringify(letters.alphabet));
+      localStorage.setItem('consonants',    JSON.stringify(letters.consonants));
+      localStorage.setItem('vocals',        JSON.stringify(letters.vocals));
+      localStorage.setItem('combinations',  JSON.stringify(letters.combinations));
       localStorage.setItem('letter_sounds', JSON.stringify(letters.sound_letters));
 
       // a list of words is saved for each letter
-      words.forEach(el => localStorage.setItem(el.letter, JSON.stringify(el.words)));
+      words.forEach(el => localStorage.setItem(el.l, JSON.stringify(el.w)));
+      this.letters.forEach(x => {
+        const lower = similarLetters.find(e => e.l === x.toLowerCase());
+        const upper = similarLetters.find(e => e.l === x.toUpperCase());
+        const d = {};
+        d[lower.l] = lower.m;
+        d[upper.l] = upper.m;
+        localStorage.setItem(`${x}_sl`, JSON.stringify(d));
+      });
     }
 
     this.loading = false;
@@ -105,27 +115,6 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
   getImage = (letter) => `/assets/img100X100/${this.wordsUrl[letter]}-min.png`;
 
   genUrl = (word: string) => `/assets/img100X100/${word}-min.png`;
-
-
-  findData = (letter: string) => {
-    const item = localStorage.getItem(letter);
-
-    if (item !== null) {
-
-      this.currentLetter = letter;
-      this.words = JSON.parse(localStorage.getItem(letter));
-
-    } else {
-
-      this.data.words.forEach(el => {
-        if (el.letter === letter) {
-          this.currentLetter = el.letter;
-          this.words = el.words;
-        }
-      });
-
-    }
-  }
 
   instructions = (type?: string) => {
 

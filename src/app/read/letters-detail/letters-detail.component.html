@@ -1,13 +1,32 @@
 <div class="container">
-  <div class="c-detail-letter hide" [class.show]="show">
+  <div class="c-detail-letter hide" [class.show]="showContainer">
 
-    <mat-card>
-      
-    </mat-card>
+    <div  #card class="card-game center">
+
+      <!-- <div #cCard class="container-cards"> -->
+        <div #cCard class="container-cards" [ngStyle]="style(card)">
+        <div
+          *ngFor="let x of lettersIDs"
+          #option [id]="x"
+          (click)="onSelect(x)"
+          class="carta active"
+          [class.showAll]="showAll === true"
+          [class.active]="selections[x] === x"
+          >
+          <div class="lado frente"></div>
+          <div [ngStyle]="calcFZ(option)" class="lado atras">{{x[0]}}</div>
+        </div>
+      </div>
 
 
+    </div>
 
-    <div class="c-letter-presentation" [class.hide]="hideTarget" >
+
+<!-- 
+    showTarget = para ocultar el modal.
+    hideTarget = para hacer transparente el modal
+ -->
+    <div *ngIf="showTarget" class="c-letter-presentation" [class.hide]="hideTarget">
       <mat-card class="card-letter">
 
         <div class="c-cat" (click)="listenMsg()">
@@ -15,15 +34,10 @@
         </div>
 
         <div class="c-letter" (click)="listenLetter()">
-          <h1>{{letter}}</h1>
+          <h1>{{currentLetter}}</h1>
         </div>
 
-        <button 
-          mat-raised-button
-          class="button-next"
-          color="warn"
-          (click)="next()"
-          >
+        <button mat-raised-button class="button-next" color="warn" (click)="next()">
           Siguiente
         </button>
 

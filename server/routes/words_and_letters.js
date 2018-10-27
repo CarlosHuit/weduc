@@ -1,6 +1,6 @@
 import express from 'express'
 import Debug from 'debug'
-import { Words, Letters } from '../models';
+import { Words, Letters, SimilarLetters } from '../models';
 import { nameProject } from '../config'
 
 const app   = express.Router()
@@ -10,13 +10,32 @@ const omit  = { __v: 0, _id: 0 }
 app.get('/', async (req, res) => {
 
   try {
-
+    
+    const t = [];
+    const l = [];
+    const w = [];
     const words   = await Words.find({}, omit)
     const letters = await Letters.findOne({vocals: 'aeiou'}, omit)
+    const sL      = await SimilarLetters.find({}, omit); 
+
+    words.forEach(x => w.push({ l: x.letter, w: x.words }))
+    sL.forEach(x => t.push({l: x.letter, m:  x.similarLetters}))
+    
+    // for (let i = 0; i < sL.length; i++) {
+    //   const el = sL[i];
+    //   const d  = {};
+    //   d['l']   = el.letter;
+    //   d['sm']  = el.similarLetters;
+    //   t.push(d)
+    // }
+
+
+
 
     res.status(200).json({
-        words: words,
-        letters: letters
+        words: w,
+        letters: letters,
+        similarLetters: t
     })
 
     debug('Mostrando todos los registros de Words y Letters')
