@@ -54,7 +54,7 @@ export class LettersDetailComponent implements OnInit {
   userData:       FindLetter   = {};
   Data:           FindLetter[] = [];
   similarLetters: SimilarLetters;
-
+  r;
 
   constructor(
     private router:   Router,
@@ -67,6 +67,9 @@ export class LettersDetailComponent implements OnInit {
     private _audio:   PreloadAudioService
   ) {
     this.letterParam = this._route.snapshot.paramMap.get('letter');
+    const key = `${this.letterParam}_sl`;
+    this.r = JSON.parse(localStorage.getItem(key));
+    console.log(this.r);
   }
 
   ngOnInit() {
