@@ -3,27 +3,31 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { SpeechSynthesisService } from '../../services/speech-synthesis.service';
 import { DetectMobileService } from '../../services/detect-mobile.service';
 import { GenerateDatesService } from '../../services/generate-dates.service';
-import { GetDataService, SimilarLetters } from '../../services/get-data.service';
+import { GetDataService } from '../../services/get-data.service';
 import { SendDataService } from '../../services/send-data.service';
 import { PreloadAudioService } from '../../services/preload-audio.service';
+import { LocalStorageService } from '../../services/local-storage.service';
+import { ShuffleService } from '../../services/shuffle/shuffle.service';
+import { GenerateIdsService } from '../../services/generate-ids/generate-ids.service';
+import { SimilarLetters } from '../../interfaces/words-and-letters';
 
 export interface FindLetter {
-  user_id?: string;
-  date?: string;
-  startTime?: string;
-  finalTime?: string;
+  user_id?:    string;
+  date?:        string;
+  startTime?:   string;
+  finalTime?:   string;
   pressLetter?: string[];
-  letter?: string;
-  pattern?: string[];
-  fails?: number;
-  couples?: string[][];
-  historial?: Selection[];
+  letter?:      string;
+  pattern?:     string[];
+  fails?:       number;
+  couples?:     string[][];
+  historial?:   Selection[];
 }
 
 export interface Selection {
-  time?: string;
+  time?:   string;
   letter?: string;
-  state?: boolean;
+  state?:  boolean;
 }
 
 @Component({
@@ -44,79 +48,86 @@ export class LettersDetailComponent implements OnInit {
   showContainer:  boolean;
   letterParam:    string;
   currentLetter:  string;
-  lettersIDs:     string[];
   lettersOPt:     string[] = [];
   selections:     string[] = [];
   sel1 =          '';
   sel2 =          '';
   loading =       true;
-  show =          true;
+  show:           boolean;
   userData:       FindLetter   = {};
   Data:           FindLetter[] = [];
   similarLetters: SimilarLetters;
-  r;
+  idOPtions:      {};
+  currentIds:     string[];
 
   constructor(
     private router:   Router,
+    private _shuffle: ShuffleService,
     private _route:   ActivatedRoute,
     private getData:  GetDataService,
-    private speech:   SpeechSynthesisService,
+    private sendData: SendDataService,
+    private _ids:     GenerateIdsService,
+    private _audio:   PreloadAudioService,
+    private _storage: LocalStorageService,
     private dMobile:  DetectMobileService,
     private genDates: GenerateDatesService,
-    private sendData: SendDataService,
-    private _audio:   PreloadAudioService
+    private speech:   SpeechSynthesisService,
+
   ) {
-    this.letterParam = this._route.snapshot.paramMap.get('letter');
-    const key = `${this.letterParam}_sl`;
-    this.r = JSON.parse(localStorage.getItem(key));
-    console.log(this.r);
+    this.letterParam    = this._route.snapshot.paramMap.get('letter');
+    this.similarLetters = this._storage.getElement(`${this.letterParam.toLowerCase()}_sl`);
+    this.lettersOPt     = this.fillLetters();
+    this.currentLetter  = this.lettersOPt[0];
+    this.idOPtions      = this.fillLettersIds();
+    this.currentIds     = this.idOPtions[this.currentLetter];
   }
 
   ngOnInit() {
-    this.setValues();
+    this.showContainer = true;
+    this.showTarget    = true;
     this._audio.loadAudio();
-    setTimeout(() => {
-      this.showContainer = true;
-    }, 10);
-    this.showTarget = true;
+    this.listenMsg();
+
+    (window).addEventListener('resize', e => this.style(this.card.nativeElement));
+    // this.initUserData();
   }
 
-  setValues = () => {
-    this.getData.getSimilarLetters(this.letterParam)
-      .subscribe(
-        (result: SimilarLetters) => {
-          this.similarLetters = result;
-          this.fillOPts();
-          this.setData(this.currentLetter);
-          this.loading = false;
-          this.initUserData();
+  fillLettersIds = () => {
+    const t = {};
 
-          this.listenMsg();
-          (window).addEventListener('resize', e => this.style(this.card.nativeElement));
-        },
-        (err) => console.log(err)
-      );
+    t[`${this.letterParam.toLowerCase()}`] = this.setData(this.letterParam.toLowerCase());
+    t[`${this.letterParam.toUpperCase()}`] = this.setData(this.letterParam.toUpperCase());
+
+    return JSON.parse(JSON.stringify(t));
   }
 
+  fillLetters = () => [this.letterParam.toUpperCase(), this.letterParam.toLowerCase()];
 
-  fillOPts = () => {
-    this.lettersOPt.push(this.letterParam.toUpperCase());
-    this.lettersOPt.push(this.letterParam.toLowerCase());
-    this.currentLetter = this.lettersOPt[0];
+  setData = (letter: string) => {
+
+    let sLetters = [];
+    const s = letter === letter.toLowerCase()
+                                              ? sLetters = this.similarLetters[letter.toLowerCase()]
+                                              : sLetters = this.similarLetters[letter.toUpperCase()];
+
+    const lettersMixed = this._shuffle.shuffle(sLetters, letter, 2);
+    const lettersIDs   = this._ids.generateIDs(lettersMixed);
+
+    return lettersIDs;
+
   }
+
 
   instructions = () => {
 
     this.canPlayGame = false;
-    const type = this.currentLetter === this.currentLetter.toLowerCase() ? 'minúscula' : 'mayúscula';
+    this.show        = true;
+
+    const type   = this.currentLetter === this.currentLetter.toLowerCase() ? 'minúscula' : 'mayúscula';
     const letter = JSON.parse(localStorage.getItem('letter_sounds'))[this.letterParam.toLocaleLowerCase()];
-    const msg = `Encuentra la pareja de letras: ${letter}.. "${type}"`;
-
-
-    const speak = this.speech.speak(msg).addEventListener('end', e => {
-      this.show = false;
-      this.canPlayGame = true;
-    });
+    const msg    = `Encuentra la pareja de letras: ${letter}.. "${type}"`;
+    const speak  = this.speech.speak(msg);
+    speak.addEventListener('end', e => ( this.canPlayGame = true, this.show = false));
 
   }
 
@@ -155,48 +166,8 @@ export class LettersDetailComponent implements OnInit {
 
   /*----- End Style of elements -----*/
 
-  setData = (letter: string) => {
 
-    let sLetters = [];
-    const s = letter === letter.toLowerCase() ? sLetters = this.similarLetters['lowerCase'] : sLetters = this.similarLetters['upperCase'];
-    const lettersMixed = this.shuffle(sLetters, letter);
-    const lettersIDs = this.generateIDs(lettersMixed);
 
-    this.lettersIDs = lettersIDs;
-  }
-
-  shuffle = (arr: string[], letter: string) => {
-
-    const array = arr;
-    array.push(letter);
-    array.push(letter);
-
-    let currentIndex = array.length;
-    let temporaryValue;
-    let randomIndex;
-
-    while (0 !== currentIndex) {
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex -= 1;
-
-      temporaryValue = array[currentIndex];
-      array[currentIndex] = array[randomIndex];
-      array[randomIndex] = temporaryValue;
-
-    }
-
-    return array;
-  }
-
-  generateIDs = (array: string[]) => {
-    const data = array;
-
-    for (let i = 0; i < data.length; i++) {
-      const element = `${data[i]}${i}`;
-      data[i] = element;
-    }
-    return JSON.parse(JSON.stringify(data));
-  }
 
   onSelect = (id: string) => {
 
@@ -217,44 +188,44 @@ export class LettersDetailComponent implements OnInit {
 
         if (this.selections.length === 1) {
           this.sel1 = id;
-          this.addSelection(this.sel1[0]);
+          // this.addSelection(this.sel1[0]);
         }
 
         if (this.selections.length === 2) {
 
           this.sel2 = id;
-          this.addSelection(this.sel2[0]);
-          this.addCouples(this.sel1[0], this.sel2[0]);
+          // this.addSelection(this.sel2[0]);
+          // this.addCouples(this.sel1[0], this.sel2[0]);
 
-          const validation = this.sel1[0] === this.sel2[0] ? setTimeout(e => this.next(), 1500) : this.reset();
+          const validation = this.sel1[0] === this.sel2[0] ? setTimeout(e => this.next(), 2000) : this.reset();
 
         }
       }
     }
   }
 
-/*   next = () => {
-    this.success = true;
-    this.addFinalTime();
-    this.reset();
-    this.show = true;
+  next = () => {
+
+    // this.addFinalTime();
 
     const index = this.lettersOPt.indexOf(this.currentLetter);
 
     if (index === 0) {
-      this.currentLetter = this.lettersOPt[index + 1];
-      this.setData(this.currentLetter);
 
-      this.speech.speak('Bien Hecho', .8).addEventListener('end', () => {
-        this.success = false;
-        this.initUserData();
-        this.instructions();
-      });
+      this.showTarget    = true;
+      this.hideTarget    = false;
+      this.reset();
+      this.currentLetter = this.lettersOPt[index + 1];
+      this.currentIds    = this.idOPtions[this.currentLetter];
+
+      this.listenMsg();
 
     } else {
+
       this.redirect();
+
     }
-  } */
+  }
 
   changeData = () => {
   }
@@ -263,9 +234,11 @@ export class LettersDetailComponent implements OnInit {
 
     // this.sendFindLetterData();
 
-    const url = `/leer/target/${this.letterParam}`;
+    this.success = true;
+
+    const url    = `/lectura/juego/${this.letterParam}`;
     const letter = JSON.parse(localStorage.getItem('letter_sounds'))[this.letterParam.toLowerCase()];
-    const msg = `Bien... es momento de aprender a usar la letra: ${letter} `;
+    const msg    = `Bien... es momento de aprender a usar la letra: ${letter} `;
     const speech = this.speech.speak(msg, .9).addEventListener('end', e => this.router.navigateByUrl(url));
 
 
@@ -290,6 +263,9 @@ export class LettersDetailComponent implements OnInit {
     }, 1200);
   }
 
+
+/* Collect User data */
+
   initUserData = () => {
     const t = this.genDates.generateData();
 
@@ -306,7 +282,7 @@ export class LettersDetailComponent implements OnInit {
 
   fillOtions = (): string[] => {
     const t = [];
-    this.lettersIDs.forEach(el => t.push(el[0]));
+    this.currentIds.forEach(el => t.push(el[0]));
     return JSON.parse(JSON.stringify(t));
   }
 
@@ -356,18 +332,18 @@ export class LettersDetailComponent implements OnInit {
     return { 'font-size': `${widthOPt * .5}px` };
   }
 
-  next = () => {
+  continue = () => {
     this.hideTarget = true;
-    this.speech.cancel();
     setTimeout(e => this.showTarget = false, 500);
-    // setTimeout(e => this.hideTarget = false, 1500);
+
+    this.instructions();
   }
 
   listenMsg = () => {
     const t = JSON.parse(localStorage.getItem('letter_sounds'))[this.letterParam.toLowerCase()];
     const type = this.currentLetter === this.currentLetter.toLowerCase() ? 'minúscula' : 'mayúscula';
     const msg = `Esta es la letra: ... ${t} ... ${type}`;
-    this.speech.speak(msg);
+    setTimeout(e => this.speech.speak(msg), 500);
   }
 
   listenLetter = () => {

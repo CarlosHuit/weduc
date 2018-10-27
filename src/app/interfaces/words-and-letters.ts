@@ -11,7 +11,7 @@ export interface Words {
     w: string[];
 }
 
-export interface SimilatLetters {
+export interface SimilarLetters {
   l: string;
   m: string;
 }
@@ -19,5 +19,5 @@ export interface SimilatLetters {
 export interface WordsAndLetters {
     words: Words[];
     letters: Letters;
-    similarLetters: SimilatLetters[];
+    similarLetters: SimilarLetters[];
 }

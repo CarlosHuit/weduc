@@ -26,7 +26,7 @@ export class SpeechSynthesisService {
     this.utterance        = new SpeechSynthesisUtterance();
     this.utterance.text   = text;
     this.utterance.lang   = 'es-US';
-    this.utterance.volume =  1;
+    this.utterance.volume =  0.4;
     this.utterance.rate   = velocity ? velocity : 1;
     this.utterance.pitch  = 1;
 
@@ -50,7 +50,7 @@ export class SpeechSynthesisService {
     this.utterance        = new SpeechSynthesisUtterance();
     this.utterance.text   = text;
     this.utterance.lang   = 'es-ES';
-    this.utterance.volume = 1;
+    this.utterance.volume = 0.4;
     this.utterance.rate   = 1;
     this.utterance.pitch  = 1;
 

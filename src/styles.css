@@ -41,6 +41,15 @@ body {
   opacity: 1
 }
 
+.hideSucces {
+  opacity: 0;
+  transition: 50ms;
+}
+
+.showSuccess {
+  opacity: 1
+}
+
 .center {
   display: flex;
   justify-content: center;

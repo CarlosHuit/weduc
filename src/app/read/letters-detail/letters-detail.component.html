@@ -3,15 +3,15 @@
 
     <div  #card class="card-game center">
 
-      <!-- <div #cCard class="container-cards"> -->
-        <div #cCard class="container-cards" [ngStyle]="style(card)">
+      <div #cCard class="container-cards" [ngStyle]="style(card)">
         <div
-          *ngFor="let x of lettersIDs"
-          #option [id]="x"
+          *ngFor="let x of currentIds"
+          [id]="x"
+          #option
           (click)="onSelect(x)"
           class="carta active"
-          [class.showAll]="showAll === true"
-          [class.active]="selections[x] === x"
+          [class.showAll]="show === true"
+          [class.active]="active === true && x === sel1 || x === sel2"
           >
           <div class="lado frente"></div>
           <div [ngStyle]="calcFZ(option)" class="lado atras">{{x[0]}}</div>
@@ -21,11 +21,6 @@
 
     </div>
 
-
-<!-- 
-    showTarget = para ocultar el modal.
-    hideTarget = para hacer transparente el modal
- -->
     <div *ngIf="showTarget" class="c-letter-presentation" [class.hide]="hideTarget">
       <mat-card class="card-letter">
 
@@ -37,11 +32,18 @@
           <h1>{{currentLetter}}</h1>
         </div>
 
-        <button mat-raised-button class="button-next" color="warn" (click)="next()">
+        <button
+          color="warn"
+          (click)="continue()"
+          mat-raised-button
+          class="button-next"
+          >
           Siguiente
         </button>
 
       </mat-card>
     </div>
   </div>
+
+  <app-success-animation class="hideSucces" [class.showSuccess]="success" *ngIf="success" ></app-success-animation>
 </div>
