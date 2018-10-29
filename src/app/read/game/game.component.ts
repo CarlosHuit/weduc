@@ -7,24 +7,26 @@ import { DetectMobileService } from '../../services/detect-mobile.service';
 import { GetDataService, RandomSimilarLetters } from '../../services/get-data.service';
 import { HttpResponse } from '@angular/common/http';
 import { PreloadAudioService } from '../../services/preload-audio.service';
+import { LocalStorageService } from '../../services/local-storage.service';
+import { SimilarLettersService } from '../../services/similar-letters/similar-letters.service';
 
 interface Option {
-  user_id?: string;
-  date?: string;
-  startTime?: string;
-  letter?: string;
-  amount?: number;
-  correct?: number;
-  incorrect?: number;
+  user_id?:     string;
+  date?:        string;
+  startTime?:   string;
+  letter?:      string;
+  amount?:      number;
+  correct?:     number;
+  incorrect?:   number;
   repetitions?: number;
-  historial?: Record[];
-  finalTime?: string;
+  historial?:   Record[];
+  finalTime?:   string;
 
 }
 
 interface Record {
   letter?: string;
-  time?: string;
+  time?:   string;
   status?: boolean;
 }
 
@@ -35,36 +37,31 @@ interface Record {
 })
 export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  @ViewChild('canvas')    canvasEl:     ElementRef;
-  @ViewChild('mcGame')    mcGame:       ElementRef;
-  @ViewChild('mcLetters') mcLetters:    ElementRef;
 
-  opportunities = 0;
-  failedCount = 0;
-  succesCount = 0;
-  loading: boolean;
-  success: boolean;
+  @ViewChild('mcGame') mcLetters:    ElementRef;
 
-
+  opportunities     = 0;
+  failedCount       = 0;
+  succesCount       = 0;
   lettersValidation = {};
-  letters:      string[];
-  arrayIDs:     string[] = [];
-  letterParam:  string;
-  elToDestroy:  string;
-  letter:       string;
-  show =        false;
-  userData:    Option = {};
-  mcGameEl:    HTMLDivElement;
-  canvas:      HTMLCanvasElement;
-  canvas2:     HTMLCanvasElement;
-  lettersData: RandomSimilarLetters;
-  ctx:         CanvasRenderingContext2D;
-  ctx2:        CanvasRenderingContext2D;
+  dataToSend        = [];
+  show              = false;
+  loading:          boolean;
+  success:          boolean;
+  isMobile:         boolean;
+  letterParam:      string;
+  elToDestroy:      string;
+  urlToRedirect:    string;
+  letter:           string;
+  letters:          string[];
+  letterIDs:        string[][] = [[]];
+  arrayIDs:         string[]   = [];
+  clearEl:          any        = {};
+  userData:         Option     = {};
+  mcGameEl:         HTMLDivElement;
+  lettersData:      RandomSimilarLetters;
+  showGame: boolean;
 
-  dataToSend   = [];
-  clearEl: any = {};
-  isMobile:  boolean;
-  letterIDs: string[][];
 
 
   constructor(
@@ -75,44 +72,46 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     private sendData:      SendDataService,
     private detectMobile:  DetectMobileService,
     private getData:       GetDataService,
-    private _sound:        PreloadAudioService
+    private _sound:        PreloadAudioService,
+    private _storage:      LocalStorageService,
+    private _sL:           SimilarLettersService
   ) {
 
-    this.success = false;
-    this.loading = true;
-    this.letterParam = this._route.snapshot.paramMap.get('letter');
-    this.isMobile = this.detectMobile.isMobile();
+    this.success       = false;
+    this.loading       = true;
+    this.letterParam   = this._route.snapshot.paramMap.get('letter');
+    this.isMobile      = this.detectMobile.isMobile();
+    this.urlToRedirect = `lectura/dibujar-letra/${this.letterParam}`;
   }
 
   ngAfterViewInit() {
-   const t = this.isMobile === true ? this.activeCanvas() : false;
+
+    const t = this._storage.getElement(`${this.letterParam.toLowerCase()}_sl`);
+
+    if (t !== null) {
+      this.lettersData = this._sL.getDataFromStorage(this.letterParam);
+      this.letter      = this.letterParam;
+      this.letterIDs   = this.prepareData(this.lettersData.lowerCase);
+      this.letters     = this.joinLetters(this.letterIDs);
+
+      setTimeout(e => this.loading = false, 0);
+      window.addEventListener('resize', e => setTimeout(() => this.restartData(), 100));
+
+      this.initUserData();
+      this.instructions();
+    } else {
+
+      this.getLettersRandom();
+
+    }
+
   }
 
 
   ngOnInit() {
-
-    this.getLettersRandom();
+    setTimeout(e => this.showGame = true, 0);
     this._sound.loadAudio();
 
-
-    if (this.isMobile) {
-      window.addEventListener('orientationchange', e => setTimeout(() => this.restartCanvas(), 50));
-    }
-
-    window.addEventListener('orientationchange', e => setTimeout(() => this.restartData(), 100));
-
-
-  }
-
-
-  activeCanvas = () => {
-    this.canvas = this.canvasEl.nativeElement;
-    this.ctx    = this.canvas.getContext('2d');
-    this.canvas2  = document.createElement('canvas');
-    this.ctx2     = this.canvas2.getContext('2d');
-
-    this.mcGameEl = this.mcGame.nativeElement;
-    this.s();
   }
 
   getLettersRandom = () => {
@@ -143,7 +142,7 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     this.speechService.cancel();
   }
 
-  prepareData = (letters: string[]): string[][] => {
+  prepareData = (letters: string[]) => {
 
     const array   = JSON.parse(JSON.stringify(letters));
     const columns = Math.floor(this.mcLetters.nativeElement.clientWidth / 80);
@@ -324,10 +323,8 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     this.insertGroupOfSelection();
     this.send();
 
-    const url = `/leer/identificar-letra/${this.letterParam}`;
-    const speech = this.speechService.speak('"Bien Hecho!"', .9);
-
-    speech.addEventListener('end', e => this.router.navigateByUrl(url));
+    const speech = this.speechService.speak('Bien Hecho!', .85);
+    speech.addEventListener('end', e => this.router.navigateByUrl(this.urlToRedirect));
 
   }
 
@@ -405,108 +402,5 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
       );
   }
 
-
-  s = () => {
-
-    const ctx = this.ctx;
-    const w   = this.canvas.width  = this.mcGameEl.clientWidth;
-    const h   = this.canvas.height = this.mcGameEl.clientHeight - 40;
-
-    const hue      = 217;
-    const stars    = [];
-    const maxStars = 1000; // 1400
-    let count      = 0;
-
-    const canvas2  = this.canvas2;
-    const ctx2     = this.ctx2;
-    canvas2.width  = 100;
-    canvas2.height = 100;
-
-    const half = canvas2.width / 2;
-    const gradient = ctx2.createRadialGradient(half, half, 0, half, half, half);
-    gradient.addColorStop(0.025, '#fff');
-    gradient.addColorStop(0.1, `hsl(${hue}, 61%, 33%)`);
-    gradient.addColorStop(0.25, `hsl(${hue}, 64%, 6%)`);
-    gradient.addColorStop(1, 'transparent');
-
-    ctx2.fillStyle = gradient;
-    ctx2.beginPath();
-    ctx2.arc(half, half, half, 0, Math.PI * 2);
-    ctx2.fill();
-
-    function random(min, max?) {
-
-      if (arguments.length < 2) {
-        max = min;
-        min = 0;
-      }
-
-      if (min > max) {
-        const hold = max;
-        max = min;
-        min = hold;
-      }
-
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
-    const maxOrbit = ( x, y ) => {
-      const max = Math.max(x, y );
-      const diameter = Math.round(Math.sqrt( max * max + max * max ));
-      return diameter / 2;
-    };
-
-    const Star = function () {
-
-      this.orbitRadius = random(maxOrbit( w, h));
-      this.radius = random(60, this.orbitRadius) / 12;
-      this.orbitX = w / 2;
-      this.orbitY = h / 2;
-      this.timePassed = random(0, maxStars);
-      this.speed = random(this.orbitRadius) / 150000; // 500000
-      this.alpha = random(2, 10) / 10;
-
-      count++;
-      stars[count] = this;
-    };
-
-    Star.prototype.draw = function() {
-
-      const x = Math.sin(this.timePassed) * this.orbitRadius + this.orbitX;
-      const y = Math.cos(this.timePassed) * this.orbitRadius + this.orbitY;
-      const twinkle = random(10);
-
-      const c = twinkle === 1 && this.alpha > 0 ? this.alpha -= 0.05 : false;
-      const t = twinkle === 2 && this.alpha < 1 ? this.alpha += 0.05 : false;
-
-      ctx.globalAlpha = this.alpha;
-      ctx.drawImage(canvas2, x - this.radius / 2, y - this.radius / 2, this.radius, this.radius);
-      this.timePassed += this.speed;
-    };
-
-    for (let i = 0; i < maxStars; i++) {
-      const t = new Star();
-    }
-
-    const animation = () => {
-
-      ctx.globalCompositeOperation = 'source-over';
-      ctx.globalAlpha = 0.8;
-      ctx.fillStyle = `hsla(${hue}, 64%, 6%, 1)`;
-      ctx.fillRect(0, 0, w, h);
-
-      ctx.globalCompositeOperation = 'lighter';
-      stars.forEach(star => star.draw());
-
-      window.requestAnimationFrame(animation);
-    };
-
-    animation();
-  }
-
-  restartCanvas = () => {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.ctx2.clearRect(0, 0, this.canvas2.width, this.canvas2.height);
-  }
 
 }

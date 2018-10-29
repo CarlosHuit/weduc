@@ -20,7 +20,6 @@
         *ngFor="let letterID of letters"
         class="d-m-option"
         >
-        <!-- [class.destroy]="letterID[0] === letter && letterID === elToDestroy" -->
 
         <button
           class="circle-letter press"
@@ -40,17 +39,30 @@
 
 
   <!-- Mobile Version -->
-  <div #mcGame class="m-c-game" *ngIf="isMobile" >
+  <div #mcGame class="m-c-game hide" [class.show]="showGame"  *ngIf="isMobile" >
 
     <div class="m-c-toolbar" #toolbGame >
       <div class="m-c-count">
-        <span class="failed"> {{failedCount}} </span>
-        <span class="succes"> {{succesCount}} </span>
+        <span
+          class="failed"
+          >
+          {{failedCount}}
+        </span>
+        <span
+          class="succes"
+          >
+          {{succesCount}}
+        </span>
       </div>
-      <div class="help resize" (click)="instructions('y')">?</div>
+      <div
+        class="help resize"
+        (click)="instructions('y')"
+        >
+        ?
+      </div>
     </div>
 
-    <div class="m-c-letters" id="s" #mcLetters>
+    <div class="m-c-letters" *ngIf="loading === false" id="s" #mcLetters>
 
       <div class="m-c-letter" *ngFor="let group of letterIDs">
         <div
@@ -69,17 +81,21 @@
           </button>
         </div>
       </div>
-
+      
     </div>
-
+    
+    <app-spinner-loading *ngIf="loading === true" ></app-spinner-loading>
     <canvas #canvas id="canvas">no</canvas>
 
     
   </div>
   
-  <!-- Succes animation -->
-  <app-success-animation *ngIf="success"></app-success-animation>
+  <app-success-animation
+    *ngIf="success"
+    class="modify-s"
+    [class.showSuccess]="success"
+    [class.hideSuccess]="!success"
+    >
+  </app-success-animation>
   
-  <!-- Initial Spinner animation -->
-  <app-spinner *ngIf="loading"></app-spinner>
 </div>
