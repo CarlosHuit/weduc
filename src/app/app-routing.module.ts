@@ -1,16 +1,15 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { SigninComponent } from './signin/signin.component';
-import { SignupComponent } from './signup/signup.component';
-import { IsLoggedInGuard } from './is-logged-in.guard';
-import { AuthGuard       } from './auth.guard';
-import { HomeComponent         } from './home/home.component';
-import { DetailCourseComponent } from './detail-course/detail-course.component';
-import { LettersMenuComponent  } from './read/letters-menu/letters-menu.component';
-import { LettersDetailComponent          } from './read/letters-detail/letters-detail.component';
-import { CatComponent          } from './cat/cat.component';
+import { Routes, RouterModule   } from '@angular/router';
+import { SigninComponent        } from './signin/signin.component';
+import { SignupComponent        } from './signup/signup.component';
+import { IsLoggedInGuard        } from './is-logged-in.guard';
+import { AuthGuard              } from './auth.guard';
+import { HomeComponent          } from './home/home.component';
+import { DetailCourseComponent  } from './detail-course/detail-course.component';
+import { LettersMenuComponent   } from './read/letters-menu/letters-menu.component';
+import { LettersDetailComponent } from './read/letters-detail/letters-detail.component';
+import { GameComponent          } from './read/game/game.component';
 // import { TargetComponent       } from './read/target/target.component';
-// import { GameComponent         } from './read/game/game.component';
 // import { GuessLetterComponent  } from './read/guess-letter/guess-letter.component';
 import { DrawLetterComponent   } from './read/draw-letter/draw-letter.component';
 // import { CompleteWordComponent } from './read/complete-word/complete-word.component';
@@ -31,7 +30,7 @@ const routes: Routes = [
   { path: 'lectura/abecedario',               component: LettersMenuComponent,            canActivate: [AuthGuard]        },
   { path: 'lectura/detalle-letra/:letter',    component: LettersDetailComponent,          canActivate: [AuthGuard]        },
   { path: 'lectura/dibujar-letra/:letter',    component: DrawLetterComponent,             canActivate: [AuthGuard]        },
-  { path: 's/cat',                              component: CatComponent        },
+  { path: 'lectura/juego/:letter',            component: GameComponent,                   canActivate: [AuthGuard]        },
   // { path: 'leer/encontrar-letra/:letter',     component: FindLetterComponent,            canActivate: [AuthGuard]        },
   // { path: 'leer/target/:letter',              component: TargetComponent,                canActivate: [AuthGuard]        },
   // { path: 'leer/select-images/:letter',       component: SelectImagesComponent,          canActivate: [AuthGuard]        },

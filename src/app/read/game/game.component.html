@@ -1,0 +1,85 @@
+<div class="container" [class.desktop]="!isMobile" >
+
+  <!-- Desktop version -->
+  <div class="d-c-game" *ngIf="!isMobile" >
+
+    <div class="toolbar">
+
+      <div class="count-try">
+        <span class="count-failed"> {{failedCount}} </span>
+        <span class="count-succes"> {{succesCount }} </span>
+      </div>
+
+      <button class="help press" (click)="instructions('y')" >?</button>
+
+    </div>
+
+
+    <div class="letter-container" #mcLetters >
+      <div 
+        *ngFor="let letterID of letters"
+        class="d-m-option"
+        >
+        <!-- [class.destroy]="letterID[0] === letter && letterID === elToDestroy" -->
+
+        <button
+          class="circle-letter press"
+          (click)="onSelect(letterID, toolbGame)"
+          [disabled]="lettersValidation[letterID] === letterID"
+          [class.showOpt]="letterID[0] === letter && show === true"
+          [class.clear]="clearEl[letterID] === letterID"
+          >
+          {{letterID[0]}}
+        </button>
+
+      </div>
+    </div>
+
+  </div>
+
+
+
+  <!-- Mobile Version -->
+  <div #mcGame class="m-c-game" *ngIf="isMobile" >
+
+    <div class="m-c-toolbar" #toolbGame >
+      <div class="m-c-count">
+        <span class="failed"> {{failedCount}} </span>
+        <span class="succes"> {{succesCount}} </span>
+      </div>
+      <div class="help resize" (click)="instructions('y')">?</div>
+    </div>
+
+    <div class="m-c-letters" id="s" #mcLetters>
+
+      <div class="m-c-letter" *ngFor="let group of letterIDs">
+        <div
+          class="c-m-option"
+          *ngFor="let letterID of group" style="height: 75px;"
+          [class.destroy]="letterID[0] === letter && letterID === elToDestroy"
+          >
+          <button
+            class="m-circle-letter press"
+            (click)="onSelect(letterID)"
+            [disabled]="lettersValidation[letterID] === letterID"
+            [class.showOpt]="letterID[0] === letter && show === true"
+            [class.clear]="clearEl[letterID] === letterID"
+            >
+            {{letterID[0]}}
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <canvas #canvas id="canvas">no</canvas>
+
+    
+  </div>
+  
+  <!-- Succes animation -->
+  <app-success-animation *ngIf="success"></app-success-animation>
+  
+  <!-- Initial Spinner animation -->
+  <app-spinner *ngIf="loading"></app-spinner>
+</div>

@@ -1,0 +1,238 @@
+/*----- Styles desktop Version -----*/
+
+.desktop { overflow: auto; }
+
+.d-c-game {
+  width: 80%;
+  height: 80%;
+  max-width: 680px;
+  min-width: 420px;
+}
+
+.toolbar {
+  background: #1a6080;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+  box-sizing: border-box;
+  height: 60px;
+  width: 100%;
+  border-radius: 5px 5px 0 0;
+}
+
+.toolbar .count-try {
+  display: flex
+}
+
+.count-try span {
+  color: white;
+  display: flex;
+  min-width: 35px;
+  height: 35px;
+  justify-content: center;
+  align-items: center;
+  font-family: sans-serif;
+  font-weight: bold;
+  font-size: 25px;
+  border-radius: 2px;
+  border: 1.5px solid rgba(255, 255, 255, 0.8);
+  margin: 0 3px;
+  box-sizing: border-box;
+}
+
+.count-failed { background-color: #f73838; }
+
+.count-succes { background-color: #00aa4d; }
+
+.letter-container {
+  height: calc(100% - 60px);
+  min-width: 580px;
+  overflow: auto;
+  box-sizing: border-box;
+  background-color: rgba(17, 17, 17, 1);
+  border-radius: 0 0 5px 5px;
+  display: grid;
+  grid-template-columns: repeat(5, 100px);
+  justify-content: space-evenly;
+}
+
+.letter-container::-webkit-scrollbar {
+  display: none;
+}
+
+.c-m-option {
+  height: 75px;
+  margin: 3px 0;
+}
+
+.d-m-option {
+  height: 100px;
+  width:  100px;
+  margin: 5px;
+}
+
+.circle-letter {
+  width: 100px;
+  height: 100px;
+  font-size: 55px;
+  border-radius: 50%;
+  font-family: 'Noto Sans';
+  font-weight: 700;
+  outline: none;
+  box-sizing: border-box;
+  color: white;
+  border: none;
+  transition: 100ms cubic-bezier(0.075, 0.82, 0.165, 1);
+  background: radial-gradient(at right bottom, #FF5722 38%, #110000);
+  box-shadow: -8px -8px 72px rgba(0, 0, 0, 0.2) inset;
+
+}
+
+.help {
+  width: 28px;
+  height: 28px;
+  border-radius: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-weight: bolder;
+  font-size: 21px;
+  outline: none;
+  cursor: pointer;
+  box-sizing: border-box;
+  border: 1.5px solid rgba(255,255,255, .81);
+  background: linear-gradient(to right, #fe4344 40%, #f15737 70%, #f1743c 100%);
+  transition: 100ms;
+}
+
+
+/* Styles Mobile Version */
+
+.container.mobile {
+  background-color: #222222;
+}
+
+.m-c-game {
+  width: 100%;
+  height: calc(100vh - 56px);
+  display: inline-flex;
+  flex-direction: column;
+}
+
+.m-c-toolbar {
+  background: #1a6080;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+  box-sizing: border-box;
+  height: 40px;
+  width: 100%;
+}
+
+
+.m-c-count {
+  display: flex;
+}
+
+.m-c-count span{
+  color: white;
+  width: 25px;
+  height: 25px;
+  border: 1.5px solid rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 5px;
+  font-weight: bold;
+  border-radius: 3px;
+}
+
+.m-c-count .succes {
+  background-color: rgb(0, 150, 25);
+}
+
+.m-c-count .failed {
+  background-color: rgb(255, 39, 39);
+}
+
+.m-c-letters {
+  height: calc(100vh - 96px);
+  width: 100%;
+  color: white;
+  position: absolute;
+  top: 40px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 80px);
+  justify-content: space-around;
+  overflow: auto;
+}
+
+.m-c-letter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.m-circle-letter {
+  width: 75px;
+  height: 75px;
+  font-size: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin: 3px 0;
+  border-radius: 50%;
+  font-family: 'Noto Sans';
+  font-weight: 700;
+  outline: none;
+  box-sizing: border-box;
+  color: white;
+  border: none;
+  transition: 100ms cubic-bezier(0.075, 0.82, 0.165, 1);
+  background: radial-gradient(at right bottom, #FF5722 38%, #110000);
+  box-shadow: -8px -8px 72px rgba(0, 0, 0, 0.2) inset;
+  padding: 0;
+}
+
+canvas {
+  background-color: hsla(217, 64%, 6%, 1);
+  width: 100%;
+  height: calc(100% - 40px);
+}
+
+
+.m-circle-letter.showOpt {
+  background-color: #159e3e;
+  background: radial-gradient(at right bottom, #00d023 38%, #110000);
+}
+
+.circle-letter.showOpt {
+  background-color: #159e3e;
+  background: radial-gradient(at right bottom, #00d023 38%, #110000);
+}
+
+.destroy {
+  animation: quitar .4s;
+}
+
+.d-m-option.destroy {
+  animation: quitar2 .2s;
+}
+
+.m-circle-letter.clear {
+  display: none;
+}
+.circle-letter.clear {
+  display: none;
+}
+
+@keyframes quitar { 100% { height: 0px; } }
+@keyframes quitar2 { 100% { width: 0px; } }
+
+@media (min-width: 240px) and (orientation: landscape) {
+
+
+}

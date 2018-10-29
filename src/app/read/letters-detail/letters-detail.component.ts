@@ -237,10 +237,9 @@ export class LettersDetailComponent implements OnInit {
     this.success = true;
 
     const url    = `/lectura/juego/${this.letterParam}`;
-    const letter = JSON.parse(localStorage.getItem('letter_sounds'))[this.letterParam.toLowerCase()];
-    const msg    = `Bien... es momento de aprender a usar la letra: ${letter} `;
-    const speech = this.speech.speak(msg, .9).addEventListener('end', e => this.router.navigateByUrl(url));
-
+    const msg    = `Bien Hecho`;
+    const speech = this.speech.speak(msg, .8)
+    speech.addEventListener('end', e => this.router.navigateByUrl(url));
 
   }
 

@@ -24,6 +24,7 @@ import { DrawLetterComponent } from './read/draw-letter/draw-letter.component';
 import { SpinnerComponent } from './spinner/spinner.component';
 import { SuccessAnimationComponent } from './success-animation/success-animation.component';
 import { CatComponent } from './cat/cat.component';
+import { GameComponent } from './read/game/game.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { CatComponent } from './cat/cat.component';
     SpinnerComponent,
     SuccessAnimationComponent,
     CatComponent,
+    GameComponent,
   ],
   imports: [
     MaterialModule,

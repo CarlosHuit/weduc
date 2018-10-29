@@ -13,11 +13,6 @@
   position: relative;
 }
 
-
-
-
-/* ------------------------------------------------------- */
-
 .card-game {
   width: 94%;
   max-height: 720px;
@@ -43,7 +38,6 @@
   height: 100%;
   position: relative;
   border: 1px solid white;
-  /* box-sizing: border-box; */
   transform-style: preserve-3d;
   color: white;
   font-weight: bold;
@@ -51,17 +45,9 @@
   transition: 1s cubic-bezier(0.25, 0.46, 0.45, 2)
 }
 
-.active {
-  transform: rotateY(180deg);
-}
-
-.showAll {
-  transform: rotateY(180deg);
-}
-
-.deactivate {
-  transform: rotateY(0deg);
-}
+.active     { transform: rotateY(180deg); }
+.showAll    { transform: rotateY(180deg); }
+.deactivate { transform: rotateY(0deg);   }
 
 .lado {
   width: 100%;
@@ -84,50 +70,11 @@
   transform: rotateY(180deg);
 }
 
-@media (min-width: 320px) and (orientation: landscape) {
-
-  .card {
-    flex-direction: row;
-    justify-content: space-evenly;
-    align-items: center;
-  }
-
-  .letter-container {
-    height: 90%;
-    width: 35%;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .letter {
-    font-size: calc(100vw * .24);
-    margin: 0;
-  }
-
-  .c-game {
-    width: 58%;
-    height: 90%;
-    margin: 0;
-  }
-
-}
-
-
-
-
-
-
-
-
-
-
 
 /* target styles */
 .c-letter-presentation {
   position: absolute;
-  background-color: rgba(0, 0, 0, .90);
+  background-color: rgba(0, 0, 0, .98);
   width: 100%;
   height: 100%;
   top: 0;
@@ -170,17 +117,9 @@
 }
 
 @keyframes rotate {
-  30% {
-    transform: rotate(-20deg)
-  }
-
-  50% {
-    transform: rotate(0deg)
-  }
-
-  80% {
-    transform: rotate(20deg)
-  }
+  30% { transform: rotate(-20deg) }
+  50% { transform: rotate(0deg)   }
+  80% { transform: rotate(20deg)  }
 }
 
 .c-cat:active {
@@ -206,4 +145,38 @@
   bottom: 10%;
   width: 200px;
   font-size: 20px;
+}
+
+@media (min-width: 320px) and (orientation: landscape) {
+
+  .card-letter {
+    width: 85% ;
+    max-width: 640px ;
+    justify-content: space-around;
+    max-width: 600px;
+    max-height: 400px;
+  }
+
+  .c-cat {
+    right: calc((100% / 4) - 50px);
+    width: 120px;
+    height: 120px;
+    top: calc(100% / 6 );
+  }
+
+  .c-letter {
+    width: 100%;
+  }
+
+  .c-letter h1 {
+    text-align: left;
+    margin-left: calc(100% / 8);
+  }
+
+  .button-next {
+    margin-bottom: 0;
+    right: calc((100% / 4) - 90px);
+    bottom: calc(100% / 6);
+  }
+
 }
