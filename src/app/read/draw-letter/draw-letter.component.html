@@ -1,7 +1,10 @@
-<div class="container" *ngIf="!loading" >
+<div class="container" >
     <div 
       [class.container-slider]="isMobile() === false"
       [class.container-slider-mobile]="isMobile() === true"
+      class="hide"
+      *ngIf="!loading"
+      [class.show]="showDraw"
       >
       <div 
         class="slider"
@@ -29,7 +32,7 @@
       </div>
     </div>
   
-    <app-spinner *ngIf="loading"></app-spinner>
-    <app-success-animation *ngIf="success"></app-success-animation>
-  
+    <app-success-animation *ngIf="success" class="hideSuccess"  [class.showSuccess]="success === false"></app-success-animation>
+    <app-spinner-loading   *ngIf="loading"></app-spinner-loading>
+    
   </div>

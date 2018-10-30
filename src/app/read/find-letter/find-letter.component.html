@@ -1,0 +1,48 @@
+<div class="container">
+
+
+  <!-- Desktop Version -->
+  <div *ngIf="!loading && !isMobile()" class="modal modify">
+
+    <div class="container-img">
+      <img [src]="urlImage" (click)="speak()">
+    </div>
+
+    <div class="container-letters">
+      <button *ngFor="let letter of arrayIDs" class="option press" [class.select]="selection[letter] === letter"
+        [disabled]="selection[letter] === letter" [id]="letter" (click)="onSelect(letter)">
+        {{letter[0]}}
+      </button>
+    </div>
+
+    <button class="icon-help press" (click)="instructions()">?</button>
+
+
+  </div>
+
+
+  <!-- Mobile Version -->
+  <div *ngIf="!loading && isMobile()" class="card">
+
+    <div class="m-c-image">
+      <img class="press" [src]="urlImage" (click)="speak()">
+    </div>
+
+    <div class="m-c-word">
+      <button class="option" [class.select]="selection[letter] === letter" [disabled]="selection[letter] === letter"
+        [id]="letter" *ngFor="let letter of arrayIDs" (click)="onSelect(letter)">
+        {{letter[0]}}
+      </button>
+    </div>
+
+    <button class="icon-help move press" (click)="instructions()">?</button>
+
+  </div>
+
+
+  <!-- Animation Spinner -->
+  <app-spinner *ngIf="loading"></app-spinner>
+  <!-- Success Animation -->
+  <app-success-animation *ngIf="success"></app-success-animation>
+
+</div>

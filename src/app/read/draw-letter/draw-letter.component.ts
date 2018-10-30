@@ -41,6 +41,7 @@ export class DrawLetterComponent implements OnInit {
   userData: DrawLetterData = {};
 
   data = [];
+  showDraw: boolean;
 
   constructor(
     private coordinatesService: CoordinatesService,
@@ -53,6 +54,7 @@ export class DrawLetterComponent implements OnInit {
   ) {
     this.letterParam = this._route.snapshot.paramMap.get('letter');
     this.loading = true;
+    this.showDraw = false;
   }
 
   ngOnInit() {
@@ -68,6 +70,7 @@ export class DrawLetterComponent implements OnInit {
 
           this.currentCoordinates = this.coordinates.coordinates[this.currentLetter];
           this.loading = false;
+          setTimeout(() =>  this.showDraw = true , 10);
           this.initUserData();
 
         }
