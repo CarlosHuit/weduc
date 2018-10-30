@@ -8,19 +8,8 @@
     <h1 id="ltrUpper">{{letter}}</h1>
   </div>
 
-
-  <!-- Botones flotantes:: position absolute -->
-  <div class="player-wrapper board" (click)="showModal()">
-    <div class="player-circles">
-      <div class="circleq c-1"></div>
-      <div class="circleq c-2"></div>
-      <div class="circleq c-3"></div>
-    </div>
-    <div class="btnr player">
-      <div class="controler paused"></div>
-    </div>
-  </div>
-  <img (click)="limpiar()" class="icon-clear" src="/assets/icons/refresh.png" width="50" height="50">
-  <div class="arrow modify-board" (click)="nextLetter()"></div>
+  <mat-icon class="icon reload" (click)="showModal()"  >replay</mat-icon>
+  <mat-icon class="icon clear"  (click)="limpiar()"    >delete_forever</mat-icon>
+  <mat-icon class="icon next"   (click)="nextLetter()" >arrow_forward</mat-icon>
 
 </div>

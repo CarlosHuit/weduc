@@ -67,7 +67,7 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
 
     this.smoothing = 5;
     this.lineWidth = 14;
-    this.lineColor = '#1b64ac';
+    this.lineColor = '#007cc0';
     this.styleLine = 'round';
     this.velocity  = 150;
 
@@ -263,6 +263,25 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
     this.timeOutsGroup.forEach(e => clearTimeout(e));
     this.timeOutsLine.forEach(e => clearTimeout(e));
 
+  }
+
+  genSizes = (el: HTMLDivElement) => {
+    console.log(el.clientWidth);
+    if  (el.clientWidth < el.clientHeight) {
+
+      return {
+        width:  `${el.clientWidth * .90}px`,
+        height: `${el.clientWidth * .90}px`
+      };
+
+    } else {
+
+      return {
+        width:  `${el.clientHeight * .90}px`,
+        height: `${el.clientHeight * .90}px`
+      };
+
+    }
   }
 
   initUserData = () => {

@@ -1,17 +1,11 @@
 <div class="container-handwriting">
 
-    <div class="container-canvas">
-      <canvas id="canvasEl" #canvasDraw></canvas>
-    </div>
-  
-    <div class="btn-reload">
-      <button 
-      class="reloadSingle"
-      (click)="startExample()"
-      >
-    </button>
-    <!-- [disabled]="stateDisabled" -->
-    </div>
-    <button class="arrow hand press" (click)="hide()"></button>
-  
+  <div class="container-canvas">
+    <canvas id="canvasEl" #canvasDraw></canvas>
   </div>
+
+  <mat-icon class="icon reload press" (click)="startExample()"> replay </mat-icon>
+  <mat-icon class="icon arrow press"  (click)="hide()"        > arrow_forward </mat-icon>
+
+
+</div>

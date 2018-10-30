@@ -1,9 +1,7 @@
 .container-board {
-  background: linear-gradient(to top, #1c3643 0%, #245675 25%, #1877ad 100%);
+  background: linear-gradient(to top right, #0f587c 0%, #0d6297 25%, #1877ad 100%);
   height: 100%;
-  /* max-height: 600px; */
   width: 100%;
-  /* max-width: 600px; */
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -61,125 +59,50 @@ canvas {
   background-color: rgba(255, 255, 255, .75);
 }
 
-.icon-clear {
-  transition: .4s;
+
+
+.icon {
+  color: white;
+  /* font-weight: bold; */
+  font-size: 45px;
   position: absolute;
-  bottom: 15px;
-}
-
-.icon-clear:active {
-  transform: scale(.9, .9)
-}
-
-.arrow.modify-board {
-  transform: scale(.8);
-  position: absolute;
-  right: 5px;
-  bottom: 10px;
-}
-
-
-
-.player-wrapper {
+  bottom: 25px;
   width: 50px;
   height: 50px;
-  position: fixed;
-  bottom: 50px;
-  left: 50px;
-  transition: 200ms;
-}
-
-.player-wrapper:active {
-  transform: scale(.9, .9)
-}
-
-.player {
-  width: 50px;
-  height: 50px;
+  border: 2px solid white;
   border-radius: 50%;
-  z-index: 10;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: -webkit-linear-gradient(left, #fe4344 40%, #f15737 70%, #f1743c 100%);
-  background: -o-linear-gradient(right, #fe4344 40%, #f15737 70%, #f1743c 100%);
-  background: -moz-linear-gradient(right, #fe4344 40%, #f15737 70%, #f1743c 100%);
-  background: linear-gradient(to right, #fe4344 40%, #f15737 70%, #f1743c 100%);
-  position: absolute;
+  transition: 100ms;
 }
 
-.player-circles {
-  z-index: -1;
+.reload {
+  left: 25px;
+  background-color: orange;
 }
 
-.circleq {
-  background: rgba(255, 255, 255, 0.08);
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  position: absolute;
+.clear {
+  background-color: #ff3c41;
 }
 
-.c-1 {
-  animation: 2000ms scaleToggleOne infinite;
-}
-
-.c-2 {
-  animation: 2000ms scaleToggleOne infinite;
-  animation-delay: 300ms;
-}
-
-.c-3 {
-  animation: 2000ms scaleToggleOne infinite;
-  animation-delay: 600ms;
-}
-
-@keyframes scaleToggleOne {
-  0% {
-    -webkit-transform: scale(1);
-    transform: scale(1);
-  }
-
-  50% {
-    -webkit-transform: scale(1.3);
-    transform: scale(1.3);
-  }
-
-  100% {
-    -webkit-transform: scale(1);
-    transform: scale(1);
-  }
-}
-
-.player .paused {
-  border: 13px solid transparent;
-  border-left: 20px solid #f6f6f6;
-  border-right: 0;
-  margin-left: 2px;
-}
-
-
-
-.player-wrapper.board {
-  position: absolute;
-  bottom: 15px;
-  left: 15px;
-  transform: scale(1.1)
+.next {
+  right: 25px;
+  background-color: rgb(0, 128, 38);
 }
 
 @media (min-width: 320px) and (orientation: landscape) {
-
-  .icon-clear {
-    bottom: unset;
+  .reload {
+    top: 25px;
     right: 25px;
-    bottom: 100px;
-  }
-
-  .player-wrapper.board {
-    position: absolute;
     bottom: unset;
     left: unset;
-    right: 20px;
-    bottom: 170px;
   }
+
+  .clear {
+    right: 25px;
+    top: calc((100% / 2 ) - 27px);
+  }
+
+
 }
