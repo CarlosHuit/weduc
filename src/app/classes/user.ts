@@ -9,7 +9,7 @@ export class User {
     ) { }
 
     fullName() {
-        return `${this.lastName} ${this.firstName}`;
+        return `${this.firstName} ${this.lastName}`;
     }
 
 }
