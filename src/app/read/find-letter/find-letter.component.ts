@@ -1,12 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { GetDataService } from '../../services/get-data.service';
-import { SpeechSynthesisService } from '../../services/speech-synthesis.service';
-import { GenerateDatesService } from '../../services/generate-dates.service';
-import { SendDataService } from '../../services/send-data.service';
-import { DetectMobileService } from '../../services/detect-mobile.service';
-import { PreloadAudioService } from '../../services/preload-audio.service';
-import { Words } from '../../interfaces/words';
+import { Router, ActivatedRoute       } from '@angular/router';
+import { GetDataService               } from '../../services/get-data.service';
+import { SpeechSynthesisService       } from '../../services/speech-synthesis.service';
+import { GenerateDatesService         } from '../../services/generate-dates.service';
+import { SendDataService              } from '../../services/send-data.service';
+import { DetectMobileService          } from '../../services/detect-mobile.service';
+import { PreloadAudioService          } from '../../services/preload-audio.service';
+import { Words                        } from '../../interfaces/words';
+import { LocalStorageService          } from '../../services/local-storage.service';
+import { ShuffleService               } from '../../services/shuffle/shuffle.service';
 
 interface GuessLetterData {
   user_id?: string;
@@ -38,8 +40,8 @@ interface Selection {
 
 @Component({
   selector: 'app-find-letter',
-  templateUrl: './guess-find.component.html',
-  styleUrls: ['./guess-find.component.css']
+  templateUrl: './find-letter.component.html',
+  styleUrls: ['./find-letter.component.css']
 })
 export class FindLetterComponent implements OnInit, OnDestroy {
 
@@ -55,16 +57,19 @@ export class FindLetterComponent implements OnInit, OnDestroy {
   success: boolean;
 
   selection = {};
+  showC: boolean;
 
   constructor(
-    private router: Router,
-    private _route: ActivatedRoute,
-    private getData: GetDataService,
-    private speech: SpeechSynthesisService,
+    private router:   Router,
+    private _route:   ActivatedRoute,
+    private getData:  GetDataService,
+    private speech:   SpeechSynthesisService,
     private genDates: GenerateDatesService,
     private sendData: SendDataService,
-    private dMobile: DetectMobileService,
-    private _sound: PreloadAudioService
+    private _mobile:  DetectMobileService,
+    private _sound:   PreloadAudioService,
+    private _storage: LocalStorageService,
+    private _shuffle: ShuffleService,
   ) {
     this.loading = true;
     this.letterParam = this._route.snapshot.paramMap.get('letter');
@@ -73,24 +78,27 @@ export class FindLetterComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.setValues();
     this._sound.loadAudio();
+    window.addEventListener('resize', this.isMobile);
   }
 
   ngOnDestroy() {
     this.speech.cancel();
+    window.removeEventListener('resize', this.isMobile);
   }
 
   setValues = () => {
 
     if (Storage) {
 
-      const val = localStorage.getItem(this.letterParam);
+      const words = this._storage.getElement(this.letterParam);
 
-      if (val !== null && val !== 'undefined') {
+      if (words !== null) {
 
-        const words = JSON.parse(localStorage.getItem(this.letterParam));
-        this.words = words.sort(() => Math.random() - 0.5);
+        this.words = this._shuffle.mess(words);
         this.initUserData();
         this.changeDates(this.words[0]);
+        this.loading = false;
+        setTimeout(() => this.showC = true, 10);
         this.instructions();
 
 
@@ -132,7 +140,7 @@ export class FindLetterComponent implements OnInit, OnDestroy {
   }
 
   isMobile = (): boolean => {
-    return this.dMobile.isMobile();
+    return this._mobile.isMobile();
   }
 
   pendingLetters = () => {
@@ -156,7 +164,7 @@ export class FindLetterComponent implements OnInit, OnDestroy {
 
   onSelect = (id: string) => {
 
-    const txt = id[0];
+    const txt        = id[0];
     const validation = txt === this.letterParam.toLowerCase() || txt === this.letterParam.toUpperCase();
 
     if (validation) {
@@ -165,7 +173,7 @@ export class FindLetterComponent implements OnInit, OnDestroy {
 
       if (this.selection[id] !== id) { this.selection[id] = id; }
 
-      const p = this.pendingLetters();
+      const p      = this.pendingLetters();
       const speech = this.speech.speak('Correcto');
 
       speech.addEventListener('end', e => { const x = p === 0 ? this.next() : false; });
@@ -182,9 +190,9 @@ export class FindLetterComponent implements OnInit, OnDestroy {
 
     this.addData(this.word, 2011);
 
-    this.success = true;
+    this.success    = true;
     const nextIndex = this.words.indexOf(this.word) + 1;
-    const x = nextIndex < this.words.length ? this.changeWord(nextIndex) : this.redirect();
+    const x         = nextIndex < this.words.length ? this.changeWord(nextIndex) : this.redirect();
 
   }
 
@@ -228,22 +236,19 @@ export class FindLetterComponent implements OnInit, OnDestroy {
   instructions = () => {
 
     this.addData(this.word, 2015);
-    const sound = JSON.parse(localStorage.getItem('letter_sounds'))[this.letterParam];
+    const s   = this._storage.getElement('letter_sounds')[this.letterParam];
+    const msg = `Selecciona todas las letras ... ${s} ... de la palabra ... ${this.word}`;
 
-    setTimeout(() => {
-      const msg = `Selecciona todas las letras ${sound} de la palabra '${this.word}'`;
-      this.speech.speak(msg);
-    }, 500);
+    setTimeout(() =>  this.speech.speak(msg), 500);
 
   }
 
   changeDates = (word: string) => {
 
-    this.word = word;
-    this.letters = this.word.split('');
+    this.word     = word;
+    this.letters  = this.word.split('');
     this.urlImage = this.generateUrlImage(this.word);
     this.generateArrayIDs();
-    this.loading = false;
 
     this.addData(this.word, 2010);
 
@@ -254,6 +259,22 @@ export class FindLetterComponent implements OnInit, OnDestroy {
   speak = () => {
     this.addData(this.word, 2014);
     this.speech.speak(this.word);
+  }
+
+  genStyles = (el: HTMLDivElement) => {
+    const max = this.arrayIDs.length;
+    const l = el.clientWidth;
+    // return {
+    //   'width': `${(l / max) - 3}px`,
+    //   'color': 'red'
+    // };
+  }
+
+  genSizeDesk = (el: HTMLDivElement) => {
+    return {
+      'width': `${el.clientHeight}px`,
+      'heght': `${el.clientHeight}px`
+    };
   }
 
   initUserData = () => {

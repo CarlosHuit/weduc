@@ -31,7 +31,7 @@ const routes: Routes = [
   { path: 'lectura/detalle-letra/:letter',    component: LettersDetailComponent,          canActivate: [AuthGuard]        },
   { path: 'lectura/juego/:letter',            component: GameComponent,                   canActivate: [AuthGuard]        },
   { path: 'lectura/dibujar-letra/:letter',    component: DrawLetterComponent,             canActivate: [AuthGuard]        },
-  { path: 'lectura/encontrar-letra/:letter',  component: FindLetterComponent,             canActivate: [AuthGuard]        },
+  { path: 'lectura/encontrar-letras/:letter', component: FindLetterComponent,             canActivate: [AuthGuard]        },
   // { path: 'leer/target/:letter',              component: TargetComponent,                canActivate: [AuthGuard]        },
   // { path: 'leer/select-images/:letter',       component: SelectImagesComponent,          canActivate: [AuthGuard]        },
   // { path: 'leer/game/:letter',                component: GameComponent,                  canActivate: [AuthGuard]        },

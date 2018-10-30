@@ -37,6 +37,7 @@ export class DrawLetterComponent implements OnInit {
   coordinates: any;
   success = false;
   currentCoordinates: {};
+  urlToRedirect: string;
 
   userData: DrawLetterData = {};
 
@@ -55,6 +56,7 @@ export class DrawLetterComponent implements OnInit {
     this.letterParam = this._route.snapshot.paramMap.get('letter');
     this.loading = true;
     this.showDraw = false;
+    this.urlToRedirect = `lectura/encontrar-letras/${this.letterParam}`;
   }
 
   ngOnInit() {
@@ -168,7 +170,7 @@ export class DrawLetterComponent implements OnInit {
 
   redirect = (): void => {
 
-    const url = `leer/completar-palabra/${this.letterParam}`;
+    const url = `lectura/encontrar-letras/${this.letterParam}`;
     this.router.navigateByUrl(url);
 
   }
