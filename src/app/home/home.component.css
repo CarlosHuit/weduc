@@ -43,6 +43,8 @@
 
 .c-cards {
   width: 100%;
+  max-width: 1728px;
+  margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(auto-fill, 300px);
   justify-content: space-evenly;

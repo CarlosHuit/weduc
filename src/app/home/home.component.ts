@@ -104,22 +104,31 @@ export class HomeComponent implements OnInit {
 
   genCols = (el: HTMLDivElement) => {
 
-    const t = el.clientWidth % 320;
-    const margin = 5 * 4;
-    const minWidth = 300;
+    if (this.isMobile()) {
+      const t = el.clientWidth % 320;
+      const margin = 5 * 4;
+      const minWidth = 300;
 
-    if (t === 0) {
+      if (t === 0) {
 
-      return { 'grid-template-columns': `repeat(auto-fill, ${minWidth}px)`};
+        return { 'grid-template-columns': `repeat(auto-fill, ${minWidth}px)` };
 
-    } else {
-      const ts     = Math.floor(el.clientWidth / 300);
-      const ttt    = ts * margin;
-      const twidth = (el.clientWidth - ttt) / ts;
+      } else {
 
-      return ({ 'grid-template-columns': `repeat(auto-fill, ${twidth}px)` });
+        const ts = Math.floor(el.clientWidth / 300);
+        const ttt = ts * margin;
+        const twidth = (el.clientWidth - ttt) / ts;
+
+        return ({ 'grid-template-columns': `repeat(auto-fill, ${twidth}px)` });
+
+      }
 
     }
+
+    if (!this.isMobile()) {
+
+    }
+
   }
 
   searchCourses = (str: string) => {
