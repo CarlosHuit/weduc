@@ -7,6 +7,7 @@ import { SendDataService } from '../../services/send-data.service';
 import { DetectMobileService } from '../../services/detect-mobile.service';
 import { MenuData, Selection } from '../../interfaces/menu-data';
 import { WordsAndLetters } from '../../interfaces/words-and-letters';
+import { LocalStorageService } from '../../services/local-storage.service';
 
 @Component({
   selector: 'app-letters-menu',
@@ -20,30 +21,33 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
   styles: {};
   @ViewChild('contGrid') contGrid: ElementRef;
-  letters: string[] = [];
-  words: string[] = [];
-  storage: boolean;
+  data:          WordsAndLetters;
+  userData:      MenuData = {};
+  letters:       string[] = [];
+  words:         string[] = [];
+  storage:       boolean;
+  selected:      boolean;
+  showC:         boolean;
+  speaking:      boolean;
   currentLetter: string;
-  loading = true;
-  showModal = false;
-  data: WordsAndLetters;
-  userData: MenuData = {};
-  count = 0;
-  soundsLetters = {};
-  selections = {};
+  loading =      true;
+  showModal =    false;
 
-  wordsUrl = {};
-
-  learned = {};
-  selected: boolean;
+  count           = 0;
+  soundsLetters   = {};
+  selections      = {};
+  wordsUrl        = {};
+  learned         = {};
+  highlightLetter = {};
 
   constructor(
-    private getData: GetDataService,
+    private getData:         GetDataService,
     private speechSynthesis: SpeechSynthesisService,
-    private router: Router,
-    private sendData: SendDataService,
-    private genDate: GenerateDatesService,
-    private detMobile: DetectMobileService
+    private router:          Router,
+    private sendData:        SendDataService,
+    private genDate:         GenerateDatesService,
+    private detMobile:       DetectMobileService,
+    private _storage:        LocalStorageService
   ) {
     const l = JSON.parse(localStorage.getItem('learned_letters'));
     this.learned = l !== null ? l : {};
@@ -72,9 +76,7 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
     this.speechSynthesis.cancel();
   }
 
-  isMobile = (): boolean => {
-    return this.detMobile.isMobile();
-  }
+  isMobile = (): boolean =>  this.detMobile.isMobile();
 
   setInitialData = (data: WordsAndLetters) => {
 
@@ -109,6 +111,7 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
     }
 
     this.loading = false;
+    setTimeout(() =>  this.showC = true, 10);
 
   }
 
@@ -132,6 +135,41 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
     const t = JSON.parse(localStorage.getItem('letter_sounds'))[letter.toLowerCase()];
     this.speechSynthesis.speak(t, .8);
+
+  }
+
+  listenLetter = (letter: string, type: string) => {
+
+    this.speaking = true;
+    this.highlightLetter[letter] = letter;
+    this.highlightLetter['type'] = type;
+
+    const lSound = this._storage.getElement('letter_sounds')[letter];
+    const lType  = type === 'l' ? 'minúscula' : 'mayúscula';
+    const msg    = `${lSound} ... ${lType}`;
+
+    const speech = this.speechSynthesis.speak(msg, 0.8);
+    speech.addEventListener('end', () => (this.highlightLetter = {}, this.speaking = false));
+
+  }
+
+  listenWord = (letter: string) => {
+
+    const lSound = this._storage.getElement('letter_sounds')[letter];
+    const word   = this.wordsUrl[letter.toLowerCase()].toLowerCase();
+
+    if ( word[0] === letter.toLowerCase() ) {
+
+      const msg    = `${word} ... comienza con la letra ... ${lSound}`;
+      const speech = this.speechSynthesis.speak(msg, .95);
+
+    }
+
+    const lower = new RegExp(letter.toLowerCase().trim());
+
+    if ( word[0] !== letter.toLowerCase() && lower.test(word) ) {
+      const speech = `${word} contiene la letra ... ${lSound}`;
+    }
 
   }
 
@@ -234,7 +272,7 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
     */
 
-    genCols = (el: HTMLDivElement) => {
+  genCols = (el: HTMLDivElement) => {
 
     const t = el.clientWidth % 320;
     const margin = 5 * 4;

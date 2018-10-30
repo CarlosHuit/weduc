@@ -1,59 +1,101 @@
 <div #contGrid class="container">
 
-  <div [class.show]="!loading" *ngIf="!loading" class="m-c-title hide" (click)="instructions()"> El Abecedario </div>
 
-  <div class="c-cards" [ngStyle]="genCols(contGrid)" *ngIf="!loading">
+  <!-- Desktop Version -->
+  <div class="d-c-menu-letters" *ngIf="!loading && !isMobile()">
+    <!-- Title -->
+    <!-- <div [class.show]="showC" class="d-c-title hide" (click)="instructions()">
+      <h1> El Abecedario </h1>
+    </div> -->
 
-    <mat-card
-      *ngFor="let letter of letters"
-      class="m-c-card"
-      >
-
-
-      <mat-icon
-        class="ic-sound"
-        matSuffix
-        (click)="listenSoundLetter(letter)"
-        >
-        volume_up
-      </mat-icon>
-
-      <div
-        class="letters"
-        (click)="openModal(letter)"
-        >
-
-
-        <div class="upper" >
-          <button
-            [class.highlight]="selections[letter] === letter"
-            >
-            {{letter | uppercase}}
-          </button>
+    <!-- Card letters -->
+    <div class="d-c-cards">
+  
+      <mat-card  class="d-c-card" *ngFor="let letter of letters">
+  
+        <div class="d-c-image" (click)="listenWord(letter)">
+          <img [src]="getImage(letter)">
         </div>
-        <div class="lower">
-          <button
-            [class.highlight]="selections[letter] === letter"
-            >
-            {{letter | lowercase}}
-          </button>
+        
+        <div class="d-c-letters" >
+  
+          <div class="d-c-upper">
+            <button 
+              (click)="listenLetter(letter, 'u')"
+              [disabled]="speaking === true"
+              [class.highlight]="selections[letter] === letter"
+              [class.highlight]=" highlightLetter[letter] === letter &&
+                                  highlightLetter['type'] === 'u'"
+              >
+              {{letter | uppercase}}
+            </button>
+          </div>
+          <div class="d-c-lower">
+            <button
+              (click)="listenLetter(letter, 'l')"
+              [disabled]="speaking === true"
+              [class.highlight]="selections[letter] === letter"
+              [class.highlight]=" highlightLetter[letter] === letter &&
+                                  highlightLetter['type'] === 'l' "
+              >
+              {{letter | lowercase}}
+            </button>
+          </div>
+  
+          <i *ngIf="learned[letter] === letter" class="star resize"></i>
+  
         </div>
 
-        <i *ngIf="learned[letter] === letter" class="star resize"></i>
-
-      </div>
-
-      <div
-        class="image"
-        (click)="openModal(letter)"
-        >
-        <img [src]="getImage(letter)">
-      </div>
-
-    </mat-card>
+        <button class="d-c-button" (click)="openModal(letter)" mat-raised-button color="warn">Empezar</button>
+        <mat-icon class="d-ic-sound" (click)="listenSoundLetter(letter)">volume_up</mat-icon>
+  
+      </mat-card>
+  
+    </div>
 
   </div>
 
-  <!-- Spinner animation component -->
+
+
+
+
+  <!-- Mobile Version -->
+  <div class="m-c-menu-letters" *ngIf="!loading && isMobile()">
+    <!-- Title -->
+    <div [class.show]="showC" class="m-c-title hide" (click)="instructions()"> El Abecedario </div>
+    <!-- Card letters -->
+    <div class="c-cards" [ngStyle]="genCols(contGrid)">
+  
+      <mat-card *ngFor="let letter of letters" class="m-c-card">
+  
+        <mat-icon class="ic-sound" (click)="listenSoundLetter(letter)">volume_up</mat-icon>
+  
+        <div class="letters" (click)="openModal(letter)">
+  
+  
+          <div class="upper">
+            <button [class.highlight]="selections[letter] === letter">
+              {{letter | uppercase}}
+            </button>
+          </div>
+          <div class="lower">
+            <button [class.highlight]="selections[letter] === letter">
+              {{letter | lowercase}}
+            </button>
+          </div>
+  
+          <i *ngIf="learned[letter] === letter" class="star resize"></i>
+  
+        </div>
+  
+        <div class="image" (click)="openModal(letter)"> <img [src]="getImage(letter)"> </div>
+  
+      </mat-card>
+  
+    </div>
+
+  </div>
+
+
   <app-spinner-loading *ngIf="loading"></app-spinner-loading>
 </div>
