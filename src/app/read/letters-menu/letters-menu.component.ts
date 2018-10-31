@@ -1,13 +1,15 @@
 import { Component, OnInit, ViewChild, OnDestroy, ElementRef, EventEmitter } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router                 } from '@angular/router';
 import { SpeechSynthesisService } from '../../services/speech-synthesis.service';
-import { GenerateDatesService } from '../../services/generate-dates.service';
-import { GetDataService } from '../../services/get-data.service';
-import { SendDataService } from '../../services/send-data.service';
-import { DetectMobileService } from '../../services/detect-mobile.service';
-import { MenuData, Selection } from '../../interfaces/menu-data';
-import { WordsAndLetters } from '../../interfaces/words-and-letters';
-import { LocalStorageService } from '../../services/local-storage.service';
+import { GenerateDatesService   } from '../../services/generate-dates.service';
+import { GetDataService         } from '../../services/get-data.service';
+import { SendDataService        } from '../../services/send-data.service';
+import { DetectMobileService    } from '../../services/detect-mobile.service';
+import { MenuData, Selection    } from '../../interfaces/menu-data';
+import { WordsAndLetters        } from '../../interfaces/words-and-letters';
+import { LocalStorageService    } from '../../services/local-storage.service';
+import { ChangeDetectorRef      } from '@angular/core';
+import { MediaMatcher           } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-letters-menu',
@@ -16,6 +18,8 @@ import { LocalStorageService } from '../../services/local-storage.service';
 })
 
 export class LettersMenuComponent implements OnInit, OnDestroy {
+
+  mobileQuery: MediaQueryList;
 
   @ViewChild('containerDetail') containerDetail: ElementRef;
 
@@ -39,18 +43,23 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
   wordsUrl        = {};
   learned         = {};
   highlightLetter = {};
+  private _mQueryListener: () => void;
 
   constructor(
-    private getData:         GetDataService,
-    private speechSynthesis: SpeechSynthesisService,
-    private router:          Router,
-    private sendData:        SendDataService,
-    private genDate:         GenerateDatesService,
-    private detMobile:       DetectMobileService,
-    private _storage:        LocalStorageService
+    private speechSynthesis:   SpeechSynthesisService,
+    private genDate:           GenerateDatesService,
+    private detMobile:         DetectMobileService,
+    private _storage:          LocalStorageService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private getData:           GetDataService,
+    private sendData:          SendDataService,
+    private media:             MediaMatcher,
+    private router:            Router,
   ) {
-    const l = JSON.parse(localStorage.getItem('learned_letters'));
-    this.learned = l !== null ? l : {};
+    this.learned         = _storage.getElement('learned_letters') !== null ? _storage.getElement('learned_letters') : {};
+    this.mobileQuery     = media.matchMedia('(min-width: 1440)');
+    this._mQueryListener = () => changeDetectorRef.detectChanges();
+    this.mobileQuery.addListener(this._mQueryListener);
   }
 
   ngOnInit() {
@@ -74,6 +83,7 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.speechSynthesis.cancel();
+    this.mobileQuery.removeListener(this._mQueryListener);
   }
 
   isMobile = (): boolean =>  this.detMobile.isMobile();

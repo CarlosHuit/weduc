@@ -6,9 +6,15 @@
     <!-- Title -->
     
     <!-- Card letters -->
-    <div class="d-c-cards">
+
+    <div class="d-c-combinations">
+      <mat-card>Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto, temporibus sed quaerat cumque veritatis blanditiis vitae vel id tenetur consequatur consectetur velit obcaecati a cupiditate saepe non, hic nostrum similique?</mat-card>
+      <mat-card>Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto, temporibus sed quaerat cumque veritatis blanditiis vitae vel id tenetur consequatur consectetur velit obcaecati a cupiditate saepe non, hic nostrum similique?</mat-card>
+    </div>
+
+    <div #cCards class="d-c-cards">
         <div [class.show]="showC" class="d-c-title hide" (click)="instructions()">
-          <h1> El Abecedario </h1>
+          <h1 [style.fontSize.px]="cCards.clientWidth * 0.08" > El Abecedario </h1>
         </div>
       <div class="d-c-grids">
         <mat-card  class="d-c-card" *ngFor="let letter of letters">
@@ -56,7 +62,10 @@
 
     <div class="d-c-progress">
       <mat-card>
-        Progreso de aprendizaje
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos sunt at soluta aliquid eius esse omnis, error illum mollitia est facere in, saepe eaque ipsa sapiente! Ullam non corrupti tempora!
+      </mat-card>
+      <mat-card>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos sunt at soluta aliquid eius esse omnis, error illum mollitia est facere in, saepe eaque ipsa sapiente! Ullam non corrupti tempora!
       </mat-card>
     </div>
 
