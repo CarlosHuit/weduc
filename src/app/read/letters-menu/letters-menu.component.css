@@ -6,8 +6,11 @@
 /* ---------- Desktop version ---------- */
 
 .d-c-menu-letters {
-  min-width: 720px;
+  min-width: 890px;
   height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 75% 25%;
 }
 
 .d-c-title {
@@ -19,25 +22,37 @@
 
 .d-c-title h1 {
   margin: 0;
+  width: 100%;
   color: #222222;
   text-align: center;
-  font-size: 80px;
+  font-size: calc(100% * 4);
 }
 
 .d-c-cards {
+  width: 98.5%;
+  height: 100%;
+  min-height: 680px;
+  overflow: auto;
+  margin: 0 auto;
+  margin-top: 10px;
+  background-color: white;
+  box-shadow: 0 2px 1px -1px rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .0), 0 1px 3px 0 rgba(0, 0, 0, 0);
+  padding: 20px 5px;
+  padding: 15px;
+  box-sizing: border-box;
+  box-shadow: 0 2px 1px -1px rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .14), 0 1px 3px 0 rgba(0, 0, 0, .12);
+  border-radius: 4px;
+  padding-top: 0;
+}
+
+.d-c-grids {
   display: grid;
   grid-template-columns: repeat(auto-fill, 300px);
   grid-auto-rows: 360px;
   grid-gap: 40px 20px;
-  justify-content: center;
+  justify-content: space-evenly;
   width: 90%;
-  margin: 0 auto;
-  background-color: white;
-  box-shadow: 0 2px 1px -1px rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .0), 0 1px 3px 0 rgba(0, 0, 0, 0);
-  padding: 35px 0;
-  box-shadow: 0 2px 1px -1px rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .14), 0 1px 3px 0 rgba(0, 0, 0, .12);
-  border-radius: 4px;
-  margin-bottom: 30px;
+  width: 100%
 }
 
 .d-c-card {
@@ -83,6 +98,11 @@
   height: 140px;
   width: 140px;
   cursor: pointer;
+  transition: 100ms;
+}
+
+.d-c-image img:active {
+  transform: scale(.97)
 }
 
 .d-c-letters {
@@ -107,12 +127,6 @@
 .d-c-letters .d-c-lower button:disabled {
   color: black;
 }
-/* .d-c-letters .d-c-upper .highlight,
-.d-c-letters .d-c-lower .highlight {
-  color: rgb(255, 191, 0) !important;
-  -webkit-text-stroke: 2px #202020;
-} */
-
 
 .d-c-button {
   font-size: 20px;
@@ -141,6 +155,19 @@
 .d-ic-sound:active {
   transform: scale(.95);
 }
+
+/* section progress style */
+
+.d-c-progress {
+  width: 98%;
+  min-height: 250px;
+  margin: 0 auto;
+  margin-top: 10px;
+  margin-right: 2%;
+}
+
+
+
 
 
 

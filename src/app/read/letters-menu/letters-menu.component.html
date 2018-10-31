@@ -4,53 +4,60 @@
   <!-- Desktop Version -->
   <div class="d-c-menu-letters" *ngIf="!loading && !isMobile()">
     <!-- Title -->
-    <!-- <div [class.show]="showC" class="d-c-title hide" (click)="instructions()">
-      <h1> El Abecedario </h1>
-    </div> -->
-
+    
     <!-- Card letters -->
     <div class="d-c-cards">
-  
-      <mat-card  class="d-c-card" *ngFor="let letter of letters">
-  
-        <div class="d-c-image" (click)="listenWord(letter)">
-          <img [src]="getImage(letter)">
+        <div [class.show]="showC" class="d-c-title hide" (click)="instructions()">
+          <h1> El Abecedario </h1>
         </div>
-        
-        <div class="d-c-letters" >
-  
-          <div class="d-c-upper">
-            <button 
-              (click)="listenLetter(letter, 'u')"
-              [disabled]="speaking === true"
-              [class.highlight]="selections[letter] === letter"
-              [class.highlight]=" highlightLetter[letter] === letter &&
-                                  highlightLetter['type'] === 'u'"
-              >
-              {{letter | uppercase}}
-            </button>
+      <div class="d-c-grids">
+        <mat-card  class="d-c-card" *ngFor="let letter of letters">
+    
+          <div class="d-c-image" (click)="listenWord(letter)">
+            <img [src]="getImage(letter)">
           </div>
-          <div class="d-c-lower">
-            <button
-              (click)="listenLetter(letter, 'l')"
-              [disabled]="speaking === true"
-              [class.highlight]="selections[letter] === letter"
-              [class.highlight]=" highlightLetter[letter] === letter &&
-                                  highlightLetter['type'] === 'l' "
-              >
-              {{letter | lowercase}}
-            </button>
+          
+          <div class="d-c-letters" >
+    
+            <div class="d-c-upper">
+              <button 
+                (click)="listenLetter(letter, 'u')"
+                [disabled]="speaking === true"
+                [class.highlight]="selections[letter] === letter"
+                [class.highlight]=" highlightLetter[letter] === letter &&
+                                    highlightLetter['type'] === 'u'"
+                >
+                {{letter | uppercase}}
+              </button>
+            </div>
+            <div class="d-c-lower">
+              <button
+                (click)="listenLetter(letter, 'l')"
+                [disabled]="speaking === true"
+                [class.highlight]="selections[letter] === letter"
+                [class.highlight]=" highlightLetter[letter] === letter &&
+                                    highlightLetter['type'] === 'l' "
+                >
+                {{letter | lowercase}}
+              </button>
+            </div>
+    
+            <i *ngIf="learned[letter] === letter" class="star resize"></i>
+    
           </div>
   
-          <i *ngIf="learned[letter] === letter" class="star resize"></i>
+          <button class="d-c-button" (click)="openModal(letter)" mat-raised-button color="warn">Empezar</button>
+          <mat-icon class="d-ic-sound" (click)="listenSoundLetter(letter)">volume_up</mat-icon>
+    
+        </mat-card>
+      </div>
   
-        </div>
+    </div>
 
-        <button class="d-c-button" (click)="openModal(letter)" mat-raised-button color="warn">Empezar</button>
-        <mat-icon class="d-ic-sound" (click)="listenSoundLetter(letter)">volume_up</mat-icon>
-  
+    <div class="d-c-progress">
+      <mat-card>
+        Progreso de aprendizaje
       </mat-card>
-  
     </div>
 
   </div>
