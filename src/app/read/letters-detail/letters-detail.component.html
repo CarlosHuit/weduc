@@ -1,5 +1,55 @@
 <div class="container">
-  <div class="c-detail-letter hide" [class.show]="showContainer">
+
+
+<!-- Desktop Version -->
+  <div class="c-detail-letter hide"  *ngIf="isMobile()" [class.show]="showContainer">
+
+    <div  #card class="card-game center">
+
+      <div #cCard class="container-cards" [ngStyle]="style(card)">
+        <div
+          *ngFor="let x of currentIds"
+          [id]="x"
+          #option
+          (click)="onSelect(x)"
+          class="carta active"
+          [class.showAll]="show === true"
+          [class.active]="active === true && x === sel1 || x === sel2"
+          >
+          <div class="lado frente"></div>
+          <div [ngStyle]="calcFZ(option)" class="lado atras">{{x[0]}}</div>
+        </div>
+      </div>
+
+
+    </div>
+
+    <div *ngIf="showTarget" class="c-letter-presentation" [class.hide]="hideTarget">
+      <mat-card class="card-letter">
+
+        <div class="c-cat" (click)="listenMsg()">
+          <app-cat></app-cat>
+        </div>
+
+        <div class="c-letter" (click)="listenLetter()">
+          <h1>{{currentLetter}}</h1>
+        </div>
+
+        <button
+          color="warn"
+          (click)="continue()"
+          mat-raised-button
+          class="button-next"
+          >
+          Siguiente
+        </button>
+
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Mobile version -->
+  <div class="c-detail-letter hide" *ngIf="!isMobile()" [class.show]="showContainer">
 
     <div  #card class="card-game center">
 
