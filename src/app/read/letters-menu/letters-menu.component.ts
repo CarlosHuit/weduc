@@ -43,6 +43,35 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
   wordsUrl        = {};
   learned         = {};
   highlightLetter = {};
+  lettersLeared   = ['a', 'b', 'c', 'd'];
+  sortAlphaState  = true;
+  sortRatingState = false;
+  sortedState     = {alpha: true, rating: false };
+
+  learneds = [
+    { letter: 'a', rating: 4, },
+    { letter: 'b', rating: 3, },
+    { letter: 'c', rating: 4, },
+    { letter: 'd', rating: 3, },
+    { letter: 'e', rating: 2, },
+    { letter: 'f', rating: 5, },
+    { letter: 'g', rating: 5, },
+    // { letter: 'm', rating: 4, },
+    // { letter: 'o', rating: 2, },
+    // { letter: 'p', rating: 2, },
+    // { letter: 'q', rating: 2, },
+    // { letter: 'r', rating: 2, },
+    // { letter: 's', rating: 2, },
+  ].sort( (a, b) => {
+
+    if (a.letter > b.letter) { return  1; }
+    if (a.letter < b.letter) { return -1; }
+
+    return 0;
+    // return b.rating - a.rating;
+  });
+
+
   private _mQueryListener: () => void;
 
   constructor(
@@ -97,7 +126,7 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
     /* Se selecciona la imagen */
     words.forEach(e => this.wordsUrl[e.l] = e.w[this.randomInt(0, e.w.length)]);
 
-    this.letters = letters.alphabet.split('');
+    this.letters = this.deleteLearnedLetters(letters.alphabet.split(''));
     this.soundsLetters = letters.sound_letters;
 
     if (Storage) {
@@ -125,9 +154,77 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
   }
 
-  getImage = (letter) => `/assets/img100X100/${this.wordsUrl[letter]}-min.png`;
+  deleteLearnedLetters = (alp: string[]) => {
 
-  genUrl = (word: string) => `/assets/img100X100/${word}-min.png`;
+    const newAlphabet = alp;
+    this.learneds.forEach(x => {
+        const index = newAlphabet.indexOf(x.letter);
+        if (index > -1) {
+          newAlphabet.splice(index, 1);
+       }
+    });
+
+    return newAlphabet;
+  }
+
+  sortAlpha = () => {
+
+    this.sortRatingState    = false;
+    this.sortedState.alpha  = true;
+    this.sortedState.rating = false;
+
+    if (!this.sortAlphaState) {
+
+      this.learneds.sort((a, b) => {
+
+        if (a.letter > b.letter) { return 1; }
+        if (a.letter < b.letter) { return -1; }
+        return 0;
+      });
+
+      this.sortAlphaState  = !this.sortAlphaState;
+
+    } else {
+
+      this.learneds.sort((b, a) => {
+
+        if (a.letter > b.letter) { return 1; }
+        if (a.letter < b.letter) { return -1; }
+
+        return 0;
+      });
+
+      this.sortAlphaState = !this.sortAlphaState;
+
+    }
+  }
+
+  sortRating = () => {
+
+    this.sortAlphaState     = false;
+    this.sortedState.alpha  = false;
+    this.sortedState.rating = true;
+
+    if (!this.sortRatingState) {
+
+      this.learneds.sort((a, b) =>  b.rating - a.rating);
+      this.sortRatingState = !this.sortRatingState;
+
+    } else {
+
+      this.learneds.sort((b, a) =>  b.rating - a.rating);
+      this.sortRatingState = !this.sortRatingState;
+
+    }
+  }
+
+  getImage = (letter) => {
+    return `/assets/img100X100/${this.wordsUrl[letter]}-min.png`;
+  }
+
+  genUrl = (word: string) => {
+    return `/assets/img100X100/${word}-min.png`;
+  }
 
   instructions = (type?: string) => {
 
@@ -139,7 +236,18 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
   }
 
-  randomInt = (min = 0, max) => Math.floor(Math.random() * (max - min)) + min;
+  countStars = (rating: number) => {
+    const t = [];
+    for (let i = 0; i < rating; i++) {
+      t.push('');
+    }
+
+    return t;
+  }
+
+  randomInt = (min = 0, max) => {
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
 
   listenSoundLetter = (letter: string) => {
 
@@ -183,7 +291,9 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
   }
 
-  openModal = (letter: string) => !this.selected ? this.redirect(letter) : null;
+  openModal = (letter: string) => {
+    return !this.selected ? this.redirect(letter) : null;
+  }
 
   redirect = (letter: string) => {
     this.selected = true;

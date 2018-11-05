@@ -1,147 +1,101 @@
-<div #contGrid class="container" [style.overflow]="isMobile() ? 'auto' : 'hidden'">
+<div #contGrid class="container" [style.overflow]="isMobile() ? 'auto' : 'auto'">
 
 
   <!-- Desktop Version -->
   <div class="d-c-menu-letters" *ngIf="!loading && !isMobile()">
-    <!-- Title -->
-    
+
     <!-- Card letters -->
 
-    <div class="d-c-combinations">
-      <mat-card>Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto, temporibus sed quaerat cumque veritatis blanditiis vitae vel id tenetur consequatur consectetur velit obcaecati a cupiditate saepe non, hic nostrum similique?</mat-card>
-      <mat-card>Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto, temporibus sed quaerat cumque veritatis blanditiis vitae vel id tenetur consequatur consectetur velit obcaecati a cupiditate saepe non, hic nostrum similique?</mat-card>
-    </div>
+    <mat-card class="d-c-combinations">
+      lksjflksd
+
+      <button>ss</button>
+    </mat-card>
 
     <div #cCards class="d-c-cards">
-        <div [class.show]="showC" class="d-c-title hide" (click)="instructions()">
-          <h1 [style.fontSize.px]="cCards.clientWidth * 0.08" > El Abecedario </h1>
-        </div>
+      <div [class.show]="showC" class="d-c-title hide" (click)="instructions()">
+        <h1 [style.fontSize.px]="cCards.clientWidth * 0.08"> El Abecedario </h1>
+      </div>
       <div class="d-c-grids">
-        <mat-card  class="d-c-card" *ngFor="let letter of letters">
-    
+        <mat-card class="d-c-card" *ngFor="let letter of letters">
+
           <div class="d-c-image" (click)="listenWord(letter)">
             <img [src]="getImage(letter)">
           </div>
-          
-          <div class="d-c-letters" >
-    
+
+          <div class="d-c-letters">
+
             <div class="d-c-upper">
-              <button 
-                (click)="listenLetter(letter, 'u')"
-                [disabled]="speaking === true"
-                [class.highlight]="selections[letter] === letter"
+              <button (click)="listenLetter(letter, 'u')" [disabled]="speaking === true" [class.highlight]="selections[letter] === letter"
                 [class.highlight]=" highlightLetter[letter] === letter &&
-                                    highlightLetter['type'] === 'u'"
-                >
+                                    highlightLetter['type'] === 'u'">
                 {{letter | uppercase}}
               </button>
             </div>
             <div class="d-c-lower">
-              <button
-                (click)="listenLetter(letter, 'l')"
-                [disabled]="speaking === true"
-                [class.highlight]="selections[letter] === letter"
+              <button (click)="listenLetter(letter, 'l')" [disabled]="speaking === true" [class.highlight]="selections[letter] === letter"
                 [class.highlight]=" highlightLetter[letter] === letter &&
-                                    highlightLetter['type'] === 'l' "
-                >
+                                    highlightLetter['type'] === 'l' ">
                 {{letter | lowercase}}
               </button>
             </div>
-    
+
             <i *ngIf="learned[letter] === letter" class="star resize"></i>
-    
+
           </div>
-  
+
           <button class="d-c-button" (click)="openModal(letter)" mat-raised-button color="warn">Empezar</button>
           <mat-icon class="d-ic-sound" (click)="listenSoundLetter(letter)">volume_up</mat-icon>
-    
+
         </mat-card>
       </div>
-  
+
     </div>
 
     <mat-card class="d-c-progress">
 
-      <div>
-        
+      <div class="d-c-progress-title">
+        <h2>Progreso</h2>
       </div>
 
-      <mat-accordion>
+      <div class="d-c-icons-sorted">
+        <button mat-button (click)="sortAlpha()">
+          <mat-icon [class.bold]="sortedState['alpha'] === true">sort_by_alpha</mat-icon>
+        </button>
+        <button mat-button (click)="sortRating()">
+          <mat-icon [class.bold]="sortedState['rating'] === true">sort</mat-icon>
+        </button>
+      </div>
 
-        <mat-expansion-panel>
-          <mat-expansion-panel-header [style.height.px]="80" >
 
-            <div style="width: 90%; display: flex; justify-content: space-between; align-items: center;" >
-              <h1 style="text-align: center; margin: 0; font-size: 28px; font-weight: bolder; font-family: 'Noto Sans', sans-serif;" >A a</h1>
+      <div class="d-c-letters-learned">
+        <mat-accordion>
 
-              <div>
-                <mat-icon style="color: gold; text-shadow: 0px 0px 1px black;" >star</mat-icon>
-                <mat-icon style="color: gold; text-shadow: 0px 0px 1px black;" >star</mat-icon>
-                <mat-icon style="color: gold; text-shadow: 0px 0px 1px black;" >star</mat-icon>
+          <mat-expansion-panel *ngFor="let il of learneds">
+
+            <mat-expansion-panel-header [style.height.px]="80" >
+
+              <div style="width: 90%; display: flex; justify-content: space-between; align-items: center;">
+
+                <h1 style="text-align: center; margin: 0; font-size: 28px; font-weight: bolder; font-family: 'Noto Sans', sans-serif;">
+                  {{il.letter | uppercase}} {{il.letter | lowercase}}
+                </h1>
+
+                <div>
+                  <mat-icon *ngFor="let k of countStars(il.rating)" style="color: gold; text-shadow: 0px 0px 1px black;">star</mat-icon>
+                </div>
               </div>
-            </div>
 
-          </mat-expansion-panel-header>
+            </mat-expansion-panel-header>
 
-          This the expansion 1 content
+            <ng-template matExpansionPanelContent>
+              Some deferred content
+            </ng-template>
 
-        </mat-expansion-panel>
+          </mat-expansion-panel>
 
-        <mat-expansion-panel>
-          <mat-expansion-panel-header [style.height.px]="80" >
-
-            <div style="width: 90%; display: flex; justify-content: space-between; align-items: center;" >
-              <h1 style="text-align: center; margin: 0; font-size: 28px; font-weight: bolder; font-family: 'Noto Sans', sans-serif;" >B b</h1>
-
-              <div>
-                <mat-icon style="color: gold; text-shadow: 0px 0px 1px black;" >star</mat-icon>
-                <mat-icon style="color: gold; text-shadow: 0px 0px 1px black;" >star</mat-icon>
-              </div>
-            </div>
-
-          </mat-expansion-panel-header>
-
-          This the expansion 1 content
-
-        </mat-expansion-panel>
-
-        <mat-expansion-panel>
-          <mat-expansion-panel-header [style.height.px]="80" >
-
-            <div style="width: 90%; display: flex; justify-content: space-between; align-items: center;" >
-              <h1 style="text-align: center; margin: 0; font-size: 28px; font-weight: bolder; font-family: 'Noto Sans', sans-serif;" >C c</h1>
-
-              <div>
-                <mat-icon style="color: gold; text-shadow: 0px 0px 1px black;" >star</mat-icon>
-                <mat-icon style="color: gold; text-shadow: 0px 0px 1px black;" >star</mat-icon>
-              </div>
-            </div>
-
-          </mat-expansion-panel-header>
-
-          This the expansion 1 content
-
-        </mat-expansion-panel>
-
-        <mat-expansion-panel>
-          <mat-expansion-panel-header [style.height.px]="80" >
-
-            <div style="width: 90%; display: flex; justify-content: space-between; align-items: center;" >
-              <h1 style="text-align: center; margin: 0; font-size: 28px; font-weight: bolder; font-family: 'Noto Sans', sans-serif;" >D d</h1>
-
-              <div>
-                <mat-icon style="color: gold; text-shadow: 0px 0px 1px black;" >star</mat-icon>
-                <mat-icon style="color: gold; text-shadow: 0px 0px 1px black;" >star</mat-icon>
-              </div>
-            </div>
-
-          </mat-expansion-panel-header>
-
-          This the expansion 1 content
-
-        </mat-expansion-panel>
-
-      </mat-accordion>
+        </mat-accordion>
+      </div>
 
     </mat-card>
 
@@ -157,14 +111,14 @@
     <div [class.show]="showC" class="m-c-title hide" (click)="instructions()"> El Abecedario </div>
     <!-- Card letters -->
     <div class="c-cards" [ngStyle]="genCols(contGrid)">
-  
+
       <mat-card *ngFor="let letter of letters" class="m-c-card">
-  
+
         <mat-icon class="ic-sound" (click)="listenSoundLetter(letter)">volume_up</mat-icon>
-  
+
         <div class="letters" (click)="openModal(letter)">
-  
-  
+
+
           <div class="upper">
             <button [class.highlight]="selections[letter] === letter">
               {{letter | uppercase}}
@@ -175,15 +129,15 @@
               {{letter | lowercase}}
             </button>
           </div>
-  
+
           <i *ngIf="learned[letter] === letter" class="star resize"></i>
-  
+
         </div>
-  
+
         <div class="image" (click)="openModal(letter)"> <img [src]="getImage(letter)"> </div>
-  
+
       </mat-card>
-  
+
     </div>
 
   </div>
