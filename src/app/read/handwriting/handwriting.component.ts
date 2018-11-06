@@ -1,6 +1,7 @@
 import { Component, ViewChild, OnInit, Output, ElementRef, AfterViewInit, Input, OnDestroy, EventEmitter } from '@angular/core';
 import { SpeechSynthesisService } from '../../services/speech-synthesis.service';
 import { GenerateDatesService } from '../../services/generate-dates.service';
+import { DetectMobileService } from '../../services/detect-mobile.service';
 
 interface HandwritingData {
   startTime?:  string;
@@ -19,7 +20,7 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
 
 
   @Input() coordinates: any;
-  @Input() letter: string;
+  @Input() letter:      string;
 
   @ViewChild('canvasDraw') canvasEl: ElementRef;
   @Output() propagar = new EventEmitter<string>();
@@ -27,22 +28,22 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
   private ctx: CanvasRenderingContext2D;
   private canvas: HTMLCanvasElement;
 
-  cw: number;
-  ch: number;
-  lineWidth: number;
-  lineColor: string;
-  styleLine: string;
-  smoothing: number;
+  cw:         number;
+  ch:         number;
+  lineWidth:  number;
+  lineColor:  string;
+  styleLine:  string;
+  smoothing:  number;
 
-  type: string;
-  info: any[] = [];
-  tiempos: any[] = [];
+  type:       string;
+  info:       any[] = [];
+  tiempos:    any[] = [];
   totalTimes: any[] = [];
-  velocity: number;
-  timeClear: any;
+  velocity:   number;
+  timeClear:  any;
 
   // stateDisabled = true;
-  timeOutsLine = [];
+  timeOutsLine  = [];
   timeOutsGroup = [];
 
   userData: HandwritingData = {};
@@ -50,14 +51,12 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
 
   constructor(
     private speechSynthesis: SpeechSynthesisService,
-    private genDates: GenerateDatesService
+    private genDates: GenerateDatesService,
+    private _mobile:  DetectMobileService
   ) {
   }
 
   ngAfterViewInit() {
-  }
-
-  ngOnInit() {
 
     this.canvas = this.canvasEl.nativeElement;
     this.ctx    = this.canvas.getContext('2d');
@@ -73,6 +72,11 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
 
     this.initUserData();
     this.startExample();
+  }
+
+  ngOnInit() {
+
+
 
   }
 
@@ -178,6 +182,7 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
 
   }
 
+  isMobile = () => this._mobile.isMobile();
 
   startExample = () => {
 

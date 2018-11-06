@@ -1,7 +1,26 @@
-<div class="container-board" >
+<div class="container-board" *ngIf="!isMobile()" >
+
+  <div class="d-c-container-canvas">
+      <hr class="line-guide one">
+      <hr class="line-guide two">
+      <hr class="line-guide three">
+    <canvas class="d-c-canvas" id="canvasEl" #canvasEl></canvas>
+  </div>
+
+  <div class="title">
+    <h1 id="ltrUpper">{{letter}}</h1>
+  </div>
+
+  <mat-icon class="icon reload" (click)="showModal()"  >replay</mat-icon>
+  <mat-icon class="icon clear"  (click)="limpiar()"    >delete_forever</mat-icon>
+  <mat-icon class="icon next"   (click)="nextLetter()" >arrow_forward</mat-icon>
+
+</div>
+
+<div class="container-board" *ngIf="isMobile()" >
 
   <div class="container-canvas">
-    <canvas id="canvasEl" #canvasEl></canvas>
+    <canvas class="m-c-canvas" id="canvasEl" #canvasEl></canvas>
   </div>
 
   <div class="title">

@@ -1,52 +1,16 @@
 .container-board {
   background: linear-gradient(to top right, #0f587c 0%, #0d6297 25%, #1877ad 100%);
-  height: 100%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
+  height:     100%;
+  width:      100%;
+  display:    flex;
+
+  flex-direction:  column;
   justify-content: space-evenly;
-  align-items: center;
-  padding: 10px;
+  align-items:     center;
+
+  padding:    10px;
   box-sizing: border-box;
-  position: relative;
-}
-
-.modal.board {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  border-radius: 4px;
-  border: none;
-}
-
-.slider {
-  width: 200%;
-  height: 100%;
-  transition: 1.3s cubic-bezier(0.19, 1, 0.22, 1);
-}
-
-.show-draw {
-  transform: translateX(-50%)
-}
-
-.box {
-  width: 50%;
-  height: 100%;
-  display: inline-block;
-}
-
-.title h1 {
-  margin: 0;
-  color: rgb(255, 255, 255);
-  font-size: 210px;
-  font-family: 'Noto Sans';
-  font-weight: normal;
-  margin: 0 12px;
-  -webkit-text-stroke: 3px black;
-}
-
-.title {
-  position: absolute;
+  position:   relative;
 }
 
 .container-canvas {
@@ -54,27 +18,62 @@
   border-radius: 2px;
 }
 
-canvas {
+.d-c-container-canvas {
+  height: 300px;
+  z-index: 20;
+  position: relative;
+}
+
+.line-guide {
+  position: absolute;
+  width:    100%;
+  border:   0.8px solid rgba(43, 145, 191, .35);
+  margin:   0
+}
+
+.one   { top: 15% }
+.two   { top: 40% }
+.three { top: 75% }
+
+.d-c-canvas {
+  background-color: rgba(255, 255, 255, .75);
+  border: 3px solid rgb(40,40,40);
+  height: 100%;
+  z-index: 50;
+}
+
+.title h1 {
+  font-family:  'Noto Sans';
+  margin:       0;
+  font-size:    210px;
+  margin:       0 12px;
+  font-weight:  normal;
+  color:      rgb(255, 255, 255);
+  -webkit-text-stroke: 3px black;
+}
+
+.title {
+  position: absolute;
+}
+
+.m-c-canvas {
   border: 2px solid rgb(29, 29, 29);
   background-color: rgba(255, 255, 255, .75);
 }
 
-
-
 .icon {
-  color: white;
-  /* font-weight: bold; */
-  font-size: 45px;
-  position: absolute;
-  bottom: 25px;
-  width: 50px;
-  height: 50px;
-  border: 2px solid white;
-  border-radius: 50%;
-  display: flex;
+  color:        white;
+  font-size:       45px;
+  position:        absolute;
+  bottom:          25px;
+  width:           50px;
+  height:          50px;
+  border:          2px solid white;
+  border-radius:   50%;
+  display:         flex;
   justify-content: center;
-  align-items: center;
-  transition: 100ms;
+  align-items:     center;
+  transition:      100ms;
 }
 
 .reload {

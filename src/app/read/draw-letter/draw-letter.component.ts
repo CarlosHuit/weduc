@@ -1,12 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { CoordinatesService, Coordinates } from '../../services/coordinates.service';
-import { Router, ActivatedRoute } from '@angular/router';
-import { HandwritingComponent } from '../handwriting/handwriting.component';
-import { BoardComponent } from '../board/board.component';
-import { SpeechSynthesisService } from '../../services/speech-synthesis.service';
-import { GenerateDatesService } from '../../services/generate-dates.service';
-import { SendDataService } from '../../services/send-data.service';
-import { DetectMobileService } from '../../services/detect-mobile.service';
+import { Component, OnInit, ViewChild     } from '@angular/core';
+import { CoordinatesService, Coordinates  } from '../../services/coordinates.service';
+import { Router, ActivatedRoute           } from '@angular/router';
+import { HandwritingComponent             } from '../handwriting/handwriting.component';
+import { BoardComponent                   } from '../board/board.component';
+import { SpeechSynthesisService           } from '../../services/speech-synthesis.service';
+import { GenerateDatesService             } from '../../services/generate-dates.service';
+import { SendDataService                  } from '../../services/send-data.service';
+import { DetectMobileService              } from '../../services/detect-mobile.service';
 
 export interface DrawLetterData {
   user_id?: string;
@@ -29,33 +29,33 @@ export class DrawLetterComponent implements OnInit {
   @ViewChild(HandwritingComponent) handWriting: HandwritingComponent;
   @ViewChild(BoardComponent) boardComponent: BoardComponent;
 
-  letterParam: string;
-  loading: boolean;
-  letters: string[] = [];
-  currentLetter: string;
-  showBoard: boolean;
-  coordinates: any;
-  success = false;
-  currentCoordinates: {};
-  urlToRedirect: string;
+  letters:        string[] = [];
+  letterParam:    string;
+  currentLetter:  string;
+  urlToRedirect:  string;
+  loading:        boolean;
+  showBoard:      boolean;
+  showDraw:       boolean;
+  coordinates:    any;
+  success =       false;
 
+  currentCoordinates:        {};
   userData: DrawLetterData = {};
 
   data = [];
-  showDraw: boolean;
 
   constructor(
     private coordinatesService: CoordinatesService,
-    private _route: ActivatedRoute,
-    private router: Router,
-    private speech: SpeechSynthesisService,
-    private genDates: GenerateDatesService,
-    private sendData: SendDataService,
-    private dMobile: DetectMobileService
+    private _route:             ActivatedRoute,
+    private router:             Router,
+    private speech:             SpeechSynthesisService,
+    private genDates:           GenerateDatesService,
+    private sendData:           SendDataService,
+    private dMobile:            DetectMobileService
   ) {
-    this.letterParam = this._route.snapshot.paramMap.get('letter');
-    this.loading = true;
-    this.showDraw = false;
+    this.letterParam   = this._route.snapshot.paramMap.get('letter');
+    this.loading       = true;
+    this.showDraw      = false;
     this.urlToRedirect = `lectura/encontrar-letras/${this.letterParam}`;
   }
 

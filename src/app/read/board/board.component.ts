@@ -1,9 +1,10 @@
 import { Component, OnDestroy, ViewChild, ElementRef, AfterViewInit, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { CoordinatesService, Coordinates } from '../../services/coordinates.service';
-import { SpeechSynthesisService } from '../../services/speech-synthesis.service';
-import { Router, ActivatedRoute } from '@angular/router';
-import { GenerateDatesService } from '../../services/generate-dates.service';
-import { SoundService } from '../../services/sound.service';
+import { SpeechSynthesisService          } from '../../services/speech-synthesis.service';
+import { Router, ActivatedRoute          } from '@angular/router';
+import { GenerateDatesService            } from '../../services/generate-dates.service';
+import { SoundService                    } from '../../services/sound.service';
+import { DetectMobileService } from '../../services/detect-mobile.service';
 
 interface BoardData {
   startTime?:   string;
@@ -57,7 +58,8 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
     private soundService:      SoundService,
     private speechSynthesis:   SpeechSynthesisService,
     private coordinateService: CoordinatesService,
-    private genDates:          GenerateDatesService
+    private genDates:          GenerateDatesService,
+    private _mobile:           DetectMobileService
   ) {
     this.success = false;
     this.letterParam = this._route.snapshot.paramMap.get('letter');
@@ -66,15 +68,21 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
   ngAfterViewInit() {
     this.canvas = this.canvasEl.nativeElement as HTMLCanvasElement;
     this.ctx    = this.canvas.getContext('2d');
-    this.cw     = this.canvas.width = 300;
-    this.ch     = this.canvas.height = 300;
+
+    if (this.isMobile()) {
+      this.cw     = this.canvas.width  = 300;
+      this.ch     = this.canvas.height = 300;
+    } else {
+      this.cw     = this.canvas.width  = 600;
+      this.ch     = this.canvas.height = 300;
+    }
 
     this.dibujar = false;
     this.traces = [];
     this.points = [];
 
     this.smoothing = 5; // 5
-    this.lineWidth = 16;
+    this.lineWidth = 12;
     this.lineColor = '#1b64ac';
     this.styleLine = 'round';
 
@@ -92,6 +100,7 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
     this.speechSynthesis.cancel();
   }
 
+  isMobile = () => this._mobile.isMobile();
 
   showModal = (): void => {
     this.showDraw = false;

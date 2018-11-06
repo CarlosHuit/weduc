@@ -1,7 +1,28 @@
-<div class="container-handwriting">
+<div class="d-c-handwriting center" *ngIf="!isMobile()">
+
+  <div class="d-c-container-canvas center">
+    <hr class="line-guide one">
+    <hr class="line-guide two">
+    <hr class="line-guide three">
+    <!-- <hr class="line-guide four"> -->
+    <canvas
+      id="canvasEl"
+      #canvasDraw
+      style="z-index: 20"
+      >
+    </canvas>
+  </div>
+
+</div>
+
+<div class="container-handwriting" *ngIf="isMobile()">
 
   <div class="container-canvas">
-    <canvas id="canvasEl" #canvasDraw></canvas>
+    <canvas
+      id="canvasEl"
+      #canvasDraw
+      >
+    </canvas>
   </div>
 
   <mat-icon class="icon reload press" (click)="startExample()"> replay </mat-icon>

@@ -1,17 +1,17 @@
-<div class="container" >
+<div class="container" style="overflow: auto">
     <div 
       [class.container-slider]="isMobile() === false"
       [class.container-slider-mobile]="isMobile() === true"
       class="hide"
-      *ngIf="!loading"
+      *ngIf="!loading && !isMobile()"
       [class.show]="showDraw"
       >
       <div 
-        class="slider"
+        class="d-c-slider"
         [class.show-board]="showBoard === true"
         >
   
-        <div class="box one">
+        <div class="d-c-box one">
           <app-handwriting
             [letter]="currentLetter"
             [coordinates]="currentCoordinates"
@@ -20,7 +20,7 @@
           </app-handwriting>
         </div>
   
-        <div class="box two">
+        <div class="d-c-box two">
           <app-board
             [letter]="currentLetter"
             (showHandwriting)="showHandWriting($event)"
@@ -32,6 +32,40 @@
       </div>
     </div>
   
+    
+    <div 
+      *ngIf="!loading && isMobile()"
+      [class.container-slider]="isMobile() === false"
+      [class.container-slider-mobile]="isMobile() === true"
+      class="hide"
+      [class.show]="showDraw"
+      >
+      <div 
+        class="slider"
+        [class.show-board]="showBoard === true"
+        >
+
+        <div class="box one">
+          <app-handwriting
+            [letter]="currentLetter"
+            [coordinates]="currentCoordinates"
+            (propagar)="showBoardC($event)"
+            >
+          </app-handwriting>
+        </div>
+
+        <div class="box two">
+          <app-board
+            [letter]="currentLetter"
+            (showHandwriting)="showHandWriting($event)"
+            (next)="next($event)"
+            >
+          </app-board>
+        </div>
+
+      </div>
+    </div>
+
     <app-success-animation *ngIf="success" class="hideSuccess"  [class.showSuccess]="success === false"></app-success-animation>
     <app-spinner-loading   *ngIf="loading"></app-spinner-loading>
     
