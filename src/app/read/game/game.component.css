@@ -2,11 +2,27 @@
 
 .desktop { overflow: auto; }
 
+/* .d-c-game {
+  width: 80%;
+  height: 80%;
+  max-width: 680px;
+  min-width: 420px; */
+/* } */
+
 .d-c-game {
   width: 80%;
   height: 80%;
   max-width: 680px;
-  min-width: 420px;
+  max-height: 720px;
+  position: relative;
+}
+
+.d-c-game .m-c-letters {
+  height: calc(100% - 40px);
+}
+
+.d-c-game .m-c-letters::-webkit-scrollbar {
+  display: none;
 }
 
 .toolbar {
@@ -114,6 +130,7 @@
   display: inline-flex;
   flex-direction: column;
   z-index: 20;
+  transition: 0ms;
 }
 
 .m-c-toolbar {

@@ -1,7 +1,7 @@
-<div class="container" [class.desktop]="!isMobile" >
+<div class="container" [class.desktop]="!isMobile()" >
 
   <!-- Desktop version -->
-  <div class="d-c-game" *ngIf="!isMobile" >
+  <!-- <div #mcGame class="d-c-game" *ngIf="!isMobile()" >
 
     <div class="toolbar">
 
@@ -34,12 +34,11 @@
       </div>
     </div>
 
-  </div>
-
-
+  </div> -->
 
   <!-- Mobile Version -->
-  <div #mcGame class="m-c-game hide" [class.show]="showGame"  *ngIf="isMobile" >
+  <!-- <div #mcGame class="m-c-game hide" [class.show]="showGame"  *ngIf="isMobile()" > -->
+  <div #mcGame class="m-c-game hide" [class.show]="showGame" [class.d-c-game]="!isMobile()" >
 
     <div class="m-c-toolbar" #toolbGame >
       <div class="m-c-count">

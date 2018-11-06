@@ -48,7 +48,7 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   show              = false;
   loading:          boolean;
   success:          boolean;
-  isMobile:         boolean;
+  showGame:         boolean;
   letterParam:      string;
   elToDestroy:      string;
   urlToRedirect:    string;
@@ -60,7 +60,6 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   userData:         Option     = {};
   mcGameEl:         HTMLDivElement;
   lettersData:      RandomSimilarLetters;
-  showGame: boolean;
 
 
 
@@ -80,7 +79,6 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     this.success       = false;
     this.loading       = true;
     this.letterParam   = this._route.snapshot.paramMap.get('letter');
-    this.isMobile      = this.detectMobile.isMobile();
     this.urlToRedirect = `lectura/dibujar-letra/${this.letterParam}`;
   }
 
@@ -95,7 +93,9 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
       this.letters     = this.joinLetters(this.letterIDs);
 
       setTimeout(e => this.loading = false, 0);
-      window.addEventListener('resize', e => setTimeout(() => this.restartData(), 100));
+
+      window.addEventListener('resize', e => setTimeout(() => this.restartData(), 0));
+      window.addEventListener('resize', e => setTimeout(() => this.isMobile(), 10));
 
       this.initUserData();
       this.instructions();
@@ -113,6 +113,8 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     this._sound.loadAudio();
 
   }
+
+  isMobile = () => this.detectMobile.isMobile();
 
   getLettersRandom = () => {
     this.getData.getRandomSimilarLetters(this.letterParam)
@@ -160,6 +162,7 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
       const el = array.splice(0, max);
       result.push(el);
     }
+    console.log(result);
     return result;
   }
 
@@ -177,6 +180,7 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
 
   restartData = () => {
 
+
     this.lettersValidation = {};
     this.clearEl = {};
     this.restartCounters();
@@ -186,16 +190,17 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
 
       if (letter === 'lower') {
 
-        this.letterIDs   = this.prepareData(this.lettersData.lowerCase);
-        this.letters     = this.joinLetters(this.letterIDs);
+        this.letterIDs = this.prepareData(this.lettersData.lowerCase);
+        this.letters = this.joinLetters(this.letterIDs);
 
       } else {
 
-        this.letterIDs   = this.prepareData(this.lettersData.upperCase);
-        this.letters     = this.joinLetters(this.letterIDs);
+        this.letterIDs = this.prepareData(this.lettersData.upperCase);
+        this.letters = this.joinLetters(this.letterIDs);
 
       }
     }, 50);
+
 
   }
 
