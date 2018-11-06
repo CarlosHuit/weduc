@@ -2,7 +2,7 @@
 
 
 <!-- Desktop Version -->
-  <div class="c-detail-letter hide"  *ngIf="isMobile()" [class.show]="showContainer">
+  <div class="d-c-detail-letter hide"  *ngIf="isMobile() === false" [class.show]="showContainer">
 
     <div  #card class="card-game center">
 
@@ -21,17 +21,20 @@
         </div>
       </div>
 
-
     </div>
 
-    <div *ngIf="showTarget" class="c-letter-presentation" [class.hide]="hideTarget">
-      <mat-card class="card-letter">
+    <div *ngIf="showTarget" class="d-c-letter-presentation" [class.hide]="hideTarget">
 
-        <div class="c-cat" (click)="listenMsg()">
+      <mat-card class="d-c-card-letter">
+
+        <div
+          class="d-c-cat"
+          (click)="listenMsg()"
+          >
           <app-cat></app-cat>
         </div>
 
-        <div class="c-letter" (click)="listenLetter()">
+        <div class="d-c-letter" (click)="listenLetter()">
           <h1>{{currentLetter}}</h1>
         </div>
 
@@ -39,17 +42,19 @@
           color="warn"
           (click)="continue()"
           mat-raised-button
-          class="button-next"
+          class="d-c-button-next"
           >
           Siguiente
         </button>
 
       </mat-card>
+
     </div>
+
   </div>
 
   <!-- Mobile version -->
-  <div class="c-detail-letter hide" *ngIf="!isMobile()" [class.show]="showContainer">
+  <div class="c-detail-letter hide" *ngIf="isMobile() === true" [class.show]="showContainer">
 
     <div  #card class="card-game center">
 

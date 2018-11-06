@@ -1,40 +1,29 @@
-<div class="container" style="display: block" >
+<div class="container" style="display: block">
 
-  <div
-    class="c-desktop hide"
-    [class.show]="!loading" 
-    *ngIf="!loading && !isMobile()"
-    >
+  <div class="c-desktop hide" [class.show]="!loading" *ngIf="!loading && isMobile() === false">
 
-    <div #cdVideo class="c-d-video-desc"  >
+    <div #cdVideo class="c-d-video-desc">
 
       <!-- Video -->
       <div #videoDesktop class="c-d-video">
 
-          <iframe
-            style="
+        <iframe style="
                 position: absolute;
                 top: 0;
                 left: 0;
                 width: 100%;
                 height: 100%;"
-            width="1012"
-            height="569"
-            [src]="videoUrl"
-            frameborder="0"
-            allow="autoplay; encrypted-media"
-            allowfullscreen
-            >
-          </iframe>
-      
+          width="1012" height="569" [src]="videoUrl" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
+        </iframe>
+
 
       </div>
       <!-- Description -->
       <div class="c-d-description">
 
-        <mat-card class="c-d-detail" >
+        <mat-card class="c-d-detail">
 
-          <div class="title-course" >
+          <div class="title-course">
             <img [src]="genUrlImg()">
             <h1 style="text-transform: capitalize">{{data.title}}</h1>
           </div>
@@ -44,10 +33,7 @@
           </div>
 
           <div class="c-button">
-            <button
-              (click)="redirect(data.title, data.subtitle)"
-              mat-flat-button color="warn"
-              >
+            <button (click)="redirect(data.title, data.subtitle)" mat-flat-button color="warn">
               Empezar Curso
             </button>
           </div>
@@ -60,25 +46,14 @@
     <div class="c-d-comments">
 
       <mat-card class="c-d-addComent">
-        <mat-form-field color="primary" style="width: 90%" >
+        <mat-form-field color="primary" style="width: 90%">
           <mat-label>Escribe tu comentario:</mat-label>
-          <textarea 
-            matInput
-            cdkTextareaAutosize
-            #autosize="cdkTextareaAutosize"
-            cdkAutosizeMinRows="1"
-            cdkAutosizeMaxRows="5"
-            #commentText
-            ></textarea>
+          <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
+            cdkAutosizeMaxRows="5" #commentText></textarea>
         </mat-form-field>
 
         <div>
-          <button
-            mat-raised-button
-            color="warn"
-            (click)="addComment(commentText)"
-            [disabled]="commentText.value === ''"
-            >
+          <button mat-raised-button color="warn" (click)="addComment(commentText)" [disabled]="commentText.value === ''">
             Agregar Comentario
           </button>
         </div>
@@ -86,17 +61,11 @@
       </mat-card>
 
       <!-- Coments -->
-      <mat-card class="card-comment" *ngFor="let item of comments"  >
+      <mat-card class="card-comment" *ngFor="let item of comments">
 
-        <div class="comment-author" >
-          <img
-            mat-card-avatar
-            [src]="item.avatar"
-            class="author-avatar"
-            >
-          <p
-            class="author-name"
-            >
+        <div class="comment-author">
+          <img mat-card-avatar [src]="item.avatar" class="author-avatar">
+          <p class="author-name">
             {{item.user}}
           </p>
         </div>
@@ -106,61 +75,99 @@
         </mat-card-content>
 
       </mat-card>
-      
+
     </div>
 
   </div>
 
 
-
-
-
-
-  <div class="hide" [class.show]="!loading"  *ngIf="!loading && isMobile()" style="overflow: auto">
+  <div class="hide" [class.show]="!loading" *ngIf="!loading && isMobile() === true" style="overflow: auto">
 
     <div #cBackgroundVideo [class.unsetHeight]="unsetHeight === true" class="container-background-video">
-      <div class="c-video" [ngStyle]="genSizes(cBackgroundVideo)">
-        <iframe
-          style="
+      <!-- <div class="c-video" [ngStyle]="genSizes(cBackgroundVideo)"> -->
+      <div class="c-video">
+
+        <iframe style="
               position: absolute;
               top: 0;
               left: 0;
               width: 100%;
               height: 100%;"
-          width="1012"
-          height="569"
-          [src]="videoUrl"
-          frameborder="0"
-          allow="autoplay; encrypted-media"
-          allowfullscreen
-          >
+          width="1012" height="569" [src]="videoUrl" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
         </iframe>
-    
+
       </div>
     </div>
 
-    <mat-card class="c-detail" >
-      <div class="title-course" >
-        <img [src]="genUrlImg()" alt="">
-        <h1 class="" style="text-transform: capitalize" >{{data.title}}</h1>
-      </div>
-      <div class="c-description">
-        <p>{{data.description}}</p>
-      </div>
-      <div class="c-button">
-        <!-- <button mat-raised-button>Regresar</button> -->
-        <button (click)="redirect(data.title, data.subtitle)" mat-flat-button color="warn">Empezar Curso</button>
-      </div>
-    </mat-card>
+
+    <div class="m-c-detail-course">
+
+      <mat-tab-group color="accent" backgroundColor="warn" mat-align-tabs="start">
+
+        <mat-tab label="Detalle">
+
+          <div class="m-c-description">
+            <mat-card class="c-detail">
+              <div class="title-course">
+                <img [src]="genUrlImg()" alt="">
+                <h1 class="" style="text-transform: capitalize">{{data.title}}</h1>
+              </div>
+              <div class="c-description">
+                <p>{{data.description}}</p>
+              </div>
+              <div class="c-button">
+                <button (click)="redirect(data.title, data.subtitle)" mat-flat-button color="warn">Empezar Curso</button>
+              </div>
+            </mat-card>
+          </div>
+
+
+        </mat-tab>
+
+        <mat-tab label="Comentarios">
+
+          <div class="m-c-comments">
+            <mat-card class="m-c-addComent">
+              <mat-form-field color="primary" style="width: 90%">
+                <mat-label>Escribe tu comentario:</mat-label>
+                <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
+                  cdkAutosizeMaxRows="5" #commentText></textarea>
+              </mat-form-field>
+
+              <div>
+                <button mat-raised-button color="warn" (click)="addComment(commentText)" [disabled]="commentText.value === ''">
+                  Agregar Comentario
+                </button>
+              </div>
+
+            </mat-card>
+
+            <mat-card *ngFor="let item of comments" class="m-c-box-comment">
+              <div class="comment-author">
+                <img mat-card-avatar [src]="item.avatar" class="author-avatar">
+                <p class="author-name">
+                  {{item.user}}
+                </p>
+              </div>
+
+              <mat-card-content>
+                <p>{{item.comment}}</p>
+              </mat-card-content>
+            </mat-card>
+
+          </div>
+          
+        </mat-tab>
+
+      </mat-tab-group>
+
+    </div>
+
+
 
   </div>
 
-  <div
-    *ngIf="loading"
-    id="loading"
-    style=" display:flex; justify-content:center; align-items:center "
-  >
-  </div>
+  <div *ngIf="loading" id="loading" style=" display:flex; justify-content:center; align-items:center "></div>
 
 
 

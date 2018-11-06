@@ -56,12 +56,6 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
     { letter: 'e', rating: 2, },
     { letter: 'f', rating: 5, },
     { letter: 'g', rating: 5, },
-    // { letter: 'm', rating: 4, },
-    // { letter: 'o', rating: 2, },
-    // { letter: 'p', rating: 2, },
-    // { letter: 'q', rating: 2, },
-    // { letter: 'r', rating: 2, },
-    // { letter: 's', rating: 2, },
   ].sort( (a, b) => {
 
     if (a.letter > b.letter) { return  1; }
@@ -139,7 +133,7 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
       // a list of words is saved for each letter
       words.forEach(el => localStorage.setItem(el.l, JSON.stringify(el.w)));
-      this.letters.forEach(x => {
+      letters.alphabet.split('').forEach(x => {
         const lower = similarLetters.find(e => e.l === x.toLowerCase());
         const upper = similarLetters.find(e => e.l === x.toUpperCase());
         const d = {};
@@ -156,15 +150,10 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
   deleteLearnedLetters = (alp: string[]) => {
 
-    const newAlphabet = alp;
-    this.learneds.forEach(x => {
-        const index = newAlphabet.indexOf(x.letter);
-        if (index > -1) {
-          newAlphabet.splice(index, 1);
-       }
-    });
+    const nAlph = alp;
+    this.learneds.forEach(x => nAlph.indexOf(x.letter) > -1 ? nAlph.splice(nAlph.indexOf(x.letter), 1) : false);
+    return nAlph;
 
-    return newAlphabet;
   }
 
   sortAlpha = () => {

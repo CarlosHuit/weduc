@@ -26,13 +26,11 @@
   box-sizing: border-box;
 }
 
-
 .c-d-detail {
   width: 90%;
   margin: 0 auto;
   margin-bottom: 20px;
 }
-
 
 .c-d-comments {
   width: 100%;
@@ -55,8 +53,6 @@
   margin: 0 auto;
 }
 
-
-
 .card-comment {
   margin: 10px;
 }
@@ -67,7 +63,10 @@
   display: flex;
   align-items: center;
   margin-bottom: 10px;
-  color: #0791e6;
+  color: #4a74ff;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #c0c0c0
+
 }
 
 .author-avatar {
@@ -79,28 +78,6 @@
   font-weight: bold;
   font-size: 20px;
 }
-
-
-
-
-.example-card {
-  max-width: 400px;
-}
-
-.example-header-image {
-  background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
-  background-size: cover;
-}
-
-
-
-
-
-
-
-
-
-
 
 .container {
   overflow: overlay
@@ -131,10 +108,29 @@
   height: max-content;
 }
 
+
+
+/* detail course descriprion + comments */
+
+.m-c-detail-course {
+  width: 100%;
+  height: max-content;
+  background-color: white;
+  
+}
+
+.m-c-description {
+  width: 100%;
+  padding: 2%;
+  box-sizing: border-box;
+  background-color: #eaecee;
+}
+
 .c-detail {
-  margin-bottom: 3px;
-  width: 89%;
-  margin: 8px auto;
+  width: 90%;
+  margin: 0 auto;
+  background-color: white;
+
 
 }
 
@@ -176,6 +172,21 @@
   font-size: 20px;
 }
 
+.m-c-comments {
+  width: 100%;
+  padding: 10px 3%;
+  box-sizing: border-box;
+  background-color: #eaecee;
+}
+
+.m-c-addComent {
+  margin-bottom: 10px;
+}
+
+.m-c-box-comment {
+  margin-bottom: 10px;
+}
+
 
 @media (min-width: 320px) and (orientation: landscape) {
 
@@ -197,21 +208,10 @@
 
   .c-video {
     position: relative;
-    width: 82%;
+    width: calc(((100vh - 56px) / 9) * 16);
     margin: 0 auto;
-    margin-bottom: 0px;
-    padding-top: 46.125%;
+    height: calc(100vh - 56px);
+    padding: 0;
   }
 
 }
-
-
-/* 
-
-position: relative;
-    width: 567.1111111111111px;
-    margin: 0 auto;
-    margin-bottom: 20px;
-    padding-top: 319px;
-
-*/

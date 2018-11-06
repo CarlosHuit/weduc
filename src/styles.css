@@ -116,6 +116,21 @@ body {
   min-width: unset !important;
 }
 
+.mat-tab-label .mat-tab-label-content {
+  font-weight: bold;
+  font-size: 18px;
+  font-family: sans-serif, 'Noto Sans';
+}
+
+.mat-tab-group.mat-background-warn .mat-tab-header, .mat-tab-group.mat-background-warn .mat-tab-links, .mat-tab-nav-bar.mat-background-warn .mat-tab-header, .mat-tab-nav-bar.mat-background-warn .mat-tab-links {
+  background-color: #1a5e7e;
+}
+
+.mat-tab-group.mat-accent .mat-ink-bar, .mat-tab-nav-bar.mat-accent .mat-ink-bar {
+  background-color: #f44336;
+  height: 4px;
+}
+
 /* .mat-expansion-panel-header {
   height: 80px !important;
 } */

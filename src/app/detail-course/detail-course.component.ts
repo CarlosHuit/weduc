@@ -73,74 +73,27 @@ export class DetailCourseComponent implements OnInit, OnDestroy {
     this._courses.getCourseData(this.course)
       .subscribe(
         (res: Subjects) => {
-          this.data = res;
+          this.data     = res;
           this.videoUrl = this._sanitizer.bypassSecurityTrustResourceUrl(this.data.urlVideo);
-          this.loading = false;
+          this.loading  = false;
         },
         err => console.log(err)
       );
 
-    if (this._mobile.isMobile()) {
-      window.addEventListener('resize', e => this.genSizes(this.cBackgroundVideo.nativeElement));
-    }
+      (window as any).addEventListener('resize', () => this._mobile.isMobile());
 
   }
 
+
+
+
+  ngOnDestroy() {
+    window.removeEventListener('resize', () => this._mobile.isMobile());
+  }
 
   triggerResize() {
     this.ngZone.onStable.pipe(take(1))
       .subscribe(() => this.autosize.resizeToFitContent(true));
-  }
-
-  ngOnDestroy() {
-    window.removeEventListener('resize', e => this.genSizes(this.cBackgroundVideo.nativeElement));
-  }
-
-  genSizes = (el?: HTMLDivElement) => {
-
-    const elem: HTMLDivElement = el ? el : this.cBackgroundVideo.nativeElement;
-
-
-    if (this.isMobile() === true) {
-      console.log('-- is mobile version --');
-      const orientation = window.orientation === 0 ? false : true;
-
-      if (orientation === false) {
-        return { 'width': `${elem.clientWidth}px` };
-      }
-
-      if (orientation === true) {
-
-        const width = (elem.clientHeight / 9) * 16;
-        const height = (width / 16) * 9;
-
-        if (width > elem.clientWidth) {
-
-          this.unsetHeight = true;
-          const width2 = elem.clientWidth * 0.8;
-          const height2 = (width2 / 16) * 9;
-
-          return {
-            width: `${width2}px`,
-            height: `${height2}px`,
-            padding: 0
-          };
-
-        } else {
-
-          return {
-            width: `${width}px`,
-            height: `${height}px`,
-            padding: 0
-          };
-
-        }
-      }
-
-    } else {
-      console.log('-- is not mobile version --');
-    }
-
   }
 
   addComment = (el: HTMLTextAreaElement) => {
@@ -158,7 +111,6 @@ export class DetailCourseComponent implements OnInit, OnDestroy {
 
     el.value = '';
   }
-
 
   genUrlImg = () => `/assets/img100X100/${this.data.title.toLowerCase()}-min.png`;
 
