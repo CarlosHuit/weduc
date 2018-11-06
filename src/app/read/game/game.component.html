@@ -1,64 +1,52 @@
 <div class="container" [class.desktop]="!isMobile()" >
 
-  <!-- Desktop version -->
-  <!-- <div #mcGame class="d-c-game" *ngIf="!isMobile()" >
+  <div #mcGame class="d-c-game hide" [class.show]="showGame" *ngIf="!isMobile()" >
 
-    <div class="toolbar">
-
-      <div class="count-try">
-        <span class="count-failed"> {{failedCount}} </span>
-        <span class="count-succes"> {{succesCount }} </span>
+    <div class="d-c-toolbar" #toolbGame >
+      <div class="m-c-count">
+        <span class="failed" > {{failedCount}} </span>
+        <span class="succes" > {{succesCount}} </span>
       </div>
-
-      <button class="help press" (click)="instructions('y')" >?</button>
-
+      <div class="help resize" (click)="instructions('y')" >?</div>
     </div>
 
+    <div class="d-c-letters" *ngIf="loading === false" id="s" #mcLetters>
 
-    <div class="letter-container" #mcLetters >
-      <div 
-        *ngFor="let letterID of letters"
-        class="d-m-option"
-        >
-
-        <button
-          class="circle-letter press"
-          (click)="onSelect(letterID, toolbGame)"
-          [disabled]="lettersValidation[letterID] === letterID"
-          [class.showOpt]="letterID[0] === letter && show === true"
-          [class.clear]="clearEl[letterID] === letterID"
+      <div class="d-c-letter" *ngFor="let group of letterIDs">
+        <div
+          class="d-c-option center"
+          *ngFor="let letterID of group"
+          [class.destroy]="letterID[0] === letter && letterID === elToDestroy"
           >
-          {{letterID[0]}}
-        </button>
-
+          <button
+            class="m-circle-letter d-c-resize press"
+            (click)="onSelect(letterID)"
+            [disabled]="lettersValidation[letterID] === letterID"
+            [class.showOpt]="letterID[0] === letter && show === true"
+            [class.clear]="clearEl[letterID] === letterID"
+            >
+            {{letterID[0]}}
+          </button>
+        </div>
       </div>
+      
     </div>
+    
+    <app-spinner-loading *ngIf="loading === true" ></app-spinner-loading>
+    <canvas class="d-c-background" #canvas id="canvas">no</canvas>
 
-  </div> -->
+    
+  </div>
 
-  <!-- Mobile Version -->
   <!-- <div #mcGame class="m-c-game hide" [class.show]="showGame"  *ngIf="isMobile()" > -->
-  <div #mcGame class="m-c-game hide" [class.show]="showGame" [class.d-c-game]="!isMobile()" >
+  <div #mcGame class="m-c-game hide" [class.show]="showGame" *ngIf="isMobile()" >
 
     <div class="m-c-toolbar" #toolbGame >
       <div class="m-c-count">
-        <span
-          class="failed"
-          >
-          {{failedCount}}
-        </span>
-        <span
-          class="succes"
-          >
-          {{succesCount}}
-        </span>
+        <span class="failed" > {{failedCount}} </span>
+        <span class="succes" > {{succesCount}} </span>
       </div>
-      <div
-        class="help resize"
-        (click)="instructions('y')"
-        >
-        ?
-      </div>
+      <div class="help resize" (click)="instructions('y')" >?</div>
     </div>
 
     <div class="m-c-letters" *ngIf="loading === false" id="s" #mcLetters>

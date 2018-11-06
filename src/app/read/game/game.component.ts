@@ -30,11 +30,14 @@ interface Record {
   status?: boolean;
 }
 
-@Component({
-  selector: 'app-game',
-  templateUrl: './game.component.html',
-  styleUrls: ['./game.component.css']
-})
+@Component(
+  {
+    selector: 'app-game',
+    templateUrl: './game.component.html',
+    styleUrls: ['./game.component.css']
+  }
+)
+
 export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
@@ -63,7 +66,7 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
 
-  constructor(
+  constructor (
     private router:        Router,
     private speechService: SpeechSynthesisService,
     private _route:        ActivatedRoute,
@@ -147,7 +150,8 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   prepareData = (letters: string[]) => {
 
     const array   = JSON.parse(JSON.stringify(letters));
-    const columns = Math.floor(this.mcLetters.nativeElement.clientWidth / 80);
+    const width   = this.isMobile() ? 80 : 100;
+    const columns = Math.floor(this.mcLetters.nativeElement.clientWidth / width);
     const missing = columns - (array.length % columns);
 
     for (let i = 0; i < missing; i++) {
@@ -156,13 +160,12 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     const result = [];
-    const max = array.length / columns;
+    const max    = array.length / columns;
 
      for (let i = 0; i < columns; i++) {
       const el = array.splice(0, max);
       result.push(el);
     }
-    console.log(result);
     return result;
   }
 
@@ -182,7 +185,8 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
     this.lettersValidation = {};
-    this.clearEl = {};
+    this.clearEl           = {};
+    this.elToDestroy       = '';
     this.restartCounters();
 
     setTimeout(() => {
@@ -191,12 +195,12 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
       if (letter === 'lower') {
 
         this.letterIDs = this.prepareData(this.lettersData.lowerCase);
-        this.letters = this.joinLetters(this.letterIDs);
+        this.letters   = this.joinLetters(this.letterIDs);
 
       } else {
 
         this.letterIDs = this.prepareData(this.lettersData.upperCase);
-        this.letters = this.joinLetters(this.letterIDs);
+        this.letters   = this.joinLetters(this.letterIDs);
 
       }
     }, 50);
