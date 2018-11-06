@@ -192,11 +192,17 @@ canvas {
   animation: quitar  .4s;
 }
 
-.m-circle-letter.clear   { display:   none;        }
-.circle-letter.clear     { display:   none;        }
+.m-circle-letter.clear {
+  display:   none;
+}
 
-@keyframes quitar        { 100% { height: 0px; } }
-@keyframes quitar2       { 100% { width:  0px; } }
+.circle-letter.clear {
+  display:   none;
+}
+
+@keyframes quitar {
+  100% { height: 0px; }
+}
 
 .modify-s {
   width:    100%;
