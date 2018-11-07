@@ -29,6 +29,19 @@
 .two   { top: 40% }
 .three { top: 75% }
 
+.icon-pen {
+  width:              36px;
+  height:             36px;
+  font-size:          36px;
+  background-color: #ff3c41;
+  color:              white;
+  padding:            6px;
+  border-radius:      50%;
+  position:           absolute;
+  top:                10px;
+  left:               10px;
+}
+
 /* ------ styles mobile version ------ */
 .container-handwriting {
   background:      linear-gradient(to top left, #0f587c 0%, #0d6297 25%, #1877ad 100%);

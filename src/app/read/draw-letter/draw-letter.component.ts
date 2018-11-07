@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild     } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { CoordinatesService, Coordinates  } from '../../services/coordinates.service';
 import { Router, ActivatedRoute           } from '@angular/router';
 import { HandwritingComponent             } from '../handwriting/handwriting.component';
@@ -24,7 +24,7 @@ export interface DrawLetterData {
   styleUrls: ['./draw-letter.component.css']
 })
 
-export class DrawLetterComponent implements OnInit {
+export class DrawLetterComponent implements OnInit, OnDestroy {
 
   @ViewChild(HandwritingComponent) handWriting: HandwritingComponent;
   @ViewChild(BoardComponent) boardComponent: BoardComponent;
@@ -62,6 +62,11 @@ export class DrawLetterComponent implements OnInit {
   ngOnInit() {
     this.setValues();
     this.getCoordinates();
+    window.addEventListener('resize', this.isMobile);
+  }
+
+  ngOnDestroy() {
+    window.removeEventListener('resize', this.isMobile);
   }
 
   getCoordinates = () => {
@@ -80,12 +85,15 @@ export class DrawLetterComponent implements OnInit {
   }
 
   setValues = () => {
+
     this.letters.push(this.letterParam.toLowerCase());
     this.letters.push(this.letterParam.toUpperCase());
     this.currentLetter = this.letters[0];
+
   }
 
   showBoardC = (ev) => {
+
     const data = JSON.parse(ev);
     this.userData.handWritingData.push(data);
 
@@ -93,6 +101,7 @@ export class DrawLetterComponent implements OnInit {
     this.handWriting.limpiar();
     this.boardComponent.limpiar();
     this.boardComponent.initUserData();
+
   }
 
   showHandWriting = (ev?) => {
@@ -104,6 +113,7 @@ export class DrawLetterComponent implements OnInit {
     this.handWriting.limpiar();
     this.handWriting.initUserData();
     this.handWriting.startExample();
+
   }
 
   isMobile = (): boolean => {
@@ -151,12 +161,10 @@ export class DrawLetterComponent implements OnInit {
     }
   }
 
-
   changeData = (index: number) => {
     this.currentLetter = this.letters[index];
     this.currentCoordinates = this.coordinates.coordinates[this.currentLetter];
   }
-
 
   nextLetter = () => {
 
@@ -167,14 +175,12 @@ export class DrawLetterComponent implements OnInit {
 
   }
 
-
   redirect = (): void => {
 
     const url = `lectura/encontrar-letras/${this.letterParam}`;
     this.router.navigateByUrl(url);
 
   }
-
 
   initUserData = () => {
     const t = this.genDates.generateData();
@@ -188,7 +194,6 @@ export class DrawLetterComponent implements OnInit {
     this.userData['handWritingData'] = [];
 
   }
-
 
   addFinalTime = () => {
     const t = this.genDates.generateData();

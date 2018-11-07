@@ -70,11 +70,11 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
     this.ctx    = this.canvas.getContext('2d');
 
     if (this.isMobile()) {
-      this.cw     = this.canvas.width  = 300;
-      this.ch     = this.canvas.height = 300;
+      this.cw = this.canvas.width  = 300;
+      this.ch = this.canvas.height = 300;
     } else {
-      this.cw     = this.canvas.width  = 600;
-      this.ch     = this.canvas.height = 300;
+      this.cw = this.canvas.width  = 600;
+      this.ch = this.canvas.height = 300;
     }
 
     this.dibujar = false;
@@ -287,8 +287,6 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
   limpiar = (): void => {
 
-
-
     // this.addCoordinates();
     this.dibujar = false;
     this.ctx.clearRect(0, 0, this.cw, this.ch);
@@ -300,9 +298,9 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
   initUserData = () => {
     const t = this.genDates.generateData();
 
-    this.userData['startTime'] = t.fullTime;
-    this.userData['nextTime'] = 'N/A';
-    this.userData['repeatTime'] = 'N/A';
+    this.userData['startTime']   = t.fullTime;
+    this.userData['nextTime']    = 'N/A';
+    this.userData['repeatTime']  = 'N/A';
     this.userData['coordinates'] = [];
 
   }
