@@ -143,7 +143,7 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
   startup = (el): void => {
 
-    const mobile = this.ismobile();
+    const mobile = this.isMobile();
 
     if (mobile === true) {
       el.addEventListener('touchstart', this.handleStart, false);
@@ -166,7 +166,7 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
   handleStart = (evt): void => {
 
-    if (this.ismobile()) { evt.preventDefault(); }
+    if (this.isMobile()) { evt.preventDefault(); }
 
     this.dibujar = true;
     this.points.length = 0;
@@ -178,7 +178,7 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
   onMousePosition = (canvas, ev): { x: any, y: any } => {
 
     const ClientRect = canvas.getBoundingClientRect();
-    const mobile = this.ismobile();
+    const mobile = this.isMobile();
 
     if (mobile) {
       return {
@@ -289,21 +289,12 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
 
 
-    this.addCoordinates();
+    // this.addCoordinates();
     this.dibujar = false;
     this.ctx.clearRect(0, 0, this.cw, this.ch);
     this.traces.length = 0;
     this.points.length = 0;
 
-  }
-
-
-  ismobile = (): boolean => {
-    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-      return true;
-    } else {
-      return false;
-    }
   }
 
   initUserData = () => {
