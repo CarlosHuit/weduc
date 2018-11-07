@@ -1,3 +1,65 @@
+/*----- desktop version -----*/
+.d-c-board {
+  height:     100%;
+  width:      100%;
+  display:         flex;
+  flex-direction:  column;
+  justify-content: space-evenly;
+}
+
+.d-c-container-canvas {
+  height:           300px;
+  z-index:          2;
+  position:         relative;
+  display:          flex;
+  justify-content:  center;
+  align-items:      center;
+  border:           1px solid #9b9b9b;
+  border-radius:    3px;
+  background-color: #ebedee;
+}
+
+.d-c-canvas {
+  height: 100%;
+  z-index: 2;
+}
+
+.line-guide {
+  position:       absolute;
+  width:          100%;
+  border:         none;
+  border-bottom:  2px solid rgba(43, 145, 191, .35);
+  margin:         0;
+}
+
+.one   { top: 15% }
+.two   { top: 40% }
+.three { top: 75% }
+
+.d-c-icon {
+  color:        white;
+  font-size:       45px;
+  width:           50px;
+  height:          50px;
+  border:          2px solid white;
+  border-radius:   50%;
+  display:         flex;
+  justify-content: center;
+  align-items:     center;
+  transition:      100ms;
+}
+
+.d-c-icons {
+  display:            flex;
+  justify-content:    space-around;
+  background-color: #202020;
+  padding:            10px 0;
+  width:              350px;
+  border-radius:      10px;
+  margin-top:         15px;
+}
+
+/*----- mobile version -----*/
 .container-board {
   background: linear-gradient(to top right, #0f587c 0%, #0d6297 25%, #1877ad 100%);
   height:     100%;
@@ -18,29 +80,7 @@
   border-radius: 2px;
 }
 
-.d-c-container-canvas {
-  height: 300px;
-  z-index: 20;
-  position: relative;
-}
 
-.line-guide {
-  position: absolute;
-  width:    100%;
-  border:   0.8px solid rgba(43, 145, 191, .35);
-  margin:   0
-}
-
-.one   { top: 15% }
-.two   { top: 40% }
-.three { top: 75% }
-
-.d-c-canvas {
-  background-color: rgba(255, 255, 255, .75);
-  border: 3px solid rgb(40,40,40);
-  height: 100%;
-  z-index: 50;
-}
 
 .title h1 {
   font-family:  'Noto Sans';
