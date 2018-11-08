@@ -81,7 +81,6 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
     this.speechSynthesis.cancel();
   }
 
-
   setValues = () => {
 
     this.tiempos       = [];
