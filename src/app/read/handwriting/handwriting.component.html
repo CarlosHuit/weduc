@@ -18,11 +18,10 @@
 <div class="container-handwriting" *ngIf="isMobile()">
 
   <div class="container-canvas">
-    <canvas
-      id="canvasEl"
-      #canvasDraw
-      >
-    </canvas>
+    <canvas id="canvasEl" #canvasDraw style="z-index: 2" ></canvas>
+    <hr class="line-guide one">
+    <hr class="line-guide two">
+    <hr class="line-guide three">
   </div>
 
   <mat-icon class="icon reload press" (click)="startExample()"> replay </mat-icon>

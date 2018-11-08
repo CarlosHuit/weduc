@@ -90,10 +90,6 @@
   position:   relative;
 }
 
-.container-canvas {
-  z-index: 2;
-  border-radius: 2px;
-}
 
 
 
@@ -111,9 +107,18 @@
   position: absolute;
 }
 
-.m-c-canvas {
-  border: 2px solid rgb(29, 29, 29);
+.container-canvas {
+  z-index:            2;
+  border-radius:      2px;
+  position:           absolute;
+  width:              300px;
+  height:             300px;
+  border:             2px solid rgb(29, 29, 29);
   background-color: rgba(255, 255, 255, .75);
+}
+
+.m-c-canvas {
+  z-index: 2;
 }
 
 .icon {
