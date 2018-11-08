@@ -17,13 +17,13 @@ export class HomeComponent implements OnInit {
 
   subjects: Subjects[];
   loading = true;
-  search: RegExp;
+  search:   RegExp;
 
   constructor(
     private detectMobile: DetectMobileService,
-    private getCourses: CoursesService,
-    private router: Router,
-    public snackBar: MatSnackBar,
+    private getCourses:   CoursesService,
+    private router:       Router,
+    public snackBar:      MatSnackBar,
   ) { }
 
   ngOnInit() {

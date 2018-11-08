@@ -1,0 +1,40 @@
+<div class="container">
+
+  <!-- desktop version -->
+  <mat-card class="d-c-card center" *ngIf="!loading && !isMobile()">
+
+    <div class="d-c-container-words" #dcCWords>
+      <button 
+        class="d-c-word correct"
+        (click)="validation(x)"
+        *ngFor="let x of messyWords"
+        [disabled]="selections[x] === x"
+        [class.correct]="corrects[x] === x"
+        [class.incorrect]="incorrects[x] === x"
+        >
+        {{x}}
+      </button>
+    </div>
+
+    <button class="icon-help" style="top: 20px; left: 20px" (click)="repeatInstructions()">?</button>
+
+  </mat-card>
+
+  <!-- mobile version -->
+  <div class="card center" *ngIf="!loading && isMobile()">
+
+    <div class="m-c-container-words">
+
+      <div class="m-c-words">
+        <button *ngFor="let x of messyWords" class="word" [class.correct]="corrects[x] === x" [class.incorrect]="incorrects[x] === x"
+          [disabled]="selections[x] === x" (click)="validation(x)"> {{x}} </button>
+      </div>
+    </div>
+
+    <button class="icon-help" (click)="repeatInstructions()">?</button>
+
+  </div>
+
+  <app-spinner *ngIf="loading"></app-spinner>
+  <app-success-animation *ngIf="success"></app-success-animation>
+</div>

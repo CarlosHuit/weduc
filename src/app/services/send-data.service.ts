@@ -8,7 +8,7 @@ import { DrawLetterData } from '../read/draw-letter/draw-letter.component';
 // import { CompleteWordData } from '../read/complete-word/complete-word.component';
 import { GetTokenService } from '../services/get-token.service';
 // import { FindLetter } from '../read/find-letter/find-letter.component';
-// import { SelectWords } from '../read/select-words/select-words.component';
+import { SelectWords } from '../read/select-words/select-words.component';
 // import { SelectImages } from '../read/select-images/select-images.component';
 // import { IdentifyLetter } from '../read/identify-letter/identify-letter.component';
 import { MenuData } from '../interfaces/menu-data';
@@ -119,17 +119,17 @@ export class SendDataService {
 
   // }
 
-  // sendSelectWordsData = (obj: SelectWords[]) => {
+  sendSelectWordsData = (obj: SelectWords[]) => {
 
-  //   const token = this.getToken.getToken();
+    const token = this.getToken.getToken();
 
-  //   const url = urljoin(this.apiUrl, `select-words${token}`);
-  //   const data = JSON.stringify(obj);
+    const url = urljoin(this.apiUrl, `select-words${token}`);
+    const data = JSON.stringify(obj);
 
-  //   return this.http.post(url, data, this.httpOptions)
-  //   .pipe( catchError(this.handleError) );
+    return this.http.post(url, data, this.httpOptions)
+    .pipe( catchError(this.handleError) );
 
-  // }
+  }
 
   // sendSelectImagesData = (obj: SelectImages) => {
 

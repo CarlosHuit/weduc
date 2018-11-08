@@ -25,7 +25,7 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
   @ViewChild('canvasDraw') canvasEl: ElementRef;
   @Output() propagar = new EventEmitter<string>();
 
-  private ctx: CanvasRenderingContext2D;
+  private ctx:    CanvasRenderingContext2D;
   private canvas: HTMLCanvasElement;
 
   cw:         number;
@@ -51,10 +51,9 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
 
   constructor(
     private speechSynthesis: SpeechSynthesisService,
-    private genDates: GenerateDatesService,
-    private _mobile:  DetectMobileService
-  ) {
-  }
+    private genDates:        GenerateDatesService,
+    private _mobile:         DetectMobileService
+  ) { }
 
   ngAfterViewInit() {
 
@@ -75,8 +74,6 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   ngOnInit() {
-
-
 
   }
 
@@ -190,15 +187,14 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
     this.addRepetitionData();
     this.setValues();
 
-    const type  = this.letter === this.letter.toLowerCase() ? 'minúscula' : 'mayúscula';
-    const sound = JSON.parse(localStorage.getItem('letter_sounds'))[this.letter.toLowerCase()];
-    const msg   = `Mira atentamente, así se escribe la letra: ${sound} .... "${type}"`;
+    const type   = this.letter === this.letter.toLowerCase() ? 'minúscula' : 'mayúscula';
+    const sound  = JSON.parse(localStorage.getItem('letter_sounds'))[this.letter.toLowerCase()];
+    const msg    = `Mira atentamente, así se escribe la letra: ... ${sound} .... "${type}"`;
+    const speech = this.speechSynthesis.speak(msg);
 
-    this.speechSynthesis.speak(msg);
     setTimeout(e => this.draw(), 500);
 
   }
-
 
   getTotalTime = (position: number) => {
     let suma = 0;
@@ -208,7 +204,6 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
     }
     return suma;
   }
-
 
   individualStrokeTimes = (obj) => {
 
@@ -222,7 +217,6 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
 
     return tiempos;
   }
-
 
   generateTimes = () => {
 
@@ -241,12 +235,10 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
 
   }
 
-
   totalTimeToDraw = (obj: number[]) => {
     const i = obj.length - 1;
     return obj[i];
   }
-
 
   calcControlPoint = (el, a, b) => {
 

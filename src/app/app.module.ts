@@ -26,6 +26,7 @@ import { SuccessAnimationComponent } from './success-animation/success-animation
 import { CatComponent } from './cat/cat.component';
 import { GameComponent } from './read/game/game.component';
 import { FindLetterComponent } from './read/find-letter/find-letter.component';
+import { SelectWordsComponent } from './read/select-words/select-words.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { FindLetterComponent } from './read/find-letter/find-letter.component';
     CatComponent,
     GameComponent,
     FindLetterComponent,
+    SelectWordsComponent,
   ],
   imports: [
     MaterialModule,
