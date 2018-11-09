@@ -153,9 +153,16 @@ body {
   background-color: #f44336;
   height: 4px;
 }
+.mat-tab-label:foucs:not(.mat-tab-disabled) {
+  opacity: 1 !important;
+}
 
-/* .mat-expansion-panel-header {
-  height: 80px !important;
-} */
+.mat-tab-label {
+  opacity: 1 !important;
+}
+
+.mat-expansion-panel-header {
+  padding: 10px 24px !important;
+}
 
 @media (min-width: 320px) and (orientation: landscape) {}

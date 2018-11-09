@@ -303,11 +303,16 @@
 }
 
 .c-cards {
-  width: 100%;
-  display: grid;
+  width:                 100%;
+  display:               grid;
   grid-template-columns: repeat(auto-fill, 300px);
-  justify-content: space-evenly;
-  align-content: start;
+  justify-content:       space-evenly;
+  align-content:         start;
+  height:                calc(100vh - 105px);
+  overflow:              auto;
+  padding-top:           5px;
+  padding-bottom:        5px;
+  box-sizing:            border-box;
 }
 
 .m-c-title {
@@ -321,6 +326,19 @@
   padding: 5px 0;
   text-align: center;
   border-radius: 3px;
+}
+
+.icon-alphabet, .icon-star {
+  margin-right: 5px;
+  color: #ffd700;
+}
+
+.tab-title {
+  height: 48px;
+}
+
+.lowOpacity  {
+  opacity: 0.4;
 }
 
 .m-c-card {
@@ -405,6 +423,86 @@
 .image img {
   width: 88%;
   height: 88%;
+}
+
+.m-c-learned-letters {
+  height:           calc(100vh - 105px);
+  display:          flex;
+  justify-content:  center;
+  padding-top:      10px;
+  box-sizing:       border-box;
+}
+
+.m-c-icons-sorted {
+  width:            100%;
+  display:          flex;
+  justify-content:  space-between;
+  margin-bottom:    7px;
+  background-color: white;
+  border:           1px solid #d9d9d9;
+  box-sizing:       border-box;
+}
+
+.m-c-icons-sorted button mat-icon {
+  color: #aaaaaa;
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.m-c-icons-sorted button .bold {
+  color: black;
+  font-weight: 400;
+}
+
+.m-c-accordion {
+  width:          95%;
+  height:         max-content;
+  margin-bottom:  10px;
+}
+
+.m-c-letters-sound {
+  width:            100%;
+  display:          flex;
+  justify-content:  center;
+  height:           40px;
+  align-items:      center;
+}
+
+.m-c-letter {
+  font-family:  'Noto sans';
+  font-size:    40px;
+  font-weight:  bold;
+  margin:       0;
+  width:        40px;
+}
+
+.m-c-detail-combinations {
+  width:            100%;
+  display:          flex;
+  flex-wrap:        wrap;
+  justify-content:  center;
+  border-top:       1px solid #d9d9d9;
+  border-bottom:    1px solid #d9d9d9;
+  padding:          5px 0 3px 0;
+}
+
+.m-c-btn-syllable {
+  font-size:      26px;
+  outline:        none;
+  font-family:    'Noto sans', sans-serif;
+  font-weight:    bold;
+  margin:         3px;
+  padding:        0 18px;
+  padding-bottom: 2px;
+}
+
+@media (min-width: 320px) and (orientation: landscape) {
+
+  .m-c-accordion {
+    max-width: 640px;
+  }
+
 }
 
 

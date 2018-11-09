@@ -36,6 +36,8 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
   currentLetter: string;
   loading =      true;
   showModal =    false;
+  showAlphabet = true;
+  combinations:  {};
 
   count           = 0;
   soundsLetters   = {};
@@ -79,7 +81,8 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
     private media:             MediaMatcher,
     private router:            Router,
   ) {
-    this.learned         = _storage.getElement('learned_letters') !== null ? _storage.getElement('learned_letters') : {};
+    this.learned         = this._storage.getElement('learned_letters') !== null ? _storage.getElement('learned_letters') : {};
+    this.combinations    = this._storage.getElement('combinations');
     this.mobileQuery     = media.matchMedia('(min-width: 1440)');
     this._mQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mQueryListener);
@@ -156,6 +159,10 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
   }
 
+  listenCombination = (syllable: string) => {
+    const speech = this.speechSynthesis.speak(syllable, .8);
+  }
+
   sortAlpha = () => {
 
     this.sortRatingState    = false;
@@ -186,6 +193,11 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
       this.sortAlphaState = !this.sortAlphaState;
 
     }
+  }
+
+  getCombinations = (letter: string) => {
+    console.log(this._storage.getElement('combinations')[letter.toLowerCase()]);
+    return this._storage.getElement('combinations')[letter.toUpperCase()];
   }
 
   sortRating = () => {
