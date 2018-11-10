@@ -161,7 +161,10 @@
           <div class="c-cards" [ngStyle]="genCols(contGrid)">
 
             <mat-card *ngFor="let letter of letters" class="m-c-card">
-              <mat-icon class="ic-sound" (click)="listenSoundLetter(letter)">volume_up</mat-icon>
+              <!-- <mat-icon class="ic-sound" (click)="listenSoundLetter(letter)">volume_up</mat-icon> -->
+              <button class="ic-sound"  mat-raised-button color="warn" (click)="listenSoundLetter(letter)" >
+                <mat-icon class="sound-icon center" >volume_up</mat-icon>
+              </button>
 
               <div class="letters" (click)="openModal(letter)">
 
@@ -233,34 +236,48 @@
                   </mat-expansion-panel-header>
       
                   <ng-template matExpansionPanelContent>
+                    <div style="width: 100%;" >
+                      <div class="m-c-letters-sound">
+                        <button
+                          class="m-c-letter center"
+                          mat-flat-button color="primary"
+                          (click)="listenLetter(itemLetter.letter, 'u')"
+                          >
+                          {{itemLetter.letter | uppercase}}
+                        </button>
+                        <button
+                          class="m-c-letter center"
+                          mat-flat-button color="primary"
+                          (click)="listenLetter(itemLetter.letter, 'l')"
+                          >
+                          {{itemLetter.letter | lowercase}}
+                        </button>
+                      </div>
+  
+                      <div class="m-c-detail-combinations">
+                        <button
+                          mat-flat-button color="warn"
+                          *ngFor="let combination of combinations[itemLetter.letter]"
+                          class="m-c-btn-syllable"
+                          (click)="listenCombination(combination.p)"
+                          >
+                          {{combination.w}}
+                        </button>
+                      </div>
 
-                    <div class="m-c-letters-sound">
-                      <h2
-                        mat-flat-button color="warn"
-                        class="m-c-letter"
-                        (click)="listenLetter(itemLetter.letter, 'u')"
-                        >
-                        {{itemLetter.letter | uppercase}}
-                      </h2>
-                      <h2
-                        mat-flat-button color="warn"
-                        class="m-c-letter"
-                        (click)="listenLetter(itemLetter.letter, 'l')"
-                        >
-                        {{itemLetter.letter | lowercase}}
-                      </h2>
+
+                      <div class="m-c-detail-button center" >
+                        <button
+                          class="btn-practice"
+                          mat-flat-button color="primary"
+                          (click)="repractice(itemLetter.letter)"
+                          >
+                          Volver a practicar
+                        </button>
+                      </div>
+
                     </div>
 
-                    <div class="m-c-detail-combinations">
-                      <button
-                        mat-flat-button color="warn"
-                        *ngFor="let combination of combinations[itemLetter.letter]"
-                        class="m-c-btn-syllable"
-                        (click)="listenCombination(combination.p)"
-                        >
-                        {{combination.w}}
-                      </button>
-                    </div>
                   </ng-template>
       
                 </mat-expansion-panel>

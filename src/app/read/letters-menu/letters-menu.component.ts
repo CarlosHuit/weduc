@@ -67,9 +67,6 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
     // return b.rating - a.rating;
   });
 
-
-  private _mQueryListener: () => void;
-
   constructor(
     private speechSynthesis:   SpeechSynthesisService,
     private genDate:           GenerateDatesService,
@@ -83,9 +80,6 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
   ) {
     this.learned         = this._storage.getElement('learned_letters') !== null ? _storage.getElement('learned_letters') : {};
     this.combinations    = this._storage.getElement('combinations');
-    this.mobileQuery     = media.matchMedia('(min-width: 1440)');
-    this._mQueryListener = () => changeDetectorRef.detectChanges();
-    this.mobileQuery.addListener(this._mQueryListener);
   }
 
   ngOnInit() {
@@ -109,7 +103,7 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.speechSynthesis.cancel();
-    this.mobileQuery.removeListener(this._mQueryListener);
+    (window as any).onresize = () => {};
   }
 
   isMobile = (): boolean =>  this.detMobile.isMobile();
@@ -123,7 +117,8 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
     /* Se selecciona la imagen */
     words.forEach(e => this.wordsUrl[e.l] = e.w[this.randomInt(0, e.w.length)]);
 
-    this.letters = this.deleteLearnedLetters(letters.alphabet.split(''));
+    this.letters       = this.deleteLearnedLetters(letters.alphabet.split(''));
+    this.combinations  = letters.combinations;
     this.soundsLetters = letters.sound_letters;
 
     if (Storage) {
@@ -145,6 +140,7 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
         localStorage.setItem(`${x}_sl`, JSON.stringify(d));
       });
     }
+
 
     this.loading = false;
     setTimeout(() =>  this.showC = true, 10);
@@ -307,6 +303,11 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
       this.router.navigateByUrl(url);
 
     });
+  }
+
+  repractice = (letter: string) => {
+    const url = `lectura/detalle-letra/${letter.toLowerCase()}`;
+    this.router.navigateByUrl(url);
   }
 
   /*

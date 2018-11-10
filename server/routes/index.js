@@ -12,6 +12,7 @@ export { default as SoundLetters    } from './sound-letters'
 export { default as Courses         } from './courses'
 export { default as WordsAndLetters } from './words_and_letters'
 export { default as Combinations    } from './combinations'
+export { default as UserProgress    } from './user-progress'
 
 export { default as Menu           } from './data/menu'
 export { default as Target         } from './data/target'
