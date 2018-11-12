@@ -1,13 +1,13 @@
-import { Component, OnInit, ViewChild, OnDestroy, ElementRef, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, ElementRef } from '@angular/core';
 import { Router                 } from '@angular/router';
 import { SpeechSynthesisService } from '../../services/speech-synthesis.service';
 import { GenerateDatesService   } from '../../services/generate-dates.service';
 import { GetDataService         } from '../../services/get-data.service';
 import { SendDataService        } from '../../services/send-data.service';
 import { DetectMobileService    } from '../../services/detect-mobile.service';
+import { LocalStorageService    } from '../../services/local-storage.service';
 import { MenuData, Selection    } from '../../interfaces/menu-data';
 import { WordsAndLetters, LearnedLetters } from '../../interfaces/words-and-letters';
-import { LocalStorageService    } from '../../services/local-storage.service';
 import { MatAccordion           } from '@angular/material';
 
 
@@ -75,7 +75,7 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
           this.instructions('y');
           // this.addInitialTime();
 
-          (window as any).onresize = () => this.genCols(this.contGrid.nativeElement);
+          (window as any).onresize = () => (this.genCols(this.contGrid.nativeElement), this.isMobile());
 
         },
         err => console.log(err)
@@ -86,10 +86,12 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.speechSynthesis.cancel();
-    (window as any).onresize = () => {};
+    window.removeEventListener('resize', () => (this.genCols(this.contGrid.nativeElement), this.isMobile()));
   }
 
+
   isMobile = (): boolean =>  this.detMobile.isMobile();
+
 
   setInitialData = (data: WordsAndLetters) => {
 
@@ -132,6 +134,7 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
   }
 
+
   deleteLearnedLetters = (alphabet: string, learneds: LearnedLetters[]) => {
 
     const nAlph = alphabet.split('');
@@ -139,6 +142,7 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
     return nAlph;
 
   }
+
 
   sortLearnedLetters = (learneds: LearnedLetters[]) => {
     learneds.sort( (a, b) => {
@@ -152,13 +156,34 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
     return learneds;
   }
 
+
   noLearneds = () => {
     return this.learneds.length === 0 ? true : false;
   }
 
+
+  goToAlphabet = () => {
+    this.showAlphabet = true;
+    this.instructions('y');
+  }
+
+
+  goToLearnedLetters = () => {
+
+    this.showAlphabet = false;
+    const msg1 = 'Aquí aparecerán las letras que vayas aprendiendo';
+    const msg2 = 'Estas son las letras que has aprendido';
+    const msg  = this.noLearneds() ? msg1 : msg2;
+
+    this.speechSynthesis.speak(msg, 0.9);
+
+  }
+
+
   listenCombination = (syllable: string) => {
     const speech = this.speechSynthesis.speak(syllable, .8);
   }
+
 
   sortAlpha = () => {
 
@@ -194,10 +219,12 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
     }
   }
 
+
   getCombinations = (letter: string) => {
     console.log(this._storage.getElement('combinations')[letter.toLowerCase()]);
     return this._storage.getElement('combinations')[letter.toUpperCase()];
   }
+
 
   sortRating = () => {
 
@@ -220,18 +247,22 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
     }
   }
 
+
   closeAllExpansion = () => {
     this.multi = true;
     setTimeout(() => (this.accordion.closeAll(), this.multi = false), 0);
   }
 
+
   getImage = (letter) => {
     return `/assets/img100X100/${this.wordsUrl[letter]}-min.png`;
   }
 
+
   genUrl = (word: string) => {
     return `/assets/img100X100/${word}-min.png`;
   }
+
 
   instructions = (type?: string) => {
 
@@ -243,6 +274,7 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
   }
 
+
   countStars = (rating: number) => {
     const t = [];
     for (let i = 0; i < rating; i++) {
@@ -252,9 +284,11 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
     return t;
   }
 
+
   randomInt = (min = 0, max) => {
     return Math.floor(Math.random() * (max - min)) + min;
   }
+
 
   listenSoundLetter = (letter: string) => {
 
@@ -262,6 +296,7 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
     this.speechSynthesis.speak(t, .8);
 
   }
+
 
   listenLetter = (letter: string, type: string) => {
 
@@ -277,6 +312,7 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
     speech.addEventListener('end', () => (this.highlightLetter = {}, this.speaking = false));
 
   }
+
 
   listenWord = (letter: string) => {
 
@@ -298,9 +334,11 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
   }
 
+
   openModal = (letter: string) => {
     return !this.selected ? this.redirect(letter) : null;
   }
+
 
   redirect = (letter: string) => {
     this.selected = true;
@@ -315,9 +353,31 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
     });
   }
 
+
   repractice = (letter: string) => {
     const url = `lectura/detalle-letra/${letter.toLowerCase()}`;
     this.router.navigateByUrl(url);
+  }
+
+
+  genCols = (el: HTMLDivElement) => {
+
+    const t = el.clientWidth % 320;
+    const margin = 5 * 4;
+    const minWidth = 300;
+
+    if (t === 0) {
+
+      return { 'grid-template-columns': `repeat(auto-fill, ${minWidth}px)` };
+
+    } else {
+      const ts = Math.floor(el.clientWidth / 300);
+      const ttt = ts * margin;
+      const twidth = (el.clientWidth - ttt) / ts;
+
+      return ({ 'grid-template-columns': `repeat(auto-fill, ${twidth}px)` });
+
+    }
   }
 
   /*
@@ -404,23 +464,5 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
     */
 
-  genCols = (el: HTMLDivElement) => {
 
-    const t = el.clientWidth % 320;
-    const margin = 5 * 4;
-    const minWidth = 300;
-
-    if (t === 0) {
-
-      return { 'grid-template-columns': `repeat(auto-fill, ${minWidth}px)` };
-
-    } else {
-      const ts = Math.floor(el.clientWidth / 300);
-      const ttt = ts * margin;
-      const twidth = (el.clientWidth - ttt) / ts;
-
-      return ({ 'grid-template-columns': `repeat(auto-fill, ${twidth}px)` });
-
-    }
-  }
 }
