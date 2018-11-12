@@ -6,10 +6,8 @@ import { GetDataService         } from '../../services/get-data.service';
 import { SendDataService        } from '../../services/send-data.service';
 import { DetectMobileService    } from '../../services/detect-mobile.service';
 import { MenuData, Selection    } from '../../interfaces/menu-data';
-import { WordsAndLetters        } from '../../interfaces/words-and-letters';
+import { WordsAndLetters, LearnedLetters } from '../../interfaces/words-and-letters';
 import { LocalStorageService    } from '../../services/local-storage.service';
-import { ChangeDetectorRef      } from '@angular/core';
-import { MediaMatcher           } from '@angular/cdk/layout';
 import { MatAccordion           } from '@angular/material';
 
 
@@ -30,6 +28,7 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
   @ViewChild('contGrid') contGrid: ElementRef;
   data:           WordsAndLetters;
   userData:       MenuData = {};
+  learneds:       LearnedLetters[];
   letters:        string[] = [];
   words:          string[] = [];
   storage:        boolean;
@@ -38,53 +37,31 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
   speaking:       boolean;
   multi:          boolean;
   closeExpansion: boolean;
+  currentLetter:  string;
 
-  currentLetter: string;
-  loading      = true;
-  showModal    = false;
-  showAlphabet = true;
-  combinations:  {};
+  loading         = true;
+  showModal       = false;
+  showAlphabet    = true;
+  combinations:     {};
 
   count           = 0;
   soundsLetters   = {};
   selections      = {};
   wordsUrl        = {};
-  learned         = {};
   highlightLetter = {};
-  lettersLeared   = ['a', 'b', 'c', 'd'];
   sortAlphaState  = true;
   sortRatingState = false;
   sortedState     = {alpha: true, rating: false };
-
-  learneds = [
-    { letter: 'a', rating: 4, },
-    { letter: 'b', rating: 3, },
-    { letter: 'c', rating: 4, },
-    { letter: 'd', rating: 3, },
-    { letter: 'e', rating: 2, },
-    { letter: 'f', rating: 5, },
-    { letter: 'g', rating: 5, },
-  ].sort( (a, b) => {
-
-    if (a.letter > b.letter) { return  1; }
-    if (a.letter < b.letter) { return -1; }
-
-    return 0;
-    // return b.rating - a.rating;
-  });
 
   constructor(
     private speechSynthesis:   SpeechSynthesisService,
     private genDate:           GenerateDatesService,
     private detMobile:         DetectMobileService,
     private _storage:          LocalStorageService,
-    private changeDetectorRef: ChangeDetectorRef,
     private getData:           GetDataService,
     private sendData:          SendDataService,
-    private media:             MediaMatcher,
     private router:            Router,
   ) {
-    this.learned         = this._storage.getElement('learned_letters') !== null ? _storage.getElement('learned_letters') : {};
     this.combinations    = this._storage.getElement('combinations');
   }
 
@@ -93,7 +70,6 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
     this.getData.getWordsAndLetters()
       .subscribe(
         (data: WordsAndLetters) => {
-          console.log(data);
           this.data = data;
           this.setInitialData(this.data);
           this.instructions('y');
@@ -128,21 +104,23 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
     const words          = data.words;
     const letters        = data.letters;
     const similarLetters = data.similarLetters;
-
+    const learnedLetters = data.learnedLetters;
     /* Se selecciona la imagen */
     words.forEach(e => this.wordsUrl[e.l] = e.w[this.randomInt(0, e.w.length)]);
 
-    this.letters       = this.deleteLearnedLetters(letters.alphabet.split(''));
-    this.combinations  = letters.combinations;
-    this.soundsLetters = letters.sound_letters;
+    this.learneds       = this.sortLearnedLetters(learnedLetters);
+    this.letters        = this.deleteLearnedLetters(letters.alphabet, this.learneds);
+    this.combinations   = letters.combinations;
+    this.soundsLetters  = letters.sound_letters;
 
     if (Storage) {
 
-      localStorage.setItem('alphabet',      JSON.stringify(letters.alphabet));
-      localStorage.setItem('consonants',    JSON.stringify(letters.consonants));
-      localStorage.setItem('vocals',        JSON.stringify(letters.vocals));
-      localStorage.setItem('combinations',  JSON.stringify(letters.combinations));
-      localStorage.setItem('letter_sounds', JSON.stringify(letters.sound_letters));
+      localStorage.setItem('alphabet',        JSON.stringify(letters.alphabet)     );
+      localStorage.setItem('consonants',      JSON.stringify(letters.consonants)   );
+      localStorage.setItem('vocals',          JSON.stringify(letters.vocals)       );
+      localStorage.setItem('combinations',    JSON.stringify(letters.combinations) );
+      localStorage.setItem('letter_sounds',   JSON.stringify(letters.sound_letters));
+      localStorage.setItem('learned_letters', JSON.stringify(learnedLetters));
 
       // a list of words is saved for each letter
       words.forEach(el => localStorage.setItem(el.l, JSON.stringify(el.w)));
@@ -162,12 +140,28 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
   }
 
-  deleteLearnedLetters = (alp: string[]) => {
+  deleteLearnedLetters = (alphabet: string, learneds: LearnedLetters[]) => {
 
-    const nAlph = alp;
-    this.learneds.forEach(x => nAlph.indexOf(x.letter) > -1 ? nAlph.splice(nAlph.indexOf(x.letter), 1) : false);
+    const nAlph = alphabet.split('');
+    learneds.forEach(x => nAlph.indexOf(x.letter) > -1 ? nAlph.splice(nAlph.indexOf(x.letter), 1) : false);
     return nAlph;
 
+  }
+
+  sortLearnedLetters = (learneds: LearnedLetters[]) => {
+    learneds.sort( (a, b) => {
+
+      if (a.letter > b.letter) { return  1; }
+      if (a.letter < b.letter) { return -1; }
+
+      return 0;
+    });
+
+    return learneds;
+  }
+
+  noLearneds = () => {
+    return this.learneds.length === 0 ? true : false;
   }
 
   listenCombination = (syllable: string) => {

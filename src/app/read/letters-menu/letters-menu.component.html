@@ -24,7 +24,7 @@
           [style.fontSize.px]="cCards.clientWidth * 0.08">
           El Abecedario
         </h1>
-      </div>card letter
+      </div>
 
       <div class="d-c-grids">
 
@@ -66,8 +66,6 @@
                 {{letter | lowercase}}
               </button>
             </div>
-
-            <i *ngIf="learned[letter] === letter" class="star resize"></i>
 
           </div>
 
@@ -181,8 +179,6 @@
                   </button>
                 </div>
 
-                <i *ngIf="learned[letter] === letter" class="star resize"></i>
-
               </div>
 
               <div class="image" (click)="openModal(letter)"> <img [src]="getImage(letter)"> </div>
@@ -206,7 +202,7 @@
           </ng-template>
 
           <!-- content -->
-          <div class="m-c-learned-letters">
+          <div class="m-c-learned-letters" *ngIf="!noLearneds()" >
             <div class="m-c-accordion">
 
               <div class="m-c-icons-sorted">
@@ -283,6 +279,12 @@
       
                 </mat-expansion-panel>
               </mat-accordion>
+            </div>
+          </div>
+
+          <div class="m-c-learned-letters center" style="padding-top: 0" *ngIf="noLearneds()" >
+            <div class="m-c-ad-learneds center">
+              <h3>Aquí aparecerán las letras que vayas aprendiendo</h3>
             </div>
           </div>
 

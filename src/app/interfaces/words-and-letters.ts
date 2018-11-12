@@ -16,8 +16,14 @@ export interface SimilarLetters {
     m: string;
 }
 
+export interface LearnedLetters {
+    letter?: string;
+    rating?: number;
+}
+
 export interface WordsAndLetters {
-    words:          Words[];
-    letters:        Letters;
-    similarLetters: SimilarLetters[];
+    words:           Words[];
+    letters:         Letters;
+    similarLetters:  SimilarLetters[];
+    learnedLetters:  LearnedLetters[];
 }

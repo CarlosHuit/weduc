@@ -526,10 +526,28 @@
   background:     linear-gradient(180deg, #fa7e29 0%, #F6682F 80%, #F6682F 100%);
 }
 
+.m-c-ad-learneds {
+  width: 80%;
+  height: 250px;
+  border: 6px dashed #a9a9a9;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+
+.m-c-ad-learneds h3 {
+  text-align: center;
+  font-size:  24px;
+  color:    #696969;
+}
+
 @media (min-width: 320px) and (orientation: landscape) {
 
   .m-c-accordion {
     max-width: 640px;
+  }
+
+  .m-c-ad-learneds {
+    height: 170px;
   }
 
 }
