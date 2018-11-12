@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import urljoin from 'url-join';
 import { environment } from '../../environments/environment';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
+import { GetTokenService } from './get-token.service';
 
 import { WordsAndLetters, Letters, Words  } from '../interfaces/words-and-letters';
 
@@ -61,9 +62,19 @@ export class GetDataService {
 
 
   apiUrl: string;
+  httpOptions: any;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private getToken: GetTokenService) {
     this.apiUrl = urljoin(environment.apiUrl);
+    this.httpOptions = {
+      headers: new HttpHeaders(
+        {
+          'Content-Type': 'application/json',
+          'Authorization': `${this.getToken.addToken()}`
+        }
+      )
+    };
+
   }
 
 
@@ -177,9 +188,11 @@ export class GetDataService {
 
 
   getWordsAndLetters = (): Observable<any | WordsAndLetters> => {
-    const url = urljoin(this.apiUrl, 'words-and-letters');
 
-    return this.http.get(url)
+    const token = this.getToken.getToken();
+    const url   = urljoin(this.apiUrl, `words-and-letters`);
+
+    return this.http.get(url, this.httpOptions)
       .pipe(
 
         catchError(this.handleError('WordsAndLetters', []))

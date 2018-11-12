@@ -10,6 +10,8 @@ import { WordsAndLetters        } from '../../interfaces/words-and-letters';
 import { LocalStorageService    } from '../../services/local-storage.service';
 import { ChangeDetectorRef      } from '@angular/core';
 import { MediaMatcher           } from '@angular/cdk/layout';
+import { MatAccordion           } from '@angular/material';
+
 
 @Component({
   selector: 'app-letters-menu',
@@ -22,20 +24,24 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
   mobileQuery: MediaQueryList;
 
   @ViewChild('containerDetail') containerDetail: ElementRef;
+  @ViewChild(MatAccordion)      accordion:       MatAccordion;
 
   styles: {};
   @ViewChild('contGrid') contGrid: ElementRef;
-  data:          WordsAndLetters;
-  userData:      MenuData = {};
-  letters:       string[] = [];
-  words:         string[] = [];
-  storage:       boolean;
-  selected:      boolean;
-  showC:         boolean;
-  speaking:      boolean;
+  data:           WordsAndLetters;
+  userData:       MenuData = {};
+  letters:        string[] = [];
+  words:          string[] = [];
+  storage:        boolean;
+  selected:       boolean;
+  showC:          boolean;
+  speaking:       boolean;
+  multi:          boolean;
+  closeExpansion: boolean;
+
   currentLetter: string;
-  loading =      true;
-  showModal =    false;
+  loading      = true;
+  showModal    = false;
   showAlphabet = true;
   combinations:  {};
 
@@ -87,6 +93,7 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
     this.getData.getWordsAndLetters()
       .subscribe(
         (data: WordsAndLetters) => {
+          console.log(data);
           this.data = data;
           this.setInitialData(this.data);
           this.instructions('y');
@@ -104,6 +111,14 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.speechSynthesis.cancel();
     (window as any).onresize = () => {};
+  }
+
+  sendExample = () => {
+    this.sendData.sendUserProgress()
+    .subscribe(
+      val => console.log(val),
+      err => console.log(err)
+    );
   }
 
   isMobile = (): boolean =>  this.detMobile.isMobile();
@@ -161,6 +176,8 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
   sortAlpha = () => {
 
+    this.closeAllExpansion();
+
     this.sortRatingState    = false;
     this.sortedState.alpha  = true;
     this.sortedState.rating = false;
@@ -198,6 +215,8 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
   sortRating = () => {
 
+    this.closeAllExpansion();
+
     this.sortAlphaState     = false;
     this.sortedState.alpha  = false;
     this.sortedState.rating = true;
@@ -213,6 +232,11 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
       this.sortRatingState = !this.sortRatingState;
 
     }
+  }
+
+  closeAllExpansion = () => {
+    this.multi = true;
+    setTimeout(() => (this.accordion.closeAll(), this.multi = false), 0);
   }
 
   getImage = (letter) => {

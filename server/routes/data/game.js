@@ -1,6 +1,6 @@
 import express from 'express'
 import Debug from 'debug'
-import { Game, User } from '../../models';
+import { Game, User } from '../../models'
 import { required } from '../../middleware'
 import { nameProject } from '../../config'
 

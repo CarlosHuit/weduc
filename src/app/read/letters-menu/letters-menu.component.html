@@ -140,6 +140,7 @@
   <!-- Mobile Version -->
   <div class="m-c-menu-letters" *ngIf="!loading && isMobile()">
 
+    <button (click)="sendExample()">evniar</button>
 
     <div class="m-c-alphabet">
       <mat-tab-group color="accent" backgroundColor="warn" mat-align-tabs="start">
@@ -217,7 +218,7 @@
                 </button>
               </div>
 
-              <mat-accordion class="m-c-accordion" >
+              <mat-accordion class="m-c-accordion" [multi]="multi" >
                 <mat-expansion-panel *ngFor="let itemLetter of learneds">
       
                   <mat-expansion-panel-header [style.height.px]="80">

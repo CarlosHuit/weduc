@@ -28,7 +28,10 @@ export class SendDataService {
     private getToken: GetTokenService
   ) {
 
+
     this.apiUrl = urljoin(environment.apiUrl, 'data');
+    // this.apiUrl2 = urljoin(environment.apiUrl, 'data');
+
 
   }
 
@@ -52,6 +55,18 @@ export class SendDataService {
     const url   = urljoin(this.apiUrl, `target${token}`);
     const data  = JSON.stringify(obj);
 
+    return this.http.post(url, data, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  sendUserProgress = () => {
+
+    const token = this.getToken.getToken();
+    const url   = urljoin(environment.apiUrl, `user-progress${token}`);
+    const data  = JSON.stringify({letter: 'a', rating: 4});
+    console.log('--send user progress--');
     return this.http.post(url, data, this.httpOptions)
       .pipe(
         catchError(this.handleError)
@@ -84,6 +99,7 @@ export class SendDataService {
 
 
   sendDrawLetterData = (obj: DrawLetterData[]) => {
+
     const token = this.getToken.getToken();
     const url   = urljoin(this.apiUrl, `draw-letter${token}`);
     const data  = JSON.stringify(obj);
