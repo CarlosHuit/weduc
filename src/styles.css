@@ -159,6 +159,7 @@ body {
 
 .mat-tab-label {
   opacity: 1 !important;
+  padding: 0 !important;
 }
 
 .mat-expansion-panel-header {

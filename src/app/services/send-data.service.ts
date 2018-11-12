@@ -1,17 +1,18 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
-import urljoin from 'url-join';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { catchError, map } from 'rxjs/operators';
-import { throwError } from 'rxjs';
-import { DrawLetterData } from '../read/draw-letter/draw-letter.component';
+import urljoin from 'url-join';
+import { environment      } from '../../environments/environment';
+import { catchError, map  } from 'rxjs/operators';
+import { throwError       } from 'rxjs';
+import { DrawLetterData   } from '../read/draw-letter/draw-letter.component';
+import { GetTokenService  } from '../services/get-token.service';
+import { SelectWords      } from '../read/select-words/select-words.component';
+import { MenuData         } from '../interfaces/menu-data';
+import { LearnedLetters   } from '../interfaces/words-and-letters';
 // import { CompleteWordData } from '../read/complete-word/complete-word.component';
-import { GetTokenService } from '../services/get-token.service';
 // import { FindLetter } from '../read/find-letter/find-letter.component';
-import { SelectWords } from '../read/select-words/select-words.component';
 // import { SelectImages } from '../read/select-images/select-images.component';
 // import { IdentifyLetter } from '../read/identify-letter/identify-letter.component';
-import { MenuData } from '../interfaces/menu-data';
 
 @Injectable({
   providedIn: 'root'
@@ -19,9 +20,7 @@ import { MenuData } from '../interfaces/menu-data';
 export class SendDataService {
 
   apiUrl: string;
-  httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-  };
+  httpOptions: any;
 
   constructor(
     private http: HttpClient,
@@ -30,7 +29,24 @@ export class SendDataService {
 
 
     this.apiUrl = urljoin(environment.apiUrl, 'data');
-    // this.apiUrl2 = urljoin(environment.apiUrl, 'data');
+    this.httpOptions = {
+      headers: new HttpHeaders( {
+        'Content-Type': 'application/json',
+        'Authorization': `${this.getToken.addToken()}`
+      })
+    };
+
+
+  }
+
+  sendUserProgress = (obj: LearnedLetters) => {
+
+
+    const url   = urljoin(environment.apiUrl, `user-progress`);
+    const data  = JSON.stringify(obj);
+
+    return this.http.post(url, data, this.httpOptions)
+      .pipe( catchError(this.handleError) );
 
 
   }
@@ -61,17 +77,7 @@ export class SendDataService {
       );
   }
 
-  sendUserProgress = () => {
 
-    const token = this.getToken.getToken();
-    const url   = urljoin(environment.apiUrl, `user-progress${token}`);
-    const data  = JSON.stringify({letter: 'a', rating: 4});
-    console.log('--send user progress--');
-    return this.http.post(url, data, this.httpOptions)
-      .pipe(
-        catchError(this.handleError)
-      );
-  }
 
 
   sendGameData = (obj: object) => {
@@ -171,7 +177,6 @@ export class SendDataService {
 
 
   private handleError (error: HttpErrorResponse) {
-
     const msg = `Error Status Code: ${error.status}. \n Message: ${error.error.message} \n Error: ${error.error.error}`;
     console.error(msg);
 

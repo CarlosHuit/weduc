@@ -2,108 +2,130 @@ import express            from 'express'
 import Debug              from 'debug'
 import { UserProgress, User   } from '../models';
 import { nameProject    } from '../config'
-import { required       } from '../middleware'
+import { required, verifyToken } from '../middleware'
 
 const app       = express.Router()
 const debug     = new Debug(`${nameProject}: user-progress`)
 const alphabet  = 'abcdefghijklmnñopqrstuvwxyz'
 const maxRating = 5
 
-app.post('/', required, async (req, res, next) => {
-
-  const { _id }            = req.user._id
-  const user               = await User.findOne(_id)
-  const { letter, rating } = req.body
-  const validation         = validateLetterAndRating(alphabet, maxRating, letter, rating)
+app.post('/', verifyToken, async (req, res, next) => {
 
   
-  if ( validation ) {
 
-    if (user !== null) {
-      
-      try {
-        const user_id        = req.user._id
-        const learnedLetter  = { letter, rating }
-        const newRegister    = { user_id, learnedLetters: [ {letter, rating } ] }
-  
-        const findUserProgress = await UserProgress.findOne({user_id: req.user._id})
-        
-        if( findUserProgress ) {
-  
-          const valLetter = findUserProgress.learnedLetters.find( letterComplete => letterComplete.letter === letter )
-  
-          if (!valLetter) {
-  
-            findUserProgress.learnedLetters.push(learnedLetter)
-            const n     = new UserProgress(findUserProgress)
-            const saveN = await n.save()
-            
-            debug(`Agre gando la letra: ${letter}`)
-            res.send(200).json({ message: 'Datos guardados' })
+  try {
+    
 
-          } else {
-  
-            if (valLetter.rating < rating) {
-  
-              for (let i = 0; i < findUserProgress.learnedLetters.length; i++) {
+    const { _id }            = req.user._id
+    const { letter, rating } = req.body
+    const validation         = validateLetterAndRating(alphabet, maxRating, letter, rating)
+    const userValidation     = await User.findOne(_id)
 
-                const el = findUserProgress.learnedLetters[i];  
-                if (el.letter === letter) { el.rating = rating }
-                
-              }
 
-              const n  = new UserProgress(findUserProgress)
-              const sN = await n.save()
-  
-              debug(`cambiando el rating de la letra: ${letter}`)
-              res.status(200).json({message: 'Datos Guardados'})
-  
-            } else {
 
-              debug('No se modifica el rating')
-              handleError(res, 'Cambios sin realizar', 'Cambios sin realizar')
+    if ( userValidation !== null && validation ) {
 
-            }
+      const userProgressProfile = await UserProgress.findOne({user_id: req.user._id}, { __v: 0 })
+
+
+
+      if (userProgressProfile) {
+
+
+
+        const lLetters    = userProgressProfile.learnedLetters.slice()
+        const letterExist = lLetters.find( group => group.letter === letter )
+
+
+
+        if (letterExist)  {
+
+
+
+          if (letterExist.rating >= rating) {
+            res.status(401).json({
+              message: `El rating de la letra "${letter}", no se actualiza`,
+              error:   'El rating obtenido es menor al anterior'
+            })
           }
-  
-  
-        } else {
-  
-          const newUserProgress = new UserProgress(newRegister)
-          const saveNewRegister = await newUserProgress.save()
-  
-          debug(`Creando nuevo registro de progreso`)
-          res.status(200).json(
-            {
-              message: 'Registrado exitosamente'
-            }
-          )
+
+
+
+          if (letterExist.rating < rating) {
+
+
+            const updateData = lLetters.slice()
+            updateData.forEach(el => el.letter === letter ? el.rating = rating : null );
+
+            const update = await UserProgress.findByIdAndUpdate(userProgressProfile._id, {$set: {learnedLetters: updateData}}, {new: true} )
+
+            debug(`El rating de la letra "${letter}" se actualiza a "${rating}"`)
+            res.status(200).json({ message: 'Rating actualizado'})
+
+          }
+
+
+
+        } 
+
+
+
+        if (!letterExist) {
+
+
+          const newElement  = { letter, rating }
+          const updateData  = lLetters.slice()
+          updateData.push(newElement)
+
+          const update = await UserProgress.findByIdAndUpdate(userProgressProfile._id, {$set: {learnedLetters: updateData}}, {new: true} )
+
+          debug(`Guardando el progreso de la letra : ${letter}`)
+          res.status(200).json({ message: `Progreso en la letra ${letter} guardado`})
+
 
         }
-  
-      } catch (error) {
-  
-        debug(error)
-        handleError(res, 'Ha ocurrido un error', 'Ha ocurrido un error')
-  
+
+
+
       }
-  
+
+
+
+      if (!userProgressProfile) {
+
+        const s = new UserProgress({ user_id: req.user._id, learnedLetters: [{ letter, rating }] })
+        const t = await s.save()
+        
+        debug(`Creando un nuevo userProgressProfile para: ${req.user.email}`)
+        res.status(200).json({ message: 'Saved data' })
+
+      }
+
+
+
     } else {
-  
-      debug('No se puede registrar datos a un usuario inexistente')
-      handleError(res, 'Data not save', 'invalid user')
-  
+
+      debug('unauthorized')
+      handleError(res, 'unauthorized', 'datos y/o usuario invalidos')
+
     }
+    
 
-  } else {
 
-    debug('Error al guardar, datos invalidos')
-    handleError(res, 'Error when saving', 'Invalid Data')
+  } catch (error) {
+    
+
+    debug('Ha ocurrido un error')
+    handleError(res, 'Ha ocurrido un error', 'Ha ocurrido un error')
+
 
   }
-  
+
+
 
 })
+
+
 
 const validateLetterAndRating = (alphabet, maxRating, letter, rating) => {
 
@@ -114,6 +136,8 @@ const validateLetterAndRating = (alphabet, maxRating, letter, rating) => {
   return valLetter === true && valRating === true ? true : false;
 
 }
+
+
 
 app.get('/', async (req, res) => {
 

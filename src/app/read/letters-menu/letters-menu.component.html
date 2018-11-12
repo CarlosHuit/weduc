@@ -138,14 +138,19 @@
   <!-- Mobile Version -->
   <div class="m-c-menu-letters" *ngIf="!loading && isMobile()">
 
-    <button (click)="sendExample()">evniar</button>
 
     <div class="m-c-alphabet">
       <mat-tab-group color="accent" backgroundColor="warn" mat-align-tabs="start">
 
+
+
+
         <!-- Alphabet -->
         <mat-tab>
-          <!-- Title tab -->
+
+
+
+          <!----- title tab ------>
           <ng-template mat-tab-label>
             <span
               class="center tab-title"
@@ -156,7 +161,10 @@
               Abecedario
             </span>
           </ng-template>
-          <!-- Content -->
+
+
+
+          <!------ Content ------>
           <div class="c-cards" [ngStyle]="genCols(contGrid)">
 
             <mat-card *ngFor="let letter of letters" class="m-c-card">
@@ -185,11 +193,20 @@
             </mat-card>
 
           </div>
+
+
+
         </mat-tab>
 
-        <!-- learned letters -->
+
+
+
+
+        <!------ learned letters ------>
         <mat-tab>
-          <!-- title tab -->
+
+
+          <!------ title tab ------>
           <ng-template mat-tab-label>
             <span 
               (click)="showAlphabet = false"
@@ -200,6 +217,9 @@
               Aprendidas
             </span>
           </ng-template>
+
+
+
 
           <!-- content -->
           <div class="m-c-learned-letters" *ngIf="!noLearneds()" >
@@ -282,13 +302,19 @@
             </div>
           </div>
 
+
           <div class="m-c-learned-letters center" style="padding-top: 0" *ngIf="noLearneds()" >
             <div class="m-c-ad-learneds center">
               <h3>Aquí aparecerán las letras que vayas aprendiendo</h3>
             </div>
           </div>
 
+
+
         </mat-tab>
+
+
+
 
       </mat-tab-group>
     </div>

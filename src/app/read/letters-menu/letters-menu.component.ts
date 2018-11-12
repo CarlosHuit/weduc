@@ -89,14 +89,6 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
     (window as any).onresize = () => {};
   }
 
-  sendExample = () => {
-    this.sendData.sendUserProgress()
-    .subscribe(
-      val => console.log(val),
-      err => console.log(err)
-    );
-  }
-
   isMobile = (): boolean =>  this.detMobile.isMobile();
 
   setInitialData = (data: WordsAndLetters) => {
