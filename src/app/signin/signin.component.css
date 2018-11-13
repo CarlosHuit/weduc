@@ -1,3 +1,36 @@
+/* ---------- desktop version ----------*/
+.d-c-dektop {
+  display:          flex !important;
+  justify-content:  center;
+  align-items:      center;
+  overflow:         auto;
+}
+
+.d-c-card-signin {
+  width:        480px;
+  padding:      40px 25px;
+  margin:       0 20px;
+  min-width:    320px;
+  min-height:   420px
+}
+
+@media (max-height: 600px) {
+
+  .d-c-dektop {
+    overflow:     auto;
+    align-items:  unset;
+  }
+
+  .d-c-card-signin {
+    padding-top:    20px; 
+    padding-bottom: 20px; 
+    margin:         10px auto;
+    height:         unset;
+  }
+
+}
+
+/* ---------- mobile version ----------*/
 .m-c-banner-title {
   height:             56px;
   width:              100%;
@@ -60,7 +93,6 @@
   padding:        0;
 }
 
-
 .m-c-button-signin {
   margin-top:   5px;
   font-size:    24px;
@@ -72,12 +104,12 @@
 
 .m-c-signup-link {
   margin-top:      15px;
+  padding-top:     10px;
   text-align:      center;
   display:         flex;
   align-items:     center;
   justify-content: center;
 }
-
 
 .text-signup, .link-signup {
   margin:    0 0 0 6px;
@@ -90,7 +122,6 @@
   color:          #0a8ecd;
   cursor:           pointer;
 }
-
 
 @media (min-width: 240px) and (orientation: landscape) {
 

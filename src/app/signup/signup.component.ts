@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
-import { CustomValidator } from './equals-validator.directive';
-import { User } from '../classes/user';
-import { AuthService } from '../services/auth.service';
-import { ErrorStateMatcher } from '@angular/material/core';
+import { CustomValidator     } from './equals-validator.directive';
+import { User                } from '../classes/user';
+import { AuthService         } from '../services/auth.service';
+import { ErrorStateMatcher   } from '@angular/material/core';
+import { DetectMobileService } from '../services/detect-mobile.service';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -18,18 +19,25 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   styleUrls: ['./signup.component.css']
 })
 
-export class SignupComponent {
+export class SignupComponent implements OnInit, OnDestroy {
 
   signupForm: FormGroup;
-  matcher = new MyErrorStateMatcher();
-  show: boolean;
+  matcher =   new MyErrorStateMatcher();
 
   constructor(
-    private fb: FormBuilder,
-    private authService: AuthService
+    private fb:           FormBuilder,
+    private authService:  AuthService,
+    private _mobile:      DetectMobileService
   ) {
+  }
+
+  ngOnInit() {
     this.createForm();
-    this.show = this.signupForm.controls.password.valid;
+    window.addEventListener('resize', this.isMobile);
+  }
+
+  ngOnDestroy() {
+    window.removeEventListener('resize', this.isMobile);
   }
 
   createForm() {
@@ -64,6 +72,9 @@ export class SignupComponent {
 
   }
 
+  isMobile = () => {
+    return this._mobile.isMobile();
+  }
 
   onSubmit() {
 

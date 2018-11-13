@@ -1,15 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormGroupDirective, NgForm } from '@angular/forms';
-import { User } from '../classes/user';
-import { AuthService } from '../services/auth.service';
-import { ErrorStateMatcher } from '@angular/material/core';
+import { User                } from '../classes/user';
+import { AuthService         } from '../services/auth.service';
+import { ErrorStateMatcher   } from '@angular/material/core';
+import { DetectMobileService } from '../services/detect-mobile.service';
 
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
+
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+
     const isSubmitted = form && form.submitted;
     return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
+
   }
+
 }
 
 @Component({
@@ -18,29 +23,44 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   styleUrls: ['./signin.component.css']
 })
 
-export class SigninComponent implements OnInit {
+export class SigninComponent implements OnInit, OnDestroy {
 
   signinForm: FormGroup;
-  matcher = new MyErrorStateMatcher();
+  matcher =   new MyErrorStateMatcher();
 
-  constructor(private authService: AuthService) { }
+  constructor(
+    private authService: AuthService,
+    private _mobile:     DetectMobileService
+  ) { }
 
   ngOnInit() {
-    this.signinForm = new FormGroup(
-      {
-        'email': new    FormControl(null, [Validators.required, Validators.email]),
-        'password': new FormControl(
-          null,
-          [
-            Validators.required,
-            Validators.minLength(8),
-            Validators.pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/)
-          ]
-        ),
-      }
-    );
+
+
+    this.signinForm = new FormGroup({
+      'email': new    FormControl(null, [Validators.required, Validators.email]),
+      'password': new FormControl(
+        null,
+        [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/)
+        ]
+      ),
+    });
+
+    window.addEventListener('resize', this.isMobile);
+
   }
 
+
+  ngOnDestroy() {
+    window.removeEventListener('resize', this.isMobile);
+  }
+
+
+  isMobile = () => {
+    return this._mobile.isMobile();
+  }
 
 
   onSubmit() {
@@ -62,4 +82,7 @@ export class SigninComponent implements OnInit {
         );
     }
   }
+
+
+
 }
