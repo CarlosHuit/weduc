@@ -45,11 +45,12 @@
   border:         none;
   border-bottom:  2px solid rgba(43, 145, 191, .35);
   margin:         0;
+  z-index:        -1;
 }
 
-.one   { top: 15% }
-.two   { top: 40% }
-.three { top: 75% }
+.one   { top: 12% }
+.two   { top: 37% }
+.three { top: 72% }
 
 .d-c-icon {
   color:        white;

@@ -22,10 +22,11 @@ export class DetailCourseComponent implements OnInit, OnDestroy {
   @ViewChild('videoDesktop') videoDesktop: ElementRef;
   @ViewChild('autosize') autosize: CdkTextareaAutosize;
   data: Subjects;
-  unsetHeight: boolean;
-  course: string;
-  loading = true;
-  videoUrl: any;
+  unsetHeight:  boolean;
+  course:       string;
+  loading =     true;
+  videoUrl:     any;
+  showComments: boolean;
   currentUser: User;
   comments = [
     {
@@ -59,7 +60,8 @@ export class DetailCourseComponent implements OnInit, OnDestroy {
     private ngZone:     NgZone,
     private router:     Router,
   ) {
-    this.course = this._route.snapshot.paramMap.get('course');
+    this.course       = this._route.snapshot.paramMap.get('course');
+    this.showComments = false;
 
     if (this._auth.isLoggedIn()) {
       const { userId, email, firstName, lastName } = JSON.parse(localStorage.getItem('user'));
