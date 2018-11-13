@@ -69,7 +69,7 @@
 .icon-signup {
   position: absolute;
   left:     calc((100% / 2) - 80px);
-  top:      15%;
+  top:      calc((100% / 2) - 80px);
 }
 
 .icon-signup img {
