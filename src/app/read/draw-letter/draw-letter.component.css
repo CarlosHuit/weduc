@@ -58,3 +58,13 @@
 .box.two {
   background-color: #eaecee;
 }
+
+@media (min-width: 320px) and (orientation: landscape) {
+  .container.mobile {
+    display: block;
+  }
+
+  .container-slider-mobile {
+    min-height: 270px;
+  }
+}

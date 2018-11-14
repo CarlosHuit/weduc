@@ -80,6 +80,7 @@ export class LettersDetailComponent implements OnInit {
     this.currentLetter  = this.lettersOPt[0];
     this.idOPtions      = this.fillLettersIds();
     this.currentIds     = this.idOPtions[this.currentLetter];
+    this.show           = true;
   }
 
   ngOnInit() {
@@ -208,6 +209,7 @@ export class LettersDetailComponent implements OnInit {
 
       this.showTarget    = true;
       this.hideTarget    = false;
+      this.show          = true;
       this.reset();
       this.currentLetter = this.lettersOPt[index + 1];
       this.currentIds    = this.idOPtions[this.currentLetter];
@@ -262,14 +264,14 @@ export class LettersDetailComponent implements OnInit {
   initUserData = () => {
     const t = this.genDates.generateData();
 
-    this.userData.user_id = 'N/A';
-    this.userData.date = t.fullDate;
+    this.userData.user_id   = 'N/A';
+    this.userData.date      = t.fullDate;
     this.userData.startTime = t.fullTime;
     this.userData.finalTime = 'N/A';
-    this.userData.letter = this.currentLetter;
-    this.userData.pattern = this.fillOtions();
-    this.userData.fails = 0;
-    this.userData.couples = [];
+    this.userData.letter    = this.currentLetter;
+    this.userData.pattern   = this.fillOtions();
+    this.userData.fails     = 0;
+    this.userData.couples   = [];
     this.userData.historial = [];
   }
 

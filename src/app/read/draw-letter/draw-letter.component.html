@@ -1,5 +1,8 @@
-<div class="container" style="overflow: auto">
-<!-- desktop Version -->
+<div class="container mobile" style="overflow: auto">
+
+
+
+  <!-- desktop Version -->
   <mat-card 
       *ngIf="!loading && !isMobile()"
       class="hide container-slider"
@@ -28,43 +31,45 @@
         </div>
   
       </div>
-    </mat-card>
+  </mat-card>
   
-    <!-- mobile version -->
+
+
+  <!-- mobile version -->
+  <div 
+    *ngIf="!loading && isMobile()"
+    [class.container-slider]="isMobile() === false"
+    [class.container-slider-mobile]="isMobile() === true"
+    class="hide"
+    [class.show]="showDraw"
+    >
     <div 
-      *ngIf="!loading && isMobile()"
-      [class.container-slider]="isMobile() === false"
-      [class.container-slider-mobile]="isMobile() === true"
-      class="hide"
-      [class.show]="showDraw"
+      class="slider"
+      [class.show-board]="showBoard === true"
       >
-      <div 
-        class="slider"
-        [class.show-board]="showBoard === true"
-        >
 
-        <div class="box one">
-          <app-handwriting
-            [letter]="currentLetter"
-            [coordinates]="currentCoordinates"
-            (propagar)="showBoardC($event)"
-            >
-          </app-handwriting>
-        </div>
-
-        <div class="box two">
-          <app-board
-            [letter]="currentLetter"
-            (showHandwriting)="showHandWriting($event)"
-            (next)="next($event)"
-            >
-          </app-board>
-        </div>
-
+      <div class="box one">
+        <app-handwriting
+          [letter]="currentLetter"
+          [coordinates]="currentCoordinates"
+          (propagar)="showBoardC($event)"
+          >
+        </app-handwriting>
       </div>
-    </div>
 
-    <app-success-animation *ngIf="success" class="hideSuccess"  [class.showSuccess]="success === false"></app-success-animation>
-    <app-spinner-loading   *ngIf="loading"></app-spinner-loading>
-    
+      <div class="box two">
+        <app-board
+          [letter]="currentLetter"
+          (showHandwriting)="showHandWriting($event)"
+          (next)="next($event)"
+          >
+        </app-board>
+      </div>
+
+    </div>
+  </div>
+
+  <app-success-animation *ngIf="success" class="hideSuccess"  [class.showSuccess]="success === false"></app-success-animation>
+  <app-spinner-loading   *ngIf="loading"></app-spinner-loading>
+  
   </div>
