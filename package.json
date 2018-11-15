@@ -5,7 +5,7 @@
     "start": "concurrently -r \"npm run start:server-dev\"  \"npm run start:client-dev\"",
     "start:mobile": "concurrently -r \"npm run start:server-dev\"  \"npm run start:client-mobile\"",
     "start:production": "concurrently -r \"npm run start:server-prod\" \"npm run start:client-prod\" ",
-    "start:client-dev": "ng serve",
+    "start:client-dev": "ng serve --port 4540",
     "start:server-dev": "NODE_ENV=development DEBUG=WEDUC:* nodemon server/index.js --exec babel-node --presets es2015,stage-0 --plugins transform-async-to-generator",
     "start:server-prod": "NODE_ENV=production node server.js",
     "start:client-prod": "ng serve --prod",

@@ -1,4 +1,4 @@
-<div class="container">
+<div #container class="container" [class.mobile]="isMobile()">
 
 
   <!-- Desktop Version -->
@@ -22,27 +22,41 @@
 
 
   <!-- Mobile Version -->
-  <mat-card *ngIf="!loading && isMobile()" class="card hide" [class.show]="showC === true">
+  <mat-card
+    [class.show]="showC === true"
+    *ngIf="!loading && isMobile()"
+    class="m-c-card-identify-letter hide"
+    >
 
-    <div class="m-c-image">
-      <img class="press" [src]="urlImage" (click)="speak()">
-    </div>
-
-    <div #mcWord class="m-c-word">
-      <button
-        [id]="letter"
-        class="option"
-        *ngFor="let letter of arrayIDs"
-        (click)="onSelect(letter)"
-        [ngStyle]="genStyles(mcWord)"
-        [disabled]="selection[letter] === letter"
-        [class.select]="selection[letter] === letter"
+    <div #mcImage class="m-c-image center" [style.width.px]="mcImage.clientHeight" >
+      <img
+        [style.width.px]="mcImage.clientHeight * 0.65"
+        [style.height.px]="mcImage.clientHeight * 0.65"
+        class="press"
+        [src]="urlImage"
+        (click)="speak()"
         >
-        {{letter[0]}}
-      </button>
+        <div class="shadow"></div>
     </div>
 
-    <mat-icon class="i-help" (click)="instructions()" >contact_support</mat-icon>
+    <div #mcWord class="m-c-container-word center">
+      <div class="m-c-word">
+        <button
+          [id]="letter"
+          class="option"
+          *ngFor="let letter of arrayIDs"
+          (click)="onSelect(letter)"
+          [ngStyle]="genStyles(mcWord, container)"
+          [disabled]="selection[letter] === letter"
+          [class.select]="selection[letter] === letter"
+          >
+          <!-- [style.fontSize.px]="mcWord.clientWidth * 0.133" -->
+          {{letter[0]}}
+        </button>
+      </div>
+    </div>
+
+    <mat-icon class="i-help" (click)="instructions()" >help</mat-icon>
 
   </mat-card>
 

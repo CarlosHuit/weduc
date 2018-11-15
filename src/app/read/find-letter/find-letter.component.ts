@@ -261,13 +261,48 @@ export class FindLetterComponent implements OnInit, OnDestroy {
     this.speech.speak(this.word);
   }
 
-  genStyles = (el: HTMLDivElement) => {
-    const max = this.arrayIDs.length;
-    const l = el.clientWidth;
-    // return {
-    //   'width': `${(l / max) - 3}px`,
-    //   'color': 'red'
-    // };
+  genStyles = (el: HTMLDivElement, container: HTMLDivElement) => {
+
+    const lenght  = this.word.length;
+    const cWidth  = container.clientWidth;
+    const cHeight = container.clientHeight;
+    const w       = el.clientWidth;
+
+    if (cHeight > cWidth) {
+      if (lenght <= 4) {
+
+        return { 'min-width': `55px`, 'font-size': `${w * 0.16}px` };
+
+      } else if ( lenght > 4 && lenght <= 6 ) {
+
+        return { 'min-width': `45px`, 'font-size': `${w * 0.16}px` };
+
+      } else if (lenght === 7 ) {
+
+        return { 'min-width': `35px`, 'font-size': `${w * 0.16}px` };
+
+      } else if (lenght > 7 ) {
+
+        return { 'min-width': `30px`, 'font-size': `${w * 0.135}px` };
+
+      }
+
+    }
+
+    if (cHeight < cWidth) {
+
+      if (lenght <= 6) {
+
+        return { 'min-width': `45px`, 'font-size': `${w * 0.135}px` };
+
+      } else {
+
+        return { 'min-width': `38px`, 'font-size': `${w * 0.10}px` };
+
+      }
+
+    }
+
   }
 
   genSizeDesk = (el: HTMLDivElement) => {
@@ -292,7 +327,7 @@ export class FindLetterComponent implements OnInit, OnDestroy {
 
   addData = (word: string, code: number, letter?: string, state?: boolean) => {
 
-    const t = this.genDates.generateData();
+    const time = this.genDates.generateData();
 
     for (const i in this.userData.words) {
       if (this.userData.words.hasOwnProperty(i)) {
@@ -302,10 +337,10 @@ export class FindLetterComponent implements OnInit, OnDestroy {
 
           switch (code) {
             case 2010:
-              el.startTime = t.fullTime;
+              el.startTime = time.fullTime;
               break;
             case 2011:
-              el.finalTime = t.fullTime;
+              el.finalTime = time.fullTime;
               break;
             case 2012:
               el.correct++;
@@ -345,7 +380,7 @@ export class FindLetterComponent implements OnInit, OnDestroy {
     const result = [];
 
     this.words.forEach(word => {
-      const t: Options = {
+      const xx: Options = {
         word: word,
         startTime: 'N/A',
         finalTime: 'N/A',
@@ -355,7 +390,7 @@ export class FindLetterComponent implements OnInit, OnDestroy {
         repetitions: 0,
         historial: []
       };
-      result.push(t);
+      result.push(xx);
     });
 
     return JSON.parse(JSON.stringify(result));
@@ -384,3 +419,199 @@ export class FindLetterComponent implements OnInit, OnDestroy {
   }
 
 }
+
+
+
+const t = [
+'bicicleta',
+'impresora',
+'serpiente',
+'sombrilla',
+'unicornio',
+'waterpolo',
+'zanahoria',
+'zapatilla',
+'zoológico',
+'aguacate',
+'boxeador',
+'diamante',
+'edificio',
+'elefante',
+'escalera',
+'estrella',
+'gelatina',
+'guitarra',
+'mariposa',
+'pantalla',
+'paraguas',
+'querubín',
+'semáforo',
+'sombrero',
+'teléfono',
+'uniforme',
+'universo',
+'xilófono',
+'Francia',
+'ardilla',
+'ballena',
+'caballo',
+'campana',
+'fósforo',
+'gallina',
+'hormiga',
+'iglesia',
+'juguete',
+'karaoke',
+'lagarto',
+'medalla',
+'naranja',
+'palmera',
+'química',
+'raqueta',
+'saxofón',
+'tenedor',
+'ventana',
+'vestido',
+'walkman',
+'Walter',
+'anillo',
+'biblia',
+'camión',
+'conejo',
+'delfín',
+'doctor',
+'duende',
+'escoba',
+'espejo',
+'flauta',
+'fuente',
+'guante',
+'gusano',
+'harina',
+'helado',
+'iguana',
+'jaguar',
+'jarrón',
+'jirafa',
+'karate',
+'kimono',
+'kiosco',
+'molino',
+'payaso',
+'pelota',
+'piñata',
+'quemar',
+'querer',
+'tambor',
+'tijera',
+'tomate',
+'urbano',
+'viento',
+'volcán',
+'waffle',
+'webcam',
+'yogurt',
+'yunque',
+'zapato',
+'zapote',
+'abeja',
+'avión',
+'baile',
+'barco',
+'burro',
+'carro',
+'dulce',
+'elote',
+'fresa',
+'fruta',
+'fuego',
+'globo',
+'gorra',
+'hielo',
+'hueso',
+'huevo',
+'indio',
+'jabón',
+'jaula',
+'koala',
+'libro',
+'limón',
+'lápiz',
+'momia',
+'mundo',
+'nariz',
+'oreja',
+'otoño',
+'otoño',
+'oveja',
+'queso',
+'ratón',
+'reloj',
+'rueda',
+'silla',
+'tigre',
+'zorro',
+'éxito',
+'ñandú',
+'agua',
+'arpa',
+'bota',
+'cama',
+'casa',
+'coco',
+'dado',
+'dedo',
+'flor',
+'gato',
+'hilo',
+'idea',
+'iglú',
+'imán',
+'isla',
+'jugo',
+'kilo',
+'kiwi',
+'lago',
+'leña',
+'lima',
+'lobo',
+'luna',
+'mano',
+'mapa',
+'mesa',
+'moño',
+'nave',
+'nido',
+'niña',
+'niño',
+'nube',
+'olla',
+'pato',
+'pera',
+'rana',
+'rosa',
+'sapo',
+'sopa',
+'taxi',
+'taxi',
+'taza',
+'uvas',
+'vaca',
+'vaso',
+'vela',
+'vino',
+'yate',
+'yema',
+'yeso',
+'yoyo',
+'ñoño',
+'ojo',
+'ola',
+'oro',
+'oso',
+'rey',
+'sol',
+'uno',
+'uña',
+
+];
