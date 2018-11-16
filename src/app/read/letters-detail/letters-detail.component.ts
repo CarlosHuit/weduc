@@ -10,25 +10,9 @@ import { LocalStorageService     } from '../../services/local-storage.service';
 import { ShuffleService          } from '../../services/shuffle/shuffle.service';
 import { GenerateIdsService      } from '../../services/generate-ids/generate-ids.service';
 import { SimilarLetters          } from '../../interfaces/words-and-letters';
+import { FindLetter, Selection } from 'src/app/interfaces/find-letter';
 
-export interface FindLetter {
-  user_id?:    string;
-  date?:        string;
-  startTime?:   string;
-  finalTime?:   string;
-  pressLetter?: string[];
-  letter?:      string;
-  pattern?:     string[];
-  fails?:       number;
-  couples?:     string[][];
-  historial?:   Selection[];
-}
 
-export interface Selection {
-  time?:   string;
-  letter?: string;
-  state?:  boolean;
-}
 
 @Component({
   selector: 'app-letters-detail',
@@ -125,9 +109,11 @@ export class LettersDetailComponent implements OnInit {
     this.show        = true;
 
     const type   = this.currentLetter === this.currentLetter.toLowerCase() ? 'minúscula' : 'mayúscula';
-    const letter = JSON.parse(localStorage.getItem('letter_sounds'))[this.letterParam.toLocaleLowerCase()];
+    const letter = JSON.parse(localStorage.getItem('letter_sounds'))[this.letterParam];
+
     const msg    = `Encuentra la pareja de letras: ${letter}.. "${type}"`;
     const speak  = this.speech.speak(msg);
+
     speak.addEventListener('end', e => ( this.canPlayGame = true, this.show = false));
 
   }
@@ -135,28 +121,9 @@ export class LettersDetailComponent implements OnInit {
   isMobile = (): boolean => this.dMobile.isMobile();
 
 
-  /*----- Style of elementes  -----*/
 
-  style = (el: HTMLElement) => {
 
-    const width  = el.clientWidth;
-    const height = el.clientHeight;
 
-    if (width > height) {
-      return {
-        'width':  `${height * .85}px`,
-        'height': `${height * .85}px`
-      };
-    } else {
-      return {
-        'width':  `${width * .85}px`,
-        'height': `${width * .85}px`
-      };
-    }
-
-  }
-
-  calcOpt = (el: HTMLElement) => ({ 'width': `${el.clientWidth * .332}px`, 'height': `${el.clientWidth * .332}px` });
 
 
   /*----- End Style of elements -----*/
@@ -168,11 +135,7 @@ export class LettersDetailComponent implements OnInit {
 
     if (this.canPlayGame) {
 
-      const sound = JSON.parse(localStorage.getItem('letter_sounds'))[id[0].toLowerCase()];
-      const typeL = this.currentLetter === this.currentLetter.toLowerCase() ? 'minúscula' : 'mayúscula';
-      const msg = `${sound} '${typeL}'`;
-
-      const playR = id[0] === this.currentLetter ? this.speech.speak(msg, .95) : this._audio.playAudio();
+      this.listenValidationOfSelection(id[0], this.currentLetter);
 
       this.active = true;
       const index = this.selections.indexOf(id);
@@ -182,8 +145,10 @@ export class LettersDetailComponent implements OnInit {
         this.selections.push(id);
 
         if (this.selections.length === 1) {
+
           this.sel1 = id;
           // this.addSelection(this.sel1[0]);
+
         }
 
         if (this.selections.length === 2) {
@@ -191,12 +156,21 @@ export class LettersDetailComponent implements OnInit {
           this.sel2 = id;
           // this.addSelection(this.sel2[0]);
           // this.addCouples(this.sel1[0], this.sel2[0]);
-
+          this.canPlayGame = false;
           const validation = this.sel1[0] === this.sel2[0] ? setTimeout(e => this.next(), 2000) : this.reset();
 
         }
       }
     }
+  }
+
+  listenValidationOfSelection = (letter: string, letterToVal: string) => {
+
+    const sound = JSON.parse(localStorage.getItem('letter_sounds'))[letter.toLowerCase()];
+    const typeL = letterToVal === letterToVal.toLowerCase() ? 'minúscula' : 'mayúscula';
+
+    const msg   = `${sound} '${typeL}'`;
+    const playR = letter === letterToVal ? this.speech.speak(msg, .95) : this._audio.playAudio();
   }
 
   next = () => {
@@ -250,16 +224,12 @@ export class LettersDetailComponent implements OnInit {
   }
 
   reset = () => {
-    setTimeout(() => {
-      this.sel1 = '';
-      this.sel2 = '';
-      this.active = false;
-      this.selections = [];
-    }, 1200);
+    setTimeout(() => (this.sel1 = '', this.sel2 = '', this.active = false, this.selections = []), 1200);
+    setTimeout(() => this.canPlayGame = true, 1500);
   }
 
 
-/* Collect User data */
+/*----- Collect User data -----*/
 
   initUserData = () => {
     const t = this.genDates.generateData();
@@ -276,21 +246,26 @@ export class LettersDetailComponent implements OnInit {
   }
 
   fillOtions = (): string[] => {
+
     const t = [];
     this.currentIds.forEach(el => t.push(el[0]));
+
     return JSON.parse(JSON.stringify(t));
+
   }
 
   addCouples = (letter1: string, letter2: string) => {
+
     const x = [letter1, letter2];
     this.userData.couples.push(x);
+
   }
 
   addSelection = (letter: string) => {
 
-    const state = letter === this.currentLetter ? true : false;
+    const state   = letter === this.currentLetter ? true : false;
     const addFail = state === false ? this.userData.fails++ : false;
-    const t = this.genDates.generateData();
+    const t       = this.genDates.generateData();
 
     const x: Selection = { time: t.fullTime, letter: letter, state: state };
     this.userData.historial.push(x);
@@ -322,12 +297,10 @@ export class LettersDetailComponent implements OnInit {
   // }
 
 
-  calcFZ = (el: HTMLElement) => {
-    const widthOPt = el.clientWidth;
-    return { 'font-size': `${widthOPt * .5}px` };
-  }
+
 
   continue = () => {
+
     this.hideTarget = true;
     setTimeout(e => this.showTarget = false, 500);
 
@@ -335,18 +308,50 @@ export class LettersDetailComponent implements OnInit {
   }
 
   listenMsg = () => {
-    const t = JSON.parse(localStorage.getItem('letter_sounds'))[this.letterParam.toLowerCase()];
+
+    const t    = JSON.parse(localStorage.getItem('letter_sounds'))[this.letterParam.toLowerCase()];
     const type = this.currentLetter === this.currentLetter.toLowerCase() ? 'minúscula' : 'mayúscula';
-    const msg = `Esta es la letra: ... ${t} ... ${type}`;
+    const msg  = `Esta es la letra: ... ${t} ... ${type}`;
+
     setTimeout(e => this.speech.speak(msg), 500);
+
   }
 
   listenLetter = () => {
-    const t = JSON.parse(localStorage.getItem('letter_sounds'))[this.letterParam.toLowerCase()];
+
+    const t    = JSON.parse(localStorage.getItem('letter_sounds'))[this.letterParam.toLowerCase()];
     const type = this.currentLetter === this.currentLetter.toLowerCase() ? 'minúscula' : 'mayúscula';
-    const msg = `${t} ... ${type}`;
+    const msg  = `${t} ... ${type}`;
+
     this.speech.speak(msg, 0.9);
+
   }
 
+  /*----- calculate styles of elements  -----*/
+  style = (el: HTMLElement) => {
 
+    const width  = el.clientWidth;
+    const height = el.clientHeight;
+
+    if (width > height) {
+      return {
+        'width':  `${height * .85}px`,
+        'height': `${height * .85}px`
+      };
+    } else {
+      return {
+        'width':  `${width * .85}px`,
+        'height': `${width * .85}px`
+      };
+    }
+
+  }
+
+  calcOpt = (el: HTMLElement) => ({ 'width': `${el.clientWidth * .332}px`, 'height': `${el.clientWidth * .332}px` });
+
+  calcFZ = (el: HTMLElement) => {
+    const widthOPt = el.clientWidth;
+    return { 'font-size': `${widthOPt * .5}px` };
+
+  }
 }
