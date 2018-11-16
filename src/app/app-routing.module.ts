@@ -12,6 +12,7 @@ import { GameComponent          } from './read/game/game.component';
 import { DrawLetterComponent    } from './read/draw-letter/draw-letter.component';
 import { FindLetterComponent    } from './read/find-letter/find-letter.component';
 import { SelectWordsComponent   } from './read/select-words/select-words.component';
+import { PronounceLetterComponent } from './read/pronounce-letter/pronounce-letter.component';
 // import { TargetComponent       } from './read/target/target.component';
 // import { GuessLetterComponent  } from './read/guess-letter/guess-letter.component';
 // import { CompleteWordComponent } from './read/complete-word/complete-word.component';
@@ -32,7 +33,8 @@ const routes: Routes = [
   { path: 'lectura/juego/:letter',            component: GameComponent,                   canActivate: [AuthGuard]        },
   { path: 'lectura/dibujar-letra/:letter',    component: DrawLetterComponent,             canActivate: [AuthGuard]        },
   { path: 'lectura/encontrar-letras/:letter', component: FindLetterComponent,             canActivate: [AuthGuard]        },
-  { path: 'leer/select-words/:letter',        component: SelectWordsComponent,            canActivate: [AuthGuard]        },
+  { path: 'lectura/select-words/:letter',     component: SelectWordsComponent,            canActivate: [AuthGuard]        },
+  { path: 'lectura/pronunciar-letra/:letter', component: PronounceLetterComponent,        canActivate: [AuthGuard]        },
   // { path: 'leer/target/:letter',              component: TargetComponent,                canActivate: [AuthGuard]        },
   // { path: 'leer/select-images/:letter',       component: SelectImagesComponent,          canActivate: [AuthGuard]        },
   // { path: 'leer/game/:letter',                component: GameComponent,                  canActivate: [AuthGuard]        },

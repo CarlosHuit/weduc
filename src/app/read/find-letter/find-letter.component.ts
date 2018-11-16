@@ -55,6 +55,7 @@ export class FindLetterComponent implements OnInit, OnDestroy {
   word: string;
   loading: boolean;
   success: boolean;
+  url: string;
 
   selection = {};
   showC: boolean;
@@ -71,8 +72,9 @@ export class FindLetterComponent implements OnInit, OnDestroy {
     private _storage: LocalStorageService,
     private _shuffle: ShuffleService,
   ) {
-    this.loading = true;
-    this.letterParam = this._route.snapshot.paramMap.get('letter');
+    this.loading      = true;
+    this.letterParam  = this._route.snapshot.paramMap.get('letter');
+    this.url          = `/lectura/select-words/${this.letterParam}`;
   }
 
   ngOnInit() {
@@ -216,11 +218,11 @@ export class FindLetterComponent implements OnInit, OnDestroy {
 
     this.success = true;
 
-    const url = `/leer/select-words/${this.letterParam}`;
+
     const msg = 'Lo has hecho muy bien.. continuemos.';
     const speech = this.speech.speak(msg);
 
-    speech.addEventListener('end', e => this.router.navigateByUrl(url));
+    speech.addEventListener('end', e => this.router.navigateByUrl(this.url));
 
   }
 

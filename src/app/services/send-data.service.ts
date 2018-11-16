@@ -9,6 +9,7 @@ import { GetTokenService  } from '../services/get-token.service';
 import { SelectWords      } from '../read/select-words/select-words.component';
 import { MenuData         } from '../interfaces/menu-data';
 import { LearnedLetters   } from '../interfaces/words-and-letters';
+import { PronounceLetter  } from '../interfaces/pronounce-letter';
 // import { CompleteWordData } from '../read/complete-word/complete-word.component';
 // import { FindLetter } from '../read/find-letter/find-letter.component';
 // import { SelectImages } from '../read/select-images/select-images.component';
@@ -164,16 +165,16 @@ export class SendDataService {
 
   // }
 
-  // sendIdentifyLetterData = (obj: IdentifyLetter[]) => {
+  sendPronounceLetterData = (obj: PronounceLetter[]) => {
 
-  //   const token = this.getToken.getToken();
-  //   const url   = urljoin(this.apiUrl, `identify-letter${token}`);
-  //   const data  = JSON.stringify(obj);
+    const token = this.getToken.getToken();
+    const url   = urljoin(this.apiUrl, `identify-letter${token}`);
+    const data  = JSON.stringify(obj);
 
-  //   return this.http.post(url, data, this.httpOptions)
-  //   .pipe( catchError(this.handleError) );
+    return this.http.post(url, data, this.httpOptions)
+    .pipe( catchError(this.handleError) );
 
-  // }
+  }
 
 
   private handleError (error: HttpErrorResponse) {

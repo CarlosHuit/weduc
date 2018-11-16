@@ -27,6 +27,7 @@ import { CatComponent } from './cat/cat.component';
 import { GameComponent } from './read/game/game.component';
 import { FindLetterComponent } from './read/find-letter/find-letter.component';
 import { SelectWordsComponent } from './read/select-words/select-words.component';
+import { PronounceLetterComponent } from './read/pronounce-letter/pronounce-letter.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { SelectWordsComponent } from './read/select-words/select-words.component
     GameComponent,
     FindLetterComponent,
     SelectWordsComponent,
+    PronounceLetterComponent,
   ],
   imports: [
     MaterialModule,

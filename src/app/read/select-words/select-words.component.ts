@@ -64,7 +64,7 @@ export class SelectWordsComponent implements OnInit, OnDestroy {
     private _mobile:   DetectMobileService
   ) {
     this.letterParam   = this._route.snapshot.paramMap.get('letter');
-    this.urlToRedirect = `leer/dibujar-letra/${this.letterParam}`;
+    this.urlToRedirect = `lectura/pronunciar-letra/${this.letterParam}`;
   }
 
   ngOnInit() {
