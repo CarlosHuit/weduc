@@ -10,7 +10,7 @@ import { LocalStorageService     } from '../../services/local-storage.service';
 import { ShuffleService          } from '../../services/shuffle/shuffle.service';
 import { GenerateIdsService      } from '../../services/generate-ids/generate-ids.service';
 import { SimilarLetters          } from '../../interfaces/words-and-letters';
-import { FindLetter, Selection   } from '../../interfaces/find-letter';
+import { FindLetterData, Selection   } from '../../interfaces/find-letter-data';
 
 
 
@@ -38,8 +38,8 @@ export class LettersDetailComponent implements OnInit {
   sel2 =          '';
   loading =       true;
   show:           boolean;
-  userData:       FindLetter   = {};
-  Data:           FindLetter[] = [];
+  userData:       FindLetterData   = {};
+  Data:           FindLetterData[] = [];
   similarLetters: SimilarLetters;
   idOPtions:      {};
   currentIds:     string[];
