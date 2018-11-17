@@ -46,6 +46,7 @@ app.get('/', verifyToken, async (req, res) => {
       handleError(res, msg)
   
     }
+
   } else {
 
     res.status(401).json({

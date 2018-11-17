@@ -1,7 +1,8 @@
 import express from 'express'
 import Debug from 'debug'
-import { Words } from '../models';
+import { Words, User } from '../models';
 import { nameProject } from '../config'
+import { verifyToken } from '../middleware';
 
 const app = express.Router()
 const debug = new Debug(`${nameProject}: words`)
@@ -26,38 +27,60 @@ app.get( '/', async (req, res) => {
 })
 
 
-app.get('/random/:letter', async (req, res) => {
+
+
+app.get('/random/:letter', verifyToken, async (req, res) => {
 
   const letterValidation = req.params.letter.toLowerCase()
-  const omit  = {_id:0, __v: 0, letter: 0} 
-  const words = [];
+  const { _id }  = req.user._id
+  const user     = await User.findOne(_id)
+  const omit     = {_id:0, __v: 0, letter: 0} 
+  const words    = [];
 
   try {
 
 
-    const AllWords      = await Words.find({}, omit)
-    const wordsOfLetter = await Words.findOne({letter: letterValidation}, omit)
+    if (user) {
+      
+      const AllWords      = await Words.find({}, omit)
+      const wordsOfLetter = await Words.findOne({letter: letterValidation}, omit)
+  
+      AllWords.forEach(element => element.words.forEach(el => words.push(el)))
+  
+      const t = cleanWords(words, letterValidation)
+      const lowerCase = prepareData(wordsOfLetter.words, t, 'lowerCase')
+      const upperCase = prepareData(wordsOfLetter.words, t, 'upperCase')
+  
+  
+      debug(`Mostrando palabras aleatorias para la letra: ${letterValidation}`)
 
-    AllWords.forEach(element => element.words.forEach(el => words.push(el)))
+      res.status(200).json({
+        lowerCase: lowerCase,
+        upperCase: upperCase
+      })
 
-    const t = cleanWords(words, letterValidation)
-    const lowerCase = prepareData(wordsOfLetter.words, t, 'lowerCase')
-    const upperCase = prepareData(wordsOfLetter.words, t, 'upperCase')
+    } else {
 
+      debug('usuario inválido')
+      res.status(401).json({
+        message: 'Usuario inválido'
+      })
 
-    debug('Mostran las palabras pata select-words')
-    res.status(200).json({
-      lowerCase: lowerCase,
-      upperCase: upperCase
-    })
+    }
+
 
   } catch (error) {
-    const msg = 'Data not found'
+
+    const msg = 'Error al obtener la informacion'
+    const err = 'Ha ocurrido un error'
     debug(msg)
-    handleError(res, msg)
+    handleError(res, msg, err)
+
   }
 
 })
+
+
 
 
 app.get( '/:letter', async (req, res) => {
@@ -331,7 +354,7 @@ const generateRandomWords = (max, words) => {
 }
 
 
-const handleError = (res, message) => {
+const handleError = (res, message, error) => {
 
   return res.status(401).json({
     message: 'Words not found',

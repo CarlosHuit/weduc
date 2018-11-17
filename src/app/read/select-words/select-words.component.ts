@@ -1,11 +1,13 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router       } from '@angular/router';
-import { GetDataService, RandomWords  } from '../../services/get-data.service';
+import { GetWordsService              } from '../../services/get-words/get-words.service';
 import { HttpResponse                 } from '@angular/common/http';
 import { SpeechSynthesisService       } from '../../services/speech-synthesis.service';
 import { GenerateDatesService         } from '../../services/generate-dates.service';
 import { SendDataService              } from '../../services/send-data.service';
 import { DetectMobileService          } from '../../services/detect-mobile.service';
+import { RandomWords                  } from 'src/app/services/get-data.service';
+import { LocalStorageService          } from '../../services/local-storage.service';
 
 export interface SelectWords {
   user_id?:    string;
@@ -55,13 +57,14 @@ export class SelectWordsComponent implements OnInit, OnDestroy {
 
 
   constructor(
-    private _route:   ActivatedRoute,
-    private getData:  GetDataService,
-    private router:   Router,
-    private speech:   SpeechSynthesisService,
-    private genDates: GenerateDatesService,
+    private _route:    ActivatedRoute,
+    private getData:   GetWordsService,
+    private router:    Router,
+    private speech:    SpeechSynthesisService,
+    private genDates:  GenerateDatesService,
     private _sendData: SendDataService,
-    private _mobile:   DetectMobileService
+    private _mobile:   DetectMobileService,
+    private _storage:  LocalStorageService
   ) {
     this.letterParam   = this._route.snapshot.paramMap.get('letter');
     this.urlToRedirect = `lectura/pronunciar-letra/${this.letterParam}`;
@@ -70,6 +73,10 @@ export class SelectWordsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.setData();
     this.loadAudio();
+
+    const x = this.getData.getAndMessUpWordsFromStorage(this.letterParam);
+    console.log(x);
+
     window.addEventListener('resize', this.isMobile);
   }
 
@@ -78,28 +85,46 @@ export class SelectWordsComponent implements OnInit, OnDestroy {
   }
 
   setData = () => {
+    const x = this._storage.getElement('words');
+    const y = this._storage.getElement(`${this.letterParam}_w`);
+
+    if ( Storage && x !== null && y !== null ) {
+      this.getLocalStorageData();
+    } else {
+      this.getServerData();
+    }
+
+  }
+
+  getLocalStorageData = () => {
+
+    const x = this.getData.getAndMessUpWordsFromStorage( this.letterParam );
+    this.configData(x);
+
+  }
+
+  getServerData = () => {
+
     this.getData.getRandomWords(this.letterParam)
       .subscribe(
         (res: HttpResponse<RandomWords>) => {
 
-          if (res.status === 200) {
-
-            this.words = res.body;
-            this.letterToVal  = this.letterParam.toLowerCase();
-            this.messyWords   = this.words.lowerCase.words;
-            this.correctWords = this.words.lowerCase.corrects;
-
-            this.initUserData();
-            this.loading = false;
-            this.instructions();
-
-          } else {
-            console.log('Imposible obtener los datos');
-          }
+          const v = res.status === 200 ? this.configData(res.body) : console.log('Imposible obtener los datos');
 
         },
         (err) => console.log(err)
       );
+  }
+
+  configData = (data: RandomWords) => {
+    this.words        = data;
+    this.letterToVal  = this.letterParam.toLowerCase();
+    this.messyWords   = this.words.lowerCase.words;
+    this.correctWords = this.words.lowerCase.corrects;
+
+    this.initUserData();
+    this.loading = false;
+    this.instructions();
   }
 
   repeatInstructions = () => {
@@ -179,7 +204,7 @@ export class SelectWordsComponent implements OnInit, OnDestroy {
     this.addFinalTime();
     this.sendSelecWordsData();
 
-    const msg = 'Lo has hecho muy bien!';
+    const msg   = 'Lo has hecho muy bien!';
     const speak = this.speech.speak(msg);
     speak.addEventListener('end', () => this.router.navigateByUrl(this.urlToRedirect));
 
