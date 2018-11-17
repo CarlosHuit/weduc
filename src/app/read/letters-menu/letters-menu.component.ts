@@ -95,7 +95,6 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
   setInitialData = (data: WordsAndLetters) => {
 
-
     const words          = data.words;
     const letters        = data.letters;
     const learnedLetters = data.learnedLetters;
@@ -255,12 +254,11 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
 
   countStars = (rating: number) => {
-    const t = [];
-    for (let i = 0; i < rating; i++) {
-      t.push('');
-    }
 
+    const t = [];
+    for (let i = 0; i < rating; i++) { t.push(''); }
     return t;
+
   }
 
 

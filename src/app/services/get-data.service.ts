@@ -210,12 +210,10 @@ export class GetDataService {
   }
 
   saveData = (x) => {
-    console.log(x.words);
-    // const data = x as WordsAndLetters;
-
 
     const words          = x.words;
     const letters        = x.letters;
+    const alphabet       = letters.alphabet.split('');
     const similarLetters = x.similarLetters;
     const learnedLetters = x.learnedLetters;
     const coordinates    = x.coordinates;
@@ -223,26 +221,30 @@ export class GetDataService {
 
     if (Storage) {
 
-      localStorage.setItem('alphabet',        JSON.stringify(letters.alphabet)     );
-      localStorage.setItem('consonants',      JSON.stringify(letters.consonants)   );
-      localStorage.setItem('vocals',          JSON.stringify(letters.vocals)       );
-      localStorage.setItem('combinations',    JSON.stringify(letters.combinations) );
-      localStorage.setItem('letter_sounds',   JSON.stringify(letters.sound_letters));
-      localStorage.setItem('learned_letters', JSON.stringify(learnedLetters));
+      this._storage.saveElement('alphabet',        letters.alphabet      );
+      this._storage.saveElement('consonants',      letters.consonants    );
+      this._storage.saveElement('vocals',          letters.vocals        );
+      this._storage.saveElement('combinations',    letters.combinations  );
+      this._storage.saveElement('letter_sounds',   letters.sound_letters );
+      this._storage.saveElement('learned_letters', learnedLetters        );
 
-      localStorage.setItem('coordinates',     JSON.stringify(coordinates));
       coordinates.forEach(c => this._storage.saveElement(`${c.letter}_coo`, c.coordinates ));
 
-      // a list of words is saved for each letter
-      words.forEach(el => localStorage.setItem(`${el.l}_w`, JSON.stringify(el.w)));
+      words.forEach(el => this._storage.saveElement(`${el.l}_w`, el.w));
 
-      letters.alphabet.split('').forEach(letter => {
+      const allWords = [];
+      words.forEach(el => el.w.forEach(w => allWords.push(w)));
+      this._storage.saveElement('words', allWords );
+
+      alphabet.forEach(letter => {
+
         const d = {};
         d[letter.toLowerCase()] = similarLetters.find(e => e.l === letter.toLowerCase()).m;
         d[letter.toUpperCase()] = similarLetters.find(e => e.l === letter.toUpperCase()).m;
-
         localStorage.setItem(`${letter}_sl`, JSON.stringify(d));
+
       });
+
     }
 
 

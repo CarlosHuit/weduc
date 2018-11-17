@@ -93,23 +93,24 @@ export class FindLetterComponent implements OnInit, OnDestroy {
     if (Storage) {
 
       const words = this._storage.getElement(this.letterParam);
-
-      if (words !== null) {
-
-        this.words = this._shuffle.mess(words);
-        this.initUserData();
-        this.changeDates(this.words[0]);
-        this.loading = false;
-        setTimeout(() => this.showC = true, 10);
-        this.instructions();
-
-
-      } else { this.getServerData(); }
+      const configData = words !== null ? this.configInitialData(words) : this.getServerData();
 
     } else { this.getServerData(); }
 
   }
 
+  configInitialData = (words: string[]) => {
+
+    this.words = this._shuffle.mess(words);
+
+    this.initUserData();
+    this.changeDates(this.words[0]);
+
+    this.loading = false;
+    setTimeout(() => this.showC = true, 10);
+
+    this.instructions();
+  }
 
   getServerData = () => {
     this.getData.getWords(this.letterParam)
@@ -122,16 +123,9 @@ export class FindLetterComponent implements OnInit, OnDestroy {
 
           } else {
 
-            this.words = word.words.sort(() => Math.random() - 0.5);
-            this.initUserData();
+            this.configInitialData(word.words);
+            const saveData = Storage ? this._storage.saveElement(this.letterParam, this.words) : null;
 
-            this.changeDates(this.words[0]);
-            this.instructions();
-
-
-            if (Storage) {
-              localStorage.setItem(this.letterParam, JSON.stringify(this.words));
-            }
           }
 
         },
