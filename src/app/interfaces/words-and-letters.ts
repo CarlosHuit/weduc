@@ -1,3 +1,13 @@
+import { Coordinates } from './coordinates';
+
+export interface WordsAndLetters {
+    words:           Words[];
+    letters:         Letters;
+    similarLetters:  SimilarLetters[];
+    learnedLetters:  LearnedLetters[];
+    coordinates:     Coordinates[];
+}
+
 export interface Letters {
     alphabet:      string;
     consonants:    string;
@@ -21,9 +31,4 @@ export interface LearnedLetters {
     rating?: number;
 }
 
-export interface WordsAndLetters {
-    words:           Words[];
-    letters:         Letters;
-    similarLetters:  SimilarLetters[];
-    learnedLetters:  LearnedLetters[];
-}
+

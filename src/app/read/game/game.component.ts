@@ -135,6 +135,10 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
             this.loading     = false;
             this.initUserData();
             this.instructions();
+
+            window.addEventListener('resize', e => setTimeout(() => this.restartData(), 0));
+            window.addEventListener('resize', e => setTimeout(() => this.isMobile(), 10));
+
           } else {
             console.log('imposible obtener los datos');
           }

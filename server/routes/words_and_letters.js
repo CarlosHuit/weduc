@@ -1,6 +1,6 @@
 import express from 'express'
 import Debug from 'debug'
-import { Words, Letters, SimilarLetters, UserProgress, User } from '../models';
+import { Words, Letters, SimilarLetters, UserProgress, User, Coordinates } from '../models';
 import { nameProject } from '../config'
 import { required, verifyToken } from '../middleware';
 
@@ -19,10 +19,11 @@ app.get('/', verifyToken, async (req, res) => {
       const t = [];
       const w = [];
       let l = [];
-      const words     = await Words.find({}, omit)
-      const letters   = await Letters.findOne({vocals: 'aeiou'}, omit)
-      const sL        = await SimilarLetters.find({}, omit); 
-      const lLetters  = await UserProgress.findOne({ user_id: req.user._id})
+      const words       = await Words.find({}, omit)
+      const letters     = await Letters.findOne({vocals: 'aeiou'}, omit)
+      const sL          = await SimilarLetters.find({}, omit); 
+      const lLetters    = await UserProgress.findOne({ user_id: req.user._id})
+      const coordinates = await Coordinates.find({}, omit)
 
       l = lLetters ? lLetters.learnedLetters : [];
       words.forEach(x => w.push({ l: x.letter, w: x.words }))
@@ -32,13 +33,14 @@ app.get('/', verifyToken, async (req, res) => {
           words:          w,
           letters:        letters,
           similarLetters: t,
-          learnedLetters: l
+          learnedLetters: l, 
+          coordinates:    coordinates
       })
   
       debug('Mostrando todos los registros de Words y Letters')
   
     } catch (error) {
-  
+      
       const msg = `Ha ocurrido un error, vuelve a intentarlo`
       debug(msg)
       handleError(res, msg)

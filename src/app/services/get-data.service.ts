@@ -5,6 +5,7 @@ import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
 import { GetTokenService } from './get-token.service';
+import { LocalStorageService } from './local-storage.service';
 
 import { WordsAndLetters, Letters, Words  } from '../interfaces/words-and-letters';
 
@@ -64,7 +65,12 @@ export class GetDataService {
   apiUrl: string;
   httpOptions: any;
 
-  constructor(private http: HttpClient, private getToken: GetTokenService) {
+  constructor(
+    private http: HttpClient,
+    private getToken: GetTokenService,
+    private _storage: LocalStorageService
+    ) {
+
     this.apiUrl = urljoin(environment.apiUrl);
     this.httpOptions = {
       headers: new HttpHeaders(
@@ -194,13 +200,53 @@ export class GetDataService {
 
     return this.http.get(url, this.httpOptions)
       .pipe(
-
+        map(x => {
+          this.saveData(x);
+          return x;
+        }),
         catchError(this.handleError('WordsAndLetters', []))
-
       );
 
   }
 
+  saveData = (x) => {
+    console.log(x.words);
+    // const data = x as WordsAndLetters;
+
+
+    const words          = x.words;
+    const letters        = x.letters;
+    const similarLetters = x.similarLetters;
+    const learnedLetters = x.learnedLetters;
+    const coordinates    = x.coordinates;
+    /* Se selecciona la imagen */
+
+    if (Storage) {
+
+      localStorage.setItem('alphabet',        JSON.stringify(letters.alphabet)     );
+      localStorage.setItem('consonants',      JSON.stringify(letters.consonants)   );
+      localStorage.setItem('vocals',          JSON.stringify(letters.vocals)       );
+      localStorage.setItem('combinations',    JSON.stringify(letters.combinations) );
+      localStorage.setItem('letter_sounds',   JSON.stringify(letters.sound_letters));
+      localStorage.setItem('learned_letters', JSON.stringify(learnedLetters));
+
+      localStorage.setItem('coordinates',     JSON.stringify(coordinates));
+      coordinates.forEach(c => this._storage.saveElement(`${c.letter}_coo`, c.coordinates ));
+
+      // a list of words is saved for each letter
+      words.forEach(el => localStorage.setItem(`${el.l}_w`, JSON.stringify(el.w)));
+
+      letters.alphabet.split('').forEach(letter => {
+        const d = {};
+        d[letter.toLowerCase()] = similarLetters.find(e => e.l === letter.toLowerCase()).m;
+        d[letter.toUpperCase()] = similarLetters.find(e => e.l === letter.toUpperCase()).m;
+
+        localStorage.setItem(`${letter}_sl`, JSON.stringify(d));
+      });
+    }
+
+
+  }
 
   getRandomWords = (letter: string): Observable<HttpResponse<RandomWords> | RandomWords | any> => {
 

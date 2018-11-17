@@ -23,4 +23,8 @@ export class LocalStorageService {
 
   }
 
+  saveElement = (key: string, content: any) => {
+    localStorage.setItem(key, JSON.stringify(content));
+  }
+
 }

@@ -95,10 +95,11 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
   setInitialData = (data: WordsAndLetters) => {
 
+
     const words          = data.words;
     const letters        = data.letters;
-    const similarLetters = data.similarLetters;
     const learnedLetters = data.learnedLetters;
+
     /* Se selecciona la imagen */
     words.forEach(e => this.wordsUrl[e.l] = e.w[this.randomInt(0, e.w.length)]);
 
@@ -106,28 +107,6 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
     this.letters        = this.deleteLearnedLetters(letters.alphabet, this.learneds);
     this.combinations   = letters.combinations;
     this.soundsLetters  = letters.sound_letters;
-
-    if (Storage) {
-
-      localStorage.setItem('alphabet',        JSON.stringify(letters.alphabet)     );
-      localStorage.setItem('consonants',      JSON.stringify(letters.consonants)   );
-      localStorage.setItem('vocals',          JSON.stringify(letters.vocals)       );
-      localStorage.setItem('combinations',    JSON.stringify(letters.combinations) );
-      localStorage.setItem('letter_sounds',   JSON.stringify(letters.sound_letters));
-      localStorage.setItem('learned_letters', JSON.stringify(learnedLetters));
-
-      // a list of words is saved for each letter
-      words.forEach(el => localStorage.setItem(el.l, JSON.stringify(el.w)));
-      letters.alphabet.split('').forEach(x => {
-        const lower = similarLetters.find(e => e.l === x.toLowerCase());
-        const upper = similarLetters.find(e => e.l === x.toUpperCase());
-        const d = {};
-        d[lower.l] = lower.m;
-        d[upper.l] = upper.m;
-        localStorage.setItem(`${x}_sl`, JSON.stringify(d));
-      });
-    }
-
 
     this.loading = false;
     setTimeout(() =>  this.showC = true, 10);
@@ -341,22 +320,23 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
 
   redirect = (letter: string) => {
+
     this.selected = true;
     this.selections[letter] = letter;
-    const msg = `Bien, Seleccionaste la letra: ... ${this.soundsLetters[letter]}`;
+
+    const msg    = `Bien, Seleccionaste la letra: ... ${this.soundsLetters[letter]}`;
     const speech = this.speechSynthesis.speak(msg, .95);
-    speech.addEventListener('end', () => {
+    const url    = `lectura/detalle-letra/${letter}`;
 
-      const url = `lectura/detalle-letra/${letter}`;
-      this.router.navigateByUrl(url);
-
-    });
+    speech.addEventListener('end', () => this.router.navigateByUrl(url));
   }
 
 
   repractice = (letter: string) => {
+
     const url = `lectura/detalle-letra/${letter.toLowerCase()}`;
     this.router.navigateByUrl(url);
+
   }
 
 

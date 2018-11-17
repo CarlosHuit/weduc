@@ -4,6 +4,7 @@ import { environment } from '../../environments/environment';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import { LocalStorageService } from './local-storage.service';
 
 export interface Coordinates {
   _id?: string;
@@ -20,7 +21,7 @@ export class CoordinatesService {
 
   apiUrl: string;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private _storage: LocalStorageService) {
     this.apiUrl = urljoin(environment.apiUrl, 'coordinates');
   }
 
@@ -34,6 +35,20 @@ export class CoordinatesService {
       .pipe(
         catchError(this.handleError)
       );
+  }
+
+  getCoordinatesOfStorage = (letter: string) => {
+
+    const lowerCase = letter.toLowerCase();
+    const upperCase = letter.toUpperCase();
+    const CoordinatesLowerCase = this._storage.getElement(`${lowerCase}_coo`);
+    const CoordinatesUpperCase = this._storage.getElement(`${upperCase}_coo`);
+
+    const coordinates = {};
+    coordinates[lowerCase] = CoordinatesLowerCase;
+    coordinates[upperCase] = CoordinatesUpperCase;
+
+    return { letter: letter.toLowerCase(), coordinates: coordinates };
   }
 
 

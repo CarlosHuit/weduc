@@ -7,6 +7,7 @@ import { SpeechSynthesisService           } from '../../services/speech-synthesi
 import { GenerateDatesService             } from '../../services/generate-dates.service';
 import { SendDataService                  } from '../../services/send-data.service';
 import { DetectMobileService              } from '../../services/detect-mobile.service';
+import { LocalStorageService              } from '../../services/local-storage.service';
 
 export interface DrawLetterData {
   user_id?: string;
@@ -51,7 +52,8 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
     private speech:             SpeechSynthesisService,
     private genDates:           GenerateDatesService,
     private sendData:           SendDataService,
-    private dMobile:            DetectMobileService
+    private dMobile:            DetectMobileService,
+    private _storage:           LocalStorageService
   ) {
     this.letterParam   = this._route.snapshot.paramMap.get('letter');
     this.loading       = true;
@@ -61,7 +63,6 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.setValues();
-    this.getCoordinates();
     window.addEventListener('resize', this.isMobile);
   }
 
@@ -69,14 +70,35 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
     window.removeEventListener('resize', this.isMobile);
   }
 
+  setValues = () => {
+
+    this.letters.push(this.letterParam.toUpperCase());
+    this.letters.push(this.letterParam.toLowerCase());
+    this.currentLetter = this.letters[0];
+
+    const val1 = this._storage.getElement(`${this.letterParam}_coo`);
+    const val2 = this._storage.getElement(`${this.letterParam}_coo`);
+
+    if (val1 !== null || val2 !== null) {
+
+      this.getLocalStorageData();
+
+    } else {
+
+      this.getCoordinates();
+
+    }
+
+  }
+
   getCoordinates = () => {
     this.coordinatesService.getCoordinates(this.letterParam)
       .subscribe(
         (coordinates: Coordinates) => {
-          this.coordinates = coordinates;
 
+          this.coordinates        = coordinates;
           this.currentCoordinates = this.coordinates.coordinates[this.currentLetter];
-          this.loading = false;
+          this.loading            = false;
           setTimeout(() =>  this.showDraw = true , 10);
           this.initUserData();
 
@@ -84,13 +106,18 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
       );
   }
 
-  setValues = () => {
+  getLocalStorageData = () => {
 
-    this.letters.push(this.letterParam.toLowerCase());
-    this.letters.push(this.letterParam.toUpperCase());
-    this.currentLetter = this.letters[0];
+    this.coordinates        = this.coordinatesService.getCoordinatesOfStorage(this.letterParam);
+    this.currentCoordinates = this.coordinates.coordinates[this.currentLetter];
+    this.loading            = false;
+
+    setTimeout(() =>  this.showDraw = true , 10);
+    this.initUserData();
 
   }
+
+
 
   showBoardC = (ev) => {
 

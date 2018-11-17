@@ -1,35 +1,17 @@
 import express from 'express'
+import compression from 'compression'
 import bodyParser from 'body-parser'
 import path from 'path'
 import { 
-	auth,
-	user,
-  letter,
-  word,
-  coordinates,
-  similarLetters,
-  saveData,
-  Syllables,
-  Menu,
-  Target,
-  Game,
-  GuessLetter,
-  DrawLetter,
-  CompleteWord,
-  SoundLetters,
-  Courses,
-  WordsAndLetters,
-  FindLetter,
-  SelectWords,
-  SelectImages,
-  IdentifyLetter,
-  Combinations,
-  UserProgress
+	auth, user, letter, word, coordinates, similarLetters, saveData, Syllables, Menu, Target, Game, GuessLetter,
+  DrawLetter, CompleteWord, SoundLetters, Courses, WordsAndLetters, FindLetter, SelectWords, SelectImages,
+  IdentifyLetter, Combinations, UserProgress
 } from './routes'
 
 const app = express()
+const compress = compression()
 
-
+app.use(compress)
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
