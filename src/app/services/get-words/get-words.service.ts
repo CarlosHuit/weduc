@@ -2,11 +2,10 @@ import { Injectable } from '@angular/core';
 import urljoin from 'url-join';
 import { environment } from '../../../environments/environment';
 import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
-import { WordsAndLetters, Letters, Words       } from '../../interfaces/words-and-letters';
 import { GetTokenService                       } from '../get-token.service';
 import { LocalStorageService                   } from '../local-storage.service';
 import { Observable, of                        } from 'rxjs';
-import { RandomWords                           } from '../get-data.service';
+import { RandomWords                           } from '../../interfaces/random-words';
 import { catchError                            } from 'rxjs/operators';
 
 @Injectable({
@@ -14,7 +13,7 @@ import { catchError                            } from 'rxjs/operators';
 })
 export class GetWordsService {
 
-  apiUrl: string;
+  apiUrl:      string;
   httpOptions: any;
 
   constructor(

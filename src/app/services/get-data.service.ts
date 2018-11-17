@@ -8,6 +8,7 @@ import { GetTokenService } from './get-token.service';
 import { LocalStorageService } from './local-storage.service';
 
 import { WordsAndLetters, Letters, Words  } from '../interfaces/words-and-letters';
+import { RandomWords, RandomWordsOPtion } from '../interfaces/random-words';
 
 
 
@@ -24,17 +25,6 @@ export interface RandomSimilarLetters {
 export interface Syllables {
   letter:    string;
   syllables: string[];
-}
-
-export interface RandomWords {
-  lowerCase: RandomWordsOPtion;
-  upperCase: RandomWordsOPtion;
-}
-
-export interface RandomWordsOPtion {
-  corrects?:   string[];
-  incorrects?: string[];
-  words?:      string[];
 }
 
 

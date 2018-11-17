@@ -8,27 +8,9 @@ import { SendDataService              } from '../../services/send-data.service';
 import { DetectMobileService          } from '../../services/detect-mobile.service';
 import { RandomWords                  } from 'src/app/services/get-data.service';
 import { LocalStorageService          } from '../../services/local-storage.service';
-
-export interface SelectWords {
-  user_id?:    string;
-  startTime?:  string;
-  finishTime?: string;
-  replays?:    string[];
-  date?:       string;
-  letter?:     string;
-  amount?:     number;
-  corrects?:   number;
-  incorrects?: number;
-  pattern?:    string[];
-  historial?:  Historial[];
-}
+import { SelectWords, Historial } from 'src/app/interfaces/select-words';
 
 
-export interface Historial {
-  time: string;
-  word: string;
-  state: boolean;
-}
 
 @Component({
   selector: 'app-select-words',
@@ -71,20 +53,22 @@ export class SelectWordsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+
     this.setData();
     this.loadAudio();
 
-    const x = this.getData.getAndMessUpWordsFromStorage(this.letterParam);
-    console.log(x);
-
     window.addEventListener('resize', this.isMobile);
+
   }
 
   ngOnDestroy() {
+
     window.removeEventListener('resize', this.isMobile);
+
   }
 
   setData = () => {
+
     const x = this._storage.getElement('words');
     const y = this._storage.getElement(`${this.letterParam}_w`);
 
@@ -117,6 +101,7 @@ export class SelectWordsComponent implements OnInit, OnDestroy {
   }
 
   configData = (data: RandomWords) => {
+
     this.words        = data;
     this.letterToVal  = this.letterParam.toLowerCase();
     this.messyWords   = this.words.lowerCase.words;
@@ -125,6 +110,7 @@ export class SelectWordsComponent implements OnInit, OnDestroy {
     this.initUserData();
     this.loading = false;
     this.instructions();
+
   }
 
   repeatInstructions = () => {
@@ -211,16 +197,20 @@ export class SelectWordsComponent implements OnInit, OnDestroy {
   }
 
   loadAudio = () => {
+
     this.audioIncorrect                  = new Audio('/assets/audio/sounds/incorrect.mp3');
     this.audioIncorrect.oncanplaythrough = () => console.log();
     this.audioIncorrect.volume           = .4;
+
   }
 
   playAudio = () => {
+
     this.speech.cancel();
     this.audioIncorrect.pause();
     this.audioIncorrect.currentTime = 0;
     this.audioIncorrect.play();
+
   }
 
   messyUpWords = (words) => {
@@ -279,17 +269,22 @@ export class SelectWordsComponent implements OnInit, OnDestroy {
   }
 
   addFinalTime = () => {
+
     const t = this.genDates.generateData();
     this.userData.finishTime = t.fullTime;
     this.addAndResetUserData();
+
   }
 
   addAndResetUserData = () => {
+
     this.Data.push(JSON.parse(JSON.stringify(this.userData)));
     this.userData = {};
+
   }
 
   sendSelecWordsData = () => {
+
     this._sendData.sendSelectWordsData(this.Data)
       .subscribe(
         (res) => console.log(res),
