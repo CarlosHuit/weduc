@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { SpeechRecognitionService } from '../../services/speech-recognition.service';
-import { SpeechSynthesisService   } from '../../services/speech-synthesis.service';
-import { ActivatedRoute, Router   } from '@angular/router';
-import { SendDataService          } from '../../services/send-data.service';
-import { GenerateDatesService     } from '../../services/generate-dates.service';
-import { PronounceLetter, Historial } from 'src/app/interfaces/pronounce-letter';
+import { ActivatedRoute, Router       } from '@angular/router';
+import { SpeechRecognitionService     } from '../../services/speech-recognition.service';
+import { SpeechSynthesisService       } from '../../services/speech-synthesis.service';
+import { SendDataService              } from '../../services/send-data.service';
+import { GenerateDatesService         } from '../../services/generate-dates.service';
+import { PronounceLetter, Historial   } from '../../interfaces/pronounce-letter';
 
 
 

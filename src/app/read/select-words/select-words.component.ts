@@ -6,9 +6,9 @@ import { SpeechSynthesisService       } from '../../services/speech-synthesis.se
 import { GenerateDatesService         } from '../../services/generate-dates.service';
 import { SendDataService              } from '../../services/send-data.service';
 import { DetectMobileService          } from '../../services/detect-mobile.service';
-import { RandomWords                  } from 'src/app/services/get-data.service';
 import { LocalStorageService          } from '../../services/local-storage.service';
-import { SelectWords, Historial } from 'src/app/interfaces/select-words';
+import { SelectWords, Historial       } from '../../interfaces/select-words';
+import { RandomWords                  } from '../../interfaces/random-words';
 
 
 

@@ -4,31 +4,25 @@ import urljoin from 'url-join';
 import { environment      } from '../../environments/environment';
 import { catchError, map  } from 'rxjs/operators';
 import { throwError       } from 'rxjs';
-import { DrawLetterData   } from '../read/draw-letter/draw-letter.component';
+import { DrawLetterData   } from '../interfaces/draw-letter-data';
 import { GetTokenService  } from '../services/get-token.service';
-import { SelectWords      } from '../read/select-words/select-words.component';
 import { MenuData         } from '../interfaces/menu-data';
 import { LearnedLetters   } from '../interfaces/words-and-letters';
 import { PronounceLetter  } from '../interfaces/pronounce-letter';
-// import { CompleteWordData } from '../read/complete-word/complete-word.component';
-// import { FindLetter } from '../read/find-letter/find-letter.component';
-// import { SelectImages } from '../read/select-images/select-images.component';
-// import { IdentifyLetter } from '../read/identify-letter/identify-letter.component';
+import { SelectWords      } from '../interfaces/select-words';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SendDataService {
 
-  apiUrl: string;
+  apiUrl:      string;
   httpOptions: any;
 
   constructor(
     private http: HttpClient,
     private getToken: GetTokenService
   ) {
-
-
     this.apiUrl = urljoin(environment.apiUrl, 'data');
     this.httpOptions = {
       headers: new HttpHeaders( {
@@ -36,8 +30,6 @@ export class SendDataService {
         'Authorization': `${this.getToken.addToken()}`
       })
     };
-
-
   }
 
   sendUserProgress = (obj: LearnedLetters) => {

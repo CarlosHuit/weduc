@@ -8,16 +8,7 @@ import { GenerateDatesService             } from '../../services/generate-dates.
 import { SendDataService                  } from '../../services/send-data.service';
 import { DetectMobileService              } from '../../services/detect-mobile.service';
 import { LocalStorageService              } from '../../services/local-storage.service';
-
-export interface DrawLetterData {
-  user_id?: string;
-  date?: string;
-  startTime?: string;
-  finalTime?: string;
-  letter?: string;
-  boardData?: {}[];
-  handWritingData?: {}[];
-}
+import { DrawLetterData                   } from '../../interfaces/draw-letter-data';
 
 @Component({
   selector: 'app-draw-letter',
