@@ -1,18 +1,26 @@
-export interface FindLetter {
-  user_id?:    string;
+interface FindLetter {
+  user_id?:     string;
   date?:        string;
   startTime?:   string;
   finalTime?:   string;
-  pressLetter?: string[];
   letter?:      string;
-  pattern?:     string[];
-  fails?:       number;
-  couples?:     string[][];
+  words?:       Options[];
+}
+
+interface Options {
+  word?:        string;
+  startTime?:   string;
+  finalTime?:   string;
+  correct?:     number;
+  incorrect?:   number;
+  pressImage:   number;
+  repetitions:  number;
   historial?:   Selection[];
 }
 
-export interface Selection {
-  time?:   string;
-  letter?: string;
-  state?:  boolean;
+interface Selection {
+  letter?:  string;
+  time?:    string;
+  status?:  boolean;
 }
+

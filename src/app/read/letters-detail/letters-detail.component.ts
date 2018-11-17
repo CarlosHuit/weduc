@@ -10,7 +10,7 @@ import { LocalStorageService     } from '../../services/local-storage.service';
 import { ShuffleService          } from '../../services/shuffle/shuffle.service';
 import { GenerateIdsService      } from '../../services/generate-ids/generate-ids.service';
 import { SimilarLetters          } from '../../interfaces/words-and-letters';
-import { FindLetter, Selection } from 'src/app/interfaces/find-letter';
+import { FindLetter, Selection   } from '../../interfaces/find-letter';
 
 
 

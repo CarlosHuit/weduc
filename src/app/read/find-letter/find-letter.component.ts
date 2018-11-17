@@ -9,32 +9,8 @@ import { PreloadAudioService          } from '../../services/preload-audio.servi
 import { Words                        } from '../../interfaces/words';
 import { LocalStorageService          } from '../../services/local-storage.service';
 import { ShuffleService               } from '../../services/shuffle/shuffle.service';
+import { FindLetterData               } from '../../interfaces/find-letter-data';
 
-interface GuessLetterData {
-  user_id?: string;
-  date?: string;
-  startTime?: string;
-  finalTime?: string;
-  letter?: string;
-  words?: Options[];
-}
-
-interface Options {
-  word?: string;
-  startTime?: string;
-  finalTime?: string;
-  correct?: number;
-  incorrect?: number;
-  pressImage: number;
-  repetitions: number;
-  historial?: Selection[];
-}
-
-interface Selection {
-  letter?: string;
-  time?: string;
-  status?: boolean;
-}
 
 
 
@@ -43,22 +19,24 @@ interface Selection {
   templateUrl: './find-letter.component.html',
   styleUrls: ['./find-letter.component.css']
 })
+
+
 export class FindLetterComponent implements OnInit, OnDestroy {
 
-  userData: GuessLetterData = {};
+  userData: FindLetter = {};
 
-  words: string[];
-  letters: string[];
-  arrayIDs: string[];
-  letterParam: string;
-  urlImage: string;
-  word: string;
-  loading: boolean;
-  success: boolean;
-  url: string;
+  words:        string[];
+  letters:      string[];
+  arrayIDs:     string[];
+  letterParam:  string;
+  urlImage:     string;
+  word:         string;
+  url:          string;
+  loading:      boolean;
+  success:      boolean;
+  showC:        boolean;
+  selection     = {};
 
-  selection = {};
-  showC: boolean;
 
   constructor(
     private router:   Router,
@@ -72,27 +50,33 @@ export class FindLetterComponent implements OnInit, OnDestroy {
     private _storage: LocalStorageService,
     private _shuffle: ShuffleService,
   ) {
+
     this.loading      = true;
     this.letterParam  = this._route.snapshot.paramMap.get('letter');
     this.url          = `/lectura/select-words/${this.letterParam}`;
+
   }
 
   ngOnInit() {
+
     this.setValues();
     this._sound.loadAudio();
     window.addEventListener('resize', this.isMobile);
+
   }
 
   ngOnDestroy() {
+
     this.speech.cancel();
     window.removeEventListener('resize', this.isMobile);
+
   }
 
   setValues = () => {
 
     if (Storage) {
 
-      const words = this._storage.getElement(this.letterParam);
+      const words      = this._storage.getElement(this.letterParam);
       const configData = words !== null ? this.configInitialData(words) : this.getServerData();
 
     } else { this.getServerData(); }
@@ -105,27 +89,24 @@ export class FindLetterComponent implements OnInit, OnDestroy {
 
     this.initUserData();
     this.changeDates(this.words[0]);
-
     this.loading = false;
     setTimeout(() => this.showC = true, 10);
 
     this.instructions();
+
   }
 
   getServerData = () => {
+
     this.getData.getWords(this.letterParam)
       .subscribe(
         (word: Words) => {
 
           if (word.words === undefined) {
-
             this.speech.speak('ha habido un error');
-
           } else {
-
             this.configInitialData(word.words);
             const saveData = Storage ? this._storage.saveElement(this.letterParam, this.words) : null;
-
           }
 
         },
@@ -136,7 +117,9 @@ export class FindLetterComponent implements OnInit, OnDestroy {
   }
 
   isMobile = (): boolean => {
+
     return this._mobile.isMobile();
+
   }
 
   pendingLetters = () => {
@@ -144,19 +127,20 @@ export class FindLetterComponent implements OnInit, OnDestroy {
     let count = 0;
 
     this.arrayIDs.forEach(e => {
-      const letter = e[0];
-      const validation = letter === this.letterParam.toLowerCase() || letter === this.letterParam.toUpperCase() ? true : false;
+    const letter     = e[0];
+    const validation = letter === this.letterParam.toLowerCase() || letter === this.letterParam.toUpperCase() ? true : false;
 
-      if (validation === true) {
-        const x = this.selection[e] !== e ? count++ : false;
-      }
+    if (validation === true) {
+      const x = this.selection[e] !== e ? count++ : false    ;
+    }
 
     });
 
     return count;
+
   }
 
-  removeClass = () => this.selection = {};
+  removeClass = () => this.selection     = {};
 
   onSelect = (id: string) => {
 
@@ -167,7 +151,7 @@ export class FindLetterComponent implements OnInit, OnDestroy {
 
       this.addData(this.word, 2020, txt, true);
 
-      if (this.selection[id] !== id) { this.selection[id] = id; }
+      if (this.selection[id] !== id) { this.selection[id] =     id; }
 
       const p      = this.pendingLetters();
       const speech = this.speech.speak('Correcto');
@@ -310,12 +294,12 @@ export class FindLetterComponent implements OnInit, OnDestroy {
 
     const time = this.genDates.generateData();
 
-    this.userData['user_id'] = 'N/A';
-    this.userData['date'] = time.fullDate;
-    this.userData['startTime'] = time.fullTime;
-    this.userData['finalTime'] = 'N/A';
-    this.userData['letter'] = this.letterParam;
-    this.userData.words = this.fillOptions();
+    this.userData['user_id']    = 'N/A';
+    this.userData['date']       = time.fullDate;
+    this.userData['startTime']  = time.fullTime;
+    this.userData['finalTime']  = 'N/A';
+    this.userData['letter']     = this.letterParam;
+    this.userData.words         = this.fillOptions();
 
   }
 

@@ -1,51 +1,20 @@
 import { Injectable } from '@angular/core';
 import urljoin from 'url-join';
-import { environment } from '../../environments/environment';
-import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { environment          } from '../../environments/environment';
+import { Observable, of       } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
-import { GetTokenService } from './get-token.service';
-import { LocalStorageService } from './local-storage.service';
+import { GetTokenService      } from './get-token.service';
+import { LocalStorageService  } from './local-storage.service';
 
-import { WordsAndLetters, Letters, Words  } from '../interfaces/words-and-letters';
-import { RandomWords, RandomWordsOPtion } from '../interfaces/random-words';
-
-
-
-export interface SimilarLetters {
-  letter:         string;
-  similarLetters: string[];
-}
-
-export interface RandomSimilarLetters {
-  upperCase: string[];
-  lowerCase: string[];
-}
-
-export interface Syllables {
-  letter:    string;
-  syllables: string[];
-}
+import { HttpClient, HttpResponse, HttpHeaders  } from '@angular/common/http';
+import { WordsAndLetters, Letters, Words        } from '../interfaces/words-and-letters';
+import { RandomWords, RandomWordsOPtion         } from '../interfaces/random-words';
+import { RandomSimilarLetters                   } from '../interfaces/random-similar-letters';
+import { SimilarLetters                         } from '../interfaces/similar-letters';
+import { Syllables                              } from '../interfaces/syllables';
+import { Combinations                           } from '../interfaces/combinations';
 
 
-/* ------------ */
-export interface Combinations {
-  letter: string;
-  combinations: Options[];
-}
-
-export interface Options {
-  word:        string;
-  combination: string;
-  syllables:   string[];
-  syllable:    SyllableDetail;
-  color?:      string;
-}
-
-export interface SyllableDetail {
-  w: string;
-  p: string;
-}
 
 @Injectable({ providedIn: 'root' })
 

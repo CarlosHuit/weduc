@@ -1,42 +1,22 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { HttpResponse           } from '@angular/common/http';
 import { SpeechSynthesisService } from '../../services/speech-synthesis.service';
-import { GenerateDatesService } from '../../services/generate-dates.service';
-import { SendDataService } from '../../services/send-data.service';
-import { DetectMobileService } from '../../services/detect-mobile.service';
-import { GetDataService, RandomSimilarLetters } from '../../services/get-data.service';
-import { HttpResponse } from '@angular/common/http';
-import { PreloadAudioService } from '../../services/preload-audio.service';
-import { LocalStorageService } from '../../services/local-storage.service';
-import { SimilarLettersService } from '../../services/similar-letters/similar-letters.service';
+import { GenerateDatesService   } from '../../services/generate-dates.service';
+import { SendDataService        } from '../../services/send-data.service';
+import { DetectMobileService    } from '../../services/detect-mobile.service';
+import { PreloadAudioService    } from '../../services/preload-audio.service';
+import { LocalStorageService    } from '../../services/local-storage.service';
+import { SimilarLettersService  } from '../../services/similar-letters/similar-letters.service';
+import { GameData, Record       } from '../../interfaces/game-data';
+import { GetDataService         } from '../../services/get-data.service';
+import { RandomSimilarLetters   } from '../../interfaces/random-similar-letters';
 
-interface Option {
-  user_id?:     string;
-  date?:        string;
-  startTime?:   string;
-  letter?:      string;
-  amount?:      number;
-  correct?:     number;
-  incorrect?:   number;
-  repetitions?: number;
-  historial?:   Record[];
-  finalTime?:   string;
-
-}
-
-interface Record {
-  letter?: string;
-  time?:   string;
-  status?: boolean;
-}
-
-@Component(
-  {
-    selector: 'app-game',
-    templateUrl: './game.component.html',
-    styleUrls: ['./game.component.css']
-  }
-)
+@Component({
+  selector: 'app-game',
+  templateUrl: './game.component.html',
+  styleUrls: ['./game.component.css']
+})
 
 export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -60,7 +40,7 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   letterIDs:        string[][] = [[]];
   arrayIDs:         string[]   = [];
   clearEl:          any        = {};
-  userData:         Option     = {};
+  userData:         GameData   = {};
   mcGameEl:         HTMLDivElement;
   lettersData:      RandomSimilarLetters;
 

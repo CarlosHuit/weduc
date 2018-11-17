@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { CoursesService } from '../services/courses.service';
-import { Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material';
-import { DetectMobileService } from '../services/detect-mobile.service';
-import { Subjects } from '../interfaces/subjects';
+import { CoursesService       } from '../services/courses.service';
+import { Router               } from '@angular/router';
+import { MatSnackBar          } from '@angular/material';
+import { DetectMobileService  } from '../services/detect-mobile.service';
+import { Subjects             } from '../interfaces/subjects';
 
 @Component({
   selector: 'app-home',

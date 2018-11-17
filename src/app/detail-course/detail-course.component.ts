@@ -1,13 +1,13 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy, NgZone } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CoursesService } from '../services/courses.service';
-import { Subjects } from '../interfaces/subjects';
-import { DomSanitizer } from '@angular/platform-browser';
-import { MatSnackBar } from '@angular/material';
-import { DetectMobileService } from '../services/detect-mobile.service';
-import { CdkTextareaAutosize } from '@angular/cdk/text-field';
+import { CoursesService         } from '../services/courses.service';
+import { Subjects               } from '../interfaces/subjects';
+import { DomSanitizer           } from '@angular/platform-browser';
+import { MatSnackBar            } from '@angular/material';
+import { DetectMobileService    } from '../services/detect-mobile.service';
+import { CdkTextareaAutosize    } from '@angular/cdk/text-field';
+import { AuthService            } from '../services/auth.service';
 import { take } from 'rxjs/operators';
-import { AuthService } from '../services/auth.service';
 import { User } from '../classes/user';
 
 @Component({
@@ -17,17 +17,18 @@ import { User } from '../classes/user';
 })
 export class DetailCourseComponent implements OnInit, OnDestroy {
 
-  @ViewChild('cBackgroundVideo') cBackgroundVideo: ElementRef;
-  @ViewChild('cdVideo') cdVideo: ElementRef;
-  @ViewChild('videoDesktop') videoDesktop: ElementRef;
-  @ViewChild('autosize') autosize: CdkTextareaAutosize;
-  data: Subjects;
+  @ViewChild('cBackgroundVideo')  cBackgroundVideo: ElementRef;
+  @ViewChild('cdVideo')           cdVideo:          ElementRef;
+  @ViewChild('videoDesktop')      videoDesktop:     ElementRef;
+  @ViewChild('autosize')          autosize:         CdkTextareaAutosize;
+
+  data:         Subjects;
+  currentUser:  User;
   unsetHeight:  boolean;
-  course:       string;
-  loading =     true;
-  videoUrl:     any;
   showComments: boolean;
-  currentUser: User;
+  course:       string;
+  videoUrl:     any;
+  loading =     true;
   comments = [
     {
       user: 'Manuel Ramos',

@@ -1,14 +1,14 @@
 import { Component, OnInit, ViewChild, OnDestroy, ElementRef } from '@angular/core';
 import { Router                 } from '@angular/router';
+import { MatAccordion           } from '@angular/material';
 import { SpeechSynthesisService } from '../../services/speech-synthesis.service';
 import { GenerateDatesService   } from '../../services/generate-dates.service';
 import { GetDataService         } from '../../services/get-data.service';
 import { SendDataService        } from '../../services/send-data.service';
 import { DetectMobileService    } from '../../services/detect-mobile.service';
 import { LocalStorageService    } from '../../services/local-storage.service';
-import { MenuData, Selection    } from '../../interfaces/menu-data';
+import { MenuData               } from '../../interfaces/menu-data';
 import { WordsAndLetters, LearnedLetters } from '../../interfaces/words-and-letters';
-import { MatAccordion           } from '@angular/material';
 
 
 @Component({
@@ -27,8 +27,8 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
   styles: {};
   @ViewChild('contGrid') contGrid: ElementRef;
   data:           WordsAndLetters;
-  userData:       MenuData = {};
   learneds:       LearnedLetters[];
+  userData:       MenuData = {};
   letters:        string[] = [];
   words:          string[] = [];
   storage:        boolean;
