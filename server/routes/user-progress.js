@@ -141,7 +141,7 @@ const validateLetterAndRating = (alphabet, maxRating, letter, rating) => {
 
 app.get('/', async (req, res) => {
 
-  debug('hola')
+  
 
 })
 

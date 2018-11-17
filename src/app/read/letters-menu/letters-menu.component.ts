@@ -92,6 +92,19 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
   isMobile = (): boolean =>  this.detMobile.isMobile();
 
+  // sendUserProgress = () => {
+  //   const n: LearnedLetters = {
+  //     letter: 'b',
+  //     rating: 4
+  //   };
+
+  //   this.sendData.sendUserProgress(n)
+  //     .subscribe(
+  //       res => console.log(res),
+  //       err => console.log(err)
+  //     );
+
+  // }
 
   setInitialData = (data: WordsAndLetters) => {
 
