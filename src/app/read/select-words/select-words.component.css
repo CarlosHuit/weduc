@@ -46,16 +46,28 @@
 .d-c-word.incorrect { background: rgb(255, 83, 60); }
 
 
+
+
+
 /* mobile version */
+
+.m-c-select-words {
+  width:      95%;
+  min-width:  300px;
+  height:     96%;
+  min-height: 420px;
+  max-height: 600px;
+  background: white;
+  padding: 0;
+  position: relative;
+  border: 1px solid #b2b2b2;
+}
+
 .m-c-container-words {
   width:              95%;
   border:             1px solid #b1b1b1;
   background-color: #ebedee;
-  height:             75%;
-  display:            flex;
-  justify-content:    center;
-  align-items:        center;
-  padding:            2px;
+  padding:            50px 2px;
 }
 
 .m-c-words {
@@ -79,25 +91,56 @@
   outline:        none;
   border:         2px solid white;
   box-shadow:     0 0 2px 2px rgba(0, 0, 0, .5);
+  /* font-family:    'Noto Sans', sans-serif */
 
 }
 
-.m-c-words .correct   { background: rgb(2, 170, 86);  }
+.m-c-words .correct   { background:  #239B56;  } /* rgb(2, 170, 86) */
 .m-c-words .incorrect { background: rgb(255, 83, 60); }
 
 
 @media (min-width: 320px) and (orientation: landscape) {
 
-  .m-c-container-words {
-    height: 90%;
+  .m-c-select-words {
+    min-height: unset;
+    max-width: 640px;
   }
 
-  .m-c-words {
-    width: 80%;
+  .m-c-container-words {
+    padding: 5% 5px;
+    width:   92%
   }
+
 
   .m-c-container-words .word {
     font-size: calc(100vw * .04);
+  }
+
+}
+
+@media (max-height: 550px) and (orientation: portrait) {
+
+  .container.mobile {
+    overflow: auto;
+    display: block;
+  }
+
+  .m-c-select-words {
+    margin: 10px auto;
+  }
+
+}
+
+@media (max-height: 300px) and (orientation: landscape) {
+
+  .container.mobile {
+    overflow: auto;
+    display: block;
+  }
+
+  .m-c-select-words {
+    margin: 10px auto;
+    min-height: 235px;
   }
 
 }

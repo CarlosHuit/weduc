@@ -1,4 +1,8 @@
-<div class="container">
+<div class="container" [class.mobile]="isMobile()" >
+
+
+
+
 
   <!-- desktop version -->
   <mat-card class="d-c-card center" *ngIf="!loading && !isMobile()">
@@ -20,10 +24,14 @@
 
   </mat-card>
 
-  <!-- mobile version -->
-  <div class="card center" *ngIf="!loading && isMobile()">
 
-    <div class="m-c-container-words">
+
+
+
+  <!-- mobile version -->
+  <mat-card class="m-c-select-words center" *ngIf="!loading && isMobile()">
+
+    <div class="m-c-container-words center">
 
       <div class="m-c-words">
         <button *ngFor="let x of messyWords" class="word" [class.correct]="corrects[x] === x" [class.incorrect]="incorrects[x] === x"
@@ -33,7 +41,7 @@
 
     <button class="icon-help" (click)="repeatInstructions()">?</button>
 
-  </div>
+  </mat-card>
 
   <app-spinner-loading *ngIf="loading"></app-spinner-loading>
   <app-success-animation *ngIf="success"></app-success-animation>
