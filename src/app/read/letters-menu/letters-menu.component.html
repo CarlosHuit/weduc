@@ -240,7 +240,11 @@
               </div>
 
               <mat-accordion class="m-c-accordion" [multi]="multi" >
-                <mat-expansion-panel *ngFor="let itemLetter of learneds">
+                <mat-expansion-panel
+                  *ngFor="let itemLetter of learneds"
+                  (closed)="itemClosed(itemLetter.letter)"
+                  (opened)="itemOpened(itemLetter.letter)"
+                  >
       
                   <mat-expansion-panel-header [style.height.px]="80">
       
@@ -281,7 +285,7 @@
                           mat-flat-button color="warn"
                           *ngFor="let combination of combinations[itemLetter.letter]"
                           class="m-c-btn-syllable"
-                          (click)="listenCombination(combination.p)"
+                          (click)="listenCombination(combination.p, combination.w, itemLetter.letter)"
                           >
                           {{combination.w}}
                         </button>

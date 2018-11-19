@@ -7,8 +7,17 @@ import { GetDataService         } from '../../services/get-data.service';
 import { SendDataService        } from '../../services/send-data.service';
 import { DetectMobileService    } from '../../services/detect-mobile.service';
 import { LocalStorageService    } from '../../services/local-storage.service';
-import { MenuData               } from '../../interfaces/menu-data';
 import { WordsAndLetters, LearnedLetters } from '../../interfaces/words-and-letters';
+import {
+  MenuLettersData,
+  TabAlphabet,
+  Times,
+  LettersHeard,
+  TabLearnedLetters,
+  Sort,
+  PreviewLetter,
+  Syllable
+} from '../../classes/menu-letters-data';
 
 
 @Component({
@@ -28,7 +37,7 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
   @ViewChild('contGrid') contGrid: ElementRef;
   data:           WordsAndLetters;
   learneds:       LearnedLetters[];
-  userData:       MenuData = {};
+  userData:       MenuLettersData;
   letters:        string[] = [];
   words:          string[] = [];
   storage:        boolean;
@@ -73,9 +82,9 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
           this.data = data;
           this.setInitialData(this.data);
           this.instructions('y');
-          // this.addInitialTime();
 
           (window as any).onresize = () => (this.genCols(this.contGrid.nativeElement), this.isMobile());
+
 
         },
         err => console.log(err)
@@ -92,19 +101,7 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
   isMobile = (): boolean =>  this.detMobile.isMobile();
 
-  // sendUserProgress = () => {
-  //   const n: LearnedLetters = {
-  //     letter: 'b',
-  //     rating: 4
-  //   };
 
-  //   this.sendData.sendUserProgress(n)
-  //     .subscribe(
-  //       res => console.log(res),
-  //       err => console.log(err)
-  //     );
-
-  // }
 
   setInitialData = (data: WordsAndLetters) => {
 
@@ -121,6 +118,7 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
     this.soundsLetters  = letters.sound_letters;
 
     this.loading = false;
+    this.initUserData();
     setTimeout(() =>  this.showC = true, 10);
 
   }
@@ -154,6 +152,9 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
 
   goToAlphabet = () => {
+
+    this.deactiveTabLearned();
+    this.activeTabAlphabet();
     this.showAlphabet = true;
     this.instructions('y');
   }
@@ -161,7 +162,10 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
   goToLearnedLetters = () => {
 
+    this.activeTabLearned();
+    this.deactiveTabAlphabet();
     this.showAlphabet = false;
+
     const msg1 = 'Aquí aparecerán las letras que vayas aprendiendo';
     const msg2 = 'Estas son las letras que has aprendido';
     const msg  = this.noLearneds() ? msg1 : msg2;
@@ -171,13 +175,15 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
   }
 
 
-  listenCombination = (syllable: string) => {
-    const speech = this.speechSynthesis.speak(syllable, .8);
+  listenCombination = (syllableP: string, syllableW: string, letter: string ) => {
+    const speech = this.speechSynthesis.speak(syllableP, .8);
+    this.AddListeningsCount(letter, 's', syllableW);
   }
 
 
   sortAlpha = () => {
 
+    this.addSortingCount('alphabet');
     this.closeAllExpansion();
 
     this.sortRatingState    = false;
@@ -212,13 +218,13 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
 
   getCombinations = (letter: string) => {
-    console.log(this._storage.getElement('combinations')[letter.toLowerCase()]);
     return this._storage.getElement('combinations')[letter.toUpperCase()];
   }
 
 
   sortRating = () => {
 
+    this.addSortingCount('rating');
     this.closeAllExpansion();
 
     this.sortAlphaState     = false;
@@ -281,7 +287,7 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
 
   listenSoundLetter = (letter: string) => {
-
+    this.addLettersHeard(letter);
     const t = JSON.parse(localStorage.getItem('letter_sounds'))[letter.toLowerCase()];
     this.speechSynthesis.speak(t, .8);
 
@@ -297,6 +303,9 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
     const lSound = this._storage.getElement('letter_sounds')[letter];
     const lType  = type === 'l' ? 'minúscula' : 'mayúscula';
     const msg    = `${lSound} ... ${lType}`;
+
+    if (type === 'l') { this.AddListeningsCount(letter, 'l'); }
+    if (type === 'u') { this.AddListeningsCount(letter, 'u'); }
 
     const speech = this.speechSynthesis.speak(msg, 0.8);
     speech.addEventListener('end', () => (this.highlightLetter = {}, this.speaking = false));
@@ -326,6 +335,7 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
 
   openModal = (letter: string) => {
+    this.addTimePracticeLetter(letter);
     return !this.selected ? this.redirect(letter) : null;
   }
 
@@ -344,7 +354,7 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
 
   repractice = (letter: string) => {
-
+    this.addTimeRepractice(letter);
     const url = `lectura/detalle-letra/${letter.toLowerCase()}`;
     this.router.navigateByUrl(url);
 
@@ -371,89 +381,167 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
     }
   }
 
-  /*
 
-    addInitialTime = (): void => {
+  initUserData = () => {
 
-      const initialTime = this.genDate.generateData();
+    const t   = this.genDate.generateData();
+    const _id = this._storage.getElement('user')['userId'];
 
-      this.userData['user_id']    = 'N/A';
-      this.userData['initTime']   = initialTime.fullTime;
-      this.userData['date']       = initialTime.fullDate;
-      this.userData['selection']  = [];
-      this.userData['successTime'] = 'N/A';
+    const times     = new Times(t.fullTime, 'N/D');
+    const t_alpha   = new TabAlphabet([times], [], 'N/D' );
+    const t_learned = new TabLearnedLetters([], [], []);
+    this.userData   = new MenuLettersData(t.fullTime, '', t.fullDate, _id, t_alpha, t_learned);
+
+  }
+
+
+  addFinalTime = () => {
+    this.userData.finalTime = this.genDate.generateData().fullTime;
+  }
+
+
+  addLettersHeard = (letter: string) => {
+    const t = this.genDate.generateData().fullTime;
+    this.userData.tab_alphabet.lettersHeard.push(new LettersHeard(letter, t));
+  }
+
+
+  addSelections = (letter: string) => {
+    this.userData.tab_alphabet.selection = letter;
+  }
+
+
+  activeTabLearned = () => {
+
+    if (this.showAlphabet === true) {
+      const x = new Times(this.genDate.generateData().fullTime, 'N/D');
+      this.userData.tab_learned.times.push(x);
+    }
+
+  }
+
+
+  deactiveTabLearned = () => {
+
+    if (this.showAlphabet === false) {
+      const c = this.userData.tab_learned.times;
+      c[c.length - 1].finalTime = this.genDate.generateData().fullTime;
+    }
+
+  }
+
+
+  activeTabAlphabet = () => {
+
+    if (this.showAlphabet === false) {
+      const x = new Times(this.genDate.generateData().fullTime, 'N/D');
+      this.userData.tab_alphabet.times.push(x);
+    }
+
+  }
+
+
+  deactiveTabAlphabet = () => {
+
+    if (this.showAlphabet === true) {
+      const c = this.userData.tab_alphabet.times;
+      c[c.length - 1].finalTime = this.genDate.generateData().fullTime;
+    }
+
+  }
+
+
+  addSortingCount = (sort: string) => {
+
+    const t = this.genDate.generateData().fullTime;
+    const c = sort === 'alphabet' || sort === 'rating' ? this.userData.tab_learned.sort.push(new Sort(sort, t)) : null;
+
+  }
+
+
+  itemOpened = (letter: string) => {
+    this.speechSynthesis.cancel();
+    const index = this.userData.tab_learned.previewLetters.findIndex(e => e.letter === letter);
+    const time = this.genDate.generateData().fullTime;
+    const t  = new Times(time, 'N/A');
+
+    if (index === -1) {
+
+      const s = [];
+      this.combinations[letter].forEach(i => s.push(new Syllable(i.w, [])));
+      const el = new PreviewLetter(letter, [t], [], [], s, 'N/D');
+      this.userData.tab_learned.previewLetters.push(el);
+
+    } else {
+
+      const path = this.userData.tab_learned.previewLetters;
+      const item = path[index].time.push(t);
 
     }
 
 
-    addInfoSelection = (letter: string) => {
 
-      const openModalTime = this.genDate.generateData();
+  }
 
-      const x: Selection = {
-        letter:        letter,
-        openModalTime: openModalTime.fullTime,
-        letterUpper:   0,
-        letterLower:   0,
-        words:          this.fillWords(),
-        cancelTime:    'N/A',
-      };
 
-      const index = this.userData.selection.length;
-      this.userData.selection[index] = x;
+  itemClosed = (letter: string) => {
 
+    this.speechSynthesis.cancel();
+    const t     = this.genDate.generateData().fullTime;
+    const path  = this.userData.tab_learned.previewLetters;
+    const index = path.findIndex( e => e.letter === letter);
+    const el    = path[index].time;
+    const val   = index > -1 ? el[el.length - 1].finalTime = t : null;
+
+  }
+
+
+  AddListeningsCount = (letter: string, code: string, syllable?: string) => {
+
+    const t     = this.genDate.generateData().fullTime;
+    const path  = this.userData.tab_learned.previewLetters;
+    const index = path.findIndex( e => e.letter === letter);
+    const el    = path[index];
+
+    switch (code) {
+      case 'l':
+        el.lowerCase.push(t);
+        break;
+
+        case 'u':
+        el.upperCase.push(t);
+        break;
+
+      default:
+        const iSyllable = el.syllables.findIndex(e => e.syllable === syllable);
+        const element   = el.syllables[iSyllable].time.push(t);
+        break;
     }
 
-    fillWords = () => {
+  }
 
-      const t = {};
-      this.words.forEach( word => t[word] = 0 );
 
-      return JSON.parse(JSON.stringify(t));
+  addTimeRepractice = (letter: string) => {
+    const t     = this.genDate.generateData().fullTime;
+    const path  = this.userData.tab_learned.previewLetters;
+    const index = path.findIndex(e => e.letter === letter);
+    const el    = path[index];
 
-    }
+    el.timeRePractice       = t;
+    this.userData.finalTime = t;
+    this.itemClosed(letter);
 
-    countLetterUpper = () => {
-      const index = this.userData.selection.length - 1;
-      const r     = this.userData.selection[index].letterUpper += 1;
-    }
+  }
 
-    countLetterLower = () => {
-      const index = this.userData.selection.length - 1;
-      const r     = this.userData.selection[index].letterLower += 1;
-    }
 
-    addCountToWord = (word: string) => {
-      const index = this.userData.selection.length - 1;
-      const t     = this.userData.selection[index].words[word] += 1;
-    }
+  addTimePracticeLetter = (letter: string) => {
 
-    addCountToSyllable = (syllable: string) => {
-      const index = this.userData.selection.length - 1;
-      const t     = this.userData.selection[index].syllables[syllable] += 1;
-    }
+    const t = this.genDate.generateData().fullTime;
+    this.userData.tab_alphabet.selection = letter;
+    this.userData.finalTime = t;
+    this.showAlphabet       = true;
 
-    addCancelTime = () => {
-      const i = this.userData.selection.length - 1;
-      const cancelTime = this.genDate.generateData();
-
-      const t = this.userData.selection[i].cancelTime = cancelTime.fullTime;
-    }
-
-    addSuccessTime = () => {
-      const successTime = this.genDate.generateData();
-      this.userData['successTime'] = successTime.fullTime;
-    }
-
-    send = () => {
-      this.sendData.sendMenuData(this.userData)
-      .subscribe(
-        e  =>  { const x = e;   },
-        err => { const x = err; }
-      );
-    }
-
-    */
-
+    this.deactiveTabAlphabet();
+  }
 
 }

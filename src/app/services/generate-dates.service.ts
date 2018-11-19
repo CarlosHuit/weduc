@@ -8,13 +8,15 @@ export class GenerateDatesService {
   constructor() { }
 
   generateData = () => {
+
     const d = new Date();
 
     const date = {
       year:  d.getFullYear(),
       month: d.getMonth() + 1,
-      day:   d.getDay(),
+      day:   d.getDate(),
     };
+
 
     const time = {
       hour:         d.getHours(),

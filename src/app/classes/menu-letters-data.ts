@@ -6,12 +6,11 @@ export class MenuLettersData {
     public finalTime:     string,
     public date:          string,
     public user_id:       string,
-    public tab_alphabet:  TabAlphabet[],
-    public tab_learned:   LearnedLetters[]
+    public tab_alphabet:  TabAlphabet,
+    public tab_learned:   TabLearnedLetters
   ) { }
 
 }
-
 
 
 
@@ -19,18 +18,27 @@ export class MenuLettersData {
 export class TabAlphabet {
 
   constructor(
-    public startTime:     string,
-    public finalTime:     string,
-    public lettersHeard:  LettersHeard[]
+    public times:         Times[],
+    public lettersHeard:  LettersHeard[],
+    public selection?:     string,
   ) { }
+
+}
+
+export class Times {
+
+  constructor (
+    public startTime?: string | Date,
+    public finalTime?: string | Date
+  ) {}
 
 }
 
 export class LettersHeard {
 
   constructor(
-    public letter: string,
-    public time:   string
+    public letter?: string,
+    public time?:   string
   ) { }
 
 }
@@ -38,35 +46,41 @@ export class LettersHeard {
 
 
 
-export class LearnedLetters {
+export class TabLearnedLetters {
 
   constructor(
-    public startTime:       string,
-    public finalTime:       string,
-    public sortAlphabet:    string[],
-    public sortRating:      string[],
-    public previewLetters:  PreviewLetters[]
+    public times:           Times[],
+    public sort:            Sort[],
+    public previewLetters:  PreviewLetter[],
   ) {}
 
 }
 
-export class PreviewLetters {
+export class Sort {
+
   constructor(
-    public letter:          string,
-    public timeOpen:        string,
-    public timeClose:       string,
-    public upperCase:       string[],
-    public lowerCase:        string[],
-    public syllables:       Syllables[],
-    public timeRePractice:  string,
+    public sortBy?: string,
+    public time?:   string,
+  ) {}
+
+}
+
+export class PreviewLetter {
+  constructor(
+    public letter?:           string,
+    public time?:             Times[],
+    public upperCase?:        string[],
+    public lowerCase?:        string[],
+    public syllables?:        Syllable[],
+    public timeRePractice?:   string,
   ) { }
 }
 
-export class Syllables {
+export class Syllable {
 
   constructor(
     public syllable: string,
-    public time:     string,
+    public time:     string[],
   ) {}
 
 }
