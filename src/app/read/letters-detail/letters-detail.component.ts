@@ -10,7 +10,6 @@ import { LocalStorageService     } from '../../services/local-storage.service';
 import { ShuffleService          } from '../../services/shuffle/shuffle.service';
 import { GenerateIdsService      } from '../../services/generate-ids/generate-ids.service';
 import { SimilarLetters          } from '../../interfaces/words-and-letters';
-// import { FindLetterData, Selection   } from '../../interfaces/find-letter-data';
 import {
   LettersDetailData,
   MemoryGame,

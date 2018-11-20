@@ -8,9 +8,10 @@ import { DetectMobileService    } from '../../services/detect-mobile.service';
 import { PreloadAudioService    } from '../../services/preload-audio.service';
 import { LocalStorageService    } from '../../services/local-storage.service';
 import { SimilarLettersService  } from '../../services/similar-letters/similar-letters.service';
-import { GameData, Record       } from '../../interfaces/game-data';
 import { GetDataService         } from '../../services/get-data.service';
 import { RandomSimilarLetters   } from '../../interfaces/random-similar-letters';
+// import { GameData, Record       } from '../../interfaces/game-data';
+import { GameData, History } from '../../classes/game-data';
 
 @Component({
   selector: 'app-game',
@@ -27,7 +28,6 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   failedCount       = 0;
   succesCount       = 0;
   lettersValidation = {};
-  dataToSend        = [];
   show              = false;
   loading:          boolean;
   success:          boolean;
@@ -40,7 +40,8 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   letterIDs:        string[][] = [[]];
   arrayIDs:         string[]   = [];
   clearEl:          any        = {};
-  userData:         GameData   = {};
+  dataToSend:       GameData[] = [];
+  userData:         GameData;
   mcGameEl:         HTMLDivElement;
   lettersData:      RandomSimilarLetters;
 
@@ -216,6 +217,7 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   restartCounters = (): void => {
     this.succesCount = 0;
     this.failedCount = 0;
+    this.opportunities = 0;
   }
 
 
@@ -324,75 +326,61 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
 
   initUserData = () => {
 
-    const startTime = this.genDates.generateData();
-
-    this.userData['user_id'] = 'N/A';
-    this.userData['date'] = startTime.fullDate;
-    this.userData['startTime'] = startTime.fullTime;
-    this.userData['amount'] = this.countLetters();
-    this.userData['letter'] = this.letter;
-    this.userData['correct'] = 0;
-    this.userData['incorrect'] = 0;
-    this.userData['repetitions'] = 0;
-    this.userData['historial'] = [];
-    this.userData['finalTime'] = 'N/A';
-
-  }
-
-  createData = (letter: string, status: boolean): Record => {
-
-    const time      = this.genDates.generateData();
-    const x: Record = { letter: letter, time: time.fullTime, status: status };
-
-    return x;
+    const t = this.genDates.generateData();
+    const id  = this._storage.getElement('user')['userId'];
+    this.userData = new GameData(id, t.fullDate, t.fullTime, 'N/D', this.letter, this.countLetters(), 0, 0, [], []);
+    console.log(this.userData);
   }
 
   addSelection = (letter: string, status: boolean) => {
 
-    const x = this.createData(letter, status);
-    this.userData['historial'].push(x);
+    const t = this.genDates.generateData().fullTime;
+    this.userData.historial.push(new History(letter, t, status));
 
   }
 
 
   insertGroupOfSelection = () => {
+
     this.addFinalTime();
     const m = JSON.parse(JSON.stringify(this.userData));
     this.dataToSend.push(m);
-  }
-
-  countLetters = (): number => {
-
-    let count = 0;
-
-    this.arrayIDs.forEach(el => {
-      const t = el[0] === this.letter ? count++ : false;
-    });
-
-    return count;
 
   }
 
 
   addFinalTime = (): void => {
-    this.userData['correct'] = this.succesCount;
-    this.userData['incorrect'] = this.failedCount;
 
-    const data = this.genDates.generateData();
-    this.userData['finalTime'] = data.fullTime;
+    this.userData.correct   = this.succesCount;
+    this.userData.incorrect = this.failedCount;
+
+    const t = this.genDates.generateData().fullTime;
+    this.userData.finalTime = t;
+
+  }
+
+  countLetters = (): number => {
+
+    let count = 0;
+    // this.letterIDs.forEach(el => el[0] === this.letter ? count++ : false);
+    this.letterIDs.forEach(g => g.forEach(e => e[0] === this.letter ? count++ : false ));
+    // console.log(this.letterIDs);
+    return count;
 
   }
 
   countRepetitions = () => {
-    this.userData['repetitions']++;
+    const t = this.genDates.generateData().fullTime;
+    this.userData.repetitions.push(t);
   }
 
   send = () => {
-    this.sendData.sendGameData(this.dataToSend)
-      .subscribe(
-        v => { const x = v; },
-        e => { const err = e; }
-      );
+    console.log(this.dataToSend);
+    // this.sendData.sendGameData(this.dataToSend)
+    //   .subscribe(
+    //     v => { const x = v; },
+    //     e => { const err = e; }
+    //   );
   }
 
 
