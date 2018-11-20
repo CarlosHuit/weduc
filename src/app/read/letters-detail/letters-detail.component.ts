@@ -10,7 +10,14 @@ import { LocalStorageService     } from '../../services/local-storage.service';
 import { ShuffleService          } from '../../services/shuffle/shuffle.service';
 import { GenerateIdsService      } from '../../services/generate-ids/generate-ids.service';
 import { SimilarLetters          } from '../../interfaces/words-and-letters';
-import { FindLetterData, Selection   } from '../../interfaces/find-letter-data';
+// import { FindLetterData, Selection   } from '../../interfaces/find-letter-data';
+import {
+  LettersDetailData,
+  MemoryGame,
+  CardExample,
+  Couples,
+  Historial
+} from '../../classes/letters-detail-data';
 
 
 
@@ -38,8 +45,8 @@ export class LettersDetailComponent implements OnInit {
   sel2 =          '';
   loading =       true;
   show:           boolean;
-  userData:       FindLetterData   = {};
-  Data:           FindLetterData[] = [];
+  userData:       LettersDetailData;
+  Data:           LettersDetailData[] = [];
   similarLetters: SimilarLetters;
   idOPtions:      {};
   currentIds:     string[];
@@ -74,7 +81,7 @@ export class LettersDetailComponent implements OnInit {
     this.listenMsg();
 
     (window).addEventListener('resize', e => this.style(this.card.nativeElement));
-    // this.initUserData();
+    this.initUserData();
   }
 
   fillLettersIds = () => {
@@ -147,15 +154,16 @@ export class LettersDetailComponent implements OnInit {
         if (this.selections.length === 1) {
 
           this.sel1 = id;
-          // this.addSelection(this.sel1[0]);
+          this.addDataToMemoryGame(3044, this.sel1[0]);
 
         }
 
         if (this.selections.length === 2) {
 
           this.sel2 = id;
-          // this.addSelection(this.sel2[0]);
-          // this.addCouples(this.sel1[0], this.sel2[0]);
+          this.addDataToMemoryGame(3044, this.sel2[0]);
+          this.addDataToMemoryGame(3043, this.sel1[0], this.sel2[0]);
+
           this.canPlayGame = false;
           const validation = this.sel1[0] === this.sel2[0] ? setTimeout(e => this.next(), 2000) : this.reset();
 
@@ -175,7 +183,8 @@ export class LettersDetailComponent implements OnInit {
 
   next = () => {
 
-    // this.addFinalTime();
+    this.addDataToMemoryGame(3041);
+    this.Data.push(JSON.parse(JSON.stringify(this.userData)));
 
     const index = this.lettersOPt.indexOf(this.currentLetter);
 
@@ -188,6 +197,8 @@ export class LettersDetailComponent implements OnInit {
       this.currentLetter = this.lettersOPt[index + 1];
       this.currentIds    = this.idOPtions[this.currentLetter];
 
+
+      this.initUserData();
       this.listenMsg();
 
     } else {
@@ -202,7 +213,7 @@ export class LettersDetailComponent implements OnInit {
 
   redirect = () => {
 
-    // this.sendFindLetterData();
+    this.sendDataToServer();
 
     this.success = true;
 
@@ -228,83 +239,18 @@ export class LettersDetailComponent implements OnInit {
     setTimeout(() => this.canPlayGame = true, 1500);
   }
 
-
-/*----- Collect User data -----*/
-
-  initUserData = () => {
-    const t = this.genDates.generateData();
-
-    this.userData.user_id   = 'N/A';
-    this.userData.date      = t.fullDate;
-    this.userData.startTime = t.fullTime;
-    this.userData.finalTime = 'N/A';
-    this.userData.letter    = this.currentLetter;
-    this.userData.pattern   = this.fillOtions();
-    this.userData.fails     = 0;
-    this.userData.couples   = [];
-    this.userData.historial = [];
-  }
-
-  fillOtions = (): string[] => {
-
-    const t = [];
-    this.currentIds.forEach(el => t.push(el[0]));
-
-    return JSON.parse(JSON.stringify(t));
-
-  }
-
-  addCouples = (letter1: string, letter2: string) => {
-
-    const x = [letter1, letter2];
-    this.userData.couples.push(x);
-
-  }
-
-  addSelection = (letter: string) => {
-
-    const state   = letter === this.currentLetter ? true : false;
-    const addFail = state === false ? this.userData.fails++ : false;
-    const t       = this.genDates.generateData();
-
-    const x: Selection = { time: t.fullTime, letter: letter, state: state };
-    this.userData.historial.push(x);
-
-
-  }
-
-  addFinalTime = () => {
-    const t = this.genDates.generateData();
-    this.userData.finalTime = t.fullTime;
-    this.addUserDataAndReset();
-  }
-
-  addUserDataAndReset = () => {
-    const x = JSON.parse(JSON.stringify(this.userData));
-    this.Data.push(x);
-  }
-
-  resetUserData = () => {
-    this.userData = {};
-  }
-
-  // sendFindLetterData = () => {
-  //   this.sendData.sendFindLetterData(this.Data)
-  //     .subscribe(
-  //       res => console.log(res),
-  //       err => console.log(err)
-  //     );
-  // }
-
-
-
-
   continue = () => {
-
+    this.addDataToCardExample(2042);
     this.hideTarget = true;
+    this.addDataToMemoryGame(3040);
     setTimeout(e => this.showTarget = false, 500);
 
     this.instructions();
+  }
+
+  listenMessage = () => {
+    this.addDataToCardExample(2040);
+    this.listenMsg();
   }
 
   listenMsg = () => {
@@ -318,7 +264,7 @@ export class LettersDetailComponent implements OnInit {
   }
 
   listenLetter = () => {
-
+    this.addDataToCardExample(2041);
     const t    = JSON.parse(localStorage.getItem('letter_sounds'))[this.letterParam.toLowerCase()];
     const type = this.currentLetter === this.currentLetter.toLowerCase() ? 'minúscula' : 'mayúscula';
     const msg  = `${t} ... ${type}`;
@@ -354,4 +300,75 @@ export class LettersDetailComponent implements OnInit {
     return { 'font-size': `${widthOPt * .5}px` };
 
   }
+
+
+/*----- Collect User data -----*/
+
+  initUserData = () => {
+
+    const t  = this.genDates.generateData();
+    const id = this._storage.getElement('user')['userId'];
+    const cE = new CardExample(t.fullTime, 'N/D', [], []);
+    const mG = new MemoryGame('N/D', 'N/D', this.currentIds, [], []);
+
+    this.userData = new LettersDetailData(id, this.currentLetter, t.fullDate, t.fullTime, 'N/D', cE, mG);
+  }
+
+  addDataToCardExample = (code: number) => {
+
+    const path = this.userData.cardExample;
+    const t = this.genDates.generateData().fullTime;
+    switch (code) {
+      case 2040:
+        path.listenMsg.push(t);
+        break;
+      case 2041:
+        path.listenLetter.push(t);
+        break;
+      case 2042:
+        path.finalTime = t;
+        break;
+      default:
+        break;
+    }
+  }
+
+  addFinalTime = () => {
+    const t = this.genDates.generateData().fullTime;
+    this.userData.finalTime = t;
+  }
+
+  addDataToMemoryGame = (code: number, fLetter?: string, sLetter?: string) => {
+
+    const path = this.userData.memoryGame;
+    const t = this.genDates.generateData().fullTime;
+    switch (code) {
+      case 3040:
+        path.startTime = t;
+        break;
+      case 3041:
+        path.finalTime = t;
+        this.addFinalTime();
+        break;
+      case 3043:
+        const x = new Couples(fLetter, sLetter);
+        path.couples.push(x);
+        break;
+      case 3044:
+        const s = fLetter === this.currentLetter ? true : false;
+        const h = new Historial(t, fLetter, s);
+        path.historial.push(h);
+        break;
+      default:
+        break;
+    }
+  }
+
+  sendDataToServer = () => {
+    console.log(this.Data);
+  }
+
+
+
+
 }

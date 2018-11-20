@@ -152,6 +152,11 @@
   margin-top: -35px;
   color: rgb(255, 191, 0);
   -webkit-text-stroke: 3px #202020;
+  transition: 100ms;
+}
+
+.c-letter h1:active {
+  transform: scale(.97);
 }
 
 .button-next {
