@@ -362,9 +362,7 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   countLetters = (): number => {
 
     let count = 0;
-    // this.letterIDs.forEach(el => el[0] === this.letter ? count++ : false);
     this.letterIDs.forEach(g => g.forEach(e => e[0] === this.letter ? count++ : false ));
-    // console.log(this.letterIDs);
     return count;
 
   }
