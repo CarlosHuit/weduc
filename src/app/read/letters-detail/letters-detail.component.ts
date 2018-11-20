@@ -109,7 +109,6 @@ export class LettersDetailComponent implements OnInit {
 
   }
 
-
   instructions = () => {
 
     this.canPlayGame = false;
@@ -126,17 +125,6 @@ export class LettersDetailComponent implements OnInit {
   }
 
   isMobile = (): boolean => this.dMobile.isMobile();
-
-
-
-
-
-
-
-  /*----- End Style of elements -----*/
-
-
-
 
   onSelect = (id: string) => {
 
@@ -179,6 +167,7 @@ export class LettersDetailComponent implements OnInit {
 
     const msg   = `${sound} '${typeL}'`;
     const playR = letter === letterToVal ? this.speech.speak(msg, .95) : this._audio.playAudio();
+
   }
 
   next = () => {
@@ -235,22 +224,28 @@ export class LettersDetailComponent implements OnInit {
   }
 
   reset = () => {
+
     setTimeout(() => (this.sel1 = '', this.sel2 = '', this.active = false, this.selections = []), 1200);
     setTimeout(() => this.canPlayGame = true, 1500);
+
   }
 
   continue = () => {
+
     this.addDataToCardExample(2042);
     this.hideTarget = true;
     this.addDataToMemoryGame(3040);
     setTimeout(e => this.showTarget = false, 500);
 
     this.instructions();
+
   }
 
   listenMessage = () => {
+
     this.addDataToCardExample(2040);
     this.listenMsg();
+
   }
 
   listenMsg = () => {
@@ -317,7 +312,8 @@ export class LettersDetailComponent implements OnInit {
   addDataToCardExample = (code: number) => {
 
     const path = this.userData.cardExample;
-    const t = this.genDates.generateData().fullTime;
+    const t    = this.genDates.generateData().fullTime;
+
     switch (code) {
       case 2040:
         path.listenMsg.push(t);
@@ -331,17 +327,18 @@ export class LettersDetailComponent implements OnInit {
       default:
         break;
     }
+
   }
 
   addFinalTime = () => {
-    const t = this.genDates.generateData().fullTime;
-    this.userData.finalTime = t;
+    this.userData.finalTime = this.genDates.generateData().fullTime;
   }
 
   addDataToMemoryGame = (code: number, fLetter?: string, sLetter?: string) => {
 
     const path = this.userData.memoryGame;
     const t = this.genDates.generateData().fullTime;
+
     switch (code) {
       case 3040:
         path.startTime = t;
@@ -362,6 +359,7 @@ export class LettersDetailComponent implements OnInit {
       default:
         break;
     }
+
   }
 
   sendDataToServer = () => {
