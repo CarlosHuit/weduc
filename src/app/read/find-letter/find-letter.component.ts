@@ -9,7 +9,6 @@ import { PreloadAudioService          } from '../../services/preload-audio.servi
 import { Words                        } from '../../interfaces/words';
 import { LocalStorageService          } from '../../services/local-storage.service';
 import { ShuffleService               } from '../../services/shuffle/shuffle.service';
-import { FindLetterData               } from '../../interfaces/find-letter-data';
 
 
 

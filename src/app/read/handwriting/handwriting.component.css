@@ -45,6 +45,7 @@
 /* ------ styles mobile version ------ */
 .container-handwriting {
   background:      linear-gradient(to top left, #0f587c 0%, #0d6297 25%, #1877ad 100%);
+  background: linear-gradient(to bottom, #1a5e7e 0%, #1b6a8d 25%, #257da4 100%);
   height:          100%;
   width:           100%;
   display:         flex;
@@ -61,7 +62,7 @@
   height:           300px;
   background-color: white;
   z-index:           2;
-  border:            3px solid rgb(40,40,40);
+  border:            2px solid rgb(29,29,29);
   border-radius:     4px;
   display:           flex;
   justify-content:   center;

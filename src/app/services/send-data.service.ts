@@ -6,7 +6,7 @@ import { catchError, map  } from 'rxjs/operators';
 import { throwError       } from 'rxjs';
 import { DrawLetterData   } from '../interfaces/draw-letter-data';
 import { GetTokenService  } from '../services/get-token.service';
-import { MenuData         } from '../interfaces/menu-data';
+import { MenuLettersData  } from '../classes/menu-letters-data';
 import { LearnedLetters   } from '../interfaces/words-and-letters';
 import { PronounceLetter  } from '../interfaces/pronounce-letter';
 import { SelectWords      } from '../interfaces/select-words';
@@ -45,7 +45,7 @@ export class SendDataService {
   }
 
 
-  sendMenuData = (obj: MenuData) => {
+  sendMenuData = (obj: MenuLettersData) => {
 
     const token = this.getToken.getToken();
     const url   = urljoin(this.apiUrl, `menu${token}`);
