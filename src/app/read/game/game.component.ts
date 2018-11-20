@@ -324,6 +324,7 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
 
+  /*---------- Collect Data  ------------*/
   initUserData = () => {
 
     const t = this.genDates.generateData();
