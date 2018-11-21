@@ -16,16 +16,89 @@
 </div>
 
 <div class="container-handwriting" *ngIf="isMobile()">
-
   <div class="container-canvas">
-    <canvas id="canvasEl" #canvasDraw style="z-index: 2" ></canvas>
-    <hr class="line-guide one">
-    <hr class="line-guide two">
-    <hr class="line-guide three">
+
+    <div class="m-c-mini-toolbar top">
+
+
+      <button mat-icon-button [matMenuTriggerFor]="menuFontSize">
+        <mat-icon class="fz-30">create</mat-icon>
+      </button>
+      <mat-menu #menuFontSize="matMenu">
+
+        <div class="m-c-menu-content">
+
+          <div class="line-width-example">
+            <hr
+              [style.borderBottomWidth.px]="lineWidth"
+              [style.borderBottomColor]="lineColor"
+              >
+          </div>
+          <div class="m-c-slider-control">
+            <mat-slider
+              class="m-c-slider"
+              [max]="24"
+              [min]="1"
+              [step]="2"
+              (change)="startExample()"
+              [(ngModel)]="lineWidth"
+              >
+            </mat-slider>
+          </div>
+
+        </div>
+
+      </mat-menu>
+
+
+      <button mat-icon-button [matMenuTriggerFor]="menuColor">
+        <mat-icon class="fz-30">format_color_fill</mat-icon>
+      </button>
+      <mat-menu #menuColor="matMenu">
+        <div class="m-c-color-buttons">
+          <button 
+            *ngFor="let color of colors"
+            [style.background]="color"
+            (click)="changeColor(color)"
+            class="btn-color"
+            mat-fab
+            >
+          </button>
+        </div>
+      </mat-menu>
+
+
+      <button mat-icon-button>
+        <mat-icon class="fz-30" *ngIf="showGuidLines" (click)="showGuidLines = false" >visibility</mat-icon>
+        <mat-icon class="fz-30" *ngIf="!showGuidLines" (click)="showGuidLines = true" >visibility_off</mat-icon>
+      </button>
+
+    </div>
+
+    <div class="m-c-content-handwriting center">
+
+      <div class="m-c-container-canvas">
+        <canvas id="canvasEl" #canvasDraw style="z-index: 2" ></canvas>
+        <hr class="m-c-line-guide one" *ngIf="showGuidLines">
+        <hr class="m-c-line-guide two" *ngIf="showGuidLines">
+        <hr class="m-c-line-guide three" *ngIf="showGuidLines">
+      </div>
+
+    </div>
+
+    <div class="m-c-mini-toolbar bottom">
+
+
+      <button mat-flat-button color="warn" (click)="startExample()">
+        <mat-icon class="fz-36 center">replay</mat-icon>
+      </button>
+
+      <button mat-flat-button color="warn" (click)="hide()" style="background: #239B56">
+        <mat-icon class="fz-36 center">arrow_forward</mat-icon>
+      </button>
+
+
+    </div>
+
   </div>
-
-  <mat-icon class="icon reload press" (click)="startExample()"> replay </mat-icon>
-  <mat-icon class="icon arrow press"  (click)="hide()"        > arrow_forward </mat-icon>
-
-
 </div>

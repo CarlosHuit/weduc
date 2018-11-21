@@ -28,23 +28,22 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
   private ctx:    CanvasRenderingContext2D;
   private canvas: HTMLCanvasElement;
 
-  cw:         number;
-  ch:         number;
-  lineWidth:  number;
-  lineColor:  string;
-  styleLine:  string;
-  smoothing:  number;
-
-  type:       string;
-  info:       any[] = [];
-  tiempos:    any[] = [];
-  totalTimes: any[] = [];
-  velocity:   number;
-  timeClear:  any;
-
-  // stateDisabled = true;
-  timeOutsLine  = [];
-  timeOutsGroup = [];
+  cw:           number;
+  ch:           number;
+  lineWidth:    number;
+  smoothing:    number;
+  velocity:     number;
+  lineColor:    string;
+  styleLine:    string;
+  type:         string;
+  colors:       string[];
+  timeClear:    any;
+  info:         any[] = [];
+  tiempos:      any[] = [];
+  totalTimes:   any[] = [];
+  timeOutsLine        = [];
+  timeOutsGroup       = [];
+  showGuidLines       = true;
 
   userData: HandwritingData = {};
 
@@ -53,7 +52,12 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
     private speechSynthesis: SpeechSynthesisService,
     private genDates:        GenerateDatesService,
     private _mobile:         DetectMobileService
-  ) { }
+  ) {
+    this.colors    = ['#f44336', '#239B56', '#007cc0', '#fc793c'].sort(e => Math.random() - 0.5);
+    this.lineWidth = 12;
+    this.lineColor = '#007cc0';
+    this.lineColor = this.colors[0];
+  }
 
   ngAfterViewInit() {
 
@@ -64,8 +68,6 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
 
 
     this.smoothing = 5;
-    this.lineWidth = 14;
-    this.lineColor = '#007cc0';
     this.styleLine = 'round';
     this.velocity  = 150;
 
@@ -93,6 +95,11 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
 
     this.info.forEach(e => e.push(e[e.length - 1]));
 
+  }
+
+  changeColor = (color: string): void => {
+    this.lineColor = color;
+    this.startExample();
   }
 
   hide = () => {

@@ -51,6 +51,8 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
   loading =      true;
   coordinates:   Coordinates;
   userData:      BoardData = {};
+  showGuidLines = true;
+  colors:        string[];
 
   constructor(
     private router:            Router,
@@ -63,27 +65,31 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
   ) {
     this.success = false;
     this.letterParam = this._route.snapshot.paramMap.get('letter');
+    this.colors    = ['#f44336', '#239B56', '#007cc0', '#fc793c'].sort(e => Math.random() - 0.5);
+    this.lineWidth = 12;
+    this.lineColor = '#007cc0';
+    this.lineColor = this.colors[0];
   }
 
   ngAfterViewInit() {
     this.canvas = this.canvasEl.nativeElement as HTMLCanvasElement;
     this.ctx    = this.canvas.getContext('2d');
 
-    if (this.isMobile()) {
-      this.cw = this.canvas.width  = 300;
-      this.ch = this.canvas.height = 300;
-    } else {
+    this.cw = this.canvas.width;
+    this.ch = this.canvas.height;
+
+    if (!this.isMobile()) {
       this.cw = this.canvas.width  = 600;
       this.ch = this.canvas.height = 300;
     }
+
+
 
     this.dibujar = false;
     this.traces = [];
     this.points = [];
 
     this.smoothing = 5; // 5
-    this.lineWidth = 12;
-    this.lineColor = '#1b64ac';
     this.styleLine = 'round';
 
     this.startup(this.canvas);
@@ -92,12 +98,13 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
   ngOnInit() {
 
     this.currentLetter = this.letterParam;
-
+    window.addEventListener('resize', this.limpiar);
 
   }
 
   ngOnDestroy() {
     this.speechSynthesis.cancel();
+    window.removeEventListener('resize', this.limpiar);
   }
 
   isMobile = () => this._mobile.isMobile();
@@ -128,6 +135,10 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
     this.soundService.playSound(name, category);
   }
 
+  changeColor = (color: string) => {
+    this.lineColor = color;
+    this.limpiar();
+  }
 
   nextLetter = (): void => {
 

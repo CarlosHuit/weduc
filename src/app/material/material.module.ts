@@ -18,7 +18,8 @@ import {
   MatDialogModule,
   MatOptionModule,
   MatTabsModule,
-  MatCheckboxModule
+  MatCheckboxModule,
+  MatSliderModule
 
 } from '@angular/material';
 
@@ -39,7 +40,8 @@ const modules = [
   MatSelectModule,
   MatDialogModule,
   MatTabsModule,
-  MatCheckboxModule
+  MatCheckboxModule,
+  MatSliderModule
 
 ];
 
