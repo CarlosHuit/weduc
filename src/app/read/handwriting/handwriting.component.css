@@ -152,9 +152,11 @@
 
 .m-c-container-canvas {
   position: relative;
-  width:      300px;
+  width:      90%;
   height:     300px;
   margin-top: calc(300px * 0.31);
+  display:    flex;
+  justify-content: center;
 }
 
 .m-c-line-guide {
