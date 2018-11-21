@@ -71,7 +71,6 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
     this.styleLine = 'round';
     this.velocity  = 150;
 
-    this.initUserData();
     this.startExample();
   }
 
@@ -107,7 +106,6 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
 
   hide = () => {
 
-    this.addnextTime();
     const data = JSON.stringify(this.userData);
 
     this.propagar.emit(data);
@@ -183,7 +181,6 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
     const sound = JSON.parse(localStorage.getItem('letter_sounds'))[this.letter.toLowerCase()];
     const msg   = `Por ahora no puedo mostrarte como escribir la letra: ${sound} .... "${type}"`;
 
-
     this.speechSynthesis.speak(msg);
 
   }
@@ -193,7 +190,6 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
   startExample = () => {
 
     this.limpiar();
-    this.addRepetitionData();
     this.setValues();
 
     const type   = this.letter === this.letter.toLowerCase() ? 'minúscula' : 'mayúscula';
@@ -206,11 +202,13 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   getTotalTime = (position: number) => {
+
     let suma = 0;
     for (let x = 0; x < position + 1; x++) {
       const element = this.totalTimes[x];
       suma += element;
     }
+
     return suma;
   }
 
@@ -219,10 +217,7 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
     const tiempos = [];
     let time = 0;
 
-    obj.forEach(el => {
-      tiempos.push(time);
-      time += this.velocity;
-    });
+    obj.forEach(el => (tiempos.push(time), time += this.velocity));
 
     return tiempos;
   }
@@ -272,19 +267,22 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   genSizes = (el: HTMLDivElement) => {
-    console.log(el.clientWidth);
-    if  (el.clientWidth < el.clientHeight) {
+
+    const width  = el.clientWidth;
+    const height = el.clientHeight;
+
+    if  (width < height) {
 
       return {
-        width:  `${el.clientWidth * .90}px`,
-        height: `${el.clientWidth * .90}px`
+        width:  `${width * .90}px`,
+        height: `${width * .90}px`
       };
 
     } else {
 
       return {
-        width:  `${el.clientHeight * .90}px`,
-        height: `${el.clientHeight * .90}px`
+        width:  `${height * .90}px`,
+        height: `${height * .90}px`
       };
 
     }
@@ -292,22 +290,6 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
 
   initUserData = () => {
 
-    const t = this.genDates.generateData();
-
-    this.userData['startTime'] = t.fullTime;
-    this.userData['repetition'] = [];
-    this.userData['nextTime'] = 'N/A';
-
-  }
-
-  addRepetitionData = () => {
-    const t = this.genDates.generateData();
-    this.userData['repetition'].push(t.fullTime);
-  }
-
-  addnextTime = () => {
-    const t = this.genDates.generateData();
-    this.userData['nextTime'] = t.fullTime;
   }
 
 }

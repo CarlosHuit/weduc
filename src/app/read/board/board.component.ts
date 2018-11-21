@@ -100,7 +100,13 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
     this.currentLetter = this.letterParam;
     window.addEventListener('resize', this.limpiar);
+    // window.addEventListener('resize', this.resetCanvasSize);
 
+  }
+
+  resetCanvasSize = () => {
+    this.cw     = this.canvas.width;
+    this.ch     = this.canvas.height;
   }
 
   ngOnDestroy() {
@@ -112,8 +118,6 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
   showModal = (): void => {
     this.showDraw = false;
-    this.addRepeatTime();
-    this.addCoordinates();
     const data = JSON.stringify(this.userData);
     this.showHandwriting.emit(data);
   }
@@ -143,8 +147,6 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
   nextLetter = (): void => {
 
-    this.addNextTime();
-    this.addCoordinates();
 
     const data = JSON.stringify(this.userData);
 
@@ -297,7 +299,7 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
   limpiar = (): void => {
 
-    // this.addCoordinates();
+    this.resetCanvasSize();
     this.dibujar = false;
     this.ctx.clearRect(0, 0, this.cw, this.ch);
     this.traces.length = 0;
@@ -306,36 +308,7 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
   }
 
   initUserData = () => {
-    const t = this.genDates.generateData();
-
-    this.userData['startTime']   = t.fullTime;
-    this.userData['nextTime']    = 'N/A';
-    this.userData['repeatTime']  = 'N/A';
-    this.userData['coordinates'] = [];
 
   }
-
-  addNextTime = () => {
-    const t = this.genDates.generateData();
-    this.userData['nextTime'] = t.fullTime;
-  }
-
-  addRepeatTime = () => {
-    const t = this.genDates.generateData();
-    this.userData['repeatTime'] = t.fullTime;
-  }
-
-  addCoordinates = () => {
-
-
-    if (this.traces.length > 0) {
-      const d = JSON.parse(JSON.stringify(this.traces));
-      this.userData['coordinates'].push(d);
-
-    }
-
-  }
-
-
 
 }
