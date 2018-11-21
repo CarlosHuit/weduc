@@ -33,26 +33,26 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
   private ctx: CanvasRenderingContext2D;
   private canvas: HTMLCanvasElement;
 
-  smoothing: number;
-  cw:        number;
-  ch:        number;
-  lineWidth: number;
-  dibujar:   boolean;
-  lineColor: string;
-  styleLine: string;
-  traces:    any[];
-  points:    any[];
-
-  currentLetter: string;
+  smoothing:     number;
+  cw:            number;
+  ch:            number;
+  lineWidth:     number;
+  dibujar:       boolean;
   success:       boolean;
-  letterParam:   string;
   inUse:         boolean;
   showDraw:      boolean;
-  loading =      true;
-  coordinates:   Coordinates;
-  userData:      BoardData = {};
-  showGuidLines = true;
+  lineColor:     string;
+  styleLine:     string;
+  currentLetter: string;
+  letterParam:   string;
   colors:        string[];
+  traces:        any[];
+  points:        any[];
+
+  coordinates:    Coordinates;
+  userData:       BoardData = {};
+  loading       = true;
+  showGuidLines = true;
 
   constructor(
     private router:            Router,
@@ -72,11 +72,12 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
   }
 
   ngAfterViewInit() {
+
     this.canvas = this.canvasEl.nativeElement as HTMLCanvasElement;
     this.ctx    = this.canvas.getContext('2d');
+    this.cw     = this.canvas.width;
+    this.ch     = this.canvas.height;
 
-    this.cw = this.canvas.width;
-    this.ch = this.canvas.height;
 
     if (!this.isMobile()) {
       this.cw = this.canvas.width  = 600;
@@ -85,12 +86,12 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
 
 
-    this.dibujar = false;
-    this.traces = [];
-    this.points = [];
-
+    this.dibujar   = false;
+    this.traces    = [];
+    this.points    = [];
     this.smoothing = 5; // 5
     this.styleLine = 'round';
+
 
     this.startup(this.canvas);
   }
@@ -158,21 +159,19 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
     if (mobile === true) {
       el.addEventListener('touchstart', this.handleStart, false);
-      el.addEventListener('touchend', this.handleEnd, false);
-      el.addEventListener('touchleave', this.handleEnd, false);
-      el.addEventListener('touchmove', this.handleMove, false);
+      el.addEventListener('touchend',   this.handleEnd,   false);
+      el.addEventListener('touchleave', this.handleEnd,   false);
+      el.addEventListener('touchmove',  this.handleMove,  false);
     }
 
     if (mobile !== true) {
       el.addEventListener('mousedown', this.handleStart, false);
-      el.addEventListener('mouseup', this.handleEnd, false);
-      el.addEventListener('mouseout', this.end, false);
-      el.addEventListener('mousemove', this.handleMove, false);
+      el.addEventListener('mouseup',   this.handleEnd,   false);
+      el.addEventListener('mouseout',  this.handleEnd,   false);
+      el.addEventListener('mousemove', this.handleMove,  false);
     }
 
   }
-
-  end = () => { };
 
 
   handleStart = (evt): void => {
@@ -217,9 +216,9 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
       this.ctx.lineTo(m.x, m.y);
 
-      this.ctx.lineWidth = this.lineWidth;
+      this.ctx.lineWidth   = this.lineWidth;
       this.ctx.strokeStyle = this.lineColor;
-      this.ctx.lineCap = this.styleLine as any;
+      this.ctx.lineCap     = this.styleLine as any;
 
       this.ctx.stroke();
     }
@@ -288,8 +287,8 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
   calcControlPoint = (ry, a, b): { x: any, y: any } => {
 
     const controlPoint = { x: 0, y: 0 };
-    controlPoint.x = (ry[a].x + ry[b].x) / 2;
-    controlPoint.y = (ry[a].y + ry[b].y) / 2;
+    controlPoint.x     = (ry[a].x + ry[b].x) / 2;
+    controlPoint.y     = (ry[a].y + ry[b].y) / 2;
 
     return controlPoint;
 
