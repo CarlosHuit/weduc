@@ -77,10 +77,13 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
 
   ngOnInit() {
 
+    window.addEventListener('resize', this.startExample);
+
   }
 
   ngOnDestroy() {
     this.speechSynthesis.cancel();
+    window.removeEventListener('resize', this.startExample);
   }
 
   setValues = () => {

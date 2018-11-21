@@ -183,14 +183,36 @@
 
 @media (min-width: 320px) and (orientation: landscape) {
 
+  .m-c-content-handwriting {
+    height: calc(100% - 50px);
+  }
+
+  .m-c-container-canvas {
+    margin-top: calc(300px * 0.15);
+  }
+
+  .m-c-mini-toolbar.bottom {
+    padding: 0;
+    margin-right: 10px;
+    width: 200px;
+    border: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
 
 }
 
 @media (max-height: 360px) and (orientation: landscape) {
 
-  .container-canvas {
+  .m-c-content-handwriting {
+    align-items: unset;
+  }
+
+  .m-c-container-canvas {
+    margin-top: 10px;
     transform: scale(.8);
-    padding:   0;
+    /* padding:   0; */
   }
 
 }

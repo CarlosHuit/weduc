@@ -235,6 +235,7 @@
 
 
 @media (min-width: 320px) and (orientation: landscape) {
+
   .reload {
     top: 25px;
     right: 25px;

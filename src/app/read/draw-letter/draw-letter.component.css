@@ -62,8 +62,10 @@
 @media (min-width: 320px) and (orientation: landscape) {
   .container.mobile {
     display: block;
+    margin: 0;
+    height: 100vh;
   }
-
+  
   .container-slider-mobile {
     min-height: 270px;
   }
