@@ -213,7 +213,7 @@
   position:       absolute;
   width:          100%;
   border:         none;
-  border-bottom:  2px solid rgba(43, 145, 191, .35);
+  border-bottom:  2px solid steelblue;
   margin:         0;
   z-index:        -1;
 }
