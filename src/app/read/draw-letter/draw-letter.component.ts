@@ -9,6 +9,7 @@ import { SendDataService                  } from '../../services/send-data.servi
 import { DetectMobileService              } from '../../services/detect-mobile.service';
 import { LocalStorageService              } from '../../services/local-storage.service';
 import { DrawLetterData                   } from '../../interfaces/draw-letter-data';
+import { DrawLettersData, Board, SizeCanvas} from '../../classes/draw-letter-data';
 
 @Component({
   selector: 'app-draw-letter',
@@ -30,11 +31,11 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
   showDraw:       boolean;
   coordinates:    any;
   success =       false;
-
   currentCoordinates:        {};
-  userData: DrawLetterData = {};
 
-  data = [];
+  userData:       DrawLettersData;
+  data:           DrawLettersData[] = [];
+
 
   constructor(
     private coordinatesService: CoordinatesService,
@@ -110,26 +111,52 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
 
 
 
-  showBoardC = (ev) => {
+  eventsHandWriting = (ev) => {
 
-    const data = JSON.parse(ev);
-    this.userData.handWritingData.push(data);
+    if ( ev === 'repeat' ) {
+      this.addRepeatTime();
+    } else {
 
-    this.showBoard = true;
-    this.handWriting.limpiar();
-    this.boardComponent.limpiar();
-    this.boardComponent.initUserData();
+      this.showBoard = true;
+      this.handWriting.limpiar();
+      this.boardComponent.limpiar();
+
+    }
 
   }
 
-  showHandWriting = (ev?) => {
+  eventsBoard = (ev?) => {
 
-    const data = JSON.parse(ev);
-    this.userData.boardData.push(data);
+    if (ev === 'repeat') {
+
+      this.addRepeatTime();
+      this.showHandWritingAndAnimate();
+
+    } else {
+
+      const data     = JSON.parse(ev);
+      const d: Board = data.boardData;
+
+      if (data.showHandwriting === true) {
+
+        this.userData.board.push(d);
+        this.showHandWritingAndAnimate();
+
+      } else {
+
+        this.userData.board.push(d);
+
+      }
+
+    }
+
+
+  }
+
+  showHandWritingAndAnimate = () => {
 
     this.showBoard = false;
     this.handWriting.limpiar();
-    this.handWriting.initUserData();
     this.handWriting.startExample();
 
   }
@@ -139,10 +166,9 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
   }
 
   next = (ev) => {
-
-    const data = JSON.parse(ev);
-    this.userData.boardData.push(data);
     this.addFinalTime();
+    this.data.push(JSON.parse(JSON.stringify(this.userData)));
+    console.log(this.data);
 
 
     const nextIndex = this.letters.indexOf(this.currentLetter) + 1;
@@ -156,10 +182,6 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
       this.success = true;
       this.showBoard = false;
       this.changeData(nextIndex);
-
-
-      const d = JSON.parse(JSON.stringify(this.userData));
-      this.data.push(d);
       this.initUserData();
 
       const speech = this.speech.speak(msg);
@@ -168,9 +190,6 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
     } else {
 
       this.success = true;
-      const d = JSON.parse(JSON.stringify(this.userData));
-      this.data.push(d);
-
       this.sendDrawLetterData(this.data);
 
       const speech = this.speech.speak(msg);
@@ -180,15 +199,16 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
   }
 
   changeData = (index: number) => {
+
     this.currentLetter = this.letters[index];
     this.currentCoordinates = this.coordinates.coordinates[this.currentLetter];
+
   }
 
   nextLetter = () => {
 
     this.success = false;
     this.handWriting.limpiar();
-    this.handWriting.initUserData();
     this.handWriting.startExample();
 
   }
@@ -201,29 +221,35 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
   }
 
   initUserData = () => {
-    const t = this.genDates.generateData();
+    const t  = this.genDates.generateData();
+    const id = this._storage.getElement('user')['userId'];
 
-    this.userData['user_id'] = 'N/A';
-    this.userData['startTime'] = t.fullTime;
-    this.userData['date'] = t.fullDate;
-    this.userData['letter'] = this.currentLetter;
-    this.userData['finalTime'] = 'N/A';
-    this.userData['boardData'] = [];
-    this.userData['handWritingData'] = [];
+    this.userData = new DrawLettersData(id, t.fullTime, 'N/A', t.fullDate, this.currentLetter, [], []);
+
+  }
+
+  addRepeatTime = () => {
+
+    const t = this.genDates.generateData().fullTime;
+    this.userData.handWriting.push(t);
 
   }
 
   addFinalTime = () => {
-    const t = this.genDates.generateData();
-    this.userData['finalTime'] = t.fullTime;
+
+    const t = this.genDates.generateData().fullTime;
+    this.userData.finalTime = t;
+
   }
 
   sendDrawLetterData = (obj: DrawLetterData[]) => {
-    this.sendData.sendDrawLetterData(obj)
-      .subscribe(
-        val => console.log(val),
-        err => console.log(err)
-      );
+    // this.sendData.sendDrawLetterData(obj)
+    //   .subscribe(
+    //     val => console.log(val),
+    //     err => console.log(err)
+    //   );
+
+    console.log(this.data);
   }
 
 }

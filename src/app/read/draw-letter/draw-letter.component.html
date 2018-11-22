@@ -16,7 +16,7 @@
           <app-handwriting
             [letter]="currentLetter"
             [coordinates]="currentCoordinates"
-            (propagar)="showBoardC($event)"
+            (evsHandWriting)="eventsHandWriting($event)"
             >
           </app-handwriting>
         </div>
@@ -24,7 +24,7 @@
         <div class="d-c-box two">
           <app-board
             [letter]="currentLetter"
-            (showHandwriting)="showHandWriting($event)"
+            (evsBoard)="eventsBoard($event)"
             (next)="next($event)"
             >
           </app-board>
@@ -52,7 +52,7 @@
         <app-handwriting
           [letter]="currentLetter"
           [coordinates]="currentCoordinates"
-          (propagar)="showBoardC($event)"
+          (evsHandWriting)="eventsHandWriting($event)"
           >
         </app-handwriting>
       </div>
@@ -60,7 +60,7 @@
       <div class="box two">
         <app-board
           [letter]="currentLetter"
-          (showHandwriting)="showHandWriting($event)"
+          (evsBoard)="eventsBoard($event)"
           (next)="next($event)"
           >
         </app-board>

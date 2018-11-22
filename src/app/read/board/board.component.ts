@@ -5,14 +5,7 @@ import { Router, ActivatedRoute          } from '@angular/router';
 import { GenerateDatesService            } from '../../services/generate-dates.service';
 import { SoundService                    } from '../../services/sound.service';
 import { DetectMobileService } from '../../services/detect-mobile.service';
-
-interface BoardData {
-  startTime?:   string;
-  nextTime?:    string;
-  letter?:      string;
-  repeatTime?:  string;
-  coordinates?: any[];
-}
+import { Board, SizeCanvas } from '../../classes/draw-letter-data';
 
 @Component(
   {
@@ -27,7 +20,7 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
   @Input() letter: string;
 
   @ViewChild('canvasEl') canvasEl: ElementRef;
-  @Output() showHandwriting = new EventEmitter<string>();
+  @Output() evsBoard = new EventEmitter<string>();
   @Output() next            = new EventEmitter<string>();
 
   private ctx: CanvasRenderingContext2D;
@@ -50,7 +43,7 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
   points:        any[];
 
   coordinates:    Coordinates;
-  userData:       BoardData = {};
+  userData:       Board;
   loading       = true;
   showGuidLines = true;
 
@@ -116,13 +109,6 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
   isMobile = () => this._mobile.isMobile();
 
-  showModal = (): void => {
-    this.showDraw = false;
-    const data = JSON.stringify(this.userData);
-    this.showHandwriting.emit(data);
-  }
-
-
   save = (): void => {
 
     const letter = prompt('letra?');
@@ -147,10 +133,9 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
   nextLetter = (): void => {
 
+    this.addCoordinates(false);
 
-    const data = JSON.stringify(this.userData);
-
-    this.next.emit(data);
+    this.next.emit('next');
 
   }
 
@@ -296,6 +281,21 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
   }
 
+  clearCanvas = () => {
+
+
+    this.resetCanvasSize();
+    this.addCoordinates(false);
+    this.limpiar();
+  }
+
+  showModal = (): void => {
+    this.evsBoard.emit('repeat');
+    this.showDraw = false;
+    this.resetCanvasSize();
+    this.addCoordinates(true);
+  }
+
 
   limpiar = (): void => {
 
@@ -307,8 +307,22 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
   }
 
-  initUserData = () => {
+  addCoordinates = (state: boolean) => {
+
+
+    if ( this.traces.length > 0 ) {
+      const t = this.genDates.generateData().fullTime;
+      const d = JSON.parse( JSON.stringify(this.traces) );
+      const x = new SizeCanvas(this.canvas.width, this.canvas.height);
+      const s = new Board(d, x, t);
+
+      const data = JSON.stringify({boardData: s, showHandwriting: state});
+      this.evsBoard.emit(data);
+
+    }
 
   }
 
 }
+
+

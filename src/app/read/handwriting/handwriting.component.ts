@@ -23,7 +23,7 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
   @Input() letter:      string;
 
   @ViewChild('canvasDraw') canvasEl: ElementRef;
-  @Output() propagar = new EventEmitter<string>();
+  @Output() evsHandWriting = new EventEmitter<string>();
 
   private ctx:    CanvasRenderingContext2D;
   private canvas: HTMLCanvasElement;
@@ -108,7 +108,7 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
 
     const data = JSON.stringify(this.userData);
 
-    this.propagar.emit(data);
+    this.evsHandWriting.emit(data);
 
     const type  = this.letter === this.letter.toLowerCase() ? 'minúscula' : 'mayúscula';
     const sound = JSON.parse(localStorage.getItem('letter_sounds'))[this.letter.toLowerCase()];
@@ -116,6 +116,11 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
 
     this.speechSynthesis.speak(msg);
     this.limpiar();
+  }
+
+  repeat = () => {
+    this.evsHandWriting.emit('repeat');
+    this.startExample();
   }
 
   draw = (): void => {
@@ -286,10 +291,6 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
       };
 
     }
-  }
-
-  initUserData = () => {
-
   }
 
 }
