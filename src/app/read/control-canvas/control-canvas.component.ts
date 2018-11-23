@@ -9,11 +9,12 @@ import { ControlCanvas } from '../../classes/control-canvas';
 })
 export class ControlCanvasComponent implements OnInit {
 
-  @Input()  colors:           string[];
-  @Input()  lineWidth:        number;
-  @Input()  lineColor:        string;
-  @Input()  showGuidLines:    boolean;
-  @Output() evsControlCanvas  = new EventEmitter<ControlCanvas>();
+  @Input()  colors:          string[];
+  @Input()  lineWidth:       number;
+  @Input()  lineColor:       string;
+  @Input()  showGuidLines:   boolean;
+  @Output() eventsNext       = new EventEmitter<boolean>();
+  @Output() evsControlCanvas = new EventEmitter<ControlCanvas>();
 
 
   constructor() {
@@ -42,6 +43,10 @@ export class ControlCanvasComponent implements OnInit {
   toggleGuideLines = () => {
     const x = new ControlCanvas(this.lineColor, this.lineWidth, !this.showGuidLines);
     this.evsControlCanvas.emit(x);
+  }
+
+  nextLetter = () => {
+    this.eventsNext.emit(true);
   }
 
 }

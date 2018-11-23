@@ -8,10 +8,8 @@
     class="hide container-slider"
     [class.show]="showDraw"
     >
-    <div 
-      class="d-c-slider"
-      [class.show-board]="showBoard === true"
-      >
+    <div  class="d-c-slider" [class.show-board]="showBoard === true" >
+
 
       <div class="d-c-control-canvas">
         
@@ -20,6 +18,7 @@
           [lineWidth]="lineWidth"
           [lineColor]="lineColor"
           [showGuidLines]="showGuidLines"
+          (eventsNext)="nextElement($event)"
           (evsControlCanvas)="eventsControlCanvas($event)"
         >
         </app-control-canvas>
@@ -58,11 +57,11 @@
 
   <!-- mobile version -->
   <div 
+    class="hide"
+    [class.show]="showDraw"
     *ngIf="!loading && isMobile()"
     [class.container-slider]="isMobile() === false"
     [class.container-slider-mobile]="isMobile() === true"
-    class="hide"
-    [class.show]="showDraw"
     >
     <div 
       class="slider"

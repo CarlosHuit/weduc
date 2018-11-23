@@ -181,7 +181,12 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
     return this.dMobile.isMobile();
   }
 
+  nextElement = (ev) => {
+    this.boardComponent.nextLetter();
+  }
+
   next = (ev) => {
+
     this.addFinalTime();
     this.data.push(JSON.parse(JSON.stringify(this.userData)));
     console.log(this.data);
