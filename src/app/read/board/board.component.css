@@ -11,8 +11,8 @@
   height:           300px;
   z-index:          2;
   position:         relative;
-  border:           1px solid #9b9b9b;
-  border-radius:    3px;
+  border:           1px solid #cccccc;
+  border-radius:    0px;
   background-color: #ebedee;
   padding-top:      30px;
 }
@@ -21,16 +21,17 @@
   position:           absolute;
   top:                10px;
   left:               10px;
-  font-size:          36px;
-  height:             36px;
-  width:              36px;
-  padding:            6px;
+  height:             48px;
+  width:              48px;
   z-index:            2;
   border-radius:      50%;
-  color:            #004f7c;
-  color:            white;
-  background-color: #ff3c41;
   z-index: 3;
+  color: white;
+}
+
+.icon-gesture mat-icon {
+  font-size: 36px;
+  margin: 0 auto;
 }
 
 .d-c-canvas {

@@ -9,14 +9,13 @@
   width:             600px;
   height:            300px;
   z-index:           2;
-  border-radius:     4px;
   overflow:          hidden;
   position:          relative;
-  border:            1px solid #9b9b9b;
-  border-radius:     3px;
+  border:            1px solid #cccccc;
+  border-radius:     0px;
   background-color: #ebedee;
-  position: relative;
-  padding-top: 30px;
+  position:         relative;
+  padding-top:      30px;
 }
 
 .line-guide {
@@ -33,18 +32,22 @@
 .three { top: 75% }
 
 
-.icon-pen {
-  width:              36px;
-  height:             36px;
-  font-size:          36px;
-  background-color: #ff3c41;
-  color:              white;
-  padding:            6px;
-  border-radius:      50%;
+.icon-replay {
   position:           absolute;
   top:                10px;
   left:               10px;
+  height:             48px;
+  width:              48px;
   z-index:            2;
+  border-radius:      50%;
+  z-index: 3;
+  color: white;
+}
+
+.icon-replay mat-icon {
+  font-size: 36px;
+  width: 36px;
+  margin: 0 auto;
 }
 
 /* ------ styles mobile version ------ */

@@ -4,16 +4,18 @@
 
   <!-- desktop Version -->
   <mat-card 
-      *ngIf="!loading && !isMobile()"
-      class="hide container-slider"
-      [class.show]="showDraw"
+    *ngIf="!loading && !isMobile()"
+    class="hide container-slider"
+    [class.show]="showDraw"
+    >
+    <div 
+      class="d-c-slider"
+      [class.show-board]="showBoard === true"
       >
-      <div 
-        class="d-c-slider"
-        [class.show-board]="showBoard === true"
-        >
 
-        <div class="d-c-control-canvas">
+      <div class="d-c-control-canvas">
+        
+        <div style="width: 75%" >
           <app-control-canvas
             [colors]="colors"
             [lineWidth]="lineWidth"
@@ -22,34 +24,41 @@
             (evsControlCanvas)="eventsControlCanvas($event)"
           >
           </app-control-canvas>
-
         </div>
-
-        <div class="d-c-box one">
-          <app-handwriting
-            [letter]="currentLetter"
-            [coordinates]="currentCoordinates"
-            [lineWidth]="lineWidth"
-            [lineColor]="lineColor"
-            [showGuidLines]="showGuidLines"
-            (evsHandWriting)="eventsHandWriting($event)"
-            >
-          </app-handwriting>
-        </div>
-  
-        <div class="d-c-box two">
-          <app-board
-            [letter]="currentLetter"
-            [lineWidth]="lineWidth"
-            [lineColor]="lineColor"
-            [showGuidLines]="showGuidLines"
-            (evsBoard)="eventsBoard($event)"
-            (next)="next($event)"
-            >
-          </app-board>
+        <div style="width: 25%" class="center">
+          <button mat-flat-button style="background: #239B56; padding: 0 30px;" >
+            <mat-icon> arrow_forward</mat-icon>
+          </button>
         </div>
   
       </div>
+
+      <div class="d-c-box one">
+        <app-handwriting
+          [letter]="currentLetter"
+          [coordinates]="currentCoordinates"
+          [lineWidth]="lineWidth"
+          [lineColor]="lineColor"
+          [showGuidLines]="showGuidLines"
+          (evsHandWriting)="eventsHandWriting($event)"
+          >
+        </app-handwriting>
+      </div>
+
+      <div class="d-c-box two">
+        <app-board
+          [letter]="currentLetter"
+          [lineWidth]="lineWidth"
+          [lineColor]="lineColor"
+          [showGuidLines]="showGuidLines"
+          (evsBoard)="eventsBoard($event)"
+          (next)="next($event)"
+          >
+        </app-board>
+      </div>
+
+
+    </div>
   </mat-card>
   
 

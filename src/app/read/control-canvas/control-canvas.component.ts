@@ -13,6 +13,7 @@ export class ControlCanvasComponent implements OnInit {
   @Input()  lineWidth:        number;
   @Input()  lineColor:        string;
   @Input()  showGuidLines:    boolean;
+  @Input()  next:             boolean;
   @Output() evsControlCanvas  = new EventEmitter<ControlCanvas>();
 
 

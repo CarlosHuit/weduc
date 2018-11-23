@@ -3,15 +3,18 @@
 
   <div class="d-c-container-canvas">
     <app-guide-lines [top]="30" *ngIf="showGuidLines" ></app-guide-lines>
-    <mat-icon class="icon-gesture" [style.background]="lineColor" >gesture</mat-icon>
+    <button mat-icon-button class="icon-gesture" [style.background]="lineColor" (click)="clearCanvas()" >
+      <mat-icon class="center" >delete_forever</mat-icon>
+
+    </button>
     <canvas class="d-c-canvas" id="canvasEl" #canvasEl></canvas>
   </div>
 
-  <div class="d-c-icons" >
+  <!-- <div class="d-c-icons" >
     <mat-icon class="d-c-icon reload" (click)="showModal()"  >replay</mat-icon>
     <mat-icon class="d-c-icon clear"  (click)="limpiar()"    >delete_forever</mat-icon>
     <mat-icon class="d-c-icon next"   (click)="nextLetter()" >arrow_forward</mat-icon>
-  </div>
+  </div> -->
 
 </div>
 

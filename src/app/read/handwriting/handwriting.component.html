@@ -3,7 +3,9 @@
   <div class="d-c-container-canvas center">
     <app-guide-lines [top]="30" *ngIf="showGuidLines" >
     </app-guide-lines>
-    <mat-icon class="icon-pen" [style.background]="lineColor">create</mat-icon>
+    <button mat-icon-button class="icon-replay" [style.background]="lineColor" (click)="repeat()">
+      <mat-icon >replay</mat-icon>
+    </button>
     <canvas
       id="canvasEl"
       #canvasDraw
