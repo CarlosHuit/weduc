@@ -188,7 +188,8 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
   next = (ev) => {
 
     this.addFinalTime();
-    this.data.push(JSON.parse(JSON.stringify(this.userData)));
+    // this.data.push(JSON.parse(JSON.stringify(this.userData)));
+    this.data.push(this.userData);
     console.log(this.data);
 
 
@@ -200,7 +201,7 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
 
     if (nextIndex < this.letters.length) {
 
-      this.success = true;
+      this.success   = true;
       this.showBoard = false;
       this.changeData(nextIndex);
       this.initUserData();
