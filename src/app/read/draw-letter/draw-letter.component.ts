@@ -9,7 +9,8 @@ import { SendDataService                  } from '../../services/send-data.servi
 import { DetectMobileService              } from '../../services/detect-mobile.service';
 import { LocalStorageService              } from '../../services/local-storage.service';
 import { DrawLetterData                   } from '../../interfaces/draw-letter-data';
-import { DrawLettersData, Board, SizeCanvas} from '../../classes/draw-letter-data';
+import { DrawLettersData, Board           } from '../../classes/draw-letter-data';
+import { ControlCanvas                    } from '../../classes/control-canvas';
 
 @Component({
   selector: 'app-draw-letter',
@@ -36,6 +37,10 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
   userData:       DrawLettersData;
   data:           DrawLettersData[] = [];
 
+  colors:         string[];
+  lineWidth:      number;
+  lineColor:      string;
+  showGuidLines:  boolean;
 
   constructor(
     private coordinatesService: CoordinatesService,
@@ -50,6 +55,11 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
     this.letterParam   = this._route.snapshot.paramMap.get('letter');
     this.loading       = true;
     this.showDraw      = false;
+    this.colors        = ['#f44336', '#239B56', '#007cc0', '#fc793c'].sort(e => Math.random() - 0.5);
+    this.lineWidth     = 14;
+    this.lineColor     = '#007cc0';
+    this.lineColor     = this.colors[0];
+    this.showGuidLines = true;
     this.urlToRedirect = `lectura/encontrar-letras/${this.letterParam}`;
   }
 
@@ -109,7 +119,13 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
 
   }
 
-
+  eventsControlCanvas = (ev: ControlCanvas) => {
+    const x = ev;
+    this.lineColor = ev.color;
+    this.lineWidth = ev.lineWidth;
+    this.showGuidLines = ev.showGuideLines;
+    this.boardComponent.limpiar();
+  }
 
   eventsHandWriting = (ev) => {
 

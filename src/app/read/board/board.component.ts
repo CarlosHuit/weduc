@@ -22,6 +22,9 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
   @ViewChild('canvasEl') canvasEl: ElementRef;
   @Output() evsBoard = new EventEmitter<string>();
   @Output() next            = new EventEmitter<string>();
+  @Input()  lineWidth:     number;
+  @Input()  lineColor:     string;
+  @Input()  showGuidLines: boolean;
 
   private ctx: CanvasRenderingContext2D;
   private canvas: HTMLCanvasElement;
@@ -29,12 +32,10 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
   smoothing:     number;
   cw:            number;
   ch:            number;
-  lineWidth:     number;
   dibujar:       boolean;
   success:       boolean;
   inUse:         boolean;
   showDraw:      boolean;
-  lineColor:     string;
   styleLine:     string;
   currentLetter: string;
   letterParam:   string;
@@ -45,7 +46,6 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
   coordinates:    Coordinates;
   userData:       Board;
   loading       = true;
-  showGuidLines = true;
 
   constructor(
     private router:            Router,
@@ -59,9 +59,6 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
     this.success = false;
     this.letterParam = this._route.snapshot.paramMap.get('letter');
     this.colors    = ['#f44336', '#239B56', '#007cc0', '#fc793c'].sort(e => Math.random() - 0.5);
-    this.lineWidth = 12;
-    this.lineColor = '#007cc0';
-    this.lineColor = this.colors[0];
   }
 
   ngAfterViewInit() {
@@ -87,6 +84,8 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
 
     this.startup(this.canvas);
+
+
   }
 
   ngOnInit() {
@@ -94,6 +93,8 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
     this.currentLetter = this.letterParam;
     window.addEventListener('resize', this.limpiar);
     // window.addEventListener('resize', this.resetCanvasSize);
+
+
 
   }
 
@@ -215,7 +216,6 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
   handleEnd = (): void => {
 
     if (this.dibujar) {
-
       this.dibujar = false;
       this.ctx.clearRect(0, 0, this.cw, this.ch);
       this.reducePoints(this.smoothing, this.points);

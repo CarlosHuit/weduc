@@ -19,6 +19,11 @@
   transition: .5s cubic-bezier(0.39, 0.575, 0.565, 1);
 }
 
+.d-c-control-canvas {
+  height: 50px;
+  background-color: #eaecee;
+}
+
 .d-c-box {
   width: 100%;
   height: 50%;

@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit, Output, ElementRef, AfterViewInit, Input, OnDestroy, EventEmitter } from '@angular/core';
 import { SpeechSynthesisService } from '../../services/speech-synthesis.service';
-import { GenerateDatesService } from '../../services/generate-dates.service';
-import { DetectMobileService } from '../../services/detect-mobile.service';
+import { GenerateDatesService   } from '../../services/generate-dates.service';
+import { DetectMobileService   } from '../../services/detect-mobile.service';
 
 interface HandwritingData {
   startTime?:  string;
@@ -19,8 +19,11 @@ interface HandwritingData {
 export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
 
 
-  @Input() coordinates: any;
-  @Input() letter:      string;
+  @Input() coordinates:    any;
+  @Input() letter:         string;
+  @Input()  lineWidth:     number;
+  @Input()  lineColor:     string;
+  @Input()  showGuidLines: boolean;
 
   @ViewChild('canvasDraw') canvasEl: ElementRef;
   @Output() evsHandWriting = new EventEmitter<string>();
@@ -30,10 +33,10 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
 
   cw:           number;
   ch:           number;
-  lineWidth:    number;
+  // lineWidth:    number;
   smoothing:    number;
   velocity:     number;
-  lineColor:    string;
+  // lineColor:    string;
   styleLine:    string;
   type:         string;
   colors:       string[];
@@ -43,7 +46,7 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
   totalTimes:   any[] = [];
   timeOutsLine        = [];
   timeOutsGroup       = [];
-  showGuidLines       = true;
+  // showGuidLines       = true;
 
   userData: HandwritingData = {};
 
@@ -54,9 +57,9 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
     private _mobile:         DetectMobileService
   ) {
     this.colors    = ['#f44336', '#239B56', '#007cc0', '#fc793c'].sort(e => Math.random() - 0.5);
-    this.lineWidth = 12;
-    this.lineColor = '#007cc0';
-    this.lineColor = this.colors[0];
+    // this.lineWidth = 12;
+    // this.lineColor = '#007cc0';
+    // this.lineColor = this.colors[0];
   }
 
   ngAfterViewInit() {

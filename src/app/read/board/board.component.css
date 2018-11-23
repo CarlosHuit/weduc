@@ -11,12 +11,10 @@
   height:           300px;
   z-index:          2;
   position:         relative;
-  display:          flex;
-  justify-content:  center;
-  align-items:      center;
   border:           1px solid #9b9b9b;
   border-radius:    3px;
   background-color: #ebedee;
+  padding-top:      30px;
 }
 
 .icon-gesture {
@@ -32,6 +30,7 @@
   color:            #004f7c;
   color:            white;
   background-color: #ff3c41;
+  z-index: 3;
 }
 
 .d-c-canvas {

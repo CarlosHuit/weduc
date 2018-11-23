@@ -12,10 +12,26 @@
         class="d-c-slider"
         [class.show-board]="showBoard === true"
         >
+
+        <div class="d-c-control-canvas">
+          <app-control-canvas
+            [colors]="colors"
+            [lineWidth]="lineWidth"
+            [lineColor]="lineColor"
+            [showGuidLines]="showGuidLines"
+            (evsControlCanvas)="eventsControlCanvas($event)"
+          >
+          </app-control-canvas>
+
+        </div>
+
         <div class="d-c-box one">
           <app-handwriting
             [letter]="currentLetter"
             [coordinates]="currentCoordinates"
+            [lineWidth]="lineWidth"
+            [lineColor]="lineColor"
+            [showGuidLines]="showGuidLines"
             (evsHandWriting)="eventsHandWriting($event)"
             >
           </app-handwriting>
@@ -24,6 +40,9 @@
         <div class="d-c-box two">
           <app-board
             [letter]="currentLetter"
+            [lineWidth]="lineWidth"
+            [lineColor]="lineColor"
+            [showGuidLines]="showGuidLines"
             (evsBoard)="eventsBoard($event)"
             (next)="next($event)"
             >

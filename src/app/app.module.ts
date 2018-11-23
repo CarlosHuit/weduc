@@ -29,6 +29,8 @@ import { FindLetterComponent              } from './read/find-letter/find-letter
 import { SelectWordsComponent             } from './read/select-words/select-words.component';
 import { PronounceLetterComponent         } from './read/pronounce-letter/pronounce-letter.component';
 import { GestureConfig } from '@angular/material';
+import { ControlCanvasComponent } from './read/control-canvas/control-canvas.component';
+import { GuideLinesComponent } from './read/guide-lines/guide-lines.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +53,8 @@ import { GestureConfig } from '@angular/material';
     FindLetterComponent,
     SelectWordsComponent,
     PronounceLetterComponent,
+    ControlCanvasComponent,
+    GuideLinesComponent,
   ],
   imports: [
     MaterialModule,

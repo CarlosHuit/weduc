@@ -1,0 +1,35 @@
+.d-c-container-canvas {
+  width:    100%;
+  height:   300px;
+  z-index:  -1;
+  position: relative;
+  position: absolute;
+  top:      0;
+  left:     0;
+}
+
+.line-guide {
+  position:       absolute;
+  width:          100%;
+  border:         none;
+  border-bottom:  2px solid rgba(43, 145, 191, .35);
+  margin:         0;
+  z-index:        -1;
+}
+
+.one   { top: 15% }
+.two   { top: 40% }
+.three { top: 75% }
+
+.m-c-line-guide {
+  position:       absolute;
+  width:          100%;
+  border:         none;
+  border-bottom:  2px solid steelblue;
+  margin:         0;
+  z-index:        -1;
+}
+
+.m-c-line-guide.one   { top: 0% }
+.m-c-line-guide.two   { top: 31% }
+.m-c-line-guide.three { top: 66% }

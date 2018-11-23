@@ -1,0 +1,85 @@
+<div class="m-c-mini-toolbar">
+
+
+  <!-- Slider menu -->
+  <button mat-icon-button [matMenuTriggerFor]="menuFontSize">
+    <mat-icon class="fz-30">create</mat-icon>
+  </button>
+
+  <mat-menu #menuFontSize="matMenu">
+
+    <div class="m-c-menu-content">
+
+      <div class="line-width-example">
+        <hr
+          [style.borderBottomWidth.px]="lineWidth"
+          [style.borderBottomColor]="lineColor"
+          >
+      </div>
+
+      <div class="m-c-slider-control">
+        <mat-slider
+          #slid
+          class="m-c-slider"
+          [max]="24"
+          [min]="1"
+          [step]="1"
+          [value]="lineWidth"
+          (input)="changeWidth(slid.value)"
+          >
+        </mat-slider>
+      </div>
+
+    </div>
+
+  </mat-menu>
+
+
+
+  <!-- font color menu -->
+  <button mat-icon-button [matMenuTriggerFor]="menuColor">
+    <mat-icon class="fz-30">format_color_fill</mat-icon>
+  </button>
+
+  <mat-menu #menuColor="matMenu">
+
+    <div class="m-c-color-buttons">
+      <button
+        *ngFor="let color of colors"
+        [style.background]="color"
+        (click)="changeColor(color)"
+        class="btn-color"
+        mat-icon-button
+        >
+        <mat-icon style="padding: 0" *ngIf="color === lineColor" >check_circle</mat-icon>
+      </button>
+    </div>
+
+  </mat-menu>
+
+
+
+  <!-- toggle guide line button -->
+  <button mat-icon-button>
+
+    <mat-icon
+      class="fz-30"
+      *ngIf="showGuidLines"
+      (click)="toggleGuideLines()"
+      >
+      <!-- (click)="showGuidLines = false" -->
+      visibility
+    </mat-icon>
+
+    <mat-icon
+      class="fz-30"
+      *ngIf="!showGuidLines"
+      (click)="toggleGuideLines()"
+      >
+      <!-- (click)="showGuidLines = true" -->
+      visibility_off
+    </mat-icon>
+
+  </button>
+
+</div>

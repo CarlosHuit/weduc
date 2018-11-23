@@ -1,10 +1,9 @@
 <div class="d-c-handwriting center" *ngIf="!isMobile()">
 
   <div class="d-c-container-canvas center">
-    <hr class="line-guide one">
-    <hr class="line-guide two">
-    <hr class="line-guide three">
-    <mat-icon class="icon-pen">create</mat-icon>
+    <app-guide-lines [top]="30" *ngIf="showGuidLines" >
+    </app-guide-lines>
+    <mat-icon class="icon-pen" [style.background]="lineColor">create</mat-icon>
     <canvas
       id="canvasEl"
       #canvasDraw
