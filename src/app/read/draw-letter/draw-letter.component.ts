@@ -55,7 +55,7 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
     this.letterParam   = this._route.snapshot.paramMap.get('letter');
     this.loading       = true;
     this.showDraw      = false;
-    this.colors        = ['#f44336', '#239B56', '#007cc0', '#fc793c'].sort(e => Math.random() - 0.5);
+    this.colors        = ['#f44336', '#009494', '#007cc0', '#fc793c'].sort(e => Math.random() - 0.5);
     this.lineWidth     = 14;
     this.lineColor     = '#007cc0';
     this.lineColor     = this.colors[0];
