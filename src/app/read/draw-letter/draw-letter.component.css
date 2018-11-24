@@ -94,9 +94,6 @@
 }
 
 @media (min-width: 320px) and (orientation: landscape) {
-  .container.mobile {
-
-  }
   
   .container-slider-mobile {
     min-height: 270px;
