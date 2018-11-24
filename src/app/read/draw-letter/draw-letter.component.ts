@@ -264,6 +264,54 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
 
   }
 
+  repeatHandWriting = () => {
+    this.handWriting.repeat();
+  }
+
+  hideHandWriting = () => {
+    this.handWriting.hide();
+  }
+
+  hideBoard = () => {
+    this.boardComponent.showModal();
+  }
+
+  clearCanvasBoard = () => {
+    this.boardComponent.clearCanvas();
+  }
+
+  nextElementBoard = () => {
+    this.boardComponent.nextLetter();
+  }
+
+  landscape = () => {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    if (w > h) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  genContainer = () => {
+    if (this.isMobile()) {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      if (w < h) {
+        return {
+          'width': '100%',
+          'height': 'calc(100vh - 56px)',
+          'margin-top': '56px'
+        };
+      } else {
+        return {
+          height: '100vh'
+        };
+      }
+    }
+  }
+
   sendDrawLetterData = (obj: DrawLetterData[]) => {
     // this.sendData.sendDrawLetterData(obj)
     //   .subscribe(

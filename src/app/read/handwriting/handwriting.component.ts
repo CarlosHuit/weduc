@@ -21,22 +21,19 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
 
   @Input() coordinates:    any;
   @Input() letter:         string;
-  @Input()  lineWidth:     number;
-  @Input()  lineColor:     string;
-  @Input()  showGuidLines: boolean;
-
-  @ViewChild('canvasDraw') canvasEl: ElementRef;
+  @Input() lineWidth:      number;
+  @Input() lineColor:      string;
+  @Input() showGuidLines:  boolean;
   @Output() evsHandWriting = new EventEmitter<string>();
+  @ViewChild('canvasDraw') canvasEl: ElementRef;
 
   private ctx:    CanvasRenderingContext2D;
   private canvas: HTMLCanvasElement;
 
   cw:           number;
   ch:           number;
-  // lineWidth:    number;
   smoothing:    number;
   velocity:     number;
-  // lineColor:    string;
   styleLine:    string;
   type:         string;
   colors:       string[];
@@ -56,10 +53,7 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
     private genDates:        GenerateDatesService,
     private _mobile:         DetectMobileService
   ) {
-    this.colors    = ['#f44336', '#239B56', '#007cc0', '#fc793c'].sort(e => Math.random() - 0.5);
-    // this.lineWidth = 12;
-    // this.lineColor = '#007cc0';
-    // this.lineColor = this.colors[0];
+
   }
 
   ngAfterViewInit() {

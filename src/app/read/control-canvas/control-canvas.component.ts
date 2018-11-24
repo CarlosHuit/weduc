@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ControlCanvas } from '../../classes/control-canvas';
+import { DetectMobileService } from '../../services/detect-mobile.service';
 
 
 @Component({
@@ -17,15 +18,18 @@ export class ControlCanvasComponent implements OnInit {
   @Output() evsControlCanvas = new EventEmitter<ControlCanvas>();
 
 
-  constructor() {
-
-  }
+  constructor(
+    private _mobile: DetectMobileService
+  ) { }
 
   ngOnInit() {
     this.lineColor = '#007cc0';
     this.lineColor = this.colors[0];
   }
 
+  isMobile = () => {
+    return this._mobile.isMobile();
+  }
 
   changeColor = (color: string): void => {
 

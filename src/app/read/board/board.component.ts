@@ -19,15 +19,19 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
   @Input() letter: string;
 
-  @ViewChild('canvasEl') canvasEl: ElementRef;
-  @Output() evsBoard = new EventEmitter<string>();
-  @Output() next            = new EventEmitter<string>();
+  @ViewChild('canvasEl')        canvasEl:        ElementRef;
+  @ViewChild('containerCanvas') containerCanvas: ElementRef;
+
+  @Output() evsBoard       = new EventEmitter<string>();
+  @Output() next           = new EventEmitter<string>();
   @Input()  lineWidth:     number;
   @Input()  lineColor:     string;
   @Input()  showGuidLines: boolean;
 
   private ctx: CanvasRenderingContext2D;
   private canvas: HTMLCanvasElement;
+
+  contCanvas: HTMLDivElement;
 
   smoothing:     number;
   cw:            number;
@@ -62,11 +66,14 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
   }
 
   ngAfterViewInit() {
-
     this.canvas = this.canvasEl.nativeElement as HTMLCanvasElement;
     this.ctx    = this.canvas.getContext('2d');
-    this.cw     = this.canvas.width;
-    this.ch     = this.canvas.height;
+
+    if (this.isMobile()) {
+      this.contCanvas = this.containerCanvas.nativeElement;
+      this.cw     = this.canvas.width   = this.contCanvas.clientWidth;
+      this.ch     = this.canvas.height  = this.contCanvas.clientHeight;
+    }
 
 
     if (!this.isMobile()) {
@@ -86,21 +93,33 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
     this.startup(this.canvas);
 
 
+    window.addEventListener('resize', () => setTimeout(() => this.resetCanvasSize, 0) );
   }
 
   ngOnInit() {
 
     this.currentLetter = this.letterParam;
     window.addEventListener('resize', this.limpiar);
-    // window.addEventListener('resize', this.resetCanvasSize);
 
 
 
   }
 
   resetCanvasSize = () => {
-    this.cw     = this.canvas.width;
-    this.ch     = this.canvas.height;
+
+    if (this.isMobile()) {
+      this.contCanvas = this.containerCanvas.nativeElement;
+      this.cw     = this.canvas.width   = this.contCanvas.clientWidth;
+      this.ch     = this.canvas.height  = this.contCanvas.clientHeight;
+    }
+
+
+    if (!this.isMobile()) {
+      this.cw = this.canvas.width  = 600;
+      this.ch = this.canvas.height = 300;
+    }
+
+
   }
 
   ngOnDestroy() {

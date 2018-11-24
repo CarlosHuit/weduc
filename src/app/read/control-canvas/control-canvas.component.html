@@ -82,11 +82,15 @@
 
   </button>
 
-  <button mat-flat-button class="btn-next" (click)="nextLetter()" >
+  <!-- button next *if(isMobile) -->
+  <button
+    mat-flat-button
+    class="btn-next"
+    *ngIf="!isMobile()"
+    (click)="nextLetter()"
+    >
     <mat-icon class="icon-next"> arrow_forward</mat-icon>
   </button>
 
-  <!-- <div class="d-c-container-button-next" [style.background]="lineColor">
-  </div> -->
 
 </div>

@@ -10,95 +10,27 @@
     <canvas class="d-c-canvas" id="canvasEl" #canvasEl></canvas>
   </div>
 
-  <!-- <div class="d-c-icons" >
-    <mat-icon class="d-c-icon reload" (click)="showModal()"  >replay</mat-icon>
-    <mat-icon class="d-c-icon clear"  (click)="limpiar()"    >delete_forever</mat-icon>
-    <mat-icon class="d-c-icon next"   (click)="nextLetter()" >arrow_forward</mat-icon>
-  </div> -->
 
 </div>
 
 <!-- version mobile -->
-<div class="container-board" *ngIf="isMobile()" >
+<div class="container-board center" *ngIf="isMobile()" >
 
-  <div class="container-canvas">
+  <div #containerCanvas class="container-canvas">
 
-    <div class="m-c-mini-toolbar top">
+    <canvas
+      class="m-c-canvas"
+      id="canvasEl"
+      #canvasEl
+      >
+      <!-- [width]="containerCanvas.clientWidth"
+      [height]="containerCanvas.clientHeight" -->
+    </canvas>
+    
+  </div>
 
-
-      <button mat-icon-button [matMenuTriggerFor]="menuFontSize">
-        <mat-icon class="fz-30">create</mat-icon>
-      </button>
-      <mat-menu #menuFontSize="matMenu">
-
-        <div class="m-c-menu-content">
-
-          <div class="line-width-example">
-            <hr [style.borderBottomWidth.px]="lineWidth" [style.borderBottomColor]="lineColor">
-          </div>
-          <div class="m-c-slider-control">
-            <mat-slider class="m-c-slider" [max]="24" [min]="1" [step]="2" (change)="limpiar()" [(ngModel)]="lineWidth">
-            </mat-slider>
-          </div>
-
-        </div>
-
-      </mat-menu>
-
-
-      <button mat-icon-button [matMenuTriggerFor]="menuColor">
-        <mat-icon class="fz-30">format_color_fill</mat-icon>
-      </button>
-      <mat-menu #menuColor="matMenu">
-        <div class="m-c-color-buttons">
-          <button *ngFor="let color of colors" [style.background]="color" (click)="changeColor(color)" class="btn-color"
-            mat-fab>
-          </button>
-        </div>
-      </mat-menu>
-
-
-      <button mat-icon-button>
-        <mat-icon class="fz-30" *ngIf="showGuidLines" (click)="showGuidLines = false">visibility</mat-icon>
-        <mat-icon class="fz-30" *ngIf="!showGuidLines" (click)="showGuidLines = true">visibility_off</mat-icon>
-      </button>
-
-    </div>
-
-    <div #containerCanvas class="m-c-content-board center">
-      <canvas
-        class="m-c-canvas"
-        id="canvasEl"
-        #canvasEl
-        [width]="containerCanvas.clientWidth"
-        [height]="containerCanvas.clientHeight"
-        >
-      </canvas>
-      <div class="m-c-container-canvas">
-        <hr class="m-c-line-guide one"   *ngIf="showGuidLines">
-        <hr class="m-c-line-guide two"   *ngIf="showGuidLines">
-        <hr class="m-c-line-guide three" *ngIf="showGuidLines">
-      </div>
-    </div>
-
-    <div class="m-c-mini-toolbar bottom">
-
-
-      <button mat-flat-button color="warn" (click)="showModal()">
-        <mat-icon class="fz-36 center">replay</mat-icon>
-      </button>
-
-      <button mat-flat-button color="warn" (click)="clearCanvas()" style="background: #007cc0" >
-        <mat-icon class="fz-36 center">delete_forever</mat-icon>
-      </button>
-
-      <button mat-flat-button color="warn" (click)="nextLetter()" style="background: #239B56">
-        <mat-icon class="fz-36 center">arrow_forward</mat-icon>
-      </button>
-
-
-    </div>
-
+  <div class="m-c-guide-lines" style="">
+    <app-guide-lines [top]="0" *ngIf="showGuidLines"></app-guide-lines>
   </div>
 
 </div>
