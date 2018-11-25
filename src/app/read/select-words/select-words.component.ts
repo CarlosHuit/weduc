@@ -7,8 +7,8 @@ import { GenerateDatesService         } from '../../services/generate-dates.serv
 import { SendDataService              } from '../../services/send-data.service';
 import { DetectMobileService          } from '../../services/detect-mobile.service';
 import { LocalStorageService          } from '../../services/local-storage.service';
-import { SelectWords, Historial       } from '../../interfaces/select-words';
-import { RandomWords                  } from '../../interfaces/random-words';
+import { RandomWords                  } from '../../classes/random-words';
+import { SelectWordsData, Historial   } from '../../classes/select-words-data';
 
 
 
@@ -22,8 +22,9 @@ export class SelectWordsComponent implements OnInit, OnDestroy {
 
   words:          RandomWords;
   audioIncorrect: HTMLAudioElement;
-  userData:       SelectWords = {};
-  Data:           SelectWords[]   = [];
+
+  userData:       SelectWordsData;
+  Data:           SelectWordsData[] = [];
   messyWords:     string[];
   correctWords:   string[];
   letterParam:    string;
@@ -237,35 +238,21 @@ export class SelectWordsComponent implements OnInit, OnDestroy {
 
   initUserData = () => {
 
-    const t = this.genDates.generateData();
+    const t  = this.genDates.generateData();
+    const id = this._storage.getElement('user')['userId'];
 
-    this.userData['user_id']    = 'N/A';
-    this.userData['date']       = t.fullDate;
-    this.userData['startTime']  = t.fullTime;
-    this.userData['finishTime'] = 'N/A';
-    this.userData['replays']    = [];
-    this.userData['letter']     = this.letterToVal;
-    this.userData['amount']     = this.correctWords.length;
-    this.userData['corrects']   = 0;
-    this.userData['incorrects'] = 0;
-    this.userData['pattern']    = this.messyWords;
-    this.userData['historial']  = [];
-
+    // tslint:disable-next-line:max-line-length
+    this.userData = new SelectWordsData(id, t.fullTime, 'N/A', [], t.fullDate, this.letterToVal, this.correctWords.length, 0, 0, this.messyWords, []);
 
   }
 
   addHistorial = (word: string, state: boolean) => {
 
+    const t = this.genDates.generateData().fullTime;
+
     const addCount = state === true ? this.userData.corrects ++ : this.userData.incorrects ++;
-    const t = this.genDates.generateData();
+    this.userData.historial.push(new Historial(t, word, state));
 
-    const x: Historial = {
-      time: t.fullTime,
-      word: word,
-      state: state
-    };
-
-    this.userData.historial.push(JSON.parse(JSON.stringify(x)));
   }
 
   addFinalTime = () => {
@@ -279,17 +266,18 @@ export class SelectWordsComponent implements OnInit, OnDestroy {
   addAndResetUserData = () => {
 
     this.Data.push(JSON.parse(JSON.stringify(this.userData)));
-    this.userData = {};
 
   }
 
   sendSelecWordsData = () => {
 
-    this._sendData.sendSelectWordsData(this.Data)
-      .subscribe(
-        (res) => console.log(res),
-        (err) => console.log(err)
-      );
-  }
+    console.log(this.Data);
+    // this._sendData.sendSelectWordsData(this.Data)
+    //   .subscribe(
+    //     (res) => console.log(res),
+    //     (err) => console.log(err)
+    //   );
+
+    }
 
 }

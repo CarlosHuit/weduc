@@ -50,7 +50,8 @@ export class PronounceLetterComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy() {
-    this._recognition.DestroySpeechObject();
+    this._synthesis.cancel();
+    // this._recognition.DestroySpeechObject();
   }
 
 

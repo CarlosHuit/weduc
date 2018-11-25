@@ -1,12 +1,12 @@
-import { Injectable } from '@angular/core';
-import urljoin from 'url-join';
-import { environment } from '../../../environments/environment';
 import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
-import { GetTokenService                       } from '../get-token.service';
-import { LocalStorageService                   } from '../local-storage.service';
-import { Observable, of                        } from 'rxjs';
-import { RandomWords                           } from '../../interfaces/random-words';
-import { catchError                            } from 'rxjs/operators';
+import urljoin from 'url-join';
+import { Injectable           } from '@angular/core';
+import { environment          } from '../../../environments/environment';
+import { GetTokenService      } from '../get-token.service';
+import { LocalStorageService  } from '../local-storage.service';
+import { Observable, of       } from 'rxjs';
+import { RandomWords          } from '../../classes/random-words';
+import { catchError           } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -23,8 +23,9 @@ export class GetWordsService {
   ) {
 
     this.apiUrl = urljoin(environment.apiUrl);
+
     this.httpOptions = {
-      headers: new HttpHeaders( {
+      headers: new HttpHeaders({
         'Content-Type':  'application/json',
         'Authorization': `${this.getToken.addToken()}`
       }),
