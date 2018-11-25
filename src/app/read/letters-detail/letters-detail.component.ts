@@ -251,9 +251,9 @@ export class LettersDetailComponent implements OnInit {
 
     const t    = JSON.parse(localStorage.getItem('letter_sounds'))[this.letterParam.toLowerCase()];
     const type = this.currentLetter === this.currentLetter.toLowerCase() ? 'minúscula' : 'mayúscula';
-    const msg  = `Esta es la letra: ... ${t} ... ${type}`;
+    const msg  = `Esta letra es la ... ... ${t} ... ${type}`;
 
-    setTimeout(e => this.speech.speak(msg), 500);
+    setTimeout(e => this.speech.speak(msg, .85), 500);
 
   }
 

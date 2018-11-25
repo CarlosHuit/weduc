@@ -24,6 +24,7 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
   @Input() lineWidth:      number;
   @Input() lineColor:      string;
   @Input() showGuidLines:  boolean;
+
   @Output() evsHandWriting = new EventEmitter<string>();
   @ViewChild('canvasDraw') canvasEl: ElementRef;
 

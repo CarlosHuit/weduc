@@ -105,18 +105,15 @@
 }
 
 .card-letter {
-  width: 95%;
-  height: 94%;
+  width:      95%;
+  height:     94%;
   max-height: 490px;
-  max-width: 350px;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 7px;
+  max-width:  350px;
+  padding:    0;
   box-sizing: border-box;
-  position: relative;
-  border: 4px solid #f85e5e;
+  position:   relative;
+  border:     4px solid #f44336;
+  border-radius: 0;
 }
 
 .c-cat {
@@ -130,6 +127,7 @@
   animation: rotate 30s alternate infinite;
   transition: 100ms;
 }
+
 
 @keyframes rotate {
   30% { transform: rotate(-20deg) }
@@ -146,13 +144,16 @@
 }
 
 .c-letter h1 {
-  text-align: center;
-  font-size: 200px;
-  margin: 0px;
-  margin-top: -35px;
-  color: rgb(255, 191, 0);
+  text-align:          center;
+  font-size:           200px;
+  margin:              0px;
+  margin-top:          -35px;
+  color:             rgb(255, 191, 0);
   -webkit-text-stroke: 3px #202020;
-  transition: 100ms;
+  transition:          100ms;
+  text-shadow:         -8px 9px 9px #474747;
+  text-shadow:         -7px 6px 11px rgba(0,0,0,.5);
+  text-shadow:         -4px 4px 11px rgba(0,0,0,.8);
 }
 
 .c-letter h1:active {

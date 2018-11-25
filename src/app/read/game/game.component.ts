@@ -330,7 +330,6 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     const t = this.genDates.generateData();
     const id  = this._storage.getElement('user')['userId'];
     this.userData = new GameData(id, t.fullDate, t.fullTime, 'N/D', this.letter, this.countLetters(), 0, 0, [], []);
-    console.log(this.userData);
   }
 
   addSelection = (letter: string, status: boolean) => {

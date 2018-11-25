@@ -6,11 +6,10 @@ import { GenerateDatesService         } from '../../services/generate-dates.serv
 import { SendDataService              } from '../../services/send-data.service';
 import { DetectMobileService          } from '../../services/detect-mobile.service';
 import { PreloadAudioService          } from '../../services/preload-audio.service';
-import { Words                        } from '../../interfaces/words';
 import { LocalStorageService          } from '../../services/local-storage.service';
 import { ShuffleService               } from '../../services/shuffle/shuffle.service';
-
-
+import { Words                        } from '../../classes/words';
+import { FindLetterData, Options, Selection } from '../../classes/find-letter-data';
 
 
 @Component({
@@ -22,7 +21,7 @@ import { ShuffleService               } from '../../services/shuffle/shuffle.ser
 
 export class FindLetterComponent implements OnInit, OnDestroy {
 
-  userData: FindLetter = {};
+  userData: FindLetterData;
 
   words:        string[];
   letters:      string[];
@@ -35,7 +34,6 @@ export class FindLetterComponent implements OnInit, OnDestroy {
   success:      boolean;
   showC:        boolean;
   selection     = {};
-
 
   constructor(
     private router:   Router,
@@ -52,8 +50,8 @@ export class FindLetterComponent implements OnInit, OnDestroy {
 
     this.loading      = true;
     this.letterParam  = this._route.snapshot.paramMap.get('letter');
-    this.url          = `/lectura/select-words/${this.letterParam}`;
-
+    this.url          = `/lectura/seleccionar-palabras/${this.letterParam}`;
+    this.words        = this._storage.getElement(`${this.letterParam}_w`);
   }
 
   ngOnInit() {
@@ -73,39 +71,84 @@ export class FindLetterComponent implements OnInit, OnDestroy {
 
   setValues = () => {
 
-    if (Storage) {
+    if (Storage && this.words !== null) {
 
-      const words      = this._storage.getElement(this.letterParam);
-      const configData = words !== null ? this.configInitialData(words) : this.getServerData();
+      this.configInitialData(this.words.slice());
 
-    } else { this.getServerData(); }
+    } else {
+
+      this.getServerData();
+
+    }
 
   }
 
   configInitialData = (words: string[]) => {
 
     this.words = this._shuffle.mess(words);
-
-    this.initUserData();
     this.changeDates(this.words[0]);
-    this.loading = false;
-    setTimeout(() => this.showC = true, 10);
 
+
+    this.loading = false;
+    this.initUserData();
+    this.addWordData(this.word);
+
+    setTimeout(() => this.showC = true, 10);
     this.instructions();
 
   }
 
-  getServerData = () => {
+  changeWord = (index: number) => {
+
+    this.removeClass();
+    this.changeDates(this.words[index]);
+
+    const speech = this.speech.speak('Bien Hecho!', 0.85);
+
+    speech.addEventListener('end', e => (this.success = false, this.addWordData(this.word), this.instructions()));
+
+  }
+
+  removeClass = () => this.selection = {};
+
+  changeDates = (word: string) => {
+
+    this.word     = word;
+    this.letters  = this.word.split('');
+    this.urlImage = this.generateUrlImage(this.word);
+    this.arrayIDs = this.generateArrayIDs(this.letters);
+
+  }
+
+  generateArrayIDs = (l: string[]): string[] => {
+
+    const r = [];
+
+    for (let i = 0; i < l.length; i++) {
+
+      r.push(`${this.letters[i]}${i}`);
+
+    }
+
+    return r;
+
+  }
+
+  getServerData = (): void => {
 
     this.getData.getWords(this.letterParam)
       .subscribe(
         (word: Words) => {
 
           if (word.words === undefined) {
+
             this.speech.speak('ha habido un error');
+
           } else {
+
             this.configInitialData(word.words);
-            const saveData = Storage ? this._storage.saveElement(this.letterParam, this.words) : null;
+            const l = Storage ? this._storage.saveElement(`${this.letterParam}_w`, this.words) : null;
+
           }
 
         },
@@ -139,8 +182,6 @@ export class FindLetterComponent implements OnInit, OnDestroy {
 
   }
 
-  removeClass = () => this.selection     = {};
-
   onSelect = (id: string) => {
 
     const txt        = id[0];
@@ -148,18 +189,18 @@ export class FindLetterComponent implements OnInit, OnDestroy {
 
     if (validation) {
 
-      this.addData(this.word, 2020, txt, true);
+      this.addCount(this.word, 'correct', txt,  true);
 
-      if (this.selection[id] !== id) { this.selection[id] =     id; }
+      const saveSel = this.selection[id] !== id ? this.selection[id] = id : null;
+      const p = this.pendingLetters();
+      const s = this.speech.speak('Correcto');
 
-      const p      = this.pendingLetters();
-      const speech = this.speech.speak('Correcto');
+      s.addEventListener('end', e => p === 0 ? this.next() : false);
 
-      speech.addEventListener('end', e => { const x = p === 0 ? this.next() : false; });
 
     } else {
 
-      this.addData(this.word, 2020, txt, false);
+      this.addCount(this.word, 'incorrect', txt,  false);
       this._sound.playAudio();
 
     }
@@ -167,24 +208,14 @@ export class FindLetterComponent implements OnInit, OnDestroy {
 
   next = () => {
 
-    this.addData(this.word, 2011);
-
+    this.addFinalTimeWord(this.word);
     this.success    = true;
     const nextIndex = this.words.indexOf(this.word) + 1;
     const x         = nextIndex < this.words.length ? this.changeWord(nextIndex) : this.redirect();
 
   }
 
-  changeWord = (index: number) => {
 
-    this.removeClass();
-    this.changeDates(this.words[index]);
-
-    const speech = this.speech.speak('Bien Hecho!', 0.85);
-
-    speech.addEventListener('end', e => (this.success = false, this.instructions() ));
-
-  }
 
   redirect = () => {
 
@@ -201,18 +232,9 @@ export class FindLetterComponent implements OnInit, OnDestroy {
 
   }
 
-  generateArrayIDs = () => {
-
-    this.arrayIDs = [];
-    for (let i = 0; i < this.letters.length; i++) {
-      this.arrayIDs.push(`${this.letters[i]}${i}`);
-    }
-
-  }
-
   instructions = () => {
 
-    this.addData(this.word, 2015);
+    this.addCount(this.word, 'instructions');
     const s   = this._storage.getElement('letter_sounds')[this.letterParam];
     const msg = `Selecciona todas las letras ... ${s} ... de la palabra ... ${this.word}`;
 
@@ -220,21 +242,12 @@ export class FindLetterComponent implements OnInit, OnDestroy {
 
   }
 
-  changeDates = (word: string) => {
 
-    this.word     = word;
-    this.letters  = this.word.split('');
-    this.urlImage = this.generateUrlImage(this.word);
-    this.generateArrayIDs();
-
-    this.addData(this.word, 2010);
-
-  }
 
   generateUrlImage = (name: string) => `/assets/img-min/${name}-min.png`;
 
   speak = () => {
-    this.addData(this.word, 2014);
+    this.addCount(this.word, 'pressImage');
     this.speech.speak(this.word);
   }
 
@@ -289,110 +302,61 @@ export class FindLetterComponent implements OnInit, OnDestroy {
     };
   }
 
-  initUserData = () => {
+  initUserData = (): void => {
 
-    const time = this.genDates.generateData();
-
-    this.userData['user_id']    = 'N/A';
-    this.userData['date']       = time.fullDate;
-    this.userData['startTime']  = time.fullTime;
-    this.userData['finalTime']  = 'N/A';
-    this.userData['letter']     = this.letterParam;
-    this.userData.words         = this.fillOptions();
+    const t  = this.genDates.generateData();
+    const id = this._storage.getElement('user')['userId'];
+    this.userData = new FindLetterData(id, t.fullDate, t.fullTime, 'N/A', this.letterParam, []);
 
   }
 
-  addData = (word: string, code: number, letter?: string, state?: boolean) => {
+  addWordData = (word): void => {
 
-    const time = this.genDates.generateData();
+    const t = this.genDates.generateData().fullTime;
+    const x = new Options(word, t, 'N/A', 0, 0, [], [], []);
+    this.userData.words.push(x);
 
-    for (const i in this.userData.words) {
-      if (this.userData.words.hasOwnProperty(i)) {
-        const el = this.userData.words[i];
+  }
 
-        if (el.word === word) {
+  addCount = (word: string, code: string, letter?: string, state?: boolean): void => {
 
-          switch (code) {
-            case 2010:
-              el.startTime = time.fullTime;
-              break;
-            case 2011:
-              el.finalTime = time.fullTime;
-              break;
-            case 2012:
-              el.correct++;
-              break;
-            case 2013:
-              el.incorrect++;
-              break;
-            case 2014:
-              el.pressImage++;
-              break;
-            case 2015:
-              el.repetitions++;
-              break;
-            case 2016:
-              el.historial.push();
-              break;
-            case 2020:
+    const t = this.genDates.generateData().fullTime;
+    const i = this.userData.words.findIndex(m => m.word === word );
+    const e = this.userData.words[i];
 
-              el.historial.push(this.generateSelection(letter, state));
-              const x = state === true ? el.correct++ : el.incorrect++;
+    const pImg  = code === 'pressImage'   ? e.pressImage.push(t)   : null;
+    const pHelp = code === 'instructions' ? e.instructions.push(t) : null;
 
-              break;
-
-            default:
-              break;
-          }
-
-        }
-
-      }
+    if (code  === 'correct' || code === 'incorrect') {
+      e[code]++;
+      e.historial.push(new Selection(letter, t, state));
     }
 
   }
 
-  fillOptions = (): Options[] => {
+  addFinalTimeWord = (word: string): void => {
 
-    const result = [];
+    const t = this.genDates.generateData().fullTime;
+    const i = this.userData.words.findIndex(m => m.word === word);
+    this.userData.words[i].finalTime = t;
 
-    this.words.forEach(word => {
-      const xx: Options = {
-        word: word,
-        startTime: 'N/A',
-        finalTime: 'N/A',
-        correct: 0,
-        incorrect: 0,
-        pressImage: 0,
-        repetitions: 0,
-        historial: []
-      };
-      result.push(xx);
-    });
-
-    return JSON.parse(JSON.stringify(result));
-
-  }
-
-  generateSelection = (letter: string, state: boolean): Selection => {
-
-    const time = this.genDates.generateData();
-    const x = { letter: letter, time: time.fullTime, status: state, };
-
-    return JSON.parse(JSON.stringify(x));
   }
 
   addFinalTimeComponent = (): void => {
-    const time = this.genDates.generateData();
-    this.userData['finalTime'] = time.fullTime;
+
+    this.userData.finalTime = this.genDates.generateData().fullTime;
   }
 
   send = () => {
-    this.sendData.sendGuessLetterData(this.userData)
-      .subscribe(
-        val => console.log(val),
-        err => console.log(err)
-      );
+
+    console.log(this.userData);
+    // this.sendData.sendGuessLetterData(this.userData)
+    //   .subscribe(
+    //     val => console.log(val),
+    //     err => console.log(err)
+    //   );
   }
 
 }
+
+
