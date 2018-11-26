@@ -4,8 +4,8 @@ import { SpeechRecognitionService     } from '../../services/speech-recognition.
 import { SpeechSynthesisService       } from '../../services/speech-synthesis.service';
 import { SendDataService              } from '../../services/send-data.service';
 import { GenerateDatesService         } from '../../services/generate-dates.service';
-import { PronounceLetter, Historial   } from '../../interfaces/pronounce-letter';
-
+import { LocalStorageService          } from '../../services/local-storage.service';
+import { PronounceLetterData, Historial } from '../../classes/pronounce-letter-data';
 
 
 @Component({
@@ -27,14 +27,15 @@ export class PronounceLetterComponent implements OnInit, OnDestroy {
   loading = true;
   success = false;
 
-  userData: PronounceLetter   = {};
-  Data:     PronounceLetter[] = [];
+  userData: PronounceLetterData;
+  Data:     PronounceLetterData[] = [];
 
 
   constructor(
     private _recognition: SpeechRecognitionService,
     private _synthesis:   SpeechSynthesisService,
     private _dates:       GenerateDatesService,
+    private _storage:     LocalStorageService,
     private _sendData:    SendDataService,
     private _route:       ActivatedRoute,
     private router:       Router,
@@ -72,15 +73,15 @@ export class PronounceLetterComponent implements OnInit, OnDestroy {
 
     console.log('-- start recording --');
     this._synthesis.cancel();
-    this.activeRecord = true;
 
-    this.startTime = this._dates.generateData().fullTime;
+    this.activeRecord = true;
+    this.startTime    = this._dates.generateData().fullTime;
 
     this._recognition.record()
       .subscribe(
         res => this.handleResponse(res),
         err => this.handleError(err),
-        () => this.onStopRecord()
+        ()  => this.onStopRecord()
       );
   }
 
@@ -211,17 +212,11 @@ export class PronounceLetterComponent implements OnInit, OnDestroy {
 
   initUserData = () => {
 
-    const t = this._dates.generateData();
+    const t       = this._dates.generateData();
+    const id      = this._storage.getElement('user')['userId'];
+    this.userData = new PronounceLetterData(id, t.fullTime, 'N/D', t.fullDate, this.letter, [], []);
 
-    this.userData = {};
-    this.userData['user_id']   = 'N/A';
-    this.userData['startTime'] = t.fullTime;
-    this.userData['finalTime'] = 'N/A';
-    this.userData['date']      = t.fullDate;
-    this.userData['letter']    = this.letter;
-    this.userData['countHelp'] = [];
-    this.userData['historial'] = [];
-
+    console.log(this.userData);
   }
 
 
@@ -233,29 +228,29 @@ export class PronounceLetterComponent implements OnInit, OnDestroy {
   }
 
 
-  addCountHelp = () => this.userData['countHelp'].push(this._dates.generateData().fullTime);
+  addCountHelp = (): void => {
 
-
-  addElToHistorial = ( sentence: string, startRecord: string, finalRecord: string, state: boolean ) => {
-
-    const t: Historial = {
-      startRecord: startRecord,
-      finalRecord: finalRecord,
-      sentence:    sentence,
-      state:       state
-    };
-
-    this.userData['historial'].push(JSON.parse(JSON.stringify(t)));
+    this.userData['countHelp'].push(this._dates.generateData().fullTime);
 
   }
 
 
-  sendData = () => {
-    this._sendData.sendPronounceLetterData(this.Data)
-      .subscribe(
-        res =>  console.log(res),
-        err =>  console.log(err)
-      );
+  addElToHistorial = ( sentence: string, startRecord: string, finalRecord: string, state: boolean ): void => {
+
+    const x = new Historial(startRecord, finalRecord, sentence, state);
+    this.userData.historial.push(x);
+    console.log(this.userData);
+
+  }
+
+
+  sendData = (): void => {
+    console.log(this.Data);
+    // this._sendData.sendPronounceLetterData(this.Data)
+    //   .subscribe(
+    //     res =>  console.log(res),
+    //     err =>  console.log(err)
+    //   );
   }
 
 
