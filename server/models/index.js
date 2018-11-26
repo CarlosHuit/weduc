@@ -10,6 +10,7 @@ export { default as Courses        } from './courses-model'
 export { default as Combinations   } from './combinations-model'
 export { default as UserProgress   } from './user-progress-model'
 
+
 export { default as Target         } from './data/target-model'
 export { default as Game           } from './data/game-model'
 export { default as GuessLetter    } from './data/guess-letter-model'

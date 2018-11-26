@@ -3,13 +3,13 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { HttpResponse           } from '@angular/common/http';
 import { SpeechSynthesisService } from '../../services/speech-synthesis.service';
 import { GenerateDatesService   } from '../../services/generate-dates.service';
-import { SendDataService        } from '../../services/send-data.service';
 import { DetectMobileService    } from '../../services/detect-mobile.service';
 import { PreloadAudioService    } from '../../services/preload-audio.service';
 import { LocalStorageService    } from '../../services/local-storage.service';
 import { SimilarLettersService  } from '../../services/similar-letters/similar-letters.service';
 import { GetDataService         } from '../../services/get-data.service';
 import { RandomSimilarLetters   } from '../../interfaces/random-similar-letters';
+import { SdGameDataService      } from '../../services/send-user-data/sd-game-data.service';
 // import { GameData, Record       } from '../../interfaces/game-data';
 import { GameData, History } from '../../classes/game-data';
 
@@ -49,15 +49,15 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor (
     private router:        Router,
-    private speechService: SpeechSynthesisService,
     private _route:        ActivatedRoute,
-    private genDates:      GenerateDatesService,
-    private sendData:      SendDataService,
-    private detectMobile:  DetectMobileService,
     private getData:       GetDataService,
+    private _sendData:     SdGameDataService,
+    private detectMobile:  DetectMobileService,
     private _sound:        PreloadAudioService,
     private _storage:      LocalStorageService,
-    private _sL:           SimilarLettersService
+    private genDates:      GenerateDatesService,
+    private _sL:           SimilarLettersService,
+    private speechService: SpeechSynthesisService,
   ) {
 
     this.success       = false;
@@ -373,12 +373,15 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   send = () => {
+
     console.log(this.dataToSend);
-    // this.sendData.sendGameData(this.dataToSend)
-    //   .subscribe(
-    //     v => { const x = v; },
-    //     e => { const err = e; }
-    //   );
+
+    this._sendData.sendGameData(this.dataToSend)
+      .subscribe(
+        val => {const v = val; },
+        err => {const e = err; }
+      );
+
   }
 
 

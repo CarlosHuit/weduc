@@ -44,33 +44,6 @@ export class SendDataService {
 
   }
 
-
-  sendTargetData = (obj: Object) => {
-    const token = this.getToken.getToken();
-    const url   = urljoin(this.apiUrl, `target${token}`);
-    const data  = JSON.stringify(obj);
-
-    return this.http.post(url, data, this.httpOptions)
-      .pipe(
-        catchError(this.handleError)
-      );
-  }
-
-
-
-
-  sendGameData = (obj: object) => {
-    const token = this.getToken.getToken();
-    const url   = urljoin(this.apiUrl, `game${token}`);
-    const body  = JSON.stringify(obj);
-
-    return this.http.post(url, body, this.httpOptions)
-    .pipe(
-      catchError(this.handleError)
-    );
-  }
-
-
   sendGuessLetterData = (obj: object) => {
     const token = this.getToken.getToken();
     const url   = urljoin(this.apiUrl, `guess-letter${token}`);

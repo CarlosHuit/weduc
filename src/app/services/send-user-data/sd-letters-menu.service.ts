@@ -1,11 +1,13 @@
-import { Injectable } from '@angular/core';
-import { MenuLettersData } from '../../classes/menu-letters-data';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import urljoin from 'url-join';
+import { Injectable       } from '@angular/core';
+import { MenuLettersData  } from '../../classes/menu-letters-data';
+import { Router           } from '@angular/router';
 import { environment      } from '../../../environments/environment';
 import { GetTokenService  } from '../get-token.service';
 import { catchError, map  } from 'rxjs/operators';
 import { throwError       } from 'rxjs';
+import { AuthService      } from '../auth.service';
+import urljoin from 'url-join';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +18,9 @@ export class SdLettersMenuService {
   httpOptions: any;
 
   constructor(
-    private http: HttpClient,
+    private http:     HttpClient,
+    private _auth:    AuthService,
+    private _router:  Router,
     private getToken: GetTokenService
   ) {
 
@@ -45,11 +49,13 @@ export class SdLettersMenuService {
       );
   }
 
-  private handleError (error: HttpErrorResponse) {
-    // console.log(error);
-    // const msg = `Error Status Code: ${error.status}. \n Message: ${error.error.message} \n Error: ${error.error.error}`;
-    // return throwError('Algo salió mal. Por favor, vuelve a intentarlo');
-    return throwError(error.error.message);
+  handleError = (error: HttpErrorResponse) => {
+    if (error.status === 401) {
+      this._router.navigateByUrl('');
+      this._auth.logout();
+      this._auth.showError('Inicia sesión con un usuario válido', 2000);
+      return throwError('Usuario Invalido');
+    }
   }
 
 }

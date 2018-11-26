@@ -1,34 +1,34 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { Router            } from '@angular/router';
 import { environment       } from '../../../environments/environment';
 import { GetTokenService   } from '../get-token.service';
 import { catchError, map   } from 'rxjs/operators';
 import { throwError        } from 'rxjs';
-import { LettersDetailData } from '../../classes/letters-detail-data';
+import { GameData          } from '../../classes/game-data';
 import { AuthService       } from '../auth.service';
 import urljoin from 'url-join';
-import { Router } from '@angular/router';
 
 @Injectable({
-    providedIn: 'root'
-  })
-  export class SdLettersDetailService {
+  providedIn: 'root'
+})
+  export class SdGameDataService {
 
   apiUrl:      string;
   httpOptions: any;
 
   constructor(
-    private http:     HttpClient,
-    private _auth:    AuthService,
-    private _router:  Router,
+    private http: HttpClient,
+    private _auth: AuthService,
+    private _router: Router,
     private getToken: GetTokenService
   ) {
 
-    this.apiUrl = urljoin(environment.apiUrl, 'data/letters-detail');
+    this.apiUrl = urljoin(environment.apiUrl, 'data/game');
 
   }
 
-  sendLettersDetailData = (userData: LettersDetailData[]) => {
+  sendGameData = (userData: GameData[]) => {
 
     const data = JSON.stringify(userData);
     this.httpOptions = {
@@ -39,7 +39,9 @@ import { Router } from '@angular/router';
     };
 
     return this.http.post(this.apiUrl, data, this.httpOptions)
-      .pipe( catchError(this.handleError) );
+      .pipe(
+        catchError(this.handleError)
+      );
 
   }
 
