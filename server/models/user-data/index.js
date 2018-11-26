@@ -1,0 +1,1 @@
+export { default as LettersMenuData } from './letters-menu'

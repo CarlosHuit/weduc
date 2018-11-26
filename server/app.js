@@ -3,10 +3,13 @@ import compression from 'compression'
 import bodyParser from 'body-parser'
 import path from 'path'
 import { 
-	auth, user, letter, word, coordinates, similarLetters, saveData, Syllables, Menu, Target, Game, GuessLetter,
+  auth, user, letter, word, coordinates, similarLetters, saveData, Syllables,
+  Target, Game, GuessLetter,
   DrawLetter, CompleteWord, SoundLetters, Courses, WordsAndLetters, FindLetter, SelectWords, SelectImages,
   IdentifyLetter, Combinations, UserProgress
 } from './routes'
+
+import { lettersMenu } from './routes/user-data'
 
 const app = express()
 const compress = compression()
@@ -43,7 +46,7 @@ app.use('/api/combinations',        Combinations      )
 app.use('/api/user-progress',       UserProgress      )
 
 
-app.use('/api/data/menu',            Menu             )
+app.use('/api/data/letters-menu',    lettersMenu      )
 app.use('/api/data/target',          Target           )
 app.use('/api/data/game',            Game             )
 app.use('/api/data/guess-letter',    GuessLetter      )

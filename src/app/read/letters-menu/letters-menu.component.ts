@@ -4,7 +4,7 @@ import { MatAccordion           } from '@angular/material';
 import { SpeechSynthesisService } from '../../services/speech-synthesis.service';
 import { GenerateDatesService   } from '../../services/generate-dates.service';
 import { GetDataService         } from '../../services/get-data.service';
-import { SendDataService        } from '../../services/send-data.service';
+import { SdLettersMenuService        } from '../../services/send-user-data/sd-letters-menu.service';
 import { DetectMobileService    } from '../../services/detect-mobile.service';
 import { LocalStorageService    } from '../../services/local-storage.service';
 import { WordsAndLetters, LearnedLetters } from '../../interfaces/words-and-letters';
@@ -68,7 +68,7 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
     private detMobile:         DetectMobileService,
     private _storage:          LocalStorageService,
     private getData:           GetDataService,
-    private sendData:          SendDataService,
+    private _sendData:         SdLettersMenuService,
     private router:            Router,
   ) {
     this.combinations    = this._storage.getElement('combinations');
@@ -345,6 +345,7 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
     this.selected = true;
     this.selections[letter] = letter;
 
+    this.sendData();
     const msg    = `Bien, Seleccionaste la letra: ... ${this.soundsLetters[letter]}`;
     const speech = this.speechSynthesis.speak(msg, .95);
     const url    = `lectura/detalle-letra/${letter}`;
@@ -542,6 +543,14 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
     this.showAlphabet       = true;
 
     this.deactiveTabAlphabet();
+  }
+
+  sendData = () => {
+    this._sendData.send(this.userData)
+      .subscribe(
+        val => console.log(val),
+        err => console.log(err),
+      );
   }
 
 }
