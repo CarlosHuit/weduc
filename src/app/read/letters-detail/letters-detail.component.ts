@@ -10,9 +10,8 @@ import { ShuffleService          } from '../../services/shuffle/shuffle.service'
 import { GenerateIdsService      } from '../../services/generate-ids/generate-ids.service';
 import { SimilarLetters          } from '../../classes/initial-data';
 import {
-  LettersDetailData,
-  MemoryGame, Historial,
-  CardExample, Couples,
+  LettersDetailData, CardExample,
+  MemoryGame, Historial, Couples,
 } from '../../classes/letters-detail-data';
 
 
@@ -22,6 +21,7 @@ import {
   templateUrl: './letters-detail.component.html',
   styleUrls: ['./letters-detail.component.css']
 })
+
 export class LettersDetailComponent implements OnInit {
 
 
@@ -361,8 +361,8 @@ export class LettersDetailComponent implements OnInit {
     console.log(this.Data);
     this._sendData.sendLettersDetailData(this.Data)
       .subscribe(
-        val => console.log(val),
-        err => console.log(err),
+        val => {const t = val; },
+        err => {const w = err; },
       );
   }
 
