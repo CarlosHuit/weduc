@@ -9,7 +9,7 @@ import {
   IdentifyLetter, Combinations, UserProgress
 } from './routes'
 
-import { lettersMenu } from './routes/user-data'
+import { lettersMenu, lettersDetail } from './routes/user-data'
 
 const app = express()
 const compress = compression()
@@ -49,6 +49,8 @@ app.use('/api/user-progress',       UserProgress      )
 
 
 app.use('/api/data/letters-menu',    lettersMenu      )
+app.use('/api/data/letters-detail',  lettersDetail      )
+
 app.use('/api/data/target',          Target           )
 app.use('/api/data/game',            Game             )
 app.use('/api/data/guess-letter',    GuessLetter      )

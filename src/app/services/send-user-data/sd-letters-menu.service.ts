@@ -56,35 +56,3 @@ export class SdLettersMenuService {
 
 
 
-// import { Injectable } from '@angular/core';
-// import { MenuLettersData } from '../../classes/menu-letters-data';
-// import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-// import urljoin from 'url-join';
-// import { environment      } from '../../../environments/environment';
-// import { GetTokenService  } from '../get-token.service';
-// import { catchError, map  } from 'rxjs/operators';
-// import { throwError       } from 'rxjs';
-
-// @Injectable({
-//   providedIn: 'root'
-// })
-// export class SdLettersMenuService {
-
-//   apiUrl:      string;
-//   httpOptions: any;
-
-//   constructor(
-//     private http: HttpClient,
-//     private getToken: GetTokenService
-//   ) {
-
-//     this.apiUrl = urljoin(environment.apiUrl, 'data');
-
-//     this.httpOptions = {
-//       headers: new HttpHeaders({
-//         'Content-Type':  'application/json',
-//         'Authorization': `${this.getToken.addToken()}`
-//       })
-//     };
-//   }
-// }

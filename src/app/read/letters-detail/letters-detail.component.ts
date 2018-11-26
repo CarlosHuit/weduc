@@ -3,8 +3,7 @@ import { Router, ActivatedRoute  } from '@angular/router';
 import { SpeechSynthesisService  } from '../../services/speech-synthesis.service';
 import { DetectMobileService     } from '../../services/detect-mobile.service';
 import { GenerateDatesService    } from '../../services/generate-dates.service';
-import { GetDataService          } from '../../services/get-data.service';
-import { SendDataService         } from '../../services/send-data.service';
+import { SdLettersDetailService  } from '../../services/send-user-data/sd-letters-detail.service';
 import { PreloadAudioService     } from '../../services/preload-audio.service';
 import { LocalStorageService     } from '../../services/local-storage.service';
 import { ShuffleService          } from '../../services/shuffle/shuffle.service';
@@ -12,10 +11,8 @@ import { GenerateIdsService      } from '../../services/generate-ids/generate-id
 import { SimilarLetters          } from '../../classes/initial-data';
 import {
   LettersDetailData,
-  MemoryGame,
-  CardExample,
-  Couples,
-  Historial
+  MemoryGame, Historial,
+  CardExample, Couples,
 } from '../../classes/letters-detail-data';
 
 
@@ -54,14 +51,13 @@ export class LettersDetailComponent implements OnInit {
     private router:   Router,
     private _shuffle: ShuffleService,
     private _route:   ActivatedRoute,
-    private getData:  GetDataService,
-    private sendData: SendDataService,
     private _ids:     GenerateIdsService,
     private _audio:   PreloadAudioService,
     private _storage: LocalStorageService,
     private dMobile:  DetectMobileService,
     private genDates: GenerateDatesService,
     private speech:   SpeechSynthesisService,
+    private _sendData: SdLettersDetailService,
 
   ) {
     this.letterParam    = this._route.snapshot.paramMap.get('letter');
@@ -363,6 +359,11 @@ export class LettersDetailComponent implements OnInit {
 
   sendDataToServer = () => {
     console.log(this.Data);
+    this._sendData.sendLettersDetailData(this.Data)
+      .subscribe(
+        val => console.log(val),
+        err => console.log(err),
+      );
   }
 
 

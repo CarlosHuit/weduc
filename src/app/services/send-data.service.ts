@@ -45,20 +45,6 @@ export class SendDataService {
   }
 
 
-  sendMenuData = (obj: MenuLettersData) => {
-
-    const token = this.getToken.getToken();
-    const url   = urljoin(this.apiUrl, `menu${token}`);
-    const body  = JSON.stringify(obj);
-
-    return this.http.post(url, body, this.httpOptions)
-      .pipe(
-        catchError(this.handleError)
-      );
-
-  }
-
-
   sendTargetData = (obj: Object) => {
     const token = this.getToken.getToken();
     const url   = urljoin(this.apiUrl, `target${token}`);
@@ -110,29 +96,7 @@ export class SendDataService {
   }
 
 
-  // sendCompleteWordData = (obj: CompleteWordData) => {
 
-  //   const token = this.getToken.getToken();
-
-  //   const url = urljoin(this.apiUrl, `complete-word${token}`);
-  //   const data = JSON.stringify(obj);
-
-  //   return this.http.post(url, data, this.httpOptions)
-  //   .pipe( catchError(this.handleError) );
-
-  // }
-
-  // sendFindLetterData = (obj: FindLetter[]) => {
-
-  //   const token = this.getToken.getToken();
-
-  //   const url = urljoin(this.apiUrl, `find-letter${token}`);
-  //   const data = JSON.stringify(obj);
-
-  //   return this.http.post(url, data, this.httpOptions)
-  //   .pipe( catchError(this.handleError) );
-
-  // }
 
   sendSelectWordsData = (obj: SelectWords[]) => {
 
@@ -145,17 +109,6 @@ export class SendDataService {
     .pipe( catchError(this.handleError) );
 
   }
-
-  // sendSelectImagesData = (obj: SelectImages) => {
-
-  //   const token = this.getToken.getToken();
-  //   const url   = urljoin(this.apiUrl, `select-images${token}`);
-  //   const data  = JSON.stringify(obj);
-
-  //   return this.http.post(url, data, this.httpOptions)
-  //   .pipe( catchError(this.handleError) );
-
-  // }
 
   sendPronounceLetterData = (obj: PronounceLetter[]) => {
 
