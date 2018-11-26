@@ -2,17 +2,17 @@ import express from 'express'
 import Debug from 'debug'
 import { Words, Letters, SimilarLetters, UserProgress, User, Coordinates } from '../models';
 import { nameProject } from '../config'
-import { required, verifyToken } from '../middleware';
+import { verifyToken, validateUser } from '../middleware';
 
 const app   = express.Router()
 const debug = new Debug(`${nameProject}: words_and_letters`)
 const omit  = { __v: 0, _id: 0 }
 
-app.get('/', verifyToken, async (req, res) => {
+app.get('/', verifyToken, validateUser, async (req, res) => {
 
   const { _id }            = req.user._id
   const user               = await User.findOne(_id)
-
+  debug(user)
   if (user) {
     try {
       

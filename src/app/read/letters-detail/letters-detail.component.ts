@@ -9,7 +9,7 @@ import { PreloadAudioService     } from '../../services/preload-audio.service';
 import { LocalStorageService     } from '../../services/local-storage.service';
 import { ShuffleService          } from '../../services/shuffle/shuffle.service';
 import { GenerateIdsService      } from '../../services/generate-ids/generate-ids.service';
-import { SimilarLetters          } from '../../interfaces/words-and-letters';
+import { SimilarLetters          } from '../../classes/initial-data';
 import {
   LettersDetailData,
   MemoryGame,

@@ -1,11 +1,13 @@
-import { HttpClient, HttpResponse, HttpHeaders  } from '@angular/common/http';
+import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse  } from '@angular/common/http';
 import { Injectable           } from '@angular/core';
 import { environment          } from '../../../environments/environment';
-import { Observable, of       } from 'rxjs';
+import { Observable, of, throwError, from       } from 'rxjs';
 import { map, catchError      } from 'rxjs/operators';
 import { GetTokenService      } from '../get-token.service';
 import { LocalStorageService  } from '../local-storage.service';
 import { InitialData          } from '../../classes/initial-data';
+import { Router               } from '@angular/router';
+import { AuthService          } from '../auth.service';
 import urljoin from 'url-join';
 
 
@@ -20,7 +22,9 @@ export class GetInitialDataService {
   httpOpts: any;
 
   constructor(
-    private http: HttpClient,
+    private _router:  Router,
+    private http:     HttpClient,
+    private _auth:    AuthService,
     private getToken: GetTokenService,
     private _storage: LocalStorageService
     ) {
@@ -49,7 +53,7 @@ export class GetInitialDataService {
     .pipe(
 
       map(x => { this.saveData(x); return x; }),
-      catchError(this.handleError('InitialData', []))
+      catchError(this.handleError)
 
     );
   }
@@ -96,19 +100,13 @@ export class GetInitialDataService {
   }
 
 
-  public handleError<T>(operation = 'operation', result?: T) {
-
-    return (error: any): Observable<T> => {
-
-      console.error(error.error.error);
-      this.log(`${operation} failed: ${error.message}`);
-      return of(result as T);
-
-    };
-  }
-
-  private log(message: string) {
-    console.log(message);
+  handleError = (error: HttpErrorResponse) => {
+    if (error.status === 401) {
+      this._router.navigateByUrl('');
+      this._auth.logout();
+      this._auth.showError('Inicia sesión con un usuario válido', 2000);
+      return throwError('Usuario Invalido');
+    }
   }
 
 }

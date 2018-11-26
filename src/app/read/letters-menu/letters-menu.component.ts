@@ -78,6 +78,7 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
     this.getData.getInitialData()
       .subscribe(
         (data: InitialData) => {
+
           this.data = data;
           this.setInitialData(this.data);
           this.instructions('y');
