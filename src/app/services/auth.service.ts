@@ -33,8 +33,8 @@ export class AuthService {
 
     if (this.isLoggedIn()) {
 
-      const { userId, email, firstName, lastName } = JSON.parse(localStorage.getItem('user'));
-      this.currentUser = new User(email, null, firstName, lastName, userId);
+      const { userId, email,  firstName, lastName } = JSON.parse(localStorage.getItem('user'));
+      this.currentUser = new User(email, null, null, firstName, lastName, userId);
 
     }
 
@@ -82,7 +82,7 @@ export class AuthService {
   login = (response: any) => {
 
     const { token, userId, firstName, lastName, email } = response;
-    this.currentUser = new User(email, null, firstName, lastName, userId);
+    this.currentUser = new User(email, null, null, firstName, lastName, userId);
 
     localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify({ userId, firstName, lastName, email }));

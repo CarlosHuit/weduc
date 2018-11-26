@@ -26,7 +26,7 @@ app.post( '/signin', async (req,res, next) => {
   if (!comparePassword(password, user.password )) {
     
     debug(`Las contrasenas no coinciden: ${user.password} !== ${hash(password, 10)}`)
-    return handLoginFailed(res, 'La contrasena no coincide!')
+    return handLoginFailed(res, 'La contraseña no coincide')
     
   }
   
@@ -53,10 +53,13 @@ const createToken = (user) => jwt.sign({ user }, secret, { expiresIn: 86400 }) /
 
 
 
+
+
+/* ------ validar que las contrase?as coincidan ------ */
 app.post('/signup', async ( req, res, next ) => {
   
-  
-  const { firstName, lastName, email, password } = req.body
+  /* password2 */
+  const { firstName, lastName, email, password, password2 } = req.body
   const findEmail = await User.findOne( { email } )
 
   if (findEmail) {
@@ -65,6 +68,13 @@ app.post('/signup', async ( req, res, next ) => {
     return handLoginFailed(res, `El email: ${email} ya esta registrado. \n Verifica y vuelve a intentarlo.`)
     
   }
+
+  if (password !== password2 ) {
+
+    debug('Las contraseñas no coinciden')
+    return handLoginFailed(res, 'Las contraseñas no coinciden')
+
+  } 
   
 
   const currentUser = new User( { firstName, lastName, email, password: hash(password, 10) } )

@@ -85,8 +85,9 @@ export class SignupComponent implements OnInit, OnDestroy {
 
     if (this.signupForm.valid) {
 
-      const { firstName, lastName, email, password } = this.signupForm.value;
-      const user = new User(email, password, firstName, lastName);
+      const { firstName, lastName, email, password, password2} = this.signupForm.value;
+      const user = new User(email, password, password2, firstName, lastName);
+      console.log(user);
 
       this.authService.signup(user)
         .subscribe(
