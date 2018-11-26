@@ -10,7 +10,7 @@ export { default as saveData        } from './save-data'
 export { default as Syllables       } from './syllables'
 export { default as SoundLetters    } from './sound-letters'
 export { default as Courses         } from './courses'
-export { default as WordsAndLetters } from './words_and_letters'
+export { default as InitialData } from './initial-data'
 export { default as Combinations    } from './combinations'
 export { default as UserProgress    } from './user-progress'
 

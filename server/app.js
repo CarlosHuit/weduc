@@ -5,7 +5,7 @@ import path from 'path'
 import { 
   auth, user, letter, word, coordinates, similarLetters, saveData, Syllables,
   Target, Game, GuessLetter,
-  DrawLetter, CompleteWord, SoundLetters, Courses, WordsAndLetters, FindLetter, SelectWords, SelectImages,
+  DrawLetter, CompleteWord, SoundLetters, Courses, InitialData, FindLetter, SelectWords, SelectImages,
   IdentifyLetter, Combinations, UserProgress
 } from './routes'
 
@@ -33,6 +33,9 @@ if ( process.env.NODE_ENV === 'production' ) {
 
 app.use('/api/auth',                auth              )
 app.use('/api/auth/user',           user              )
+app.use('/api/initial-data',        InitialData       )
+
+
 app.use('/api/letters',             letter            )
 app.use('/api/guardar',             saveData          )
 app.use('/api/words',               word              )
@@ -41,7 +44,6 @@ app.use('/api/coordinates',         coordinates       )
 app.use('/api/similar-letters',     similarLetters    )
 app.use('/api/sound-letters',       SoundLetters      )
 app.use('/api/courses',             Courses           )
-app.use('/api/words-and-letters',   WordsAndLetters   )
 app.use('/api/combinations',        Combinations      )
 app.use('/api/user-progress',       UserProgress      )
 

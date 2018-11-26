@@ -1,4 +1,5 @@
 import { Coordinates } from './coordinates';
+import { LearnedLetters } from '../classes/learned-letters';
 
 export interface WordsAndLetters {
     words:           Words[];
@@ -24,11 +25,6 @@ export interface Words {
 export interface SimilarLetters {
     l: string;
     m: string;
-}
-
-export interface LearnedLetters {
-    letter?: string;
-    rating?: number;
 }
 
 

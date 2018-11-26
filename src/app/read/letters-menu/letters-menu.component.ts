@@ -3,11 +3,12 @@ import { Router                 } from '@angular/router';
 import { MatAccordion           } from '@angular/material';
 import { SpeechSynthesisService } from '../../services/speech-synthesis.service';
 import { GenerateDatesService   } from '../../services/generate-dates.service';
-import { GetDataService         } from '../../services/get-data.service';
-import { SdLettersMenuService        } from '../../services/send-user-data/sd-letters-menu.service';
+import { GetInitialDataService  } from '../../services/get-data/get-initial-data.service';
+import { SdLettersMenuService   } from '../../services/send-user-data/sd-letters-menu.service';
 import { DetectMobileService    } from '../../services/detect-mobile.service';
 import { LocalStorageService    } from '../../services/local-storage.service';
-import { WordsAndLetters, LearnedLetters } from '../../interfaces/words-and-letters';
+import { InitialData            } from '../../classes/initial-data';
+import { LearnedLetters         } from '../../classes/learned-letters';
 import {
   MenuLettersData,
   TabAlphabet,
@@ -31,16 +32,14 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
   mobileQuery: MediaQueryList;
 
   @ViewChild('containerDetail') containerDetail: ElementRef;
+  @ViewChild('contGrid')        contGrid:        ElementRef;
   @ViewChild(MatAccordion)      accordion:       MatAccordion;
 
-  styles: {};
-  @ViewChild('contGrid') contGrid: ElementRef;
-  data:           WordsAndLetters;
+  data:           InitialData;
   learneds:       LearnedLetters[];
   userData:       MenuLettersData;
   letters:        string[] = [];
   words:          string[] = [];
-  storage:        boolean;
   selected:       boolean;
   showC:          boolean;
   speaking:       boolean;
@@ -67,7 +66,7 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
     private genDate:           GenerateDatesService,
     private detMobile:         DetectMobileService,
     private _storage:          LocalStorageService,
-    private getData:           GetDataService,
+    private getData:           GetInitialDataService,
     private _sendData:         SdLettersMenuService,
     private router:            Router,
   ) {
@@ -76,9 +75,9 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.getData.getWordsAndLetters()
+    this.getData.getInitialData()
       .subscribe(
-        (data: WordsAndLetters) => {
+        (data: InitialData) => {
           this.data = data;
           this.setInitialData(this.data);
           this.instructions('y');
@@ -103,7 +102,7 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
 
 
-  setInitialData = (data: WordsAndLetters) => {
+  setInitialData = (data: InitialData) => {
 
     const words          = data.words;
     const letters        = data.letters;
