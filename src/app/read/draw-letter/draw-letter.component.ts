@@ -188,9 +188,7 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
   next = (ev) => {
 
     this.addFinalTime();
-    // this.data.push(JSON.parse(JSON.stringify(this.userData)));
     this.data.push(this.userData);
-    console.log(this.data);
 
 
     const nextIndex = this.letters.indexOf(this.currentLetter) + 1;

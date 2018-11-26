@@ -216,7 +216,6 @@ export class PronounceLetterComponent implements OnInit, OnDestroy {
     const id      = this._storage.getElement('user')['userId'];
     this.userData = new PronounceLetterData(id, t.fullTime, 'N/D', t.fullDate, this.letter, [], []);
 
-    console.log(this.userData);
   }
 
 
@@ -239,7 +238,6 @@ export class PronounceLetterComponent implements OnInit, OnDestroy {
 
     const x = new Historial(startRecord, finalRecord, sentence, state);
     this.userData.historial.push(x);
-    console.log(this.userData);
 
   }
 
