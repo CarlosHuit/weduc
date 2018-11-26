@@ -10,14 +10,10 @@ import { LocalStorageService    } from '../../services/local-storage.service';
 import { InitialData            } from '../../classes/initial-data';
 import { LearnedLetters         } from '../../classes/learned-letters';
 import {
-  MenuLettersData,
-  TabAlphabet,
-  Times,
-  LettersHeard,
-  TabLearnedLetters,
-  Sort,
-  PreviewLetter,
-  Syllable
+  MenuLettersData, TabAlphabet,
+  TabLearnedLetters, Syllable,
+  PreviewLetter, LettersHeard,
+  Times, Sort,
 } from '../../classes/menu-letters-data';
 
 

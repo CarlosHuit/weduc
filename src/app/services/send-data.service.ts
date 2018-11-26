@@ -7,7 +7,7 @@ import { throwError       } from 'rxjs';
 import { DrawLetterData   } from '../interfaces/draw-letter-data';
 import { GetTokenService  } from '../services/get-token.service';
 import { MenuLettersData  } from '../classes/menu-letters-data';
-import { LearnedLetters   } from '../interfaces/words-and-letters';
+import { LearnedLetters   } from '../classes/learned-letters';
 import { PronounceLetter  } from '../interfaces/pronounce-letter';
 import { SelectWords      } from '../interfaces/select-words';
 
