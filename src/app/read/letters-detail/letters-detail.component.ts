@@ -58,7 +58,6 @@ export class LettersDetailComponent implements OnInit {
     private genDates: GenerateDatesService,
     private speech:   SpeechSynthesisService,
     private _sendData: SdLettersDetailService,
-
   ) {
     this.letterParam    = this._route.snapshot.paramMap.get('letter');
     this.similarLetters = this._storage.getElement(`${this.letterParam.toLowerCase()}_sl`);
@@ -358,15 +357,13 @@ export class LettersDetailComponent implements OnInit {
   }
 
   sendDataToServer = () => {
-    console.log(this.Data);
+
     this._sendData.sendLettersDetailData(this.Data)
       .subscribe(
         val => {const t = val; },
         err => {const w = err; },
       );
+
   }
-
-
-
 
 }
