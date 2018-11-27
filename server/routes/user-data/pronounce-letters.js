@@ -6,7 +6,7 @@ import { nameProject } from '../../config'
 
 
 const app   = express.Router()
-const debug = new Debug(`${nameProject}: identify-letter`)
+const debug = new Debug(`${nameProject}: pronounce-letters`)
 
 
 app.post('/', verifyToken, validateUser, async (req, res) => {
