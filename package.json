@@ -14,10 +14,14 @@
     "build": "concurrently -r \"npm run build:client \" \"npm run build:server\"",
     "build:client": "ng build --prod --base-href 'https://carloshuit.github.io/weduc/' ",
     "build:server": "babel server --out-dir dist/server",
-    "postinstall": "concurrently -r \"ng build --prod\" \"build:server\"",
+    "postinstall": "concurrently -r \"ng build --prod\" \"npm run build:server\"",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
+  },
+  "engines": {
+    "node": "10.13.0",
+    "npm": "6.4.1"
   },
   "private": true,
   "dependencies": {
