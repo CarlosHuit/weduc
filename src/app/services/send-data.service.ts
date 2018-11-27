@@ -53,18 +53,6 @@ export class SendDataService {
   }
 
 
-  sendPronounceLetterData = (obj: PronounceLetter[]) => {
-
-    const token = this.getToken.getToken();
-    const url   = urljoin(this.apiUrl, `identify-letter${token}`);
-    const data  = JSON.stringify(obj);
-
-    return this.http.post(url, data, this.httpOptions)
-    .pipe( catchError(this.handleError) );
-
-  }
-
-
   private handleError (error: HttpErrorResponse) {
     const msg = `Error Status Code: ${error.status}. \n Message: ${error.error.message} \n Error: ${error.error.error}`;
     console.error(msg);

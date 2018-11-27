@@ -9,7 +9,7 @@ import {
   IdentifyLetter, Combinations, UserProgress
 } from './routes'
 
-import { lettersMenu, lettersDetail, Game, DrawLetters, FindLetters, SelectWords } from './routes/user-data'
+import { lettersMenu, lettersDetail, game, drawLetters, findLetters, selectWords, pronounceLetters } from './routes/user-data'
 
 const app = express()
 const compress = compression()
@@ -36,12 +36,13 @@ app.use('/api/auth/user',           user              )
 app.use('/api/initial-data',        InitialData       )
 
 
-app.use('/api/data/letters-menu',    lettersMenu      )
-app.use('/api/data/letters-detail',  lettersDetail    )
-app.use('/api/data/game',            Game             )
-app.use('/api/data/draw-letters',    DrawLetters      )
-app.use('/api/data/find-letters',    FindLetters      )
-app.use('/api/data/select-words',    SelectWords      )
+app.use('/api/data/letters-menu',      lettersMenu      )
+app.use('/api/data/letters-detail',    lettersDetail    )
+app.use('/api/data/game',              game             )
+app.use('/api/data/draw-letters',      drawLetters      )
+app.use('/api/data/find-letters',      findLetters      )
+app.use('/api/data/select-words',      selectWords      )
+app.use('/api/data/pronounce-letters', pronounceLetters )
 
 
 app.use('/api/letters',             letter            )

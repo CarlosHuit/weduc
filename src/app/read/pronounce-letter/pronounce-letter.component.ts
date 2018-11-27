@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router       } from '@angular/router';
 import { SpeechRecognitionService     } from '../../services/speech-recognition.service';
 import { SpeechSynthesisService       } from '../../services/speech-synthesis.service';
-import { SendDataService              } from '../../services/send-data.service';
+import { SdPronounceLetterService     } from '../../services/send-user-data/sd-pronounce-letter.service';
 import { GenerateDatesService         } from '../../services/generate-dates.service';
 import { LocalStorageService          } from '../../services/local-storage.service';
 import { PronounceLetterData, Historial } from '../../classes/pronounce-letter-data';
@@ -33,10 +33,10 @@ export class PronounceLetterComponent implements OnInit, OnDestroy {
 
   constructor(
     private _recognition: SpeechRecognitionService,
+    private _sendData:    SdPronounceLetterService,
     private _synthesis:   SpeechSynthesisService,
     private _dates:       GenerateDatesService,
     private _storage:     LocalStorageService,
-    private _sendData:    SendDataService,
     private _route:       ActivatedRoute,
     private router:       Router,
   ) {
@@ -153,7 +153,7 @@ export class PronounceLetterComponent implements OnInit, OnDestroy {
     const url    = `/leer/adivina-la-letra/${this.letterParam}`;
     const speak  = this._synthesis.speak('"Bien Hecho!"', .85);
 
-    speak.addEventListener('end', e => this.router.navigateByUrl(url) );
+    // speak.addEventListener('end', e => this.router.navigateByUrl(url) );
 
   }
 
@@ -244,11 +244,11 @@ export class PronounceLetterComponent implements OnInit, OnDestroy {
 
   sendData = (): void => {
     console.log(this.Data);
-    // this._sendData.sendPronounceLetterData(this.Data)
-    //   .subscribe(
-    //     res =>  console.log(res),
-    //     err =>  console.log(err)
-    //   );
+    this._sendData.sendPronounceLettersData(this.Data)
+      .subscribe(
+        res => { const e = res; },
+        err => { const x = err; }
+      );
   }
 
 
