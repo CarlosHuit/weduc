@@ -16,7 +16,6 @@ export { default as UserProgress    } from './user-progress'
 
 export { default as Target         } from './data/target'
 export { default as GuessLetter    } from './data/guess-letter'
-export { default as DrawLetter     } from './data/draw-letter'
 export { default as CompleteWord   } from './data/complete-word'
 export { default as FindLetter     } from './data/find-letter'
 export { default as SelectWords    } from './data/select-words'

@@ -5,7 +5,7 @@ import { HandwritingComponent             } from '../handwriting/handwriting.com
 import { BoardComponent                   } from '../board/board.component';
 import { SpeechSynthesisService           } from '../../services/speech-synthesis.service';
 import { GenerateDatesService             } from '../../services/generate-dates.service';
-import { SendDataService                  } from '../../services/send-data.service';
+import { SdDrawLettersService             } from '../../services/send-user-data/sd-draw-letters.service';
 import { DetectMobileService              } from '../../services/detect-mobile.service';
 import { LocalStorageService              } from '../../services/local-storage.service';
 import { DrawLetterData                   } from '../../interfaces/draw-letter-data';
@@ -48,7 +48,7 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
     private router:             Router,
     private speech:             SpeechSynthesisService,
     private genDates:           GenerateDatesService,
-    private sendData:           SendDataService,
+    private _sendData:           SdDrawLettersService,
     private dMobile:            DetectMobileService,
     private _storage:           LocalStorageService
   ) {
@@ -210,7 +210,7 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
     } else {
 
       this.success = true;
-      this.sendDrawLetterData(this.data);
+      this.sendDrawLetterData();
 
       const speech = this.speech.speak(msg);
       speech.addEventListener('end', this.redirect);
@@ -310,14 +310,14 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
     }
   }
 
-  sendDrawLetterData = (obj: DrawLetterData[]) => {
-    // this.sendData.sendDrawLetterData(obj)
-    //   .subscribe(
-    //     val => console.log(val),
-    //     err => console.log(err)
-    //   );
+  sendDrawLetterData = () => {
 
-    console.log(this.data);
+    this._sendData.sendDrawLetters(this.data)
+      .subscribe(
+        val => { const t = val; },
+        err => { const e = err; }
+      );
+
   }
 
 }
