@@ -27,9 +27,23 @@ if ( process.env.NODE_ENV === 'development' ) {
   })
 }
 
+
 if ( process.env.NODE_ENV === 'production' ) {
-  app.use(express.static(path.join(process.cwd(), 'dist')))
+  app.use(express.static(path.join(process.cwd(), 'dist/weduc')))
+
+  // app.use(express.static(__dirname + '/dist/weduc'));
+  
+  // app.get('/', (req, res) => {
+
+  //   res.sendFile(path.join(__dirname+'/dist/weduc/index.html'));
+      
+  // });
+
 }
+
+
+
+
 
 app.use('/api/auth',                auth              )
 app.use('/api/auth/user',           user              )
