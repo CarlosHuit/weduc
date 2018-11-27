@@ -4,12 +4,9 @@ import urljoin from 'url-join';
 import { environment      } from '../../environments/environment';
 import { catchError, map  } from 'rxjs/operators';
 import { throwError       } from 'rxjs';
-import { DrawLetterData   } from '../interfaces/draw-letter-data';
 import { GetTokenService  } from '../services/get-token.service';
-import { MenuLettersData  } from '../classes/menu-letters-data';
 import { LearnedLetters   } from '../classes/learned-letters';
 import { PronounceLetter  } from '../interfaces/pronounce-letter';
-import { SelectWords      } from '../interfaces/select-words';
 
 @Injectable({
   providedIn: 'root'
