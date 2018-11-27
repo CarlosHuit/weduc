@@ -112,7 +112,7 @@
   cursor:           pointer;
 }
 
-@media (max-height: 600px) and (orientation: portrait) {
+@media (max-height: 640px) and (orientation: portrait) {
 
   .container {
     overflow: auto;
@@ -126,7 +126,7 @@
 
 }
 
-@media (min-height: 320px) and (orientation: landscape) {
+@media (min-width: 320px) and (orientation: landscape) {
 
   .container.mobile {
     overflow: auto;
