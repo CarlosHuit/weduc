@@ -5,6 +5,7 @@ import { User                } from '../classes/user';
 import { AuthService         } from '../services/auth.service';
 import { ErrorStateMatcher   } from '@angular/material/core';
 import { DetectMobileService } from '../services/detect-mobile.service';
+import { Router } from '@angular/router';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -27,7 +28,8 @@ export class SignupComponent implements OnInit, OnDestroy {
   constructor(
     private fb:           FormBuilder,
     private authService:  AuthService,
-    private _mobile:      DetectMobileService
+    private _mobile:      DetectMobileService,
+    private _router:      Router
   ) {
   }
 
@@ -76,6 +78,10 @@ export class SignupComponent implements OnInit, OnDestroy {
     return this._mobile.isMobile();
   }
 
+  goToHome = () => {
+    this._router.navigateByUrl('/');
+  }
+
   onSubmit() {
 
 
@@ -87,7 +93,6 @@ export class SignupComponent implements OnInit, OnDestroy {
 
       const { firstName, lastName, email, password, password2} = this.signupForm.value;
       const user = new User(email, password, password2, firstName, lastName);
-      console.log(user);
 
       this.authService.signup(user)
         .subscribe(

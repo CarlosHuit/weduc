@@ -4,6 +4,7 @@ import { User                } from '../classes/user';
 import { AuthService         } from '../services/auth.service';
 import { ErrorStateMatcher   } from '@angular/material/core';
 import { DetectMobileService } from '../services/detect-mobile.service';
+import { Router } from '@angular/router';
 
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -30,7 +31,8 @@ export class SigninComponent implements OnInit, OnDestroy {
 
   constructor(
     private authService: AuthService,
-    private _mobile:     DetectMobileService
+    private _mobile:     DetectMobileService,
+    private _router:     Router
   ) { }
 
   ngOnInit() {
@@ -62,6 +64,9 @@ export class SigninComponent implements OnInit, OnDestroy {
     return this._mobile.isMobile();
   }
 
+  goToHome = () => {
+    this._router.navigateByUrl('');
+  }
 
   onSubmit() {
 
