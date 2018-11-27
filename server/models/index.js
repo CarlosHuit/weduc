@@ -15,7 +15,6 @@ export { default as Target         } from './data/target-model'
 export { default as Game           } from './data/game-model'
 export { default as GuessLetter    } from './data/guess-letter-model'
 export { default as CompleteWord   } from './data/complete-word-model'
-export { default as SelectWords    } from './data/select-words-model'
 export { default as SelectImages   } from './data/select-images-model'
 export { default as IdentifyLetter } from './data/identify-letter-model'
 

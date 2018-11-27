@@ -5,11 +5,11 @@ import path from 'path'
 import { 
   auth, user, letter, word, coordinates, similarLetters, saveData, Syllables,
   Target, GuessLetter,
-  CompleteWord, SoundLetters, Courses, InitialData, FindLetter, SelectWords, SelectImages,
+  CompleteWord, SoundLetters, Courses, InitialData, SelectImages,
   IdentifyLetter, Combinations, UserProgress
 } from './routes'
 
-import { lettersMenu, lettersDetail, Game, DrawLetters, FindLetters } from './routes/user-data'
+import { lettersMenu, lettersDetail, Game, DrawLetters, FindLetters, SelectWords } from './routes/user-data'
 
 const app = express()
 const compress = compression()
@@ -41,6 +41,7 @@ app.use('/api/data/letters-detail',  lettersDetail    )
 app.use('/api/data/game',            Game             )
 app.use('/api/data/draw-letters',    DrawLetters      )
 app.use('/api/data/find-letters',    FindLetters      )
+app.use('/api/data/select-words',    SelectWords      )
 
 
 app.use('/api/letters',             letter            )
@@ -60,7 +61,6 @@ app.use('/api/user-progress',       UserProgress      )
 app.use('/api/data/target',          Target           )
 app.use('/api/data/guess-letter',    GuessLetter      )
 app.use('/api/data/complete-word',   CompleteWord     )
-app.use('/api/data/select-words',    SelectWords      )
 app.use('/api/data/select-images',   SelectImages     )
 app.use('/api/data/identify-letter', IdentifyLetter   )
 

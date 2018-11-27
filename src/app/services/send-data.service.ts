@@ -56,18 +56,6 @@ export class SendDataService {
   }
 
 
-  sendSelectWordsData = (obj: SelectWords[]) => {
-
-    const token = this.getToken.getToken();
-
-    const url = urljoin(this.apiUrl, `select-words${token}`);
-    const data = JSON.stringify(obj);
-
-    return this.http.post(url, data, this.httpOptions)
-    .pipe( catchError(this.handleError) );
-
-  }
-
   sendPronounceLetterData = (obj: PronounceLetter[]) => {
 
     const token = this.getToken.getToken();

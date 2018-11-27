@@ -4,11 +4,11 @@ import { GetWordsService              } from '../../services/get-words/get-words
 import { HttpResponse                 } from '@angular/common/http';
 import { SpeechSynthesisService       } from '../../services/speech-synthesis.service';
 import { GenerateDatesService         } from '../../services/generate-dates.service';
-import { SendDataService              } from '../../services/send-data.service';
 import { DetectMobileService          } from '../../services/detect-mobile.service';
 import { LocalStorageService          } from '../../services/local-storage.service';
 import { RandomWords                  } from '../../classes/random-words';
 import { SelectWordsData, Historial   } from '../../classes/select-words-data';
+import { SdSelectWordsService } from 'src/app/services/send-user-data/sd-select-words.service';
 
 
 
@@ -45,7 +45,7 @@ export class SelectWordsComponent implements OnInit, OnDestroy {
     private router:    Router,
     private speech:    SpeechSynthesisService,
     private genDates:  GenerateDatesService,
-    private _sendData: SendDataService,
+    private _sendData: SdSelectWordsService,
     private _mobile:   DetectMobileService,
     private _storage:  LocalStorageService
   ) {
@@ -271,12 +271,11 @@ export class SelectWordsComponent implements OnInit, OnDestroy {
 
   sendSelecWordsData = () => {
 
-    console.log(this.Data);
-    // this._sendData.sendSelectWordsData(this.Data)
-    //   .subscribe(
-    //     (res) => console.log(res),
-    //     (err) => console.log(err)
-    //   );
+    this._sendData.sendSelectWordsData(this.Data)
+      .subscribe(
+        val => { const t = val; },
+        err => { const x = err; }
+      );
 
     }
 

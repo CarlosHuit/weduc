@@ -77,10 +77,10 @@ const TabLearnedLetters = new Schema(
 
 
 const LettersMenuSchema = new Schema({
-  user_id:      {type: String, required: true, },
-  startTime:    {type: String, required: true},
-  finalTime:    {type: String, required: true},
-  date:         {type: String, required: true},
+  user_id:      {type: String, required: true, maxlength: 100 },
+  startTime:    {type: String, required: true, maxlength: 20  },
+  finalTime:    {type: String, required: true, maxlength: 20  },
+  date:         {type: String, required: true, maxlength: 20  },
   tab_alphabet: TabAlphabet,
   tab_learned:  TabLearnedLetters,
 });
