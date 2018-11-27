@@ -56,21 +56,6 @@ export class SendDataService {
   }
 
 
-  sendDrawLetterData = (obj: DrawLetterData[]) => {
-
-    const token = this.getToken.getToken();
-    const url   = urljoin(this.apiUrl, `draw-letter${token}`);
-    const data  = JSON.stringify(obj);
-
-    return this.http.post(url, data, this.httpOptions)
-      .pipe(
-        catchError(this.handleError)
-      );
-  }
-
-
-
-
   sendSelectWordsData = (obj: SelectWords[]) => {
 
     const token = this.getToken.getToken();
