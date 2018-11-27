@@ -3,7 +3,7 @@ import { Router, ActivatedRoute       } from '@angular/router';
 import { GetDataService               } from '../../services/get-data.service';
 import { SpeechSynthesisService       } from '../../services/speech-synthesis.service';
 import { GenerateDatesService         } from '../../services/generate-dates.service';
-import { SendDataService              } from '../../services/send-data.service';
+import { SdFindLettersService         } from '../../services/send-user-data/sd-find-letters.service';
 import { DetectMobileService          } from '../../services/detect-mobile.service';
 import { PreloadAudioService          } from '../../services/preload-audio.service';
 import { LocalStorageService          } from '../../services/local-storage.service';
@@ -36,16 +36,16 @@ export class FindLetterComponent implements OnInit, OnDestroy {
   selection     = {};
 
   constructor(
-    private router:   Router,
-    private _route:   ActivatedRoute,
-    private getData:  GetDataService,
-    private speech:   SpeechSynthesisService,
-    private genDates: GenerateDatesService,
-    private sendData: SendDataService,
-    private _mobile:  DetectMobileService,
-    private _sound:   PreloadAudioService,
-    private _storage: LocalStorageService,
-    private _shuffle: ShuffleService,
+    private router:    Router,
+    private _route:    ActivatedRoute,
+    private getData:   GetDataService,
+    private speech:    SpeechSynthesisService,
+    private genDates:  GenerateDatesService,
+    private _sendData: SdFindLettersService,
+    private _mobile:   DetectMobileService,
+    private _sound:    PreloadAudioService,
+    private _storage:  LocalStorageService,
+    private _shuffle:  ShuffleService,
   ) {
 
     this.loading      = true;
@@ -349,12 +349,11 @@ export class FindLetterComponent implements OnInit, OnDestroy {
 
   send = () => {
 
-    console.log(this.userData);
-    // this.sendData.sendGuessLetterData(this.userData)
-    //   .subscribe(
-    //     val => console.log(val),
-    //     err => console.log(err)
-    //   );
+    this._sendData.sendDrawLetters(this.userData)
+      .subscribe(
+        val => { const v = val; },
+        err => { const e = err; }
+      );
   }
 
 }

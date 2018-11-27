@@ -9,7 +9,7 @@ import {
   IdentifyLetter, Combinations, UserProgress
 } from './routes'
 
-import { lettersMenu, lettersDetail, Game, DrawLetters } from './routes/user-data'
+import { lettersMenu, lettersDetail, Game, DrawLetters, FindLetters } from './routes/user-data'
 
 const app = express()
 const compress = compression()
@@ -36,6 +36,13 @@ app.use('/api/auth/user',           user              )
 app.use('/api/initial-data',        InitialData       )
 
 
+app.use('/api/data/letters-menu',    lettersMenu      )
+app.use('/api/data/letters-detail',  lettersDetail    )
+app.use('/api/data/game',            Game             )
+app.use('/api/data/draw-letters',    DrawLetters      )
+app.use('/api/data/find-letters',    FindLetters      )
+
+
 app.use('/api/letters',             letter            )
 app.use('/api/guardar',             saveData          )
 app.use('/api/words',               word              )
@@ -48,15 +55,11 @@ app.use('/api/combinations',        Combinations      )
 app.use('/api/user-progress',       UserProgress      )
 
 
-app.use('/api/data/letters-menu',    lettersMenu      )
-app.use('/api/data/letters-detail',  lettersDetail    )
-app.use('/api/data/game',            Game             )
-app.use('/api/data/draw-letters',     DrawLetters      )
+
 
 app.use('/api/data/target',          Target           )
 app.use('/api/data/guess-letter',    GuessLetter      )
 app.use('/api/data/complete-word',   CompleteWord     )
-app.use('/api/data/find-letter',     FindLetter       )
 app.use('/api/data/select-words',    SelectWords      )
 app.use('/api/data/select-images',   SelectImages     )
 app.use('/api/data/identify-letter', IdentifyLetter   )
