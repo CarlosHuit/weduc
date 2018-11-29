@@ -87,7 +87,7 @@ export class FindLetterComponent implements OnInit, OnDestroy {
     this.totalWords = this.words.length;
 
     this.changeDates(this.words[0]);
-
+    this.preloadImage('s');
 
     this.loading = false;
     this.initUserData();
@@ -102,6 +102,7 @@ export class FindLetterComponent implements OnInit, OnDestroy {
 
     this.removeClass();
     this.changeDates(this.words[index]);
+
 
     const speech = this.speech.speak('Bien Hecho!', 0.85);
 
@@ -230,7 +231,15 @@ export class FindLetterComponent implements OnInit, OnDestroy {
 
 
 
-  generateUrlImage = (name: string) => `/assets/img-min/${name}-min.png`;
+  generateUrlImage = (name: string) => {
+    return `/assets/img-min/${name}-min.png`;
+  }
+
+  preloadImage = (name: string) => {
+    this.words.forEach(word => {
+      new Image().src = `/assets/img-min/${word}-min.png`;
+    });
+  }
 
   speak = () => {
     this.addCount(this.word, 'pressImage');
