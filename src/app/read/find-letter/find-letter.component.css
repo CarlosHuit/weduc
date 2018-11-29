@@ -207,7 +207,11 @@
   }
 
   .m-c-card-identify-letter {
-    margin: 15px auto;
+    margin: 5px;
+    width: calc( 100% - 10px);
+    height: calc( 100% - 10px);
+    min-height: unset;
+    box-sizing: border-box;
   }
 
 }

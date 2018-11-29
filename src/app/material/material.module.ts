@@ -19,7 +19,8 @@ import {
   MatOptionModule,
   MatTabsModule,
   MatCheckboxModule,
-  MatSliderModule
+  MatSliderModule,
+  MatProgressBarModule
 
 } from '@angular/material';
 
@@ -41,7 +42,8 @@ const modules = [
   MatDialogModule,
   MatTabsModule,
   MatCheckboxModule,
-  MatSliderModule
+  MatSliderModule,
+  MatProgressBarModule
 
 ];
 

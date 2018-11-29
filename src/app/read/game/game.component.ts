@@ -41,6 +41,9 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   userData:         GameData;
   mcGameEl:         HTMLDivElement;
   lettersData:      RandomSimilarLetters;
+  totalCorrects:    number;
+
+  lastID: string;
 
 
 
@@ -88,6 +91,7 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
           // prepararDatos
           this.letterIDs   = this.prepareData(this.lettersData.lowerCase);
           this.letters     = this.joinLetters(this.letterIDs);
+          this.totalCorrects = this.countPendings();
 
           setTimeout(() => this.loading = false, 0);
 
@@ -219,12 +223,21 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
       const speak = this.speechService.speak(msg);
 
 
-      setTimeout(e => this.removeElement(id), 395);
 
-        setTimeout(e => {
-        const index = this.letters.indexOf(id);
-        const i = index > -1 ? this.letters.splice(index, 1) : false;
-      }, 600);
+      this.removeElement(this.lastID);
+      this.lastID = '';
+
+
+      setTimeout(e => this.removeElement(id), 395);
+      this.lastID = id;
+
+
+      setTimeout(e =>  this.letters.indexOf(id) > -1 ? this.letters.splice(this.letters.indexOf(id), 1) : false, 500);
+
+      // setTimeout(e => {
+      //   const index = this.letters.indexOf(id);
+      //   const i = index > -1 ? this.letters.splice(index, 1) : false;
+      // }, 600);
 
       speak.addEventListener('end', () => {
 
@@ -259,6 +272,12 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
+  progress = (): number => {
+    const total = 100;
+    const t = total - (( this.countPendings() * 100 ) / this.totalCorrects);
+    return t;
+  }
+
   countPendings = () => {
     let count = 0;
     this.letters.forEach(x => {
@@ -277,6 +296,7 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     this.letter    = this.letterParam.toUpperCase();
     this.letterIDs = this.prepareData(this.lettersData.upperCase);
     this.letters   = this.joinLetters(this.letterIDs);
+    this.totalCorrects = this.countPendings();
 
     const speak = this.speechService.speak('"Bien Hecho"', .9);
     speak.addEventListener('end', e => {

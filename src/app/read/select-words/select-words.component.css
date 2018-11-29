@@ -56,7 +56,7 @@
   min-width:  300px;
   height:     96%;
   min-height: 420px;
-  max-height: 600px;
+  max-height: 520px;
   background: white;
   padding: 0;
   position: relative;
@@ -65,19 +65,10 @@
 
 .m-c-container-words {
   width:              95%;
-  border:             1px solid #b1b1b1;
-  background-color: #ebedee;
-  padding:            50px 2px;
+  flex-wrap:          wrap;
 }
 
-.m-c-words {
-  width:           100%;
-  display:         flex;
-  flex-wrap:       wrap;
-  justify-content: center;
-}
-
-.m-c-words .word {
+.word {
   font-size:      calc(100vw * .07);
   margin:         3px;
   padding:        6px 20px;
@@ -95,8 +86,8 @@
 
 }
 
-.m-c-words .correct   { background:  #239B56;  } /* rgb(2, 170, 86) */
-.m-c-words .incorrect { background: rgb(255, 83, 60); }
+.m-c-container-words .correct   { background:  #239B56;  } /* rgb(2, 170, 86) */
+.m-c-container-words .incorrect { background: rgb(255, 83, 60); }
 
 
 @media (min-width: 320px) and (orientation: landscape) {
@@ -126,7 +117,11 @@
   }
 
   .m-c-select-words {
-    margin: 10px auto;
+    margin:     10px;
+    min-height: unset;
+    width:      calc( 100% - 20px );
+    height:     calc( 100% - 20px );
+    box-sizing: border-box;
   }
 
 }

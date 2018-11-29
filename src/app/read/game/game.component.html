@@ -1,5 +1,7 @@
 <div class="container" [class.desktop]="!isMobile()" >
 
+
+  <!-- desktop version -->
   <div #mcGame class="d-c-game hide" [class.show]="showGame" *ngIf="!isMobile()" >
 
     <div class="d-c-toolbar" #toolbGame >
@@ -38,15 +40,28 @@
     
   </div>
 
+
+
+  <!-- mobile version -->
   <div #mcGame class="m-c-game hide" [class.show]="showGame" *ngIf="isMobile()" >
 
-    <div class="m-c-toolbar" #toolbGame >
+
+    <div class="m-c-toolbar" style="position: relative;" #toolbGame >
+
+      <mat-progress-bar
+        *ngIf="!loading && isMobile()" style="position: absolute; top: 0px; left: 0;"
+        color="warn" [mode]="determinate" [value]="progress()" >
+      </mat-progress-bar>
+
       <div class="m-c-count">
         <span class="failed" > {{failedCount}} </span>
         <span class="succes" > {{succesCount}} </span>
       </div>
-      <div class="help resize" (click)="instructions('y')" >?</div>
+      <div class="help center" (click)="instructions('y')" >?</div>
+
     </div>
+
+
 
     <div class="m-c-letters" *ngIf="loading === false" id="s" #mcLetters>
 
@@ -71,7 +86,6 @@
     </div>
     
     <app-spinner-loading *ngIf="loading === true" ></app-spinner-loading>
-    <canvas #canvas id="canvas">no</canvas>
 
     
   </div>

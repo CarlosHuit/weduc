@@ -148,7 +148,9 @@
 
   .m-c-card-signin {
     height: 500px;
-    margin: 10px auto;
+    margin: 10px 10px;
+    box-sizing: border-box;
+    width: calc(100% - 20px);
   }
 
 }

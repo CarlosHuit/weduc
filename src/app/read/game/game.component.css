@@ -77,14 +77,14 @@
 }
 
 .m-c-toolbar {
-  background: #1a6080;
-  display: flex;
+  background:    #1a5e7e;
+  display:         flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 0 10px;
-  box-sizing: border-box;
-  height: 40px;
-  width: 100%;
+  align-items:     flex-end;
+  padding:         0px 10px 4px 10px;
+  box-sizing:      border-box;
+  height:          40px;
+  width:           100%;
 }
 
 .m-c-count {
@@ -93,8 +93,8 @@
 
 .m-c-count span {
   color: white;
-  width: 25px;
-  height: 25px;
+  width: 24px;
+  height: 24px;
   border: 1.5px solid rgba(255, 255, 255, 0.8);
   display: flex;
   justify-content: center;
@@ -105,29 +105,27 @@
 }
 
 .m-c-count .succes {
-  background-color: rgb(0, 150, 25);
+  background-color: #239B56;
 }
 
 .m-c-count .failed {
-  background-color: rgb(255, 39, 39);
+  background-color: #f44336;
 }
 
 .help {
-  width: 28px;
-  height: 28px;
-  border-radius: 2px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  font-weight: bolder;
-  font-size: 21px;
-  outline: none;
-  cursor: pointer;
-  box-sizing: border-box;
-  border: 1.5px solid rgba(255, 255, 255, .81);
-  background: linear-gradient(to right, #fe4344 40%, #f15737 70%, #f1743c 100%);
-  transition: 100ms;
+  width:          25px;
+  height:         25px;
+  border-radius:  2px;
+  color:        white;
+  font-weight:    bolder;
+  font-size:      19px;
+  outline:        none;
+  cursor:         pointer;
+  box-sizing:     border-box;
+  border:         1.5px solid rgba(255, 255, 255, .81);
+  background:     linear-gradient(to right, #fe4344 40%, #f15737 70%, #f1743c 100%);
+  transition:     100ms;
+  margin-bottom:  2px;
 }
 
 .m-c-letters {
@@ -141,6 +139,7 @@
   justify-content: space-around;
   overflow: auto;
   z-index: 20;
+  background:  #141414;
 }
 
 .m-c-letter {

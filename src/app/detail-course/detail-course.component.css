@@ -94,6 +94,8 @@
 .container-background-video {
   background-color: rgba(34, 34, 34, 1);
   width: 100%;
+  border-top: 4vh solid black;
+  border-bottom: 4vh solid black;
 }
 
 .video-responsive iframe {
@@ -208,6 +210,7 @@
     background-color: rgba(34, 34, 34, 1);
     width: 100%;
     height: calc(100vh - 56px);
+    border: 0;
   }
 
   .unsetHeight {

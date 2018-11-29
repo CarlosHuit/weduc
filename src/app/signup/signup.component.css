@@ -121,7 +121,8 @@
 
   .m-c-card-signup {
     height: 560px;
-    margin: 10px auto;
+    margin: 10px;
+    width: calc( 100% - 20px);
   }
 
 }

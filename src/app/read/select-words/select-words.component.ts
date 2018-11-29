@@ -37,6 +37,7 @@ export class SelectWordsComponent implements OnInit, OnDestroy {
   corrects    =   {};
   selections  =   {};
   urlToRedirect:  string;
+  totalCorrects: number;
 
 
   constructor(
@@ -84,6 +85,7 @@ export class SelectWordsComponent implements OnInit, OnDestroy {
     this.letterToVal  = this.letterParam.toLowerCase();
     this.messyWords   = this.words.lowerCase.words;
     this.correctWords = this.words.lowerCase.corrects;
+    this.totalCorrects = this.correctWords.length;
 
     this.initUserData();
     this.loading = false;
@@ -153,6 +155,7 @@ export class SelectWordsComponent implements OnInit, OnDestroy {
     this.letterToVal  = this.letterParam.toUpperCase();
     this.messyWords   = this.words.upperCase.words;
     this.correctWords = this.words.upperCase.corrects;
+    this.totalCorrects = this.correctWords.length;
 
     const speak = this.speech.speak('Bien Hecho');
     speak.addEventListener('end', () => {
