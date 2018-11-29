@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute       } from '@angular/router';
-import { GetDataService               } from '../../services/get-data.service';
 import { SpeechSynthesisService       } from '../../services/speech-synthesis.service';
 import { GenerateDatesService         } from '../../services/generate-dates.service';
 import { SdFindLettersService         } from '../../services/send-user-data/sd-find-letters.service';
@@ -10,6 +9,7 @@ import { LocalStorageService          } from '../../services/local-storage.servi
 import { ShuffleService               } from '../../services/shuffle/shuffle.service';
 import { Words                        } from '../../classes/words';
 import { FindLetterData, Options, Selection } from '../../classes/find-letter-data';
+import { GetWordsService              } from '../../services/get-data/get-words.service';
 
 
 @Component({
@@ -38,7 +38,7 @@ export class FindLetterComponent implements OnInit, OnDestroy {
   constructor(
     private router:    Router,
     private _route:    ActivatedRoute,
-    private getData:   GetDataService,
+    private _getData:   GetWordsService,
     private speech:    SpeechSynthesisService,
     private genDates:  GenerateDatesService,
     private _sendData: SdFindLettersService,
@@ -56,7 +56,7 @@ export class FindLetterComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.setValues();
+    this.getData();
     this._sound.loadAudio();
     window.addEventListener('resize', this.isMobile);
 
@@ -69,18 +69,14 @@ export class FindLetterComponent implements OnInit, OnDestroy {
 
   }
 
-  setValues = () => {
+  getData = (): void => {
 
-    if (Storage && this.words !== null) {
+    this._getData.getWordsOfLetter(this.letterParam)
+      .subscribe(
+        (data: Words) => this.configInitialData(data.words),
+        (err) => console.log(err)
 
-      this.configInitialData(this.words.slice());
-
-    } else {
-
-      this.getServerData();
-
-    }
-
+      );
   }
 
   configInitialData = (words: string[]) => {
@@ -134,29 +130,6 @@ export class FindLetterComponent implements OnInit, OnDestroy {
 
   }
 
-  getServerData = (): void => {
-
-    this.getData.getWords(this.letterParam)
-      .subscribe(
-        (word: Words) => {
-
-          if (word.words === undefined) {
-
-            this.speech.speak('ha habido un error');
-
-          } else {
-
-            this.configInitialData(word.words);
-            const l = Storage ? this._storage.saveElement(`${this.letterParam}_w`, this.words) : null;
-
-          }
-
-        },
-
-        (err) => console.log(err)
-
-      );
-  }
 
   isMobile = (): boolean => {
 

@@ -2,6 +2,7 @@ import express from 'express'
 import Debug from 'debug'
 import { SimilarLetters } from '../models';
 import { nameProject } from '../config';
+import { verifyToken, validateUser } from '../middleware'
 
 const app = express.Router()
 const debug = new Debug(`${nameProject}: similarLetters`)
@@ -51,10 +52,18 @@ app.get('/:letter', async (req, res) => {
 
       debug(`Mostrando las letras similares: ${letter}`)
 
-      res.status(200).json({
-        lowerCase: findSimilarLettersLower.similarLetters,
-        upperCase: findSimilarLettersUpper.similarLetters
-      })
+      const x = [
+        {
+          letter:         letterLower,
+          similarLetters: findSimilarLettersLower.similarLetters
+        },
+        {
+          letter:         letterUpper,
+          similarLetters: findSimilarLettersUpper.similarLetters
+        }
+      ]
+
+      res.status(200).json(x)
 
     } else {
 
@@ -79,7 +88,7 @@ app.get('/:letter', async (req, res) => {
 })
 
 
-app.get('/random/:letter', async (req, res) => {
+app.get('/random/:letter', verifyToken, validateUser, async (req, res) => {
 
   const letterLowerCase = req.params.letter.toLowerCase();
   const letterUpperCase = req.params.letter.toUpperCase();
@@ -137,7 +146,9 @@ app.get('/random/:letter', async (req, res) => {
 
     res.status(200).json({
       upperCase: upper,
-      lowerCase: lower
+      lowerCase: lower,
+      u: lettersUpperCase,
+      l: lettersLowerCase,
     })
 
 

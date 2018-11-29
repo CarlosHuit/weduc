@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { CoordinatesService, Coordinates  } from '../../services/coordinates.service';
 import { Router, ActivatedRoute           } from '@angular/router';
 import { HandwritingComponent             } from '../handwriting/handwriting.component';
 import { BoardComponent                   } from '../board/board.component';
@@ -8,9 +7,10 @@ import { GenerateDatesService             } from '../../services/generate-dates.
 import { SdDrawLettersService             } from '../../services/send-user-data/sd-draw-letters.service';
 import { DetectMobileService              } from '../../services/detect-mobile.service';
 import { LocalStorageService              } from '../../services/local-storage.service';
-import { DrawLetterData                   } from '../../interfaces/draw-letter-data';
 import { DrawLettersData, Board           } from '../../classes/draw-letter-data';
 import { ControlCanvas                    } from '../../classes/control-canvas';
+import { GetCoordinatesService            } from '../../services/get-data/get-coordinates.service';
+import { Coordinates                      } from '../../classes/coordinates';
 
 @Component({
   selector: 'app-draw-letter',
@@ -43,14 +43,14 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
   showGuidLines:  boolean;
 
   constructor(
-    private coordinatesService: CoordinatesService,
-    private _route:             ActivatedRoute,
-    private router:             Router,
-    private speech:             SpeechSynthesisService,
-    private genDates:           GenerateDatesService,
-    private _sendData:           SdDrawLettersService,
-    private dMobile:            DetectMobileService,
-    private _storage:           LocalStorageService
+    private _getData:    GetCoordinatesService,
+    private _route:      ActivatedRoute,
+    private router:      Router,
+    private speech:      SpeechSynthesisService,
+    private genDates:    GenerateDatesService,
+    private _sendData:   SdDrawLettersService,
+    private dMobile:     DetectMobileService,
+    private _storage:    LocalStorageService
   ) {
     this.letterParam   = this._route.snapshot.paramMap.get('letter');
     this.loading       = true;
@@ -78,23 +78,12 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
     this.letters.push(this.letterParam.toLowerCase());
     this.currentLetter = this.letters[0];
 
-    const val1 = this._storage.getElement(`${this.letterParam}_coo`);
-    const val2 = this._storage.getElement(`${this.letterParam}_coo`);
-
-    if (val1 !== null || val2 !== null) {
-
-      this.getLocalStorageData();
-
-    } else {
-
-      this.getCoordinates();
-
-    }
+    this.getCoordinates();
 
   }
 
   getCoordinates = () => {
-    this.coordinatesService.getCoordinates(this.letterParam)
+    this._getData.getCoordinates(this.letterParam)
       .subscribe(
         (coordinates: Coordinates) => {
 
@@ -106,17 +95,6 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
 
         }
       );
-  }
-
-  getLocalStorageData = () => {
-
-    this.coordinates        = this.coordinatesService.getCoordinatesOfStorage(this.letterParam);
-    this.currentCoordinates = this.coordinates.coordinates[this.currentLetter];
-    this.loading            = false;
-
-    setTimeout(() =>  this.showDraw = true , 10);
-    this.initUserData();
-
   }
 
   eventsControlCanvas = (ev: ControlCanvas) => {

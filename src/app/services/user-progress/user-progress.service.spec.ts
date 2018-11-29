@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { CoordinatesService } from './coordinates.service';
+import { UserProgressService } from './user-progress.service';
 
-describe('CoordinatesService', () => {
+describe('UserProgressService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: CoordinatesService = TestBed.get(CoordinatesService);
+    const service: UserProgressService = TestBed.get(UserProgressService);
     expect(service).toBeTruthy();
   });
 });

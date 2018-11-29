@@ -1,14 +1,14 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy, NgZone } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CoursesService         } from '../services/courses.service';
-import { Subjects               } from '../interfaces/subjects';
+import { Subjects               } from '../classes/subjects';
 import { DomSanitizer           } from '@angular/platform-browser';
 import { MatSnackBar            } from '@angular/material';
 import { DetectMobileService    } from '../services/detect-mobile.service';
 import { CdkTextareaAutosize    } from '@angular/cdk/text-field';
 import { AuthService            } from '../services/auth.service';
+import { User                   } from '../classes/user';
+import { GetCoursesService      } from '../services/get-data/get-courses.service';
 import { take } from 'rxjs/operators';
-import { User } from '../classes/user';
 
 @Component({
   selector: 'app-detail-course',
@@ -54,7 +54,7 @@ export class DetailCourseComponent implements OnInit, OnDestroy {
   constructor(
     private _sanitizer: DomSanitizer,
     private _route:     ActivatedRoute,
-    private _courses:   CoursesService,
+    private _courses:   GetCoursesService,
     private _mobile:    DetectMobileService,
     private _auth:      AuthService,
     private snackBar:   MatSnackBar,

@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router       } from '@angular/router';
-import { GetWordsService              } from '../../services/get-words/get-words.service';
 import { HttpResponse                 } from '@angular/common/http';
 import { SpeechSynthesisService       } from '../../services/speech-synthesis.service';
 import { GenerateDatesService         } from '../../services/generate-dates.service';
@@ -8,7 +7,8 @@ import { DetectMobileService          } from '../../services/detect-mobile.servi
 import { LocalStorageService          } from '../../services/local-storage.service';
 import { RandomWords                  } from '../../classes/random-words';
 import { SelectWordsData, Historial   } from '../../classes/select-words-data';
-import { SdSelectWordsService } from 'src/app/services/send-user-data/sd-select-words.service';
+import { SdSelectWordsService         } from '../../services/send-user-data/sd-select-words.service';
+import { GetWordsService              } from '../../services/get-data/get-words.service';
 
 
 
@@ -70,35 +70,12 @@ export class SelectWordsComponent implements OnInit, OnDestroy {
 
   setData = () => {
 
-    const x = this._storage.getElement('words');
-    const y = this._storage.getElement(`${this.letterParam}_w`);
-
-    if ( Storage && x !== null && y !== null ) {
-      this.getLocalStorageData();
-    } else {
-      this.getServerData();
-    }
-
-  }
-
-  getLocalStorageData = () => {
-
-    const x = this.getData.getAndMessUpWordsFromStorage( this.letterParam );
-    this.configData(x);
-
-  }
-
-  getServerData = () => {
-
-    this.getData.getRandomWords(this.letterParam)
+    this.getData.getRandomWords( this.letterParam )
       .subscribe(
-        (res: HttpResponse<RandomWords>) => {
-
-          const v = res.status === 200 ? this.configData(res.body) : console.log('Imposible obtener los datos');
-
-        },
+        (res: RandomWords) => this.configData(res),
         (err) => console.log(err)
       );
+
   }
 
   configData = (data: RandomWords) => {

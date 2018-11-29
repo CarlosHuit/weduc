@@ -1,11 +1,12 @@
 import { Component, OnDestroy, ViewChild, ElementRef, AfterViewInit, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { CoordinatesService, Coordinates } from '../../services/coordinates.service';
+import { GetCoordinatesService           } from '../../services/get-data/get-coordinates.service';
 import { SpeechSynthesisService          } from '../../services/speech-synthesis.service';
 import { Router, ActivatedRoute          } from '@angular/router';
 import { GenerateDatesService            } from '../../services/generate-dates.service';
 import { SoundService                    } from '../../services/sound.service';
-import { DetectMobileService } from '../../services/detect-mobile.service';
-import { Board, SizeCanvas } from '../../classes/draw-letter-data';
+import { DetectMobileService             } from '../../services/detect-mobile.service';
+import { Board, SizeCanvas               } from '../../classes/draw-letter-data';
+import { Coordinates                     } from '../../classes/coordinates';
 
 @Component(
   {
@@ -56,7 +57,7 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
     private _route:            ActivatedRoute,
     private soundService:      SoundService,
     private speechSynthesis:   SpeechSynthesisService,
-    private coordinateService: CoordinatesService,
+    private coordinateService: GetCoordinatesService,
     private genDates:          GenerateDatesService,
     private _mobile:           DetectMobileService
   ) {

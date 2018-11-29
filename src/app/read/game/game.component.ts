@@ -1,16 +1,13 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { HttpResponse           } from '@angular/common/http';
 import { SpeechSynthesisService } from '../../services/speech-synthesis.service';
 import { GenerateDatesService   } from '../../services/generate-dates.service';
 import { DetectMobileService    } from '../../services/detect-mobile.service';
 import { PreloadAudioService    } from '../../services/preload-audio.service';
 import { LocalStorageService    } from '../../services/local-storage.service';
-import { SimilarLettersService  } from '../../services/similar-letters/similar-letters.service';
-import { GetDataService         } from '../../services/get-data.service';
-import { RandomSimilarLetters   } from '../../interfaces/random-similar-letters';
+import { GetLettersRandomService } from '../../services/get-data/get-letters-random.service';
+import { RandomSimilarLetters   } from '../../classes/random-similar-letters';
 import { SdGameDataService      } from '../../services/send-user-data/sd-game-data.service';
-// import { GameData, Record       } from '../../interfaces/game-data';
 import { GameData, History } from '../../classes/game-data';
 
 @Component({
@@ -50,13 +47,12 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor (
     private router:        Router,
     private _route:        ActivatedRoute,
-    private getData:       GetDataService,
+    private getData:       GetLettersRandomService,
     private _sendData:     SdGameDataService,
     private detectMobile:  DetectMobileService,
     private _sound:        PreloadAudioService,
     private _storage:      LocalStorageService,
     private genDates:      GenerateDatesService,
-    private _sL:           SimilarLettersService,
     private speechService: SpeechSynthesisService,
   ) {
 
@@ -68,26 +64,7 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit() {
 
-    const t = this._storage.getElement(`${this.letterParam.toLowerCase()}_sl`);
-
-    if (t !== null) {
-      this.lettersData = this._sL.getDataFromStorage(this.letterParam);
-      this.letter      = this.letterParam;
-      this.letterIDs   = this.prepareData(this.lettersData.lowerCase);
-      this.letters     = this.joinLetters(this.letterIDs);
-
-      setTimeout(e => this.loading = false, 0);
-
-      window.addEventListener('resize', e => setTimeout(() => this.restartData(), 0));
-      window.addEventListener('resize', e => setTimeout(() => this.isMobile(), 10));
-
-      this.initUserData();
-      this.instructions();
-    } else {
-
-      this.getLettersRandom();
-
-    }
+    this.getLettersRandom();
 
   }
 
@@ -101,28 +78,25 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   isMobile = () => this.detectMobile.isMobile();
 
   getLettersRandom = () => {
-    this.getData.getRandomSimilarLetters(this.letterParam)
+    this.getData.getSimilarLettersRandom(this.letterParam)
       .subscribe(
-        (res: HttpResponse<RandomSimilarLetters>) => {
+        (res: RandomSimilarLetters) => {
 
-          if (res.status === 200) {
-            this.lettersData = res.body;
-            this.letter      = this.letterParam;
+          this.lettersData = res;
+          this.letter      = this.letterParam;
 
-            // prepararDatos
-            this.letterIDs   = this.prepareData(this.lettersData.lowerCase);
-            this.letters     = this.joinLetters(this.letterIDs);
+          // prepararDatos
+          this.letterIDs   = this.prepareData(this.lettersData.lowerCase);
+          this.letters     = this.joinLetters(this.letterIDs);
 
-            this.loading     = false;
-            this.initUserData();
-            this.instructions();
+          setTimeout(() => this.loading = false, 0);
 
-            window.addEventListener('resize', e => setTimeout(() => this.restartData(), 0));
-            window.addEventListener('resize', e => setTimeout(() => this.isMobile(), 10));
+          window.addEventListener('resize', e => setTimeout(() => this.restartData(), 0));
+          window.addEventListener('resize', e => setTimeout(() => this.isMobile(), 10));
 
-          } else {
-            console.log('imposible obtener los datos');
-          }
+          this.initUserData();
+          this.instructions();
+
         },
         err => console.log(err)
       );
@@ -373,8 +347,6 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   send = () => {
-
-    console.log(this.dataToSend);
 
     this._sendData.sendGameData(this.dataToSend)
       .subscribe(

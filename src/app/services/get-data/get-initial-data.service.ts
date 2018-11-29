@@ -49,6 +49,7 @@ export class GetInitialDataService {
       })
     };
 
+
     return this.http.get(url, this.httpOpts)
     .pipe(
 

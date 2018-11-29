@@ -1,7 +1,8 @@
 import express from 'express'
 import Debug from 'debug'
 import { nameProject } from '../config'
-import { Coordinates } from '../models';
+import { Coordinates } from '../models'
+import { verifyToken, validateUser } from '../middleware'
 
 const app = express.Router()
 const debug = new Debug(`${nameProject}: coordinates`)
@@ -26,7 +27,7 @@ app.get('/', async (req, res) => {
 
 
 
-app.post('/guardar', async (req, res) => {
+app.post('/guardar', verifyToken, validateUser, async (req, res) => {
 
   const { letter, coordinates } = req.body
   
@@ -65,7 +66,7 @@ app.post('/guardar', async (req, res) => {
 
 
 
-app.get('/:letter', async (req, res) => {
+app.get('/:letter', verifyToken, validateUser, async (req, res) => {
 
   const letter = req.params.letter
   const letterUpper = letter.toUpperCase()

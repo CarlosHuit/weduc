@@ -544,8 +544,8 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
   sendData = () => {
     this._sendData.send(this.userData)
       .subscribe(
-        val => console.log(val),
-        err => console.log(err),
+        val => { const t = val; },
+        err => { const t = err; },
       );
   }
 

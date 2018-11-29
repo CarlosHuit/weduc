@@ -2,9 +2,10 @@ import express from 'express'
 import Debug from 'debug'
 import { Courses } from '../models';
 import { nameProject } from '../config'
+import { verifyToken, validateUser } from '../middleware'
 
 const app = express.Router()
-const debug = new Debug(`${nameProject}: coordinates`)
+const debug = new Debug(`${nameProject}: courses`) 
 
 const subjects = [
   {
@@ -39,7 +40,7 @@ const subjects = [
   }
 ];
 
-app.get('/', async (req, res) => {
+app.get('/', verifyToken, validateUser, async (req, res) => {
 
   try {
 
@@ -59,7 +60,7 @@ app.get('/', async (req, res) => {
 
 
 
-app.get('/:name', async (req, res) => {
+app.get('/:name', verifyToken, validateUser, async (req, res) => {
 
   const name = req.params.name
   

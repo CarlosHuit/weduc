@@ -1,10 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router       } from '@angular/router';
-import { SpeechRecognitionService     } from '../../services/speech-recognition.service';
-import { SpeechSynthesisService       } from '../../services/speech-synthesis.service';
-import { SdPronounceLetterService     } from '../../services/send-user-data/sd-pronounce-letter.service';
-import { GenerateDatesService         } from '../../services/generate-dates.service';
-import { LocalStorageService          } from '../../services/local-storage.service';
+import { Component, OnInit, OnDestroy   } from '@angular/core';
+import { ActivatedRoute, Router         } from '@angular/router';
+import { SpeechRecognitionService       } from '../../services/speech-recognition.service';
+import { SpeechSynthesisService         } from '../../services/speech-synthesis.service';
+import { SdPronounceLetterService       } from '../../services/send-user-data/sd-pronounce-letter.service';
+import { GenerateDatesService           } from '../../services/generate-dates.service';
+import { LocalStorageService            } from '../../services/local-storage.service';
 import { PronounceLetterData, Historial } from '../../classes/pronounce-letter-data';
 
 
@@ -20,15 +20,15 @@ export class PronounceLetterComponent implements OnInit, OnDestroy {
   letterParam:    string;
   activeRecord:   boolean;
   showButtonHelp: boolean;
+  startTime:      string;
+  finalTime:      string;
 
-  startTime: string;
-  finalTime: string;
 
-  loading = true;
-  success = false;
-
+  loading:  Boolean;
+  success:  Boolean;
   userData: PronounceLetterData;
   Data:     PronounceLetterData[] = [];
+
 
 
   constructor(
@@ -41,6 +41,8 @@ export class PronounceLetterComponent implements OnInit, OnDestroy {
     private router:       Router,
   ) {
     this.letterParam = this._route.snapshot.paramMap.get('letter');
+    this.loading = true;
+    this.success = false;
   }
 
 
@@ -153,7 +155,7 @@ export class PronounceLetterComponent implements OnInit, OnDestroy {
     const url    = `/leer/adivina-la-letra/${this.letterParam}`;
     const speak  = this._synthesis.speak('"Bien Hecho!"', .85);
 
-    // speak.addEventListener('end', e => this.router.navigateByUrl(url) );
+    speak.addEventListener('end', e => this.router.navigateByUrl('') );
 
   }
 
@@ -243,7 +245,6 @@ export class PronounceLetterComponent implements OnInit, OnDestroy {
 
 
   sendData = (): void => {
-    console.log(this.Data);
     this._sendData.sendPronounceLettersData(this.Data)
       .subscribe(
         res => { const e = res; },

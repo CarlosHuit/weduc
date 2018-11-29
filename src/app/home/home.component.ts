@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { CoursesService       } from '../services/courses.service';
 import { Router               } from '@angular/router';
 import { MatSnackBar          } from '@angular/material';
 import { DetectMobileService  } from '../services/detect-mobile.service';
-import { Subjects             } from '../interfaces/subjects';
+import { Subjects             } from '../classes/subjects';
+import { GetCoursesService } from '../services/get-data/get-courses.service';
 
 @Component({
   selector: 'app-home',
@@ -20,24 +20,22 @@ export class HomeComponent implements OnInit {
   search:   RegExp;
 
   constructor(
-    private detectMobile: DetectMobileService,
-    private getCourses:   CoursesService,
     private router:       Router,
     public snackBar:      MatSnackBar,
+    private getCourses:   GetCoursesService,
+    private detectMobile: DetectMobileService,
   ) { }
 
   ngOnInit() {
-    this.getCourses.getCoursesData()
+    this.getCourses.getCourses()
       .subscribe(
         (val: Subjects[]) => {
           this.subjects = val;
-          this.loading = false;
+          this.loading  = false;
           (window as any).onresize = () => this.genCols(this.contGrid.nativeElement);
         },
-        err => console.log(err)
+        (err) => console.log(err)
       );
-
-
   }
 
 

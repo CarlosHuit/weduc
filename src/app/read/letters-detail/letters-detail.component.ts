@@ -13,6 +13,7 @@ import {
   LettersDetailData, CardExample,
   MemoryGame, Historial, Couples,
 } from '../../classes/letters-detail-data';
+import { GetSimilarLettersService } from '../../services/get-data/get-similar-letters.service';
 
 
 
@@ -58,24 +59,42 @@ export class LettersDetailComponent implements OnInit {
     private genDates: GenerateDatesService,
     private speech:   SpeechSynthesisService,
     private _sendData: SdLettersDetailService,
+    private _sl:       GetSimilarLettersService,
   ) {
     this.letterParam    = this._route.snapshot.paramMap.get('letter');
-    this.similarLetters = this._storage.getElement(`${this.letterParam.toLowerCase()}_sl`);
-    this.lettersOPt     = this.fillLetters();
-    this.currentLetter  = this.lettersOPt[0];
-    this.idOPtions      = this.fillLettersIds();
-    this.currentIds     = this.idOPtions[this.currentLetter];
-    this.show           = true;
+
   }
 
   ngOnInit() {
-    this.showContainer = true;
-    this.showTarget    = true;
-    this._audio.loadAudio();
-    this.listenMsg();
+    this.getData(this.letterParam);
+  }
 
-    (window).addEventListener('resize', e => this.style(this.card.nativeElement));
-    this.initUserData();
+  getData = (letter: string) => {
+
+    this._sl.getSimilarLetters(letter)
+      .subscribe(
+        val => {
+          this.similarLetters = val;
+          this.lettersOPt     = this.fillLetters();
+          this.currentLetter  = this.lettersOPt[0];
+          this.idOPtions      = this.fillLettersIds();
+          this.currentIds     = this.idOPtions[this.currentLetter];
+          this.loading        = false;
+
+          setTimeout(() => this.show = true, 20);
+
+          this.showContainer = true;
+          this.showTarget    = true;
+
+          this._audio.loadAudio();
+          this.initUserData();
+          this.listenMsg();
+
+          (window).addEventListener('resize', e => this.style(this.card.nativeElement));
+
+        },
+        err => console.log(err)
+      );
   }
 
   fillLettersIds = () => {

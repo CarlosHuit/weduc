@@ -2,7 +2,7 @@ import express from 'express'
 import Debug from 'debug'
 import { Words, User } from '../models';
 import { nameProject } from '../config'
-import { verifyToken } from '../middleware';
+import { verifyToken, validateUser } from '../middleware';
 
 const app = express.Router()
 const debug = new Debug(`${nameProject}: words`)
@@ -27,9 +27,7 @@ app.get( '/', async (req, res) => {
 })
 
 
-
-
-app.get('/random/:letter', verifyToken, async (req, res) => {
+app.get('/random/:letter', verifyToken, validateUser, async (req, res) => {
 
   const letterValidation = req.params.letter.toLowerCase()
   const { _id }  = req.user._id
@@ -56,7 +54,8 @@ app.get('/random/:letter', verifyToken, async (req, res) => {
 
       res.status(200).json({
         lowerCase: lowerCase,
-        upperCase: upperCase
+        upperCase: upperCase,
+        words:     words
       })
 
     } else {
@@ -81,9 +80,7 @@ app.get('/random/:letter', verifyToken, async (req, res) => {
 })
 
 
-
-
-app.get( '/:letter', async (req, res) => {
+app.get( '/:letter', verifyToken, validateUser, async (req, res) => {
 
   const letter = req.params.letter
 

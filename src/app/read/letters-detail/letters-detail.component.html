@@ -99,6 +99,6 @@
       </mat-card>
     </div>
   </div>
-
+  <app-spinner-loading *ngIf="loading" ></app-spinner-loading>
   <app-success-animation class="hideSucces" [class.showSuccess]="success" *ngIf="success" ></app-success-animation>
 </div>
