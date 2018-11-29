@@ -60,6 +60,11 @@
 
   </mat-card>
 
+  <mat-progress-bar
+    *ngIf="!loading && isMobile()"    style="position: absolute; top: 0px; left: 0;"
+    color="warn" [mode]="determinate" [value]="advance()" >
+  </mat-progress-bar>
+
 
   <!-- Animation Spinner -->
   <app-spinner-loading *ngIf="loading"></app-spinner-loading>

@@ -33,6 +33,8 @@ export class FindLetterComponent implements OnInit, OnDestroy {
   loading:      boolean;
   success:      boolean;
   showC:        boolean;
+  totalWords:   number;
+  currentIndex  = 0;
   selection     = {};
 
   constructor(
@@ -81,7 +83,9 @@ export class FindLetterComponent implements OnInit, OnDestroy {
 
   configInitialData = (words: string[]) => {
 
-    this.words = this._shuffle.mess(words);
+    this.words      = this._shuffle.mess(words);
+    this.totalWords = this.words.length;
+
     this.changeDates(this.words[0]);
 
 
@@ -130,6 +134,13 @@ export class FindLetterComponent implements OnInit, OnDestroy {
 
   }
 
+  advance = () => {
+
+    const result = 100 - (((this.totalWords -  this.currentIndex) * 100) / this.totalWords);
+    return result;
+
+  }
+
 
   isMobile = (): boolean => {
 
@@ -167,6 +178,8 @@ export class FindLetterComponent implements OnInit, OnDestroy {
       const saveSel = this.selection[id] !== id ? this.selection[id] = id : null;
       const p = this.pendingLetters();
       const s = this.speech.speak('Correcto');
+
+      const addProgress =  p === 0 ? this.currentIndex = this.words.indexOf(this.word) + 1 : null;
 
       s.addEventListener('end', e => p === 0 ? this.next() : false);
 
