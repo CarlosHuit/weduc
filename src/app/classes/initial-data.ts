@@ -5,9 +5,9 @@ export class InitialData {
   constructor(
     public words:           Words[],
     public letters:         Letters,
-    public similarLetters:  SimilarLetters[],
     public learnedLetters:  LearnedLetters[],
-    public coordinates:     Coordinates[],
+    public similarLetters?:  SimilarLetters[],
+    public coordinates?:     Coordinates[],
   ) {}
 }
 

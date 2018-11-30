@@ -87,7 +87,6 @@ export class FindLetterComponent implements OnInit, OnDestroy {
     this.totalWords = this.words.length;
 
     this.changeDates(this.words[0]);
-    this.preloadImage('s');
 
     this.loading = false;
     this.initUserData();
@@ -237,7 +236,7 @@ export class FindLetterComponent implements OnInit, OnDestroy {
 
   preloadImage = (name: string) => {
     this.words.forEach(word => {
-      new Image().src = `/assets/img-min/${word}-min.png`;
+      return new Image().src = `/assets/img-min/${word}-min.png`;
     });
   }
 
