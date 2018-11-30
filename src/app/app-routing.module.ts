@@ -13,16 +13,12 @@ import { DrawLetterComponent      } from './read/draw-letter/draw-letter.compone
 import { FindLetterComponent      } from './read/find-letter/find-letter.component';
 import { SelectWordsComponent     } from './read/select-words/select-words.component';
 import { PronounceLetterComponent } from './read/pronounce-letter/pronounce-letter.component';
-// import { ProofComponent                 } from './read/proof/proof.component';
-// import { SelectImagesComponent          } from './read/select-images/select-images.component';
-// import { IdentifyLetterComponent        } from './read/identify-letter/identify-letter.component';
-// import { WriterComponent                } from './read/writer/writer.component';
 
 const routes: Routes = [
 
+  { path: '',                                         component: HomeComponent,                   canActivate: [AuthGuard]        },
   { path: 'signin',                                   component: SigninComponent,                 canActivate: [IsLoggedInGuard]  },
   { path: 'signup',                                   component: SignupComponent,                 canActivate: [IsLoggedInGuard]  },
-  { path: '',                                         component: HomeComponent,                   canActivate: [AuthGuard]        },
   { path: ':course',                                  component: DetailCourseComponent,           canActivate: [AuthGuard]        },
   { path: 'lectura/abecedario',                       component: LettersMenuComponent,            canActivate: [AuthGuard]        },
   { path: 'lectura/detalle-letra/:letter',            component: LettersDetailComponent,          canActivate: [AuthGuard]        },
@@ -30,12 +26,7 @@ const routes: Routes = [
   { path: 'lectura/dibujar-letra/:letter',            component: DrawLetterComponent,             canActivate: [AuthGuard]        },
   { path: 'lectura/encontrar-letras/:letter',         component: FindLetterComponent,             canActivate: [AuthGuard]        },
   { path: 'lectura/seleccionar-palabras/:letter',     component: SelectWordsComponent,            canActivate: [AuthGuard]        },
-  { path: 'lectura/pronunciar-letra/:letter',         component: PronounceLetterComponent,        canActivate: [AuthGuard]        },
-  // { path: 'leer/select-images/:letter',       component: SelectImagesComponent,          canActivate: [AuthGuard]        },
-  // { path: 'leer/completar-palabra/:letter',   component: CompleteWordComponent,          canActivate: [AuthGuard]        },
-  // { path: 'leer/escribir/:letter',            component: WriterComponent,                canActivate: [AuthGuard]        },
-
-  // { path: 'leer/proof/:letter',               component:  ProofComponent,                canActivate: [AuthGuard]        },
+  { path: 'lectura/pronunciar-letra/:letter',         component: PronounceLetterComponent,        canActivate: [AuthGuard]        }
 
 ];
 

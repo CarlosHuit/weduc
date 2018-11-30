@@ -21,6 +21,7 @@ export class AuthService {
 
   usersUrl: string;
   currentUser?: User; // Usuario actual
+  redirectUrl: string;
 
 
   constructor(
