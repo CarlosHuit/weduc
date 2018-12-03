@@ -22,6 +22,7 @@ export class PronounceLetterComponent implements OnInit, OnDestroy {
   showButtonHelp: boolean;
   startTime:      string;
   finalTime:      string;
+  urlToRedirect:  string;
 
 
   loading:  Boolean;
@@ -43,6 +44,7 @@ export class PronounceLetterComponent implements OnInit, OnDestroy {
     this.letterParam = this._route.snapshot.paramMap.get('letter');
     this.loading = true;
     this.success = false;
+    this.urlToRedirect = '/lectura/abecedario';
   }
 
 
@@ -152,10 +154,8 @@ export class PronounceLetterComponent implements OnInit, OnDestroy {
     this.success = true;
     this.sendData();
 
-    const url    = `/leer/adivina-la-letra/${this.letterParam}`;
     const speak  = this._synthesis.speak('"Bien Hecho!"', .85);
-
-    speak.addEventListener('end', e => this.router.navigateByUrl('') );
+    speak.addEventListener('end', e => this.router.navigateByUrl(this.urlToRedirect));
 
   }
 
