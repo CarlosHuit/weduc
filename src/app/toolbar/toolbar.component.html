@@ -19,7 +19,7 @@
 
     <mat-menu #menu="matMenu">
       <button mat-menu-item style="text-transform: capitalize;" (click)="redirect()">
-        {{ fullName()}}
+        {{ fullName}}
       </button>
       <button mat-menu-item (click)="logout()">
         Salir
@@ -43,7 +43,7 @@
           <img src="/assets/img-min/gato-min.png" width="100" height="100">
         </div>
         <div class="m-c-user-name">
-          <p>{{fullName()}}</p>
+          <p>{{fullName}}</p>
         </div>
 
       </div>
@@ -51,7 +51,7 @@
       <div class="m-c-list-items">
 
         <mat-nav-list *ngIf="isLoggedIn()">
-          <a mat-list-item (click)="snav.toggle()">
+          <a mat-list-item (click)="logoutAndClose()">
             Cerrar Sesion
           </a>
           <mat-divider></mat-divider>

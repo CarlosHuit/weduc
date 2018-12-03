@@ -111,11 +111,11 @@
 
 
     <div class="m-c-detail-course">
-      <mat-tab-group color="accent" backgroundColor="warn" mat-align-tabs="start">
+      <mat-tab-group color="accent" backgroundColor="warn" (selectedTabChange)="ks($event)" mat-align-tabs="start">
 
 
         <!-------- Course details tab -------->
-        <mat-tab>
+        <mat-tab label="hola" >
 
           <!----- title tab ------>
           <ng-template mat-tab-label>
@@ -144,7 +144,7 @@
 
 
         <!-------- Comments tab -------->
-        <mat-tab >
+        <mat-tab>
 
 
           <!----- title tab ------>
@@ -154,40 +154,9 @@
             </span>
           </ng-template>
 
-          <div class="m-c-comments">
-            <mat-card class="m-c-addComent">
-              <mat-form-field color="primary" style="width: 100%; margin: 0">
-                <mat-label>Escribe tu comentario:</mat-label>
-                <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
-                  cdkAutosizeMaxRows="5" #commentText></textarea>
-              </mat-form-field>
-
-              <div>
-                <button mat-raised-button color="warn" (click)="addComment(commentText)" [disabled]="commentText.value === ''">
-                  Agregar Comentario
-                </button>
-              </div>
-
-            </mat-card>
-
-            <mat-card *ngFor="let item of comments" class="m-c-box-comment">
-              <div class="comment-author">
-                <img mat-card-avatar [src]="item.avatar" class="author-avatar">
-                <p class="author-name">
-                  {{item.user}}
-                </p>
-              </div>
-
-              <mat-card-content>
-                <p>{{item.comment}}</p>
-              </mat-card-content>
-            </mat-card>
-
-          </div>
+          <app-discussion-system [course_id]="course_id" ></app-discussion-system>
           
         </mat-tab>
-
-
 
       </mat-tab-group>
     </div>

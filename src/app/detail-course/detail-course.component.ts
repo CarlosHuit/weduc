@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, OnDestroy, NgZone } from '@an
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subjects               } from '../classes/subjects';
 import { DomSanitizer           } from '@angular/platform-browser';
-import { MatSnackBar            } from '@angular/material';
+import { MatSnackBar, MatTabChangeEvent            } from '@angular/material';
 import { DetectMobileService    } from '../services/detect-mobile.service';
 import { CdkTextareaAutosize    } from '@angular/cdk/text-field';
 import { AuthService            } from '../services/auth.service';
@@ -29,27 +29,8 @@ export class DetailCourseComponent implements OnInit, OnDestroy {
   course:       string;
   videoUrl:     any;
   loading =     true;
-  comments = [
-    {
-      user: 'Manuel Ramos',
-      avatar: 'https://material.angular.io/assets/img/examples/shiba1.jpg',
-      comment: `Un proceso muy practico e interactivo para
-                aprender lectura y escritura por medio de la adquicision de conocimiento por medio de la experiecia`
-    },
-    {
-      user: 'Freddy Perez',
-      avatar: 'https://material.angular.io/assets/img/examples/shiba1.jpg',
-      comment: `Un proceso muy practico e interactivo para
-                aprender lectura y escritura por medio de la adquicision de conocimiento por medio de la experiecia`
-    },
-    {
-      user: 'Jessica Galicia',
-      avatar: 'https://material.angular.io/assets/img/examples/shiba1.jpg',
-      comment: `Un proceso muy practico e interactivo para
-                aprender lectura y escritura por medio de la adquicision de conocimiento por medio de la experiecia`
-    }
+  course_id:    string;
 
-  ];
 
   constructor(
     private _sanitizer: DomSanitizer,
@@ -76,9 +57,10 @@ export class DetailCourseComponent implements OnInit, OnDestroy {
     this._courses.getCourseData(this.course)
       .subscribe(
         (res: Subjects) => {
-          this.data     = res;
-          this.videoUrl = this._sanitizer.bypassSecurityTrustResourceUrl(this.data.urlVideo);
-          this.loading  = false;
+          this.data      = res;
+          this.course_id = res._id;
+          this.videoUrl  = this._sanitizer.bypassSecurityTrustResourceUrl(this.data.urlVideo);
+          this.loading   = false;
         },
         err => console.log(err)
       );
@@ -99,21 +81,7 @@ export class DetailCourseComponent implements OnInit, OnDestroy {
       .subscribe(() => this.autosize.resizeToFitContent(true));
   }
 
-  addComment = (el: HTMLTextAreaElement) => {
 
-    if (el.value.trim() === '') {
-
-    } else {
-      const x = {
-        user:    this.currentUser.fullName().toString().trim(),
-        avatar: 'https://material.angular.io/assets/img/examples/shiba1.jpg',
-        comment: el.value.trim().toString()
-      };
-      this.comments.unshift(x);
-    }
-
-    el.value = '';
-  }
 
   genUrlImg = () => `/assets/img100X100/${this.data.title.toLowerCase()}-min.png`;
 
@@ -129,6 +97,10 @@ export class DetailCourseComponent implements OnInit, OnDestroy {
 
   showError(message) {
     this.snackBar.open(message, 'Cerrar', { duration: 3000 });
+  }
+
+  ks = (ev: MatTabChangeEvent) => {
+    console.log(ev);
   }
 
 }

@@ -31,6 +31,7 @@ import { PronounceLetterComponent         } from './read/pronounce-letter/pronou
 import { GestureConfig } from '@angular/material';
 import { ControlCanvasComponent } from './read/control-canvas/control-canvas.component';
 import { GuideLinesComponent } from './read/guide-lines/guide-lines.component';
+import { DiscussionSystemComponent } from './discussion-system/discussion-system.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { GuideLinesComponent } from './read/guide-lines/guide-lines.component';
     PronounceLetterComponent,
     ControlCanvasComponent,
     GuideLinesComponent,
+    DiscussionSystemComponent,
   ],
   imports: [
     MaterialModule,

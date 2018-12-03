@@ -13,6 +13,7 @@ export { default as Courses         } from './courses'
 export { default as InitialData     } from './initial-data'
 export { default as Combinations    } from './combinations'
 export { default as UserProgress    } from './user-progress'
+export { default as Comments        } from './comments'
 
 export { default as Target         } from './data/target'
 export { default as GuessLetter    } from './data/guess-letter'

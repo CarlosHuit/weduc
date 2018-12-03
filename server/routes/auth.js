@@ -13,8 +13,8 @@ app.post( '/signin', async (req,res, next) => {
 
   const { email, password } = req.body
   const user = await User.findOne( { email } )
-  
-  
+
+
   if (!user) {
     
     debug(`El usuario con el email: ${email} no existe`)

@@ -44,7 +44,7 @@ app.get('/', verifyToken, validateUser, async (req, res) => {
 
   try {
 
-    const courses = await Courses.find({}, { __v:0, _id:0});
+    const courses = await Courses.find({}, { __v:0});
 
     debug('Mostrando la informacion de todos los cursos')
     res.status(200).json(courses)
@@ -66,7 +66,7 @@ app.get('/:name', verifyToken, validateUser, async (req, res) => {
   
   try {
 
-    const findCourse = await Courses.findOne({subtitle: name}, {_id: 0, __v:0})    
+    const findCourse = await Courses.findOne({subtitle: name}, {__v:0})    
     debug(`Guardando la informacion de los cursos`)
 
     res.status(201).json(findCourse)

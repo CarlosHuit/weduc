@@ -147,7 +147,7 @@
 
 .title-course {
   margin-top: 0;
-  padding: 10px 0 20px 0;
+  padding: 10px 0 15px 0;
   border-bottom: 1px solid #a6a6a6;
   display: flex;
   align-items: center;
@@ -183,20 +183,6 @@
   font-size: 20px;
 }
 
-.m-c-comments {
-  width: 100%;
-  padding: 10px 3%;
-  box-sizing: border-box;
-  background-color: #eaecee;
-}
-
-.m-c-addComent {
-  margin-bottom: 10px;
-}
-
-.m-c-box-comment {
-  margin-bottom: 10px;
-}
 
 
 @media (min-width: 320px) and (orientation: landscape) {

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
@@ -11,11 +11,12 @@ import {MatSidenav} from '@angular/material/sidenav';
   styleUrls: ['./toolbar.component.css']
 })
 
-export class ToolbarComponent implements OnDestroy {
+export class ToolbarComponent implements OnDestroy, OnInit {
 
   mobileQuery: MediaQueryList;
   @ViewChild('snav') sidenav: MatSidenav;
 
+  fullName: string;
 
   private _mobileQueryListener: () => void;
 
@@ -36,17 +37,16 @@ export class ToolbarComponent implements OnDestroy {
     this.mobileQuery.removeListener(this._mobileQueryListener);
   }
 
+  ngOnInit() {
+    this.fullName = this.authService.currentUser.fullName().toString();
+  }
+
   isLoggedIn = () => {
 
     return this.authService.isLoggedIn();
 
   }
 
-  fullName = () => {
-
-    return this.authService.currentUser.fullName();
-
-  }
 
 
   logout = () => {

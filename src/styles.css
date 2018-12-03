@@ -175,4 +175,18 @@ body {
   margin-bottom: 5px;
 }
 
+.mat-progress-spinner {
+  width:  100% !important;
+  height: 100% !important;
+}
+
+.mat-progress-spinner svg {
+  width:   100% !important;
+  height:  100% !important;
+}
+
+.mat-progress-spinner circle, .mat-spinner circle {
+  stroke: #1e7096;
+}
+
 @media (min-width: 320px) and (orientation: landscape) {}

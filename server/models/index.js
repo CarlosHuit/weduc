@@ -9,6 +9,7 @@ export { default as SoundLetters   } from './sound-letters-model'
 export { default as Courses        } from './courses-model'
 export { default as Combinations   } from './combinations-model'
 export { default as UserProgress   } from './user-progress-model'
+export { default as CommentsModel  } from './comments-model'
 
 
 export { default as Target         } from './data/target-model'
