@@ -31,6 +31,8 @@
 .m-c-sidenav {
   height: 100%;
   min-width:      250px;
+  max-width: 350px;
+  width: 85vw;
   display:        flex;
   flex-direction: column;
   align-items:    center;
@@ -77,4 +79,8 @@
   font-weight:  bold;
   font-size:    24px;
   margin:       5px 0;
+}
+
+.m-c-list-items {
+  width: 100%;
 }
