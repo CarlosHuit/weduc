@@ -71,22 +71,18 @@
 }
 
 .m-c-letter .letter {
-  font-size: 150px;
-  color: yellow;
-  outline: none;
-  font-weight: bold;
-  border: none;
-  background-color: transparent;
-  -webkit-text-stroke: 3px #534c58;
-  font-family: 'Noto Sans';
+  font-size:      150px;
+  color:        yellow;
+  outline:        none;
+  font-weight:    bold;
+  border:         none;
+  background:     transparent;
+  font-family:    'Noto Sans';
   padding-bottom: 15px;
-  z-index: 8;
+  -webkit-text-stroke: 3px #534c58;
 }
 
 .m-c-microphone {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 95%;
   min-height: 50%;
 }

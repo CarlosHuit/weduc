@@ -6,6 +6,8 @@ import { SdPronounceLetterService       } from '../../services/send-user-data/sd
 import { GenerateDatesService           } from '../../services/generate-dates.service';
 import { LocalStorageService            } from '../../services/local-storage.service';
 import { PronounceLetterData, Historial } from '../../classes/pronounce-letter-data';
+import { UserProgressService            } from '../../services/user-progress/user-progress.service';
+import { LearnedLetters } from 'src/app/classes/learned-letters';
 
 
 @Component({
@@ -37,6 +39,7 @@ export class PronounceLetterComponent implements OnInit, OnDestroy {
     private _sendData:    SdPronounceLetterService,
     private _synthesis:   SpeechSynthesisService,
     private _dates:       GenerateDatesService,
+    private _progress:    UserProgressService,
     private _storage:     LocalStorageService,
     private _route:       ActivatedRoute,
     private router:       Router,
@@ -206,7 +209,7 @@ export class PronounceLetterComponent implements OnInit, OnDestroy {
 
   instructions = (): void => {
 
-    const msg   = 'Presiona el micrófono y dí Cuál es esta letra... ejemplo: X minúscula';
+    const msg   = 'Presiona el micrófono y dí Cuál es esta letra';
     const speak = this._synthesis.speak(msg, .96);
 
   }
@@ -250,6 +253,12 @@ export class PronounceLetterComponent implements OnInit, OnDestroy {
         res => { const e = res; },
         err => { const x = err; }
       );
+
+    this._progress.sendUserProgress( new LearnedLetters(this.letterParam, 3) )
+        .subscribe(
+          (val) => console.log(val),
+          (err) => console.log(err),
+        );
   }
 
 
