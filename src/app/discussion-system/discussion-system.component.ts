@@ -58,7 +58,6 @@ export class DiscussionSystemComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.course_id);
 
   }
 
