@@ -99,8 +99,5 @@ export class DetailCourseComponent implements OnInit, OnDestroy {
     this.snackBar.open(message, 'Cerrar', { duration: 3000 });
   }
 
-  ks = (ev: MatTabChangeEvent) => {
-    console.log(ev);
-  }
 
 }

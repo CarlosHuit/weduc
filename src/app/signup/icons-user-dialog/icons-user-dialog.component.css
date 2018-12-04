@@ -1,0 +1,39 @@
+.center-items{
+  display: flex;
+  justify-content: center;
+  max-width: 80vw;
+  width: 100%;
+}
+
+.m-c-container-imgs {
+  height: 120px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.m-c-image {
+  margin: 0 5px;
+  border-radius: 50%;
+  width: 100px;
+  box-sizing: border-box;
+  height: 100px;
+  transition: 250ms;
+}
+
+.m-c-image.selected {
+  border: 5px solid #239B56;
+}
+
+.m-c-image img {
+  width: 80px;
+  height: 80px;
+}
+
+.btn-selected {
+  font-size: 18px;
+  min-width: 225px;
+  color: white;
+  font-weight: bold;
+}

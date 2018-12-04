@@ -189,4 +189,9 @@ body {
   stroke: #1e7096;
 }
 
+.cdk-overlay-pane {
+  max-width: 340px !important;
+
+}
+
 @media (min-width: 320px) and (orientation: landscape) {}

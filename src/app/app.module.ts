@@ -32,6 +32,7 @@ import { GestureConfig } from '@angular/material';
 import { ControlCanvasComponent } from './read/control-canvas/control-canvas.component';
 import { GuideLinesComponent } from './read/guide-lines/guide-lines.component';
 import { DiscussionSystemComponent } from './discussion-system/discussion-system.component';
+import { IconsUserDialogComponent } from './signup/icons-user-dialog/icons-user-dialog.component';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import { DiscussionSystemComponent } from './discussion-system/discussion-system
     ControlCanvasComponent,
     GuideLinesComponent,
     DiscussionSystemComponent,
+    IconsUserDialogComponent,
   ],
   imports: [
     MaterialModule,
@@ -68,6 +70,9 @@ import { DiscussionSystemComponent } from './discussion-system/discussion-system
     AppRoutingModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     BrowserAnimationsModule
+  ],
+  entryComponents: [
+    IconsUserDialogComponent
   ],
   providers: [
     {provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig}

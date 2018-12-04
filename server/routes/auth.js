@@ -59,7 +59,8 @@ const createToken = (user) => jwt.sign({ user }, secret, { expiresIn: 86400 }) /
 app.post('/signup', async ( req, res, next ) => {
   
   /* password2 */
-  const { firstName, lastName, email, password, password2 } = req.body
+  const { firstName, lastName, email, password, password2, avatar } = req.body
+  debug(req.body)
   const findEmail = await User.findOne( { email } )
 
   if (findEmail) {
@@ -77,9 +78,9 @@ app.post('/signup', async ( req, res, next ) => {
   } 
   
 
-  const currentUser = new User( { firstName, lastName, email, password: hash(password, 10) } )
-  const user = await currentUser.save()
-  const token = createToken( user )
+  const currentUser = new User( { firstName, lastName, email, password: hash(password, 10), avatar } )
+  const user        = await currentUser.save()
+  const token       = createToken( user )
   
   
   res.status(201).json(
@@ -89,7 +90,8 @@ app.post('/signup', async ( req, res, next ) => {
       userId: user._id,
       firstName,
       lastName,
-      email
+      email,
+      avatar
     }
   )
 

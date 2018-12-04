@@ -47,7 +47,11 @@ export class ToolbarComponent implements OnDestroy, OnInit {
 
   }
 
+  urlImage = () => {
 
+    const t = this.authService.currentUser.avatar;
+    return `/assets/icon-user-min/${t}-min.png`;
+  }
 
   logout = () => {
     return this.authService.logout();

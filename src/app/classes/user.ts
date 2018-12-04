@@ -6,8 +6,8 @@ export class User {
         public password2?: string,
         public firstName?: string,
         public lastName?:  string,
-        public _id?:       string,
         public avatar?:    string,
+        public _id?:       string,
     ) { }
 
     fullName() {

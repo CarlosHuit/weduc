@@ -5,8 +5,9 @@ import { environment } from '../../environments/environment';
 import { User } from '../classes/user';
 import { Router } from '@angular/router';
 import { map } from 'rxjs/operators';
-import { MatSnackBar } from '@angular/material';
-import { JwtHelperService } from '@auth0/angular-jwt';
+import { MatSnackBar         } from '@angular/material';
+import { JwtHelperService    } from '@auth0/angular-jwt';
+import { LocalStorageService } from '../services/local-storage.service';
 
 
 
@@ -28,14 +29,15 @@ export class AuthService {
     private http: HttpClient,
     private router: Router,
     public snackBar: MatSnackBar,
+    private _storage: LocalStorageService
   ) {
 
     this.usersUrl = urljoin(environment.apiUrl, 'auth');
 
     if (this.isLoggedIn()) {
 
-      const { userId, email,  firstName, lastName } = JSON.parse(localStorage.getItem('user'));
-      this.currentUser = new User(email, null, null, firstName, lastName, userId);
+      const t: User = this._storage.getElement('user');
+      this.currentUser = new User(t.email, null, null, t.firstName, t.lastName, t.avatar, t._id);
 
     }
 
@@ -82,11 +84,11 @@ export class AuthService {
 
   login = (response: any) => {
 
-    const { token, userId, firstName, lastName, email } = response;
-    this.currentUser = new User(email, null, null, firstName, lastName, userId);
+    const { token, userId, firstName, lastName, email, avatar } = response;
+    this.currentUser = new User(email, null, null, firstName, lastName, avatar, userId);
 
     localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify({ userId, firstName, lastName, email }));
+    this._storage.saveElement('user', { userId, firstName, lastName, email, avatar });
 
     this.router.navigateByUrl('');
 
