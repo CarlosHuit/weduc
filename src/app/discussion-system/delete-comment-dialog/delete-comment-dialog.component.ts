@@ -9,10 +9,6 @@ import { DialogData } from '../discussion-system.component';
 })
 export class DeleteCommentDialogComponent {
 
-  iconSelected: string;
-
-  icons = ['man', 'woman'];
-
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     public  dialogRef: MatDialogRef<DeleteCommentDialogComponent>,
@@ -22,6 +18,5 @@ export class DeleteCommentDialogComponent {
     this.dialogRef.close();
   }
 
-  genUrl = (icon) => `/assets/icon-user100X100/icon-${icon}.png`;
 
 }

@@ -5,7 +5,7 @@ import { AuthService              } from '../services/auth.service';
 import { Comments                 } from '../classes/comments';
 import { DiscussionSystemService  } from '../services/discussion-system/discussion-system.service';
 
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { DeleteCommentDialogComponent } from './delete-comment-dialog/delete-comment-dialog.component';
 
 export interface DialogData {
