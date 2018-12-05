@@ -194,4 +194,9 @@ body {
 
 }
 
+.mat-dialog-container {
+  max-width: 90vw !important;
+  margin: 0 auto  !important;
+}
+
 @media (min-width: 320px) and (orientation: landscape) {}

@@ -1,17 +1,17 @@
+import { User } from './user';
+
 export class Comments {
 
   constructor(
 
-    public course_id:   string,
-    public user_id:     string,
-    public avatar:      string,
+    public _id:         string,
+    public user_id:     string | User,
     public text:        string,
     public date:        Date,
-    public fistName?:   string,
-    public lastName?:   string,
+    public course_id?:  string,
+    public temp_id?:    string,
 
   ) {}
 
-  fullName = () => `${this.fistName} ${this.lastName}`;
 
 }

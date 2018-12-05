@@ -1,0 +1,15 @@
+
+<h1 mat-dialog-title class="dialog-title">¿ Realmente quieres eliminar tu comentario ?</h1>
+
+<div mat-dialog-actions class="dialog-buttons">
+
+  <div >
+    <button mat-flat-button color="warn" class="btn-selected" [mat-dialog-close]="'ok'" cdkFocusInitial>Eliminar</button>
+  </div>
+
+  <div >
+    <button mat-button color="primary" (click)="onNoClick()">Cancelar</button>
+  </div>
+
+
+</div>

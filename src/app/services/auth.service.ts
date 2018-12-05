@@ -68,14 +68,7 @@ export class AuthService {
     const us = JSON.stringify(user); // to JSON
 
     return this.http.post(urljoin(this.usersUrl, 'signin'), us, httpOptions)
-      .pipe(
-        map(
-          (response: Response) => {
-            const json = response;
-            return json;
-          }
-        )
-      );
+      .pipe(  );
   }
 
 
@@ -85,9 +78,9 @@ export class AuthService {
   login = (response: any) => {
 
     const { token, userId, firstName, lastName, email, avatar } = response;
-    this.currentUser = new User(email, null, null, firstName, lastName, avatar, userId);
 
     localStorage.setItem('token', token);
+    this.currentUser = new User(email, null, null, firstName, lastName, avatar, userId);
     this._storage.saveElement('user', { userId, firstName, lastName, email, avatar });
 
     this.router.navigateByUrl('');
@@ -118,10 +111,8 @@ export class AuthService {
 
   public handleError = (response: HttpErrorResponse) => {
 
-    /*     const { error: { name }, message } = response; */
     console.error(response.error.error);
     this.showError(response.error.error);
-    /*     this.logout(); */
 
     return response;
 

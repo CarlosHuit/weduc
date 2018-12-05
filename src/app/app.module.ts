@@ -33,6 +33,7 @@ import { ControlCanvasComponent } from './read/control-canvas/control-canvas.com
 import { GuideLinesComponent } from './read/guide-lines/guide-lines.component';
 import { DiscussionSystemComponent } from './discussion-system/discussion-system.component';
 import { IconsUserDialogComponent } from './signup/icons-user-dialog/icons-user-dialog.component';
+import { DeleteCommentDialogComponent } from './discussion-system/delete-comment-dialog/delete-comment-dialog.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +60,7 @@ import { IconsUserDialogComponent } from './signup/icons-user-dialog/icons-user-
     GuideLinesComponent,
     DiscussionSystemComponent,
     IconsUserDialogComponent,
+    DeleteCommentDialogComponent,
   ],
   imports: [
     MaterialModule,
@@ -72,7 +74,8 @@ import { IconsUserDialogComponent } from './signup/icons-user-dialog/icons-user-
     BrowserAnimationsModule
   ],
   entryComponents: [
-    IconsUserDialogComponent
+    IconsUserDialogComponent,
+    DeleteCommentDialogComponent
   ],
   providers: [
     {provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig}

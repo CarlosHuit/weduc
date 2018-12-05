@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders, HttpErrorResponse  } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse, HttpParams  } from '@angular/common/http';
 import { Injectable                 } from '@angular/core';
 import { environment                } from '../../../environments/environment';
 import { Observable, throwError, of } from 'rxjs';
@@ -34,7 +34,7 @@ export class DiscussionSystemService {
     }
 
 
-  addComment = (comment: Comments) => {
+  addComment = (comment: Comments): Observable<any | Comments> => {
 
     const data = JSON.stringify(comment);
     this.httpOpts = {
@@ -70,6 +70,25 @@ export class DiscussionSystemService {
       );
   }
 
+  deleteComment = (course_id: string, comment_id: string) => {
+
+    const url = urljoin(this.apiUrl, course_id);
+    this.httpOpts = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+        'Authorization': `${this._getToken.addToken()}`
+      }),
+      params: new HttpParams()
+        .set('course_id',  course_id )
+        .set('comment_id', comment_id)
+    };
+
+    return this.http.delete(url, this.httpOpts, )
+      .pipe(
+        catchError( this.unauthorized )
+      );
+
+  }
 
 
   handleError = (error: HttpErrorResponse) => {
@@ -81,6 +100,11 @@ export class DiscussionSystemService {
     }
   }
 
+  unauthorized = (error: HttpErrorResponse) => {
+    if ( error.status === 401 ) {
+      return throwError('Unauthorized');
+    }
+  }
 
 }
 

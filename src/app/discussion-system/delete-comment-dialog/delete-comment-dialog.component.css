@@ -1,0 +1,17 @@
+.dialog-title {
+  text-align:   center;
+  margin:       20px 0;
+  line-height:  1.2em
+}
+
+.dialog-buttons {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+button {
+  min-width: 150px;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
