@@ -13,13 +13,20 @@
       <!-- Video -->
       <div #videoDesktop class="c-d-video">
 
-        <iframe style="
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;"
-          width="1012" height="569" [src]="videoUrl" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
+        <iframe
+        style="
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;"
+          width="1012"
+          height="569"
+          [src]="videoUrl"
+          frameborder="0"
+          allow="autoplay; encrypted-media"
+          allowfullscreen
+          >
         </iframe>
 
 
@@ -51,36 +58,8 @@
 
     <div class="c-d-comments">
 
-      <mat-card class="c-d-addComent">
-        <mat-form-field color="primary" style="width: 90%">
-          <mat-label>Escribe tu comentario:</mat-label>
-          <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
-            cdkAutosizeMaxRows="5" #commentText></textarea>
-        </mat-form-field>
-
-        <div>
-          <button mat-raised-button color="warn" (click)="addComment(commentText)" [disabled]="commentText.value === ''">
-            Agregar Comentario
-          </button>
-        </div>
-
-      </mat-card>
-
       <!-- Coments -->
-      <mat-card class="card-comment" *ngFor="let item of comments">
-
-        <div class="comment-author">
-          <img mat-card-avatar [src]="item.avatar" class="author-avatar">
-          <p class="author-name">
-            {{item.user}}
-          </p>
-        </div>
-
-        <mat-card-content>
-          <p>{{item.comment}}</p>
-        </mat-card-content>
-
-      </mat-card>
+      <app-discussion-system [course_id]="course_id" ></app-discussion-system>
 
     </div>
 
