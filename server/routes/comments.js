@@ -10,7 +10,7 @@ const app   = express.Router()
 const debug = new Debug(`${nameProject}: comments`)
 
 
-app.post('/', async (req, res) => {
+app.post('/', verifyToken, validateUser, async (req, res) => {
 
   try {
 
@@ -53,7 +53,7 @@ app.post('/', async (req, res) => {
 
 })
 
-app.get('/:course_id', async (req, res) => {
+app.get('/:course_id', verifyToken, validateUser, async (req, res) => {
 
   try {
 
