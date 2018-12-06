@@ -21,7 +21,7 @@
 }
 
 .m-c-box-comment {
-  margin-bottom: 10px;
+  margin-bottom: 7px;
   padding:       10px 15px 20px 15px;
 }
 
@@ -90,3 +90,26 @@
   height: 60px;
 }
 
+
+
+.m-c-container-answers {
+  position:     relative;
+  margin-bottom: 10px;
+  margin-left: 10px;
+}
+
+.m-c-comment-guide {
+  position:       absolute;
+  border-left:    2px solid #1c88b3;
+  border-bottom:  2px solid #1c88b3;
+  border-radius:  0 0 0 5px;
+  height:         calc(100% - 20px);
+  width:          20px;
+}
+
+.m-c-button-answer {
+  position: relative;
+  bottom: 0;
+  left: 25px;
+  color: #1c88b3;
+}
