@@ -286,16 +286,16 @@ export class LettersDetailComponent implements OnInit {
 
     const width  = el.clientWidth;
     const height = el.clientHeight;
-
+    const percent = .92;
     if (width > height) {
       return {
-        'width':  `${height * .85}px`,
-        'height': `${height * .85}px`
+        'width':  `${height * percent}px`,
+        'height': `${height * percent}px`
       };
     } else {
       return {
-        'width':  `${width * .85}px`,
-        'height': `${width * .85}px`
+        'width':  `${width * percent}px`,
+        'height': `${width * percent}px`
       };
     }
 

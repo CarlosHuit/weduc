@@ -109,7 +109,6 @@
 .container-cards {
   -webkit-perspective: 800;
   perspective: 800;
-  box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.4);
   display: grid;
   grid-template-columns: repeat(auto-fill, 32.5%);
   grid-auto-rows: 32.5%;
@@ -120,7 +119,8 @@
   border: 6px solid #1a5e7e;
   border: 6px solid #17789e;
 
-  border-radius: 4px;
+  box-sizing: border-box;
+  padding: 2px;
 }
 
 .carta {
