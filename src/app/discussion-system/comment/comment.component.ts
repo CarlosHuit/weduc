@@ -8,7 +8,7 @@ import { Comments } from '../../classes/comments';
 })
 export class CommentComponent implements OnInit {
 
-  @Input()  data:          Comments;
+  @Input()  data:          any;
   @Input()  idCurrentUser: string;
   @Output() evsComment =   new EventEmitter<string>();
 
