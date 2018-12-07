@@ -1,6 +1,5 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
-import { DialogData } from '../discussion-system.component';
 
 @Component({
   selector: 'app-delete-comment-dialog',
@@ -10,7 +9,7 @@ import { DialogData } from '../discussion-system.component';
 export class DeleteCommentDialogComponent {
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,
+    // @Inject(MAT_DIALOG_DATA) public data: DialogData,
     public  dialogRef: MatDialogRef<DeleteCommentDialogComponent>,
     ) {}
 

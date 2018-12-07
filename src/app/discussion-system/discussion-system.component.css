@@ -5,80 +5,65 @@
   background: #eaecee;
 }
 
-.m-c-addComent {
-  margin-bottom: 10px;
-  border-radius: 0;
-
-  height: 45px;
-  overflow: hidden;
-  padding-top: 0;
-  transition: .5s;
-}
-
-.m-c-addComent.commented {
-  height:  unset;
-  padding: 15px
-}
-
-.m-c-box-comment {
-  margin-bottom: 7px;
-  padding:       10px 15px 20px 15px;
-}
-
-
-.comment-box {
-  resize: none;
-  width:  90%;
-  margin: 0 auto;
-}
-
-.card-comment {
-  margin: 10px;
-}
-
-.comment-author {
-  width:          100%;
-  height:         40px;
-  display:        flex;
-  align-items:    center;
-  margin-bottom:  10px;
+.m-c-container-comment {
   padding-bottom: 10px;
-  border-bottom:  1px solid #c0c0c0
+  margin-bottom: 20px;
+  border-bottom: 1px solid #1c88b3
 }
 
-.comment-author .m-c-avatar {
-  width: 50px;
-  height: 100%;
+.m-c-container-answers {
+  position:      relative;
+  margin-bottom: 10px;
+  margin-left:   10px;
 }
 
-.comment-author .m-c-comment-data {
-  width:        calc(100% - 50px);
-  height:       100%;
-  display:      flex;
+.m-c-answers {
+  margin: 10px 10px 10px 25px;
 }
 
-.comment-author .m-c-comment-data .m-c-name-date {
-  width:          calc(100% - 40px);
-  height:         100%;
-  display:        flex;
-  flex-direction: column;
+.m-c-msg-show-answers {
+  color:          #1c88b3;
+  font-weight:      bolder;
+  text-align:       center;
+  text-decoration:  underline;
+  letter-spacing:   0.2px;
+  margin:           0
 }
 
-.comment-author .m-c-comment-data .m-c-button-delete {
-  width: 40px;
-  height: 100%;
+.m-c-answers mat-card {
+  margin: 5px 0;
 }
 
-.author-name {
-  margin:      0;
-  font-weight: bold;
-  font-size:   18px;
-  color:     #1c88b3;
+
+.m-c-comment-guide {
+  position:       absolute;
+  border-left:    2px solid #1c88b3;
+  border-bottom:  2px solid #1c88b3;
+  border-radius:  0 0 0 5px;
+  height:         calc(100% - 20px);
+  width:          20px;
+  top:            0;
 }
 
-.m-c-date {
-  font-size: 12px;
-  color: #9e9e9e;
+
+.m-c-container-buttons-answer {
+  position: relative;
+  width:    max-content;
+  bottom:   0;
+  left:     25px;
+  color:  #1c88b3;
+}
+
+.m-c-btn-write-answer  {
+  color:  #1c88b3;
+}
+
+.m-c-btn-hide-write-answer {
+  color:          #1c88b3;
+  font-size:        18px;
+  font-weight:      bold;
+  text-decoration:  underline;
+  letter-spacing:   0.5px;
 }
 
 .m-c-spinner {
@@ -88,28 +73,4 @@
 .box-spinner {
   width:  60px;
   height: 60px;
-}
-
-
-
-.m-c-container-answers {
-  position:     relative;
-  margin-bottom: 10px;
-  margin-left: 10px;
-}
-
-.m-c-comment-guide {
-  position:       absolute;
-  border-left:    2px solid #1c88b3;
-  border-bottom:  2px solid #1c88b3;
-  border-radius:  0 0 0 5px;
-  height:         calc(100% - 20px);
-  width:          20px;
-}
-
-.m-c-button-answer {
-  position: relative;
-  bottom: 0;
-  left: 25px;
-  color: #1c88b3;
 }

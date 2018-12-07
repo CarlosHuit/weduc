@@ -7,7 +7,8 @@ import { GetTokenService            } from '../get-token.service';
 import { LocalStorageService        } from '../local-storage.service';
 import { Router                     } from '@angular/router';
 import { AuthService                } from '../auth.service';
-import { Comments } from '../../classes/comments';
+import { Comments                   } from '../../classes/comments';
+import { Answers, Answer                    } from '../../classes/answers';
 import urljoin from 'url-join';
 
 @Injectable({
@@ -86,6 +87,23 @@ export class DiscussionSystemService {
     return this.http.delete(url, this.httpOpts, )
       .pipe(
         catchError( this.unauthorized )
+      );
+
+  }
+
+  addAnswer = (answer: Answer): Observable<Answer | any> => {
+    const url = urljoin(this.apiUrl, 'answers');
+    this.httpOpts = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+        'Authorization': `${this._getToken.addToken()}`
+      })
+    };
+    const data = JSON.stringify(answer);
+
+    return this.http.post<Answer>(url, data, this.httpOpts)
+      .pipe(
+        catchError( this.handleError )
       );
 
   }

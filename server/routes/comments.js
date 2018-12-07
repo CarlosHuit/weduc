@@ -1,9 +1,9 @@
 import express  from 'express'
 import Debug    from 'debug'
 import mongoose from 'mongoose'
-import { nameProject               } from '../config'
-import { verifyToken, validateUser } from '../middleware'
-import { CommentsModel             } from '../models'
+import { nameProject                } from '../config'
+import { verifyToken, validateUser  } from '../middleware'
+import { CommentsModel, AnswerModel } from '../models'
 import { cpus } from 'os';
 
 const app   = express.Router()
@@ -15,26 +15,54 @@ app.post('/', verifyToken, validateUser, async (req, res) => {
   try {
 
     const { temp_id, course_id, text, date, user_id } = req.body
-    const course = await CommentsModel.findOne({ course_id: course_id })
+    const courseComments = await CommentsModel.findOne({ course_id: course_id })
 
-    if (!course) {
+    if (!courseComments) {
 
-      const comment     = { _id: new mongoose.Types.ObjectId(), user_id, text, date }
-      const newComment  = new CommentsModel({ course_id, comments: [comment] })
-      const saveComment = await newComment.save()
+
+      /*------ Generate the ObjectsIds of use on mongodb collections ------*/
+      const idComment = new mongoose.Types.ObjectId()
+      const idAnswers = new mongoose.Types.ObjectId()
+
+      
+      /*------ Init and save the first comment of the course ------*/
+      const comment         = { _id: idComment, user_id, text, date, answers_id: idAnswers }
+      const courseComments  = new CommentsModel({ course_id, comments: [comment] })
+      const saveComment     = await courseComments.save()
+      
+      
+
+      /*------ Initializing the collection of answers of the current course ------*/
+      const initAnswers           = { _id: idAnswers, comment_id: comment._id  , answers: [] }
+      const initAnswerComment     = new   AnswerModel(initAnswers)
+      const saveInitAnswerComment = await initAnswerComment.save()
+
+      
+      debug('Creating a new register, adding the first comment and initialize your answers collection')
 
       comment['temp_id'] = temp_id
-      
-      debug('Creando un nuevo registro y agregando commentarios')
       return res.status(200).json(comment)
 
     }
 
-    if (course) {
+    if (courseComments) {
 
-      
-      const comment    = { _id: new mongoose.Types.ObjectId(), user_id, text, date }
+
+      /*------ Generate the ObjectsIds of use on mongodb collections ------*/
+      const idComment = new mongoose.Types.ObjectId()
+      const idAnswers = new mongoose.Types.ObjectId()
+
+
+      /* Save the new comment of course & the referenc to their answers */
+      const comment    = { _id: idComment, user_id, text, date, answers_id: idAnswers }
       const addComment = await CommentsModel.findOneAndUpdate({course_id: course_id}, {$push: {comments: comment } }) 
+
+
+      /*------ Initializing the collection of answers of the current course ------*/
+      const initAnswers           = { _id: idAnswers, comment_id: comment._id  , answers: [] }
+      const initAnswerComment     = new   AnswerModel(initAnswers)
+      const saveInitAnswerComment = await initAnswerComment.save()
+
 
       comment['temp_id'] = temp_id
       
@@ -59,7 +87,15 @@ app.get('/:course_id', verifyToken, validateUser, async (req, res) => {
 
     const course_id = req.params.course_id
     const data      = await CommentsModel.findOne({course_id}, {__v: 0})
-      .populate('comments.user_id', { __v: 0, password: 0, email: 0 })
+      .populate('comments.user_id',    { __v: 0, password: 0, email: 0 })
+      .populate({
+        path: 'comments.answers_id',
+        populate: {
+          path: 'answers.user_id'
+        }
+      })
+
+
 
     const result = data ? data.comments : []
 
@@ -68,7 +104,7 @@ app.get('/:course_id', verifyToken, validateUser, async (req, res) => {
   } catch (error) {
 
     debug(error)
-    degug('An internal error has ocurred')
+    debug('An internal error has ocurred')
     handleError(res)
     
   }
@@ -112,3 +148,9 @@ const handleError = (res, message) => {
 }
 
 export default app
+
+
+
+/*     const data      = await CommentsModel.findOne({course_id}, {__v: 0})
+      .populate('comments.user_id',    { __v: 0, password: 0, email: 0 })
+      .populate('comments.answers_id', 'answers') */

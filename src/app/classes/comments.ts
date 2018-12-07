@@ -1,4 +1,5 @@
-import { User } from './user';
+import { User    } from './user';
+import { Answers } from './answers';
 
 export class Comments {
 
@@ -10,8 +11,10 @@ export class Comments {
     public date:        Date,
     public course_id?:  string,
     public temp_id?:    string,
+    public answers_id?: Answers
 
   ) {}
 
 
 }
+

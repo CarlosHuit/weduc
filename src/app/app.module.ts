@@ -34,6 +34,9 @@ import { GuideLinesComponent } from './read/guide-lines/guide-lines.component';
 import { DiscussionSystemComponent } from './discussion-system/discussion-system.component';
 import { IconsUserDialogComponent } from './signup/icons-user-dialog/icons-user-dialog.component';
 import { DeleteCommentDialogComponent } from './discussion-system/delete-comment-dialog/delete-comment-dialog.component';
+import { CommentComponent } from './discussion-system/comment/comment.component';
+import { WriteCommentComponent } from './discussion-system/write-comment/write-comment.component';
+import { WriteAnswerComponent } from './discussion-system/write-answer/write-answer.component';
 
 @NgModule({
   declarations: [
@@ -61,6 +64,9 @@ import { DeleteCommentDialogComponent } from './discussion-system/delete-comment
     DiscussionSystemComponent,
     IconsUserDialogComponent,
     DeleteCommentDialogComponent,
+    CommentComponent,
+    WriteCommentComponent,
+    WriteAnswerComponent,
   ],
   imports: [
     MaterialModule,

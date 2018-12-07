@@ -1,0 +1,21 @@
+.m-c-addComent {
+  margin-bottom: 10px;
+  height:        45px;
+  padding-top:   0;
+  transition:    500ms;
+  overflow:      hidden;
+  border-radius: 10px;
+  padding-left:  25px;
+  padding-right: 25px;
+}
+
+.m-c-addComent.commented {
+  height:  unset;
+  padding: 15px;
+  border-radius: 0px;
+}
+
+.fieldComment {
+  width:  100%;
+  margin: 0 
+}

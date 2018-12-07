@@ -3,112 +3,119 @@
 
   <div>
     
-
+    <!-- AddComment -->
     <div class="m-c-container-addComment">
 
 
       <!----- Add Comment ----->
-      <mat-card [class.commented]="commented || commentText.value.length > 0" class="m-c-addComent">
-
-        <mat-form-field color="primary" style="width: 100%; margin: 0">
-
-          <mat-label>Escribe tu comentario:</mat-label>
-          <textarea
-            matInput
-            #commentText
-            cdkTextareaAutosize
-            cdkAutosizeMinRows="1"
-            cdkAutosizeMaxRows="5"
-            (focus)="commented = true"
-            (focusout)="commented = false"
-            #autosize="cdkTextareaAutosize"
-            ></textarea>
-
-        </mat-form-field>
-    
-        <div style="display: flex; justify-content: flex-end" >
-          <button
-            mat-raised-button
-            color="warn"
-            (click)="addComment(commentText)"
-            [disabled]="commentText.value === ''"
-            >
-            Agregar Comentario
-          </button>
-        </div>
-    
-      </mat-card>
-
+      <app-write-comment
+        [currentUser]="currentUser"
+        (evsWriteComments)="addComment($event)"
+        >
+      </app-write-comment>
+      
 
     </div>
   
-  
+    <!-- AllComments -->
     <div class="m-c-container-comments" *ngIf="!loadingComments">
 
-      <!----- All Comments ----->
-      <div *ngFor="let item of comments" >
-        <mat-card  class="m-c-box-comment">
-      
-          <div class="comment-author">
-  
-            <div class="m-c-avatar">
-  
-              <img mat-card-avatar [src]="genUrl(item.user_id.avatar)" class="author-avatar">
-  
-            </div>
-  
-            <div class="m-c-comment-data" >
-  
-              <div class="m-c-name-date">
-                <p class="author-name">
-                  {{ item.user_id.firstName }} {{ item.user_id.lastName }}
-                </p>
-                <small class="m-c-date">{{ item.date | date }}</small>
-              </div>
-  
-              <div class="m-c-button-delete">
-                <button
-                  mat-icon-button
-                  (click)="openDialog(item._id)"
-                  *ngIf="currentUser._id === item.user_id._id && !item.temp_id"
-                  >
-                  <mat-icon
-                    color="warn"
-                    aria-label="Delete Commet">
-                    delete_forever
-                  </mat-icon>
-                </button>
-              </div>
-  
-            </div>
-  
-  
-          </div>
-      
-          <mat-card-content>
-            <p style="word-break: break-word" >{{item.text}}</p>
-          </mat-card-content>
-      
-        </mat-card>
+      <div class="m-c-container-comment" *ngFor="let item of comments" >
+
+        <!----- box comments ----->
+        <app-comment
+          [data]="item"
+          (evsComment)="openDialog($event)"
+          [idCurrentUser]="currentUser._id"
+          >
+        </app-comment>
 
         <div class="m-c-container-answers" >
-          <div class="m-c-comment-guide" ></div>
-          <button class="m-c-button-answer" mat-raised-button>Responder</button>
+
+          <!----- box answers ----->
+          <div class="m-c-answers" >
+
+            <div *ngIf="item.answers_id.answers.length > 0 && !showAnswers[item._id]" >
+
+              <p
+                class="m-c-msg-show-answers"
+                (click)="showAnswers[item._id] = item._id"
+                >
+                Ver todas las respuestas
+              </p>
+
+            </div>
+
+            <div *ngIf="item.answers_id && showAnswers[item._id] === item._id" >
+              <app-comment
+                *ngFor="let answer of item.answers_id.answers"
+                [data]="answer"
+                (evsComment)="openDialog($event)"
+                [idCurrentUser]="currentUser._id"
+                >
+              </app-comment>
+            </div>
+
+          </div>
+
+          <!----- Write answer  ----->
+          <div class="m-c-answers" *ngIf="writeAnswer === item._id">
+            <app-write-answer 
+              [currentUser]="currentUser"
+              (evsWriteComments)="addAnswer($event, item._id)"
+              >
+            </app-write-answer>
+          </div>
+
+
+          <div
+            class="m-c-comment-guide"
+            >
+          </div>
+
+          <div class="m-c-container-buttons-answer">
+
+            <button
+              mat-raised-button
+              class="m-c-btn-write-answer"
+              *ngIf="writeAnswer !== item._id"
+              (click)="writeAnswer = item._id"
+              >
+              Responder
+            </button>
+  
+            <button
+              mat-button
+              color="primary"
+              (click)="writeAnswer = ''"
+              class="m-c-btn-hide-write-answer"
+              *ngIf="writeAnswer === item._id"
+              >
+              Ocultar
+            </button>
+
+          </div>
+
         </div>
-        
+
+
       </div>
-
-
     </div>
-
-
 
   </div>
 
 
-  <div class="m-c-spinner center" *ngIf="loadingComments" >
+  <!-- Spinner -->
+  <div
+    class="m-c-spinner center"
+    *ngIf="loadingComments"
+    >
 
-    <div class="box-spinner"> <mat-spinner></mat-spinner> </div>
+    <div
+      class="box-spinner"
+      >
+      <mat-spinner></mat-spinner>
+    </div>
 
   </div>
 

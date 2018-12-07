@@ -5,7 +5,7 @@ import path from 'path'
 import { 
   auth, user, letter, word, coordinates, similarLetters, saveData, Syllables,
   Target, GuessLetter, CompleteWord, SoundLetters, Courses, InitialData, SelectImages,
-  IdentifyLetter, Combinations, UserProgress, Comments
+  IdentifyLetter, Combinations, UserProgress, Comments, Answers
 } from './routes'
 
 import { lettersMenu, lettersDetail, game, drawLetters, findLetters, selectWords, pronounceLetters } from './routes/user-data'
@@ -41,6 +41,7 @@ app.use('/api/auth',                auth              )
 app.use('/api/auth/user',           user              )
 app.use('/api/initial-data',        InitialData       )
 app.use('/api/comments',            Comments          )
+app.use('/api/comments/answers',    Answers           )
 
 
 app.use('/api/data/letters-menu',      lettersMenu      )

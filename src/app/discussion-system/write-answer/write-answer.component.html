@@ -1,0 +1,33 @@
+<mat-card
+class="m-c-addComent"
+[class.commented]="commented || commentText.value.length > 0"
+>
+
+<mat-form-field color="primary" class="fieldComment">
+
+  <mat-label>Escribe tu respuesta:</mat-label>
+  <textarea
+    matInput
+    #commentText
+    cdkTextareaAutosize
+    cdkAutosizeMinRows="1"
+    cdkAutosizeMaxRows="5"
+    (focus)="commented = true"
+    (focusout)="commented = false"
+    #autosize="cdkTextareaAutosize"
+    ></textarea>
+
+</mat-form-field>
+
+<div style="display: flex; justify-content: flex-end" >
+  <button
+    mat-raised-button
+    color="warn"
+    (click)="reqAddComment(commentText)"
+    [disabled]="commentText.value === ''"
+    >
+    Agregar Comentario
+  </button>
+</div>
+
+</mat-card>
