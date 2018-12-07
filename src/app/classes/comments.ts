@@ -4,7 +4,6 @@ import { Answers } from './answers';
 export class Comments {
 
   constructor(
-
     public _id:         string,
     public user_id:     User | string,
     public text:        string,
@@ -12,7 +11,6 @@ export class Comments {
     public course_id?:  string,
     public temp_id?:    string,
     public answers_id?: Answers
-
   ) {}
 
 

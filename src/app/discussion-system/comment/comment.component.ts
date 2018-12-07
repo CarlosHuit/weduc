@@ -14,7 +14,8 @@ export class CommentComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() { }
+  ngOnInit() {
+  }
 
   genUrl = (avatar: String) => `/assets/icon-user100X100/icon-${avatar}.png`;
 
