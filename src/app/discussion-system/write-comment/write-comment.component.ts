@@ -11,6 +11,8 @@ export class WriteCommentComponent implements OnInit {
   @Input()  currentUser:    User;
   @Output() evsWriteComments = new EventEmitter<string>();
 
+  commented: boolean;
+
   constructor() { }
 
   ngOnInit() { }

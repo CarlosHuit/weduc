@@ -10,7 +10,7 @@ export class Answers {
 
   export class Answer {
     constructor (
-      public user_id:     string | User,
+      public user_id:     User | string,
       public text:        string,
       public date:        Date,
       public comment_id?: string,
