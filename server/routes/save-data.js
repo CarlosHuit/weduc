@@ -6,7 +6,7 @@ const app = express.Router()
 const debug = new Debug('WEDUC: Save Data')
 
 
-app.get('', async (req, res) => {
+app.post('', async (req, res) => {
   try {
 
 

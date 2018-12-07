@@ -1,4 +1,4 @@
-const MONGODB_URI_SERVER = process.env.MONGODB_URI || 'mongodb://emox:mX179zAzAzA@ds241737.mlab.com:41737/welearn'
+const MONGODB_URI_SERVER = process.env.MONGODB_URI || 'mongodb://emox2544:mX179zA@ds141661.mlab.com:41661/weduc'
 const MONGODB_URI_LOCAL  = process.env.MONGODB_URI || 'mongodb://localhost/weduc'
 
 const PORT_SERVER = process.env.PORT || 8000
