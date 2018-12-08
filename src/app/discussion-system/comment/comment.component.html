@@ -21,9 +21,8 @@
         <p class="author-name">
           {{ data.user_id.firstName }} {{ data.user_id.lastName }}
         </p>
-        <small
-          class="m-c-date"
-          >
+
+        <small class="m-c-date" >
           {{ data.date | date }}
         </small>
 
@@ -36,10 +35,7 @@
           (click)="evOpenDialog(data._id)"
           *ngIf="idCurrentUser === data.user_id._id && !data.temp_id"
           >
-          <mat-icon
-            color="warn"
-            aria-label="Delete Commet"
-            >
+          <mat-icon color="warn">
             delete_forever
           </mat-icon>
         </button>
