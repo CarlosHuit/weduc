@@ -25,6 +25,7 @@
         <!----- box comments ----->
         <app-comment
           [data]="item"
+          [answers]="item.answers_id.answers.length"
           (evsComment)="openDialog($event)"
           [idCurrentUser]="currentUser._id"
           >
@@ -47,13 +48,15 @@
             </div>
 
             <div *ngIf="item.answers_id && showAnswers[item._id] === item._id" >
-              <app-comment
+
+              <app-answer
                 *ngFor="let answer of item.answers_id.answers"
                 [data]="answer"
-                (evsComment)="openDialog($event)"
+                (evsComment)="openDialogAnswer($event, item._id)"
                 [idCurrentUser]="currentUser._id"
                 >
-              </app-comment>
+              </app-answer>
+
             </div>
 
           </div>

@@ -58,21 +58,20 @@ app.get('/:comment_id', verifyToken, validateUser, async (req, res) => {
 
 })
 
-app.delete('/:course_id', verifyToken, validateUser, async (req, res) => {
+app.delete('/:comment_id', verifyToken, validateUser, async (req, res) => {
 
   try {
     
     const user_id = req.user._id
-    const { course_id, comment_id } = req.query
+    const { comment_id, answer_id } = req.query
   
-    const deleteComment = await CommentsModel.updateOne(
-      { course_id },
-      { $pull: { 'comments': { _id: comment_id, user_id }} },
+    const deleteAnswer = await AnswerModel.updateOne(
+      { comment_id },
+      { $pull: { 'answers': { _id: answer_id, user_id }} },
       { safe: true }
     )
   
     res.status(200).json({ message: 'Comentario eliminado' })
-
   } catch (error) {
     
     debug(error)

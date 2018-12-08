@@ -6,11 +6,7 @@
 
     <div class="m-c-avatar">
 
-      <img
-        mat-card-avatar
-        class="author-avatar"
-        [src]="genUrl(data.user_id.avatar)"
-        >
+      <img mat-card-avatar class="author-avatar" [src]="genUrl(data.user_id.avatar)">
 
     </div>
 
@@ -22,7 +18,7 @@
           {{ data.user_id.firstName }} {{ data.user_id.lastName }}
         </p>
 
-        <small class="m-c-date" >
+        <small class="m-c-date">
           {{ data.date | date }}
         </small>
 
@@ -30,11 +26,7 @@
 
       <div class="m-c-button-delete">
 
-        <button
-          mat-icon-button
-          (click)="evOpenDialog(data._id)"
-          *ngIf="idCurrentUser === data.user_id._id && !data.temp_id && answers === 0"
-          >
+        <button mat-icon-button (click)="evOpenDialog(data._id)" *ngIf="idCurrentUser === data.user_id._id && !data.temp_id">
           <mat-icon color="warn">
             delete_forever
           </mat-icon>

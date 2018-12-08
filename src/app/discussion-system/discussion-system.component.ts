@@ -60,7 +60,7 @@ export class DiscussionSystemComponent implements OnInit {
       );
   }
 
-  openDialog(id: string) {
+  openDialog = (id: string) => {
 
     const dialogRef = this.dialog.open( DeleteCommentDialogComponent, { disableClose: false });
 
@@ -68,6 +68,15 @@ export class DiscussionSystemComponent implements OnInit {
       .subscribe(
         (ev) => ev === 'ok' ? this.deleteComment(id) : null
       );
+
+  }
+
+  openDialogAnswer = (answer_id: string, comment_id: string) => {
+
+    const dialogRef = this.dialog.open( DeleteCommentDialogComponent, { disableClose: false });
+
+    dialogRef.afterClosed()
+      .subscribe( ev => this.deleteAnswer(answer_id, comment_id));
 
   }
 
@@ -148,6 +157,22 @@ export class DiscussionSystemComponent implements OnInit {
 
     }
 
+  }
+
+
+  deleteAnswer = (answer_id: string, comment_id: string) => {
+
+    const index = this.comments.findIndex(comment => comment._id === comment_id );
+    const path  = this.comments[index];
+
+    const iAnswer = path.answers_id.answers.findIndex(answer => answer._id === answer_id);
+    path.answers_id.answers.splice(iAnswer, 1);
+
+    this._discussionSystem.deleteAnswer(comment_id, answer_id)
+      .subscribe(
+        (val) => console.log(val),
+        (err) => console.log(err)
+      );
   }
 
 

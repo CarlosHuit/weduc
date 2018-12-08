@@ -117,6 +117,11 @@ app.delete('/:course_id', verifyToken, validateUser, async (req, res) => {
     
     const user_id = req.user._id
     const { course_id, comment_id } = req.query
+
+    // const answers = await AnswerModel.find({course_id})
+
+    // debug(answers)
+    // validar si tiene respuestas antes de eliminar
   
     const deleteComment = await CommentsModel.updateOne(
       { course_id },

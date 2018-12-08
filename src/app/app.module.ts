@@ -37,6 +37,7 @@ import { DeleteCommentDialogComponent } from './discussion-system/delete-comment
 import { CommentComponent } from './discussion-system/comment/comment.component';
 import { WriteCommentComponent } from './discussion-system/write-comment/write-comment.component';
 import { WriteAnswerComponent } from './discussion-system/write-answer/write-answer.component';
+import { AnswerComponent } from './discussion-system/answer/answer.component';
 
 @NgModule({
   declarations: [
@@ -67,6 +68,7 @@ import { WriteAnswerComponent } from './discussion-system/write-answer/write-ans
     CommentComponent,
     WriteCommentComponent,
     WriteAnswerComponent,
+    AnswerComponent,
   ],
   imports: [
     MaterialModule,

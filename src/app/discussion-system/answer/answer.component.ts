@@ -2,14 +2,13 @@ import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { Comments } from '../../classes/comments';
 
 @Component({
-  selector: 'app-comment',
-  templateUrl: './comment.component.html',
-  styleUrls: ['./comment.component.css']
+  selector: 'app-answer',
+  templateUrl: './answer.component.html',
+  styleUrls: ['./answer.component.css']
 })
-export class CommentComponent implements OnInit {
+export class AnswerComponent implements OnInit {
 
   @Input()  data:          any;
-  @Input()  answers:       number;
   @Input()  idCurrentUser: string;
   @Output() evsComment =   new EventEmitter<string>();
 

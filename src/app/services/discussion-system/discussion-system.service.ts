@@ -91,6 +91,27 @@ export class DiscussionSystemService {
 
   }
 
+
+  deleteAnswer = (comment_id: string, answer_id: string) => {
+
+    const url = urljoin(this.apiUrl, `answers/${comment_id}`);
+    this.httpOpts = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+        'Authorization': `${this._getToken.addToken()}`
+      }),
+      params: new HttpParams()
+        .set('comment_id',  comment_id )
+        .set('answer_id',   answer_id  )
+    };
+
+    return this.http.delete(url, this.httpOpts, )
+      .pipe(
+        catchError( this.unauthorized )
+      );
+
+  }
+
   addAnswer = (answer: Answer): Observable<Answer | any> => {
     const url = urljoin(this.apiUrl, 'answers');
     this.httpOpts = {
