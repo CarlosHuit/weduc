@@ -118,25 +118,37 @@ app.delete('/:course_id', verifyToken, validateUser, async (req, res) => {
     const user_id = req.user._id
     const { course_id, comment_id } = req.query
 
-    // const answers = await AnswerModel.find({course_id})
+    const data    = await AnswerModel.findOne({ comment_id }, {answers: 1})
+    const answers = data.answers.length
 
-    // debug(answers)
-    // validar si tiene respuestas antes de eliminar
-  
-    const deleteComment = await CommentsModel.updateOne(
-      { course_id },
-      { $pull: { 'comments': { _id: comment_id, user_id }} },
-      { safe: true }
-    )
-  
-    res.status(200).json({ message: 'Comentario eliminado' })
+    if (answers === 0) {
+
+      const deleteComment = await CommentsModel.updateOne(
+        { course_id },
+        { $pull: { 'comments': { _id: comment_id, user_id }} },
+        { safe: true }
+      )
+
+      const removeAnswers = await AnswerModel.deleteOne({comment_id})
+
+      res.status(200).json({ message: 'Comment deleted' })
+
+    } else {
+
+      res.status(202).json({
+        error: 'Accepted but not deleted',
+        answers: 'Contain aswers'
+      })
+
+    }
+    
 
   } catch (error) {
     
     debug(error)
-    res.status(401).json({
-      error:   'Unauthorized',
-      message: 'Unauthorized'
+    res.status(500).json({
+      error:   'Internal Server Error',
+      message: 'An internal erros has ocurred'
     })
   }
 
@@ -153,9 +165,3 @@ const handleError = (res, message) => {
 }
 
 export default app
-
-
-
-/*     const data      = await CommentsModel.findOne({course_id}, {__v: 0})
-      .populate('comments.user_id',    { __v: 0, password: 0, email: 0 })
-      .populate('comments.answers_id', 'answers') */

@@ -151,8 +151,8 @@ export class DiscussionSystemComponent implements OnInit {
 
       this._discussionSystem.deleteComment(this.course_id, comment_id)
         .subscribe(
-          val => { const t = val; },
-          err => { const e = err; }
+          val => { const x = val; },
+          err => { const x = err; }
         );
 
     }
@@ -170,8 +170,8 @@ export class DiscussionSystemComponent implements OnInit {
 
     this._discussionSystem.deleteAnswer(comment_id, answer_id)
       .subscribe(
-        (val) => console.log(val),
-        (err) => console.log(err)
+        (val) => { const x = val; },
+        (err) => { const x = err; }
       );
   }
 
