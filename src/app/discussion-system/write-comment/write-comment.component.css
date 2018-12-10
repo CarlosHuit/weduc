@@ -9,7 +9,8 @@
 
 .m-c-addComent.commented {
   height:  unset;
-  padding: 15px
+  padding: 30px 25px;
+  padding-bottom: 20px;
 }
 
 .fieldComment {

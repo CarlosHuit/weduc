@@ -1,9 +1,9 @@
 import { Component, OnDestroy, ViewChild, OnInit } from '@angular/core';
-import { AuthService } from '../services/auth.service';
+import { AuthService       } from '../services/auth.service';
 import { ChangeDetectorRef } from '@angular/core';
-import { MediaMatcher } from '@angular/cdk/layout';
-import { Router } from '@angular/router';
-import {MatSidenav} from '@angular/material/sidenav';
+import { MediaMatcher      } from '@angular/cdk/layout';
+import { Router            } from '@angular/router';
+import { MatSidenav        } from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-toolbar',
@@ -23,8 +23,8 @@ export class ToolbarComponent implements OnDestroy, OnInit {
   constructor(
     private authService:        AuthService,
     private router:             Router,
-            changeDetectorRef:  ChangeDetectorRef,
-            media:              MediaMatcher
+    public  changeDetectorRef:  ChangeDetectorRef,
+    public  media:              MediaMatcher
   ) {
 
     this.mobileQuery = media.matchMedia('(max-width: 600px)');

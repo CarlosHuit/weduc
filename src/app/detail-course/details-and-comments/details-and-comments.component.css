@@ -1,0 +1,56 @@
+
+
+.tab-title {
+  height: 48px;
+  padding: 0 24px;
+}
+
+.lowOpacity  {
+  opacity: 0.4;
+}
+
+.m-c-description {
+  width: 100%;
+  padding: 2%;
+  box-sizing: border-box;
+  background-color: #eaecee;
+}
+
+.c-detail {
+  width: 90%;
+  margin: 0 auto;
+  background-color: white;
+
+
+}
+
+
+
+@media (min-width: 320px) and (orientation: landscape) {
+
+  .container {
+    overflow: auto;
+  }
+
+  .container-background-video {
+    background-color: #343434;
+    background-color: rgba(34, 34, 34, 1);
+    width: 100%;
+    height: calc(100vh - 56px);
+    border: 0;
+  }
+
+  .unsetHeight {
+    height: max-content;
+  }
+
+
+  .c-video {
+    position: relative;
+    width: calc(((100vh - 56px) / 9) * 16);
+    margin: 0 auto;
+    height: calc(100vh - 56px);
+    padding: 0;
+  }
+
+}

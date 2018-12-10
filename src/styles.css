@@ -9,16 +9,24 @@ body {
 }
 
 .container {
-  width: 100vw;
-  height: calc(100vh - 56px);
-  background-color: #eaecee;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 56px;
-  position: relative;
+  width:            100vw;
+  height:           calc(100vh - 56px);
+  background:     #eaecee;
+  margin:           0;
+  padding:          0;
+  display:          flex;
+  justify-content:  center;
+  align-items:      center;
+  margin-top:       56px;
+  position:         relative;
+}
+
+.overflow-auto {
+  overflow: auto;
+}
+
+.quit-scroll-bar::-webkit-scrollbar {
+  display: none;
 }
 
 .card {
@@ -128,11 +136,13 @@ body {
 }
 
 .mat-tab-body-wrapper {
-  height: 100%;
+  height:       100%;
+  background: #eaecee;
 }
 
 .mat-tab-group {
   font-family: 'Noto Sans';
+  min-height:  100%
 }
 
 .mat-tab-body-content::-webkit-scrollbar {

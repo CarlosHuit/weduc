@@ -38,6 +38,8 @@ import { CommentComponent } from './discussion-system/comment/comment.component'
 import { WriteCommentComponent } from './discussion-system/write-comment/write-comment.component';
 import { WriteAnswerComponent } from './discussion-system/write-answer/write-answer.component';
 import { AnswerComponent } from './discussion-system/answer/answer.component';
+import { DetailsAndCommentsComponent } from './detail-course/details-and-comments/details-and-comments.component';
+import { CardDetailsComponent } from './detail-course/card-details/card-details.component';
 
 @NgModule({
   declarations: [
@@ -69,6 +71,8 @@ import { AnswerComponent } from './discussion-system/answer/answer.component';
     WriteCommentComponent,
     WriteAnswerComponent,
     AnswerComponent,
+    DetailsAndCommentsComponent,
+    CardDetailsComponent,
   ],
   imports: [
     MaterialModule,

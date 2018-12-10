@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy, NgZone } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subjects               } from '../classes/subjects';
 import { DomSanitizer           } from '@angular/platform-browser';
@@ -7,6 +7,7 @@ import { DetectMobileService    } from '../services/detect-mobile.service';
 import { AuthService            } from '../services/auth.service';
 import { User                   } from '../classes/user';
 import { GetCoursesService      } from '../services/get-data/get-courses.service';
+import { MediaMatcher           } from '@angular/cdk/layout';
 
 
 @Component({
@@ -29,19 +30,27 @@ export class DetailCourseComponent implements OnInit, OnDestroy {
   loading =     true;
   course_id:    string;
 
+  mobileQuery: MediaQueryList;
+  _mobileQueryListener: () => void;
+
+
 
   constructor(
-    private _sanitizer: DomSanitizer,
-    private _route:     ActivatedRoute,
-    private _courses:   GetCoursesService,
-    private _mobile:    DetectMobileService,
-    private _auth:      AuthService,
-    private snackBar:   MatSnackBar,
-
-    private router:     Router,
+    private router:             Router,
+    private _auth:              AuthService,
+    private snackBar:           MatSnackBar,
+    private _sanitizer:         DomSanitizer,
+    public  media:              MediaMatcher,
+    private _route:             ActivatedRoute,
+    private _courses:           GetCoursesService,
+    private _mobile:            DetectMobileService,
+    public  changeDetectorRef:  ChangeDetectorRef,
   ) {
     this.course       = this._route.snapshot.paramMap.get('course');
     this.showComments = false;
+    this.mobileQuery  = media.matchMedia('(max-width: 864px)');
+    this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+    this.mobileQuery.addListener(this._mobileQueryListener);
 
     if (this._auth.isLoggedIn()) {
       const { userId, email, firstName, lastName } = JSON.parse(localStorage.getItem('user'));
@@ -72,6 +81,7 @@ export class DetailCourseComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     window.removeEventListener('resize', () => this._mobile.isMobile());
+    this.mobileQuery.removeListener(this._mobileQueryListener);
   }
 
 

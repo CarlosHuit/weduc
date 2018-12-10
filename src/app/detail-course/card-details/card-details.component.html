@@ -1,0 +1,30 @@
+<mat-card class="c-d-detail mobile">
+
+  <div class="title-course">
+ 
+    <img [src]="genUrlImg()">
+    <h1
+      style="text-transform: capitalize"
+      >
+      {{data.title}}
+    </h1>
+ 
+  </div>
+
+
+  <div class="c-description">
+    <p>{{data.description}}</p>
+  </div>
+
+
+  <div class="c-button">
+    <button
+      color="warn"
+      mat-flat-button
+      (click)="redirect(data.title, data.subtitle)"
+      >
+      Empezar Curso
+    </button>
+  </div>
+
+</mat-card>

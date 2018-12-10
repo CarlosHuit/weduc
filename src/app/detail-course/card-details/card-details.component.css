@@ -1,0 +1,51 @@
+.c-d-detail {
+  width:         100%;
+  margin:        0 auto;
+  margin-bottom: 20px;
+  box-sizing:    border-box;
+  padding:       20px 30px;
+  padding-top:   10px;
+}
+
+.c-d-detail.mobile {
+  padding-left:  20px;
+  padding-right: 20px;
+}
+
+.title-course {
+  margin-top:    0;
+  padding:       10px 0 15px 0;
+  border-bottom: 1px solid #a6a6a6;
+  display:       flex;
+  align-items:   center;
+}
+
+.title-course img {
+  width:         50px;
+  height:        50px;
+  margin-right:  5px;
+}
+
+.title-course h1 {
+  margin: 0;
+}
+
+.c-description {
+  font-size:   18px;
+  font-family: sans-serif;
+}
+
+.c-button {
+  width:           100%;
+  margin-top:      20px;
+  display:         flex;
+  justify-content: center;
+  align-items:     center;
+}
+
+.c-button button {
+  width:      200px;
+  height:     40px;
+  margin:     0 auto;
+  font-size:  20px;
+}

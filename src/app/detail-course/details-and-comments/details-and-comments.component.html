@@ -1,0 +1,54 @@
+<mat-tab-group color="accent" backgroundColor="warn" mat-align-tabs="start" >
+
+
+  <!-------- Course details tab -------->
+  <mat-tab >
+
+    <ng-template mat-tab-label>
+
+      <span
+        class="center tab-title"
+        (click)="showComments = false"
+        [class.lowOpacity]="showComments"
+        >
+        Detalles
+      </span>
+
+    </ng-template>
+
+    <div class="m-c-description">
+
+      <app-card-details
+        [data]="data"
+        >
+      </app-card-details>
+
+    </div>
+
+  </mat-tab>
+
+
+  <!-------- Comments tab -------->
+  <mat-tab>
+
+    <ng-template mat-tab-label>
+
+      <span 
+        class="center tab-title"
+        (click)="showComments = true"
+        [class.lowOpacity]="!showComments"
+        >
+        Comentarios
+      </span>
+
+    </ng-template>
+
+    <app-discussion-system
+      [course_id]="course_id"
+      >
+    </app-discussion-system>
+    
+  </mat-tab>
+
+
+</mat-tab-group>
