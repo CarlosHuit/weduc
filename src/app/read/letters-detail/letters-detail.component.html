@@ -60,11 +60,11 @@
 
       <div #cCard class="container-cards" [ngStyle]="style(card)">
         <div
-          *ngFor="let x of currentIds"
           [id]="x"
           #option
-          (click)="onSelect(x)"
           class="carta active"
+          (click)="onSelect(x)"
+          *ngFor="let x of currentIds"
           [class.showAll]="show === true"
           [class.active]="active === true && x === sel1 || x === sel2"
           >
