@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { Router               } from '@angular/router';
 import { MatSnackBar          } from '@angular/material';
 import { DetectMobileService  } from '../services/detect-mobile.service';
@@ -11,13 +11,14 @@ import { GetCoursesService } from '../services/get-data/get-courses.service';
   styleUrls: ['./home.component.css']
 })
 
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
 
   @ViewChild('contGrid') contGrid: ElementRef;
 
   subjects: Subjects[];
   loading = true;
   search:   RegExp;
+  listenerResize: any;
 
   constructor(
     private router:       Router,
@@ -32,12 +33,15 @@ export class HomeComponent implements OnInit {
         (val: Subjects[]) => {
           this.subjects = val;
           this.loading  = false;
-          (window as any).onresize = () => this.genCols(this.contGrid.nativeElement);
+          window.addEventListener('resize', () => this.genCols(this.contGrid.nativeElement));
         },
         (err) => console.log(err)
       );
   }
 
+  ngOnDestroy() {
+    window.removeEventListener('resize', () => this.genCols(this.contGrid.nativeElement));
+  }
 
   redirect = (course: string) => {
 

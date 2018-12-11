@@ -67,7 +67,6 @@ export class FindLetterComponent implements OnDestroy, OnInit {
   ngOnDestroy() {
     this._speech.cancel();
     window.removeEventListener('resize', this.isMobile);
-    console.log('destroy');
   }
 
 

@@ -55,11 +55,11 @@ export class SpeechSynthesisService {
     this.utterance.pitch  = 1;
 
     (window as any).speechSynthesis.speak(this.utterance);
-    (window as any).addEventListener('beforeunload', () => this.cancel(), false);
+    (window as any).addEventListener('beforeunload', this.cancel());
 
-    this.utterance.onend = () => {
-      (window as any).removeEventListener('beforeunload', () => this.cancel(), false );
-    };
+    this.utterance.addEventListener('end', () => {
+      (window as any).removeEventListener('beforeunload', this.cancel());
+    });
 
     return this.utterance;
   }

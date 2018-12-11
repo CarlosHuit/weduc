@@ -45,6 +45,8 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
 
   lastID: string;
 
+  listenerRestartData:   any;
+  listenerDetectMobile: any;
 
 
   constructor (
@@ -88,15 +90,17 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
           this.lettersData = res;
           this.letter      = this.letterParam;
 
-          // prepararDatos
           this.letterIDs   = this.prepareData(this.lettersData.lowerCase);
           this.letters     = this.joinLetters(this.letterIDs);
           this.totalCorrects = this.countPendings();
 
           setTimeout(() => this.loading = false, 0);
 
-          window.addEventListener('resize', e => setTimeout(() => this.restartData(), 0));
-          window.addEventListener('resize', e => setTimeout(() => this.isMobile(), 10));
+          this.listenerRestartData  = () => setTimeout(() => this.restartData(), 0);
+          this.listenerDetectMobile = () => setTimeout(() => this.isMobile(), 10);
+
+          window.addEventListener('resize', this.listenerRestartData);
+          window.addEventListener('resize', this.listenerDetectMobile);
 
           this.initUserData();
           this.instructions();
@@ -108,6 +112,8 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy() {
     this.speechService.cancel();
+    window.removeEventListener('resize', this.listenerRestartData);
+    window.removeEventListener('resize', this.listenerDetectMobile);
   }
 
   prepareData = (letters: string[]) => {

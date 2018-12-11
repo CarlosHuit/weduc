@@ -94,17 +94,21 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
     this.startup(this.canvas);
 
 
-    window.addEventListener('resize', () => setTimeout(() => this.resetCanvasSize, 0) );
+    // window.addEventListener('resize', () => setTimeout(() => this.resetCanvasSize, 0) );
   }
 
   ngOnInit() {
 
     this.currentLetter = this.letterParam;
     window.addEventListener('resize', this.limpiar);
-
-
-
   }
+
+  ngOnDestroy() {
+    this.speechSynthesis.cancel();
+    this.removeListeners(this.canvas);
+    window.removeEventListener('resize', this.limpiar);
+  }
+
 
   resetCanvasSize = () => {
 
@@ -123,10 +127,6 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
   }
 
-  ngOnDestroy() {
-    this.speechSynthesis.cancel();
-    window.removeEventListener('resize', this.limpiar);
-  }
 
   isMobile = () => this._mobile.isMobile();
 
@@ -181,6 +181,23 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
   }
 
+  removeListeners = (el) => {
+    const mobile = this.isMobile();
+
+    if (mobile === true) {
+      el.removeEventListener('touchstart', this.handleStart );
+      el.removeEventListener('touchend',   this.handleEnd   );
+      el.removeEventListener('touchleave', this.handleEnd   );
+      el.removeEventListener('touchmove',  this.handleMove  );
+    }
+
+    if (mobile !== true) {
+      el.removeEventListener('mousedown', this.handleStart );
+      el.removeEventListener('mouseup',   this.handleEnd   );
+      el.removeEventListener('mouseout',  this.handleEnd   );
+      el.removeEventListener('mousemove', this.handleMove  );
+    }
+  }
 
   handleStart = (evt): void => {
 
