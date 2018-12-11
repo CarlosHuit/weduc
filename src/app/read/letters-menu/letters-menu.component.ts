@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { Router                 } from '@angular/router';
 import { MatAccordion           } from '@angular/material';
 import { SpeechSynthesisService } from '../../services/speech-synthesis.service';
@@ -15,6 +15,7 @@ import {
   PreviewLetter, LettersHeard,
   Times, Sort,
 } from '../../classes/menu-letters-data';
+import { MediaMatcher } from '@angular/cdk/layout';
 
 
 @Component({
@@ -25,11 +26,8 @@ import {
 
 export class LettersMenuComponent implements OnInit, OnDestroy {
 
-  mobileQuery: MediaQueryList;
-
   @ViewChild('containerDetail') containerDetail: ElementRef;
   @ViewChild('contGrid')        contGrid:        ElementRef;
-  @ViewChild(MatAccordion)      accordion:       MatAccordion;
 
   data:           InitialData;
   learneds:       LearnedLetters[];
@@ -39,7 +37,6 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
   selected:       boolean;
   showC:          boolean;
   speaking:       boolean;
-  multi:          boolean;
   closeExpansion: boolean;
   currentLetter:  string;
 
@@ -57,6 +54,9 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
   sortRatingState = false;
   sortedState     = {alpha: true, rating: false };
 
+  mobileQuery:          MediaQueryList;
+  _mobileQueryListener: () => void;
+
   constructor(
     private speechSynthesis:   SpeechSynthesisService,
     private genDate:           GenerateDatesService,
@@ -64,9 +64,14 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
     private _storage:          LocalStorageService,
     private getData:           GetInitialDataService,
     private _sendData:         SdLettersMenuService,
+    public  changeDetectorRef: ChangeDetectorRef,
     private router:            Router,
+    public  media:             MediaMatcher,
   ) {
-    this.combinations    = this._storage.getElement('combinations');
+    this.combinations         = this._storage.getElement('combinations');
+    this.mobileQuery          = media.matchMedia('(max-width: 720px)');
+    this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+    this.mobileQuery.addListener(this._mobileQueryListener);
   }
 
   ngOnInit() {
@@ -92,6 +97,7 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.speechSynthesis.cancel();
     window.removeEventListener('resize', () => (this.genCols(this.contGrid.nativeElement), this.isMobile()));
+    this.mobileQuery.removeListener(this._mobileQueryListener);
   }
 
 
@@ -141,11 +147,9 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
     return learneds;
   }
 
-
   noLearneds = () => {
     return this.learneds.length === 0 ? true : false;
   }
-
 
   goToAlphabet = () => {
 
@@ -180,7 +184,6 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
   sortAlpha = () => {
 
     this.addSortingCount('alphabet');
-    this.closeAllExpansion();
 
     this.sortRatingState    = false;
     this.sortedState.alpha  = true;
@@ -221,7 +224,6 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
   sortRating = () => {
 
     this.addSortingCount('rating');
-    this.closeAllExpansion();
 
     this.sortAlphaState     = false;
     this.sortedState.alpha  = false;
@@ -241,10 +243,7 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
   }
 
 
-  closeAllExpansion = () => {
-    this.multi = true;
-    setTimeout(() => (this.accordion.closeAll(), this.multi = false), 0);
-  }
+
 
 
   getImage = (letter) => {
@@ -268,15 +267,6 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
   }
 
 
-  countStars = (rating: number) => {
-
-    const t = [];
-    for (let i = 0; i < rating; i++) { t.push(''); }
-    return t;
-
-  }
-
-
   randomInt = (min = 0, max) => {
     return Math.floor(Math.random() * (max - min)) + min;
   }
@@ -289,8 +279,17 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
   }
 
+  listen = (ev) => {
+
+    if (ev.code === 'letter') { this.listenLetter(ev.letter, ev.type); }
+
+    if ( ev.code === 'combinations' ) { this.listenCombination(ev.syllableP, ev.syllableW, ev.letter); }
+  }
+
 
   listenLetter = (letter: string, type: string) => {
+
+    console.log(letter, type);
 
     this.speaking = true;
     this.highlightLetter[letter] = letter;
@@ -300,8 +299,12 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
     const lType  = type === 'l' ? 'minúscula' : 'mayúscula';
     const msg    = `${lSound} ... ${lType}`;
 
-    if (type === 'l') { this.AddListeningsCount(letter, 'l'); }
-    if (type === 'u') { this.AddListeningsCount(letter, 'u'); }
+    if (this.isMobile()) {
+
+      if (type === 'l') { this.AddListeningsCount(letter, 'l'); }
+      if (type === 'u') { this.AddListeningsCount(letter, 'u'); }
+
+    }
 
     const speech = this.speechSynthesis.speak(msg, 0.8);
     speech.addEventListener('end', () => (this.highlightLetter = {}, this.speaking = false));
@@ -316,15 +319,20 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
     if ( word[0] === letter.toLowerCase() ) {
 
+      this.selected = true;
+      this.selections[letter] = letter;
+
       const msg    = `${word} ... comienza con la letra ... ${lSound}`;
       const speech = this.speechSynthesis.speak(msg, .95);
-
+      speech.addEventListener('end', () => (this.selected = false, this.selections = {}));
     }
 
     const lower = new RegExp(letter.toLowerCase().trim());
 
     if ( word[0] !== letter.toLowerCase() && lower.test(word) ) {
-      const speech = `${word} contiene la letra ... ${lSound}`;
+      const msg = `${word} contiene la letra ... ${lSound}`;
+      const speech = this.speechSynthesis.speak(msg, .95);
+
     }
 
   }

@@ -1,0 +1,124 @@
+<div class="m-c-learned-letters" [class.quit-padding]="!isMobile()" *ngIf="!noLearneds()" >
+  <div class="m-c-accordion"  [class.desktop]="isMobile() === false" >
+
+
+    <div class="m-c-icons-sorted">
+
+
+      <button mat-button (click)="sortAlpha()" >
+        <mat-icon [class.bold]="sortedState['alpha'] === true">
+          sort_by_alpha
+        </mat-icon>
+      </button>
+
+
+      <button mat-button (click)="sortRating()">
+        <mat-icon [class.bold]="sortedState['rating'] === true">
+          sort
+        </mat-icon>
+      </button>
+
+
+    </div>
+
+
+
+    <mat-accordion [multi]="multi" class="m-c-accordion">
+      <mat-expansion-panel
+        *ngFor="let itemLetter of learneds"
+        (closed)="itemClosed(itemLetter.letter)"
+        (opened)="itemOpened(itemLetter.letter)"
+        >
+
+        <mat-expansion-panel-header [style.height.px]="80">
+
+          <div class="m-c-header-title">
+
+            <h1 class="letter">
+              {{itemLetter.letter | uppercase}} {{itemLetter.letter | lowercase}}
+            </h1>
+
+            <div>
+
+              <mat-icon
+                class="icon-star"
+                *ngFor="let i of countStars(itemLetter.rating)"
+                >
+                star
+              </mat-icon>
+
+            </div>
+          </div>
+
+        </mat-expansion-panel-header>
+
+
+
+        <ng-template matExpansionPanelContent>
+          <div style="width: 100%;" >
+
+
+            <div class="m-c-letters-sound">
+              <button
+                class="m-c-letter center"
+                mat-flat-button color="primary"
+                (click)="listenLetter(itemLetter.letter, 'u')"
+                >
+                {{itemLetter.letter | uppercase}}
+              </button>
+              <button
+                class="m-c-letter center"
+                mat-flat-button color="primary"
+                (click)="listenLetter(itemLetter.letter, 'l')"
+                >
+                {{itemLetter.letter | lowercase}}
+              </button>
+            </div>
+
+
+            <div class="m-c-detail-combinations">
+              <button
+                class="m-c-btn-syllable"
+                mat-flat-button color="warn"
+                *ngFor="let combination of combinations[itemLetter.letter]"
+                (click)="listenCombination(combination.p, combination.w, itemLetter.letter)"
+                >
+                {{combination.w}}
+              </button>
+            </div>
+
+
+            <div class="m-c-detail-button center" >
+              <button
+                class="btn-practice"
+                mat-flat-button color="primary"
+                (click)="repractice(itemLetter.letter)"
+                >
+                Volver a practicar
+              </button>
+            </div>
+
+          </div>
+        </ng-template>
+
+
+      </mat-expansion-panel>
+    </mat-accordion>
+
+
+  </div>
+</div>
+
+
+
+<div
+  *ngIf="noLearneds()"
+  style="padding-top: 0"
+  class="m-c-learned-letters center"
+  >
+
+  <div class="m-c-ad-learneds center">
+    <h3>Aquí aparecerán las letras que vayas aprendiendo</h3>
+  </div>
+
+</div>

@@ -126,6 +126,11 @@ body {
   transform: rotate(-35deg);
 }
 
+.highlight {
+  color:             rgb(255, 191, 0) !important;
+  -webkit-text-stroke: 2px #202020;
+}
+
 .star:after {
   transform: rotate(35deg);
 }
@@ -179,6 +184,10 @@ body {
 
 .mat-expansion-panel-header {
   padding: 10px 24px !important;
+}
+
+.mat-expansion-panel-body {
+  padding: 0 20px 16px !important;
 }
 
 .mat-form-field {

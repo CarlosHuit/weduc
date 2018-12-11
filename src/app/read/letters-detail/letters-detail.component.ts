@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute  } from '@angular/router';
 import { SpeechSynthesisService  } from '../../services/speech-synthesis.service';
 import { DetectMobileService     } from '../../services/detect-mobile.service';
@@ -23,7 +23,7 @@ import { GetSimilarLettersService } from '../../services/get-data/get-similar-le
   styleUrls: ['./letters-detail.component.css']
 })
 
-export class LettersDetailComponent implements OnInit {
+export class LettersDetailComponent implements OnInit, OnDestroy {
 
 
   @ViewChild('card') card: ElementRef;
@@ -67,6 +67,10 @@ export class LettersDetailComponent implements OnInit {
 
   ngOnInit() {
     this.getData(this.letterParam);
+  }
+
+  ngOnDestroy () {
+    this.speech.cancel();
   }
 
   getData = (letter: string) => {

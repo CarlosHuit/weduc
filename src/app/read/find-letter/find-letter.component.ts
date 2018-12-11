@@ -19,7 +19,7 @@ import { GetWordsService              } from '../../services/get-data/get-words.
 })
 
 
-export class FindLetterComponent implements OnInit, OnDestroy {
+export class FindLetterComponent implements OnDestroy, OnInit {
 
   userData: FindLetterData;
 
@@ -41,7 +41,7 @@ export class FindLetterComponent implements OnInit, OnDestroy {
     private router:    Router,
     private _route:    ActivatedRoute,
     private _getData:   GetWordsService,
-    private speech:    SpeechSynthesisService,
+    private _speech:    SpeechSynthesisService,
     private genDates:  GenerateDatesService,
     private _sendData: SdFindLettersService,
     private _mobile:   DetectMobileService,
@@ -65,11 +65,11 @@ export class FindLetterComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-
-    this.speech.cancel();
+    this._speech.cancel();
     window.removeEventListener('resize', this.isMobile);
-
+    console.log('destroy');
   }
+
 
   getData = (): void => {
 
@@ -103,7 +103,7 @@ export class FindLetterComponent implements OnInit, OnDestroy {
     this.changeDates(this.words[index]);
 
 
-    const speech = this.speech.speak('Bien Hecho!', 0.85);
+    const speech = this._speech.speak('Bien Hecho!', 0.85);
 
     speech.addEventListener('end', e => (this.success = false, this.addWordData(this.word), this.instructions()));
 
@@ -177,7 +177,7 @@ export class FindLetterComponent implements OnInit, OnDestroy {
 
       const saveSel = this.selection[id] !== id ? this.selection[id] = id : null;
       const p = this.pendingLetters();
-      const s = this.speech.speak('Correcto');
+      const s = this._speech.speak('Correcto');
 
       const addProgress =  p === 0 ? this.currentIndex = this.words.indexOf(this.word) + 1 : null;
 
@@ -212,7 +212,7 @@ export class FindLetterComponent implements OnInit, OnDestroy {
 
 
     const msg = 'Lo has hecho muy bien.. continuemos.';
-    const speech = this.speech.speak(msg);
+    const speech = this._speech.speak(msg);
 
     speech.addEventListener('end', e => this.router.navigateByUrl(this.url));
 
@@ -224,7 +224,7 @@ export class FindLetterComponent implements OnInit, OnDestroy {
     const s   = this._storage.getElement('letter_sounds')[this.letterParam];
     const msg = `Selecciona todas las letras ... ${s} ... de la palabra ... ${this.word}`;
 
-    setTimeout(() =>  this.speech.speak(msg), 500);
+    setTimeout(() =>  this._speech.speak(msg), 500);
 
   }
 
@@ -242,7 +242,7 @@ export class FindLetterComponent implements OnInit, OnDestroy {
 
   speak = () => {
     this.addCount(this.word, 'pressImage');
-    this.speech.speak(this.word);
+    this._speech.speak(this.word);
   }
 
   genStyles = (el: HTMLDivElement, container: HTMLDivElement) => {

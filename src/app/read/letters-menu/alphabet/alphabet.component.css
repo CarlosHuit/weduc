@@ -1,0 +1,97 @@
+/*------ Styles mobile version ------*/
+.c-cont-grids {
+  width:                  100%;
+  display:                grid;
+  grid-template-columns:  repeat(auto-fill, 300px);
+  justify-content:        space-evenly;
+  align-content:          start;
+  height:                 calc(100vh - 104px);
+  overflow:               auto;
+  padding-top:            5px;
+  padding-bottom:         5px;
+  box-sizing:             border-box;
+}
+
+.c-cont-grids::-webkit-scrollbar {
+  display: none;
+}
+
+.m-c-card {
+  width:                  100%;
+  height:                 100px;
+  padding:                3px;
+  box-sizing:             border-box;
+  margin:                 3.5px auto;
+  display:                flex;
+  padding:                0;
+  border:                 solid 1px #dbdbe2;
+  box-shadow:             none;
+  border-radius:          5px;
+  min-width:              305px;
+}
+
+.ic-sound {
+  position:               absolute;
+  bottom:                 5px;
+  left:                   5px;
+  background:             #239B56;
+  color:                  white;
+  border-radius:          2px;
+  width:                  32px;
+  height:                 32px;
+  font-size:              25px;
+  z-index:                20;
+  min-width:              0;
+  transition:             100ms;
+}
+
+.ic-sound .sound-icon {
+  width:                  32px;
+  height:                 32px;
+}
+
+.ic-sound:active {
+  transform:              scale(.98);
+}
+
+.letters {
+  width:                  calc(100% - 100px);
+  display:                flex;
+  height:                 100%;
+  position:               relative;
+  justify-content:        center;
+}
+
+.letters div {
+  width:                  70px;
+}
+
+.upper button, .lower button {
+  border:                 none;
+  background:             transparent;
+  font-size:              70px;
+  font-weight:            bold;
+  outline:                none;
+  font-family:            'Noto Sans';
+}
+
+.star.resize {
+  position:               absolute;
+  font-size:              12px;
+  top:                    5px;
+  right:                  5px;
+}
+
+.image {
+  width:                  98px;
+  height:                 98px;
+  background:             rgb(30, 30, 30);
+  box-sizing:             border-box;
+  margin-left:            auto;
+  border-radius:          0 4px 4px 0;
+}
+
+.image img {
+  width:                  88%;
+  height:                 88%;
+}

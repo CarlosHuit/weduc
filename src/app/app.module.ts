@@ -40,6 +40,8 @@ import { WriteAnswerComponent } from './discussion-system/write-answer/write-ans
 import { AnswerComponent } from './discussion-system/answer/answer.component';
 import { DetailsAndCommentsComponent } from './detail-course/details-and-comments/details-and-comments.component';
 import { CardDetailsComponent } from './detail-course/card-details/card-details.component';
+import { LearnedLettersComponent } from './read/letters-menu/learned-letters/learned-letters.component';
+import { AlphabetComponent } from './read/letters-menu/alphabet/alphabet.component';
 
 @NgModule({
   declarations: [
@@ -73,6 +75,8 @@ import { CardDetailsComponent } from './detail-course/card-details/card-details.
     AnswerComponent,
     DetailsAndCommentsComponent,
     CardDetailsComponent,
+    LearnedLettersComponent,
+    AlphabetComponent,
   ],
   imports: [
     MaterialModule,
