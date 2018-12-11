@@ -42,7 +42,6 @@ import { DetailsAndCommentsComponent } from './detail-course/details-and-comment
 import { CardDetailsComponent } from './detail-course/card-details/card-details.component';
 import { LearnedLettersComponent } from './read/letters-menu/learned-letters/learned-letters.component';
 import { AlphabetComponent } from './read/letters-menu/alphabet/alphabet.component';
-import { LaksjlDirective } from './laksjl.directive';
 
 @NgModule({
   declarations: [
@@ -78,7 +77,6 @@ import { LaksjlDirective } from './laksjl.directive';
     CardDetailsComponent,
     LearnedLettersComponent,
     AlphabetComponent,
-    LaksjlDirective,
   ],
   imports: [
     MaterialModule,
