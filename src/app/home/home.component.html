@@ -1,55 +1,95 @@
 <div #contGrid class="container">
 
-  <div class="c-search hide" *ngIf="!loading" [class.show]="!loading">
-      
-    <div class="search">
-      <input 
-        #searchBox
-        class="input-search"
-        (keyup)="searchCourses(searchBox.value)"
-        type="search"
-        placeholder="¿Qué quieres aprender hoy?"
-        >
-      <mat-icon
-        class="icon-search" 
-        matSuffix
-        >
-        mic
-      </mat-icon>
+  <div *ngIf="!loading && isMobile() " >
+
+    <div class="m-c-search hide" [class.show]="!loading">
+        
+        <app-search (evsSearch)="searchCourses($event)"></app-search>
+  
     </div>
+  
+    <div
+       [ngStyle]="genCols(contGrid)"
+       [class.show]="!loading"
+       class="c-cards hide"
+       >
+  
+      <mat-card
+        class="card-course"
+        *ngFor="let item of filterCourses()"
+        (click)="redirect(item.subtitle)"
+        >
+  
+        <div class="c-icon">
 
+          <img [src]="genUrl(item.title)" width="65" height="65">
+
+        </div>
+  
+        <div class="c-title">
+  
+          <span class="title">
+            {{item.title}}
+          </span>
+  
+        </div>
+  
+  
+      </mat-card>
+  
+    </div>
+    
+    
+    
+    
+    
   </div>
 
-  <div *ngIf="!loading" [ngStyle]="genCols(contGrid)" [class.show]="!loading" class="c-cards hide" >
+  <div class="dc-c-courses" *ngIf="!loading && !isMobile() " >
 
-    <mat-card
-      class="card-course"
-      *ngFor="let item of filterCourses()"
-      (click)="redirect(item.subtitle)"
-      >
-
-      <div class="c-icon">
-        <img [src]="genUrl(item.title)" width="65" height="65">
+    <!----- Search ----->
+    <div class="d-c-container-search center">
+      <div class="d-c-search hide"  [class.show]="!loading" >
+          
+        <app-search
+          (evsSearch)="searchCourses($event)"
+          >
+        </app-search>
+  
       </div>
+    </div>
+  
+    <!------ Courses ------>
+    <div #cGridCourses class="dc-c-container-courses hide" [class.show]="!loading">
+      <div class="d-c-courses-grid" [ngStyle]="grids(cGridCourses)"  >
 
-      <div class="c-title">
-
-        <span class="title">
-          {{item.title}}
-        </span>
+        <mat-card
+          class="d-c-card-course"
+          *ngFor="let item of filterCourses()"
+          (click)="redirect(item.subtitle)"
+          >
+    
+          <div class="d-c-icon">
+            <img
+              [src]="genUrl(item.title)"
+              width="100"
+              height="100"
+              >
+          </div>
+    
+          <div class="d-c-title center">
+            <span class="title">{{item.title}}</span>
+          </div>
+    
+    
+        </mat-card>
 
       </div>
-
-
-    </mat-card>
-
+    </div>
+    
   </div>
 
-  <div
-    *ngIf="loading"
-    id="loading"
-    style=" display:flex; justify-content:center; align-items:center"
-    >
-  </div>
 
+  <!------ loading animation ------>
+  <div *ngIf="loading"id="loading" style=" display:flex; justify-content:center; align-items:center"></div>
 </div>

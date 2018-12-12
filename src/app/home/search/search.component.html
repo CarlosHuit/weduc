@@ -1,0 +1,15 @@
+<div class="search">
+  <input 
+    #searchBox
+    class="input-search"
+    (keyup)="searchCourses(searchBox.value)"
+    type="search"
+    placeholder="¿Qué quieres aprender hoy?"
+    >
+  <mat-icon
+    class="icon-search" 
+    matSuffix
+    >
+    mic
+  </mat-icon>
+</div>

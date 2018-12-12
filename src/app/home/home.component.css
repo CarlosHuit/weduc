@@ -3,45 +3,12 @@
   display: block;
 }
 
-.c-search {
-  width:           95%;
-  display:         flex;
-  justify-content: center;
-  margin:          5px auto;
-  margin-top:      10px;
-}
-
-.c-search .search {
-  width:          95%;
-  max-width:      540px;
-  height:         45px;
-  display:        flex;
-  background:   white;
-  padding:        0;
-  border-radius:  4px;
-  box-shadow:     0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
-}
-
-.c-search .input-search{
-  width:        calc(100% - 45px);
-  height:       100%;
-  border:       none;
-  padding:      0;
-  outline:      none;
-  font-family: 'Noto Sans', sans-serif;
-  font-size:    16px;
-  padding-left: 10px;
-  box-sizing:   border-box;
-  border-radius: 4px 0 0 4px;
-}
-.c-search .icon-search{
-  width:           45px;
-  height:          100%;
-  font-size:       32px;
-  border-radius:   4px;
-  display:         flex;
-  justify-content: center;
-  align-items:     center;
+.m-c-search {
+  width:      90%;
+  max-width:  450px;
+  height:     45px;
+  box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
+  margin:     10px auto;
 }
 
 .c-cards {
@@ -52,6 +19,7 @@
   grid-template-columns: repeat(auto-fill, 300px);
   justify-content:       space-evenly;
   align-content:         start;
+  margin-bottom: 15px;
 }
 
 
@@ -97,4 +65,70 @@
     width: 100%;
   }
 
+}
+
+/*------ Mobile version ------*/
+.dc-c-courses {
+  width:        100%;
+  height:       100%;
+  max-width:    1440px;
+  margin:       0 auto;
+}
+
+.d-c-container-search {
+  width:  100%;
+  height: 80px;
+}
+
+.d-c-search {
+  width:          90%;
+  max-width:      540px;
+  height:         45px;
+  background:   white;
+  padding:        0;
+  border-radius:  4px;
+  box-shadow:     0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
+  margin:         20px auto;
+}
+
+.dc-c-container-courses {
+  width: 100%;
+}
+
+.dc-c-container-courses::-webkit-scrollbar {
+  display: none;
+}
+
+.d-c-courses-grid {
+  margin:     0 10px;
+  display:    grid;
+  grid-template-columns: repeat(auto-fill, 250px);
+  justify-content: space-evenly;
+}
+
+.d-c-card-course {
+  width:           95%;
+  display:         flex;
+  align-items:     center;
+  box-sizing:      border-box;
+  flex-direction:  column;
+  margin:          5px auto;
+  padding:         30px 15px;
+  cursor:          pointer;
+  transition:      150ms;
+}
+
+.d-c-card-course:hover {
+  transform:  scale(1.025);
+  box-shadow: 0 0 2px 1px rgba(0,0,0,.5);
+}
+
+.d-c-title {
+  width:      100%;
+  margin-top: 10px;
+}
+
+.d-c-title .title {
+  font-weight: bold;
+  font-size:   32px;
 }

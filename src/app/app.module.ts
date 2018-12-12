@@ -42,6 +42,7 @@ import { DetailsAndCommentsComponent } from './detail-course/details-and-comment
 import { CardDetailsComponent } from './detail-course/card-details/card-details.component';
 import { LearnedLettersComponent } from './read/letters-menu/learned-letters/learned-letters.component';
 import { AlphabetComponent } from './read/letters-menu/alphabet/alphabet.component';
+import { SearchComponent } from './home/search/search.component';
 
 @NgModule({
   declarations: [
@@ -77,6 +78,7 @@ import { AlphabetComponent } from './read/letters-menu/alphabet/alphabet.compone
     CardDetailsComponent,
     LearnedLettersComponent,
     AlphabetComponent,
+    SearchComponent,
   ],
   imports: [
     MaterialModule,

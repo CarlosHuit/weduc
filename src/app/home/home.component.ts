@@ -150,6 +150,22 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
+  grids = (el: HTMLDivElement) => {
+
+    const width    = el.clientWidth - 20;
+    const widthCol = 250;
+    const residue  = width % widthCol;
+
+    if (residue > 0) {
+      const exactColumns = Math.floor(width / widthCol);
+      const widthColumn  = width / exactColumns;
+      return {
+        'grid-template-columns': `repeat(auto-fill, ${widthColumn}px)`
+      };
+    }
+
+  }
+
 
 
 }
