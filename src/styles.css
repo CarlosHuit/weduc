@@ -167,7 +167,8 @@ body {
 }
 
 .mat-tab-group.mat-background-warn .mat-tab-header, .mat-tab-group.mat-background-warn .mat-tab-links, .mat-tab-nav-bar.mat-background-warn .mat-tab-header, .mat-tab-nav-bar.mat-background-warn .mat-tab-links {
-  background-color: #1a5e7e;
+  /* background-color: #1a5e7e; */
+  background-color: #1976d2;
 }
 
 .mat-tab-group.mat-accent .mat-ink-bar, .mat-tab-nav-bar.mat-accent .mat-ink-bar {

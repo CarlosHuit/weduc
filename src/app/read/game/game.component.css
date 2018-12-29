@@ -77,7 +77,8 @@
 }
 
 .m-c-toolbar {
-  background:    #1a5e7e;
+  /* background:    #1a5e7e; */
+  background:     #1976d2;
   display:         flex;
   justify-content: space-between;
   align-items:     flex-end;

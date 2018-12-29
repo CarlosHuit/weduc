@@ -11,7 +11,8 @@
   padding:          0 10px;
   box-sizing:       border-box;
   position:         fixed;
-  background:       #1a5e7e;
+  /* background:       #1a5e7e; */
+  background:       #1976d2;
 }
 
 .title-toolbar {

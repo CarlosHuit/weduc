@@ -35,7 +35,8 @@
 .m-c-banner-title {
   height:             56px;
   width:              100%;
-  background-color: #1a5e7e;
+  /* background-color: #1a5e7e; */
+  background:         #1976d2;
   position:           fixed;
   top:                0;
   left:               0;
