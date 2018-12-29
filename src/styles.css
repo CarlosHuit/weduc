@@ -6,6 +6,7 @@ body {
   user-select: none !important;
   font-family: 'Noto Sans' !important;
   outline: none !important;
+  overscroll-behavior: contain
 }
 
 .container {
