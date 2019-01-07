@@ -1,4 +1,4 @@
-import { BrowserModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
+import { BrowserModule, HAMMER_GESTURE_CONFIG, Title } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { MaterialModule                   } from './material/material.module';
@@ -28,21 +28,22 @@ import { GameComponent                    } from './read/game/game.component';
 import { FindLetterComponent              } from './read/find-letter/find-letter.component';
 import { SelectWordsComponent             } from './read/select-words/select-words.component';
 import { PronounceLetterComponent         } from './read/pronounce-letter/pronounce-letter.component';
-import { GestureConfig } from '@angular/material';
-import { ControlCanvasComponent } from './read/control-canvas/control-canvas.component';
-import { GuideLinesComponent } from './read/guide-lines/guide-lines.component';
-import { DiscussionSystemComponent } from './discussion-system/discussion-system.component';
-import { IconsUserDialogComponent } from './signup/icons-user-dialog/icons-user-dialog.component';
-import { DeleteCommentDialogComponent } from './discussion-system/delete-comment-dialog/delete-comment-dialog.component';
-import { CommentComponent } from './discussion-system/comment/comment.component';
-import { WriteCommentComponent } from './discussion-system/write-comment/write-comment.component';
-import { WriteAnswerComponent } from './discussion-system/write-answer/write-answer.component';
-import { AnswerComponent } from './discussion-system/answer/answer.component';
-import { DetailsAndCommentsComponent } from './detail-course/details-and-comments/details-and-comments.component';
-import { CardDetailsComponent } from './detail-course/card-details/card-details.component';
-import { LearnedLettersComponent } from './read/letters-menu/learned-letters/learned-letters.component';
-import { AlphabetComponent } from './read/letters-menu/alphabet/alphabet.component';
-import { SearchComponent } from './home/search/search.component';
+import { GestureConfig                    } from '@angular/material';
+import { ControlCanvasComponent           } from './read/control-canvas/control-canvas.component';
+import { GuideLinesComponent              } from './read/guide-lines/guide-lines.component';
+import { DiscussionSystemComponent        } from './discussion-system/discussion-system.component';
+import { IconsUserDialogComponent         } from './signup/icons-user-dialog/icons-user-dialog.component';
+import { DeleteCommentDialogComponent     } from './discussion-system/delete-comment-dialog/delete-comment-dialog.component';
+import { CommentComponent                 } from './discussion-system/comment/comment.component';
+import { WriteCommentComponent            } from './discussion-system/write-comment/write-comment.component';
+import { WriteAnswerComponent             } from './discussion-system/write-answer/write-answer.component';
+import { AnswerComponent                  } from './discussion-system/answer/answer.component';
+import { DetailsAndCommentsComponent      } from './detail-course/details-and-comments/details-and-comments.component';
+import { CardDetailsComponent             } from './detail-course/card-details/card-details.component';
+import { LearnedLettersComponent          } from './read/letters-menu/learned-letters/learned-letters.component';
+import { AlphabetComponent                } from './read/letters-menu/alphabet/alphabet.component';
+import { SearchComponent                  } from './home/search/search.component';
+import { NgxsStoreModule                  } from './store/store.module';
 
 @NgModule({
   declarations: [
@@ -83,19 +84,21 @@ import { SearchComponent } from './home/search/search.component';
   imports: [
     MaterialModule,
     ReactiveFormsModule,
+    NgxsStoreModule,
     FormsModule,
     HttpClientModule,
 
     BrowserModule,
     AppRoutingModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
   ],
   entryComponents: [
     IconsUserDialogComponent,
     DeleteCommentDialogComponent
   ],
   providers: [
+    Title,
     {provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig}
   ],
   bootstrap: [AppComponent]
