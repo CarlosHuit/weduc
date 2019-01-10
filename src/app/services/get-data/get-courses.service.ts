@@ -8,6 +8,8 @@ import { Router                 } from '@angular/router';
 import { AuthService            } from '../auth.service';
 import { Subjects               } from '../../classes/subjects';
 import urljoin from 'url-join';
+import { Store } from '@ngxs/store';
+import { Logout } from 'src/app/store/actions/auth.actions';
 
 
 
@@ -25,6 +27,7 @@ export class GetCoursesService {
     private http:     HttpClient,
     private _auth:    AuthService,
     private getToken: GetTokenService,
+    private store:    Store
   ) {
 
     this.apiUrl = urljoin(environment.apiUrl, 'courses');
@@ -77,7 +80,7 @@ export class GetCoursesService {
 
     if (error.status === 401) {
       this._router.navigateByUrl('');
-      this._auth.logout();
+      this.store.dispatch( new Logout() );
       this._auth.showError('Inicia sesión con un usuario válido', 2000);
       return throwError('Usuario Invalido');
     }

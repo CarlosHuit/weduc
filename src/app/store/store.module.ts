@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { NgxsModule } from '@ngxs/store';
 import { CommonModule } from '@angular/common';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
+import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 
 import { environment as env } from '../../environments/environment';
 import { rootState } from './app.state';
@@ -13,6 +14,7 @@ import { rootState } from './app.state';
       rootState,
       { developmentMode: !env.production }
     ),
+    NgxsRouterPluginModule.forRoot(),
     NgxsReduxDevtoolsPluginModule.forRoot({
       name:     'weduc',
       maxAge:   25,

@@ -1,8 +1,12 @@
-<div class="toolbar" *ngIf="isLoggedIn()">
+<div class="toolbar"  [ngClass]="{ 'center-title': (isLoggedIn$| async) === false }" >
 
   <div class="center">
 
-    <mat-icon (click)="snav.toggle()" style="font-size: 40px; width: 40px; height: 40px">
+    <mat-icon
+      (click)="toggleDrawer()"
+      *ngIf="isLoggedIn$ | async"
+      class="m-c-icon-menu"
+      >
       menu
     </mat-icon>
 
@@ -11,15 +15,15 @@
     </span>
   </div>
 
-  <div *ngIf="isLoggedIn()" class="center">
+  <div *ngIf="isLoggedIn$ | async" class="center">
 
-    <mat-icon [matMenuTriggerFor]="menu" style="font-size: 45px; width: 45px; height: 45px">
+    <mat-icon [matMenuTriggerFor]="menu" class="m-c-icon-account">
       account_circle
     </mat-icon>
 
     <mat-menu #menu="matMenu">
       <button mat-menu-item style="text-transform: capitalize;" (click)="redirect()">
-        {{ fullName}}
+        {{ fullName$ | async }}
       </button>
       <button mat-menu-item (click)="logout()">
         Salir
@@ -29,37 +33,3 @@
   </div>
 
 </div>
-
-
-<!-- [mode]="over" -->
-<mat-sidenav-container>
-  <mat-sidenav #snav mode="over" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
-
-    <div class="m-c-sidenav">
-
-      <div class="m-c-user-profile center">
-
-        <div class="m-c-img-user">
-          <img [src]="urlImage()" width="100" height="100">
-        </div>
-        <div class="m-c-user-name">
-          <p>{{fullName}}</p>
-        </div>
-
-      </div>
-
-      <div class="m-c-list-items">
-
-        <mat-nav-list *ngIf="isLoggedIn()">
-          <a mat-list-item (click)="logoutAndClose()">
-            Cerrar Sesion
-          </a>
-          <mat-divider></mat-divider>
-        </mat-nav-list>
-
-      </div>
-
-    </div>
-
-  </mat-sidenav>
-</mat-sidenav-container>

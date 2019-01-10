@@ -1,7 +1,7 @@
-import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
-import { DialogData } from '../signup.component';
-import { Router } from '@angular/router';
+import { Component    } from '@angular/core';
+import { MatDialogRef } from '@angular/material';
+import { Store        } from '@ngxs/store';
+import { Navigate     } from '@ngxs/router-plugin';
 
 
 @Component({
@@ -16,16 +16,15 @@ export class IconsUserDialogComponent {
   icons = ['man', 'woman'];
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,
     public  dialogRef: MatDialogRef<IconsUserDialogComponent>,
-    private _router:   Router
+    private store:     Store
     ) {}
 
   onNoClick(): void {
     this.dialogRef.close();
-    this._router.navigateByUrl('/');
+    this.store.dispatch( new Navigate(['/']) );
   }
 
-  genUrl = (icon) => `/assets/icon-user100X100/icon-${icon}.png`;
+  genUrl = (icon: string) => `/assets/icon-user100X100/icon-${icon}.png`;
 
 }

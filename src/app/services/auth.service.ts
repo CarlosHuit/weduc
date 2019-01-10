@@ -4,10 +4,11 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { environment } from '../../environments/environment';
 import { User } from '../classes/user';
 import { Router } from '@angular/router';
-import { map } from 'rxjs/operators';
 import { MatSnackBar         } from '@angular/material';
 import { JwtHelperService    } from '@auth0/angular-jwt';
 import { LocalStorageService } from '../services/local-storage.service';
+import { throwError } from 'rxjs';
+import { UserDataModel } from '../store/models/user-data.model';
 
 
 
@@ -20,9 +21,8 @@ const httpOptions = {
 export class AuthService {
 
 
-  usersUrl: string;
-  currentUser?: User; // Usuario actual
-  redirectUrl: string;
+  url:          string;
+  currentUser?: UserDataModel;
 
 
   constructor(
@@ -31,65 +31,56 @@ export class AuthService {
     public snackBar: MatSnackBar,
     private _storage: LocalStorageService
   ) {
-
-    this.usersUrl = urljoin(environment.apiUrl, 'auth');
-
-    if (this.isLoggedIn()) {
-
-      const t: User = this._storage.getElement('user');
-      this.currentUser = new User(t.email, null, null, t.firstName, t.lastName, t.avatar, t._id);
-
-    }
-
+    this.url = urljoin(environment.apiUrl, 'auth');
   }
 
 
 
   signup(user: User) {
 
-    const us = JSON.stringify(user); // to JSON
+    const body = JSON.stringify(user);
+    const url  = urljoin(this.url, 'signup');
+    return this.http.post(url, body, httpOptions);
 
-    return this.http.post(urljoin(this.usersUrl, 'signup'), us, httpOptions)
-      .pipe(
-        map(
-          (response: Response) => {
-            const json = response;
-            this.login(json);
-            return json;
-          }
-        )
-      );
   }
-
 
 
   signin(user: User) {
 
-    const us = JSON.stringify(user); // to JSON
+    const body = JSON.stringify(user);
+    const url  = urljoin(this.url, 'signin');
+    return this.http.post(url, body, httpOptions);
 
-    return this.http.post(urljoin(this.usersUrl, 'signin'), us, httpOptions)
-      .pipe(  );
+  }
+
+
+  greetToUser = (response: any) => {
+    const name = response.firstName;
+    const gender = response.avatar;
+    if (gender === 'man') {
+      this.showError(`Bienvenido ${name}`);
+    }
+
+    if (gender === 'woman') {
+      this.showError(`Bienvenida ${name}`);
+    }
   }
 
 
 
-
-
-  login = (response: any) => {
+  saveData = (response: any) => {
 
     const { token, userId, firstName, lastName, email, avatar } = response;
 
     localStorage.setItem('token', token);
-    this.currentUser = new User(email, null, null, firstName, lastName, avatar, userId);
-    this._storage.saveElement('user', { userId, firstName, lastName, email, avatar });
-
-    this.router.navigateByUrl('');
+    this.currentUser = new UserDataModel(email, firstName, lastName, avatar, userId);
+    this._storage.saveElement('user', this.currentUser);
 
   }
 
 
 
-  showError(message, time?) {
+  showError(message: string, time?: number) {
     this.snackBar.open(message, 'Cerrar', { duration: time || 2000 });
   }
 
@@ -99,22 +90,10 @@ export class AuthService {
     return localStorage.getItem('token') !== null;
   }
 
+  handleError = (response: HttpErrorResponse) => {
 
-
-  logout() {
-    localStorage.clear();
-    this.currentUser = null;
-    this.router.navigateByUrl('/signin');
-  }
-
-
-
-  public handleError = (response: HttpErrorResponse) => {
-
-    console.error(response.error.error);
     this.showError(response.error.error);
-
-    return response;
+    return throwError(response.error.message);
 
   }
 

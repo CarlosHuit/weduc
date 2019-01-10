@@ -1,14 +1,13 @@
-import { HttpClient, HttpHeaders, HttpErrorResponse  } from '@angular/common/http';
-import { Injectable             } from '@angular/core';
-import { environment            } from '../../../environments/environment';
-import { Observable, throwError, of } from 'rxjs';
-import { catchError, map             } from 'rxjs/operators';
-import { GetTokenService        } from '../get-token.service';
-import { Router                 } from '@angular/router';
-import { AuthService            } from '../auth.service';
-import { Words                  } from '../../classes/words';
-import { RandomWords            } from '../../classes/random-words';
-import { LocalStorageService    } from '../local-storage.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable              } from '@angular/core';
+import { environment             } from '../../../environments/environment';
+import { Observable, of          } from 'rxjs';
+import { catchError, map         } from 'rxjs/operators';
+import { GetTokenService         } from '../get-token.service';
+import { Words                   } from '../../classes/words';
+import { RandomWords             } from '../../classes/random-words';
+import { LocalStorageService     } from '../local-storage.service';
+import { HandleErrorService      } from '../../shared/handle-error.service';
 import urljoin from 'url-join';
 
 
@@ -23,11 +22,10 @@ export class GetWordsService {
   httpOpts: any;
 
   constructor(
-    private _router:  Router,
     private http:     HttpClient,
-    private _auth:    AuthService,
     private getToken: GetTokenService,
     private _storage: LocalStorageService,
+    private _err:     HandleErrorService
   ) {
 
     this.apiUrl = urljoin(environment.apiUrl, 'words');
@@ -67,7 +65,7 @@ export class GetWordsService {
     return this.http.get<Words>(url, this.httpOpts)
       .pipe(
         map(x => this.saveData(x)),
-        catchError(this.handleError)
+        catchError(this._err.handleError)
       );
 
   }
@@ -119,7 +117,7 @@ export class GetWordsService {
     return this.http.get<RandomWords>(url, this.httpOpts)
       .pipe(
         map( x => this.saveAllWords(x) ),
-        catchError(this.handleError)
+        catchError(this._err.handleError)
 
       );
 
@@ -282,15 +280,6 @@ export class GetWordsService {
   }
 
 
-  handleError = (error: HttpErrorResponse) => {
 
-    if (error.status === 401) {
-      this._router.navigateByUrl('');
-      this._auth.logout();
-      this._auth.showError('Inicia sesión con un usuario válido', 2000);
-      return throwError('Usuario Invalido');
-    }
-
-  }
 
 }

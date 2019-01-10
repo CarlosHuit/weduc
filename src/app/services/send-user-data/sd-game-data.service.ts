@@ -8,6 +8,8 @@ import { throwError        } from 'rxjs';
 import { GameData          } from '../../classes/game-data';
 import { AuthService       } from '../auth.service';
 import urljoin from 'url-join';
+import { Store } from '@ngxs/store';
+import { Logout } from 'src/app/store/actions/auth.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +23,8 @@ import urljoin from 'url-join';
     private http: HttpClient,
     private _auth: AuthService,
     private _router: Router,
-    private getToken: GetTokenService
+    private getToken: GetTokenService,
+    private store:    Store
   ) {
 
     this.apiUrl = urljoin(environment.apiUrl, 'data/game');
@@ -47,8 +50,7 @@ import urljoin from 'url-join';
 
   handleError = (error: HttpErrorResponse) => {
     if (error.status === 401) {
-      this._router.navigateByUrl('');
-      this._auth.logout();
+      this.store.dispatch(new Logout());
       this._auth.showError('Inicia sesión con un usuario válido', 2000);
       return throwError('Usuario Invalido');
     }

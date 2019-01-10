@@ -103,9 +103,11 @@
   background:   linear-gradient(180deg, #fa7e29 0%, #F6682F 80%, #F6682F 100%);
 }
 
+.m-c-button-signin:disabled {
+  color: white;
+}
+
 .m-c-signup-link {
-  margin-top:      15px;
-  padding-top:     10px;
   text-align:      center;
   display:         flex;
   align-items:     center;
@@ -123,6 +125,17 @@
   color:          #0a8ecd;
   cursor:           pointer;
 }
+
+.container-spinner {
+  height: 30px;
+  margin: 10px;
+}
+
+.container-spinner > div {
+  height: 30px;
+  width: 30px;
+}
+
 
 @media (min-width: 240px) and (orientation: landscape) {
 
@@ -155,3 +168,4 @@
   }
 
 }
+

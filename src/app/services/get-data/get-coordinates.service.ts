@@ -1,13 +1,12 @@
-import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse  } from '@angular/common/http';
-import { Injectable           } from '@angular/core';
-import { environment          } from '../../../environments/environment';
-import { Observable, throwError, of } from 'rxjs';
-import { catchError, map        } from 'rxjs/operators';
-import { GetTokenService        } from '../get-token.service';
-import { LocalStorageService    } from '../local-storage.service';
-import { Router                 } from '@angular/router';
-import { AuthService            } from '../auth.service';
-import { Coordinates            } from '../../classes/coordinates';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable              } from '@angular/core';
+import { environment             } from '../../../environments/environment';
+import { Observable, of          } from 'rxjs';
+import { catchError, map         } from 'rxjs/operators';
+import { GetTokenService         } from '../get-token.service';
+import { LocalStorageService     } from '../local-storage.service';
+import { Coordinates             } from '../../classes/coordinates';
+import { HandleErrorService      } from '../../shared/handle-error.service';
 import urljoin from 'url-join';
 
 
@@ -22,11 +21,10 @@ export class GetCoordinatesService {
   httpOpts: any;
 
   constructor(
-    private _router:  Router,
     private http:     HttpClient,
-    private _auth:    AuthService,
     private getToken: GetTokenService,
     private _storage: LocalStorageService,
+    private _error:   HandleErrorService
   ) {
     this.apiUrl = urljoin(environment.apiUrl, 'coordinates');
   }
@@ -61,7 +59,7 @@ export class GetCoordinatesService {
     return this.http.get<Coordinates>(url, this.httpOpts)
       .pipe(
         map(x => this.saveData(x, letter)),
-        catchError(this.handleError)
+        catchError(this._error.handleError)
       );
   }
 
@@ -102,20 +100,10 @@ export class GetCoordinatesService {
 
     return this.http.post(url, coo, httpOptions)
       .pipe(
-        catchError(this.handleError)
+        catchError(this._error.handleError)
       );
 
   }
 
-
-
-  handleError = (error: HttpErrorResponse) => {
-    if (error.status === 401) {
-      this._router.navigateByUrl('');
-      this._auth.logout();
-      this._auth.showError('Inicia sesión con un usuario válido', 2000);
-      return throwError('Usuario Invalido');
-    }
-  }
 
 }

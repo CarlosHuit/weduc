@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, CanLoad, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { AuthService } from './services/auth.service';
-import {  LocalStorageService } from './services/local-storage.service';
-import { JwtHelperService } from '@auth0/angular-jwt';
+import { CanActivate, CanLoad, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { LocalStorageService  } from './services/local-storage.service';
+import { Injectable           } from '@angular/core';
+import { Observable           } from 'rxjs';
+import { JwtHelperService     } from '@auth0/angular-jwt';
+import { Store                } from '@ngxs/store';
+import { Navigate             } from '@ngxs/router-plugin';
 
 @Injectable({
   providedIn: 'root'
@@ -11,9 +12,8 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 export class AuthGuard implements CanActivate, CanLoad {
 
   constructor(
-    public auth:      AuthService,
     private _storage: LocalStorageService,
-    private router:   Router
+    private store: Store
   ) { }
 
   canLoad(): Observable<boolean> | Promise<boolean> | boolean {
@@ -27,7 +27,7 @@ export class AuthGuard implements CanActivate, CanLoad {
 
     if (sesionExpired || !existToken) {
 
-      this.router.navigateByUrl('signin');
+      this.store.dispatch(new Navigate(['/signin']));
       return false;
 
     }
@@ -50,8 +50,7 @@ export class AuthGuard implements CanActivate, CanLoad {
 
     if ( token === null) {
 
-      this.auth.redirectUrl = url;
-      this.router.navigate(['/signin']);
+      this.store.dispatch(new Navigate(['/signin']));
       return false;
 
     }

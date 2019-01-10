@@ -1,14 +1,12 @@
-import { HttpClient, HttpHeaders, HttpErrorResponse, HttpParams  } from '@angular/common/http';
-import { Injectable                 } from '@angular/core';
-import { environment                } from '../../../environments/environment';
-import { Observable, throwError, of } from 'rxjs';
-import { catchError, map            } from 'rxjs/operators';
-import { GetTokenService            } from '../get-token.service';
-import { LocalStorageService        } from '../local-storage.service';
-import { Router                     } from '@angular/router';
-import { AuthService                } from '../auth.service';
-import { Comments                   } from '../../classes/comments';
-import { Answers, Answer                    } from '../../classes/answers';
+import { HttpClient, HttpHeaders, HttpParams  } from '@angular/common/http';
+import { Injectable         } from '@angular/core';
+import { Observable         } from 'rxjs';
+import { catchError         } from 'rxjs/operators';
+import { GetTokenService    } from '../get-token.service';
+import { Comments           } from '../../classes/comments';
+import { Answer             } from '../../classes/answers';
+import { HandleErrorService } from '../../shared/handle-error.service';
+import { environment        } from '../../../environments/environment';
 import urljoin from 'url-join';
 
 @Injectable({
@@ -21,11 +19,9 @@ export class DiscussionSystemService {
   httpOpts: any;
 
   constructor(
-    private _router:   Router,
     private http:      HttpClient,
-    private _auth:     AuthService,
     private _getToken: GetTokenService,
-    private _storage:  LocalStorageService,
+    private _error:    HandleErrorService,
     ) {
 
       this.apiUrl   = urljoin(environment.apiUrl, 'comments');
@@ -49,7 +45,7 @@ export class DiscussionSystemService {
 
     return this.http.post(this.apiUrl, data, this.httpOpts)
       .pipe(
-        catchError( this.handleError )
+        catchError( this._error.handleError )
       );
   }
 
@@ -67,7 +63,7 @@ export class DiscussionSystemService {
 
     return this.http.get<Comments[]>(url, this.httpOpts)
       .pipe(
-        catchError( this.handleError )
+        catchError( this._error.handleError )
       );
   }
 
@@ -86,7 +82,7 @@ export class DiscussionSystemService {
 
     return this.http.delete(url, this.httpOpts, )
       .pipe(
-        catchError( this.unauthorized )
+        catchError( this._error.handleError )
       );
 
   }
@@ -107,7 +103,7 @@ export class DiscussionSystemService {
 
     return this.http.delete(url, this.httpOpts, )
       .pipe(
-        catchError( this.unauthorized )
+        catchError( this._error.handleError )
       );
 
   }
@@ -124,25 +120,9 @@ export class DiscussionSystemService {
 
     return this.http.post<Answer>(url, data, this.httpOpts)
       .pipe(
-        catchError( this.handleError )
+        catchError( this._error.handleError )
       );
 
-  }
-
-
-  handleError = (error: HttpErrorResponse) => {
-    if (error.status === 401) {
-      this._router.navigateByUrl('');
-      this._auth.logout();
-      this._auth.showError('Inicia sesión con un usuario válido', 2000);
-      return throwError('Usuario Invalido');
-    }
-  }
-
-  unauthorized = (error: HttpErrorResponse) => {
-    if ( error.status === 401 ) {
-      return throwError('Unauthorized');
-    }
   }
 
 }

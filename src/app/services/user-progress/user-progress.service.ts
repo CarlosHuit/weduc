@@ -1,14 +1,13 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Router                 } from '@angular/router';
-import { environment            } from '../../../environments/environment';
-import { GetTokenService        } from '../get-token.service';
-import { catchError, map        } from 'rxjs/operators';
-import { throwError, Observable, of } from 'rxjs';
-import { LearnedLetters         } from '../../classes/learned-letters';
-import { AuthService            } from '../auth.service';
-import { LocalStorageService    } from '../local-storage.service';
-import { UserProgress           } from '../../classes/user-progress';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable          } from '@angular/core';
+import { environment         } from '../../../environments/environment';
+import { GetTokenService     } from '../get-token.service';
+import { catchError          } from 'rxjs/operators';
+import { Observable, of      } from 'rxjs';
+import { LearnedLetters      } from '../../classes/learned-letters';
+import { LocalStorageService } from '../local-storage.service';
+import { UserProgress        } from '../../classes/user-progress';
+import { HandleErrorService  } from '../../shared/handle-error.service';
 import urljoin from 'url-join';
 
 @Injectable({
@@ -21,11 +20,10 @@ export class UserProgressService {
   httpOpts: any;
 
   constructor(
-    private _router:  Router,
     private http:     HttpClient,
-    private _auth:    AuthService,
     private getToken: GetTokenService,
-    private _storage: LocalStorageService
+    private _storage: LocalStorageService,
+    private _err:     HandleErrorService
   ) {
 
     this.apiUrl = urljoin(environment.apiUrl, 'user-progress');
@@ -45,7 +43,7 @@ export class UserProgressService {
     };
 
     return this.http.post(url, data, this.httpOpts)
-      .pipe( catchError(this.handleError) );
+      .pipe( catchError(this._err.handleError) );
 
   }
 
@@ -61,7 +59,7 @@ export class UserProgressService {
 
     return this.http.get<LearnedLetters[]>(url, this.httpOpts)
       .pipe(
-        catchError(this.handleError)
+        catchError(this._err.handleError)
       );
 
   }
@@ -181,13 +179,5 @@ export class UserProgressService {
 
   }
 
-  handleError = (error: HttpErrorResponse) => {
-    if (error.status === 401) {
-      this._router.navigateByUrl('');
-      this._auth.logout();
-      this._auth.showError('Inicia sesión con un usuario válido', 2000);
-      return throwError('Usuario Invalido');
-    }
-  }
 
 }

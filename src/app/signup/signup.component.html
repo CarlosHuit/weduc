@@ -315,6 +315,13 @@
           >
           Registrarse
         </button>
+
+        <div class="container-spinner center">
+          <div>
+            <mat-spinner *ngIf="isLoading$ | async" >
+            </mat-spinner>
+          </div>
+        </div>
   
         <a
           class="redirect-signup"

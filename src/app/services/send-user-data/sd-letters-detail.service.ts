@@ -1,13 +1,11 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { environment       } from '../../../environments/environment';
-import { GetTokenService   } from '../get-token.service';
-import { catchError, map   } from 'rxjs/operators';
-import { throwError        } from 'rxjs';
-import { LettersDetailData } from '../../classes/letters-detail-data';
-import { AuthService       } from '../auth.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable         } from '@angular/core';
+import { environment        } from '../../../environments/environment';
+import { GetTokenService    } from '../get-token.service';
+import { catchError         } from 'rxjs/operators';
+import { LettersDetailData  } from '../../classes/letters-detail-data';
+import { HandleErrorService } from 'src/app/shared/handle-error.service';
 import urljoin from 'url-join';
-import { Router } from '@angular/router';
 
 @Injectable({
     providedIn: 'root'
@@ -19,9 +17,8 @@ import { Router } from '@angular/router';
 
   constructor(
     private http:     HttpClient,
-    private _auth:    AuthService,
-    private _router:  Router,
-    private getToken: GetTokenService
+    private getToken: GetTokenService,
+    private _err:     HandleErrorService
   ) {
 
     this.apiUrl = urljoin(environment.apiUrl, 'data/letters-detail');
@@ -39,17 +36,10 @@ import { Router } from '@angular/router';
     };
 
     return this.http.post(this.apiUrl, data, this.httpOptions)
-      .pipe( catchError(this.handleError) );
+      .pipe( catchError(this._err.handleError) );
 
   }
 
-  handleError = (error: HttpErrorResponse) => {
-    if (error.status === 401) {
-      this._router.navigateByUrl('');
-      this._auth.logout();
-      this._auth.showError('Inicia sesión con un usuario válido', 2000);
-      return throwError('Usuario Invalido');
-    }
-  }
+
 
 }

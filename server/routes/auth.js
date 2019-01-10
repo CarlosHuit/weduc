@@ -59,9 +59,8 @@ const createToken = (user) => jwt.sign({ user }, secret, { expiresIn: 86400 }) /
 /* ------ validar que las contrase?as coincidan ------ */
 app.post('/signup', async ( req, res, next ) => {
   
-  /* password2 */
+
   const { firstName, lastName, email, password, password2, avatar } = req.body
-  debug(req.body)
   const findEmail = await User.findOne( { email } )
 
   if (findEmail) {

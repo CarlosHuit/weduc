@@ -1,17 +1,13 @@
-<div class="m-c-banner-title">
-  <span class="logo-title" (click)="goToHome()" >WEDUC</span>
-</div>
-
-<div class="container" [class.d-c-dektop]="!isMobile()">
+<div class="container" [class.d-c-dektop]="(isMobile$ | async) === false">
 
 
     <!-------- Version Dektop -------->
-  <mat-card class="d-c-card-signin" *ngIf="!isMobile()" >
+  <mat-card class="d-c-card-signin" *ngIf="!(isMobile$ | async)" >
     <div style="width: 100%; padding-bottom: 20px;">
 
 
       <div class="m-c-icon-login" >
-        <img src="/assets/img-min/education-min.png" alt="" width="120" height="120">
+        <img src="/assets/img-min/education-min.png" width="120" height="120">
       </div>
   
       <h1 class="m-c-title-signin" >Iniciar Sesión</h1>
@@ -92,7 +88,14 @@
         </button>
   
       </form>
-  
+
+      <div class="container-spinner center">
+        <div>
+          <mat-spinner *ngIf="isLoading$ | async" >
+          </mat-spinner>
+        </div>
+      </div>
+      
       <div class="m-c-signup-link">
         <span class="text-signup"> ¿No tienes cuenta? </span>
         <span class="link-signup" mat-button color="primary" routerLink='/signup'>
@@ -106,8 +109,8 @@
 
 
   <!-------- Version Mobile -------->
-  <mat-card class="m-c-card-signin center" *ngIf="isMobile()" >
-    <div style="width: 100%; padding-bottom: 20px;">
+  <mat-card class="m-c-card-signin center" *ngIf="(isMobile$ | async)" >
+    <div style="width: 100%">
 
 
       <div class="m-c-icon-login" >
@@ -187,11 +190,18 @@
           type="submit"
           mat-raised-button
           color="accent"
+          [disabled]="isLoading$ | async"
           >
           Entrar
         </button>
-  
+        
       </form>
+      <div class="container-spinner center">
+        <div>
+          <mat-spinner *ngIf="isLoading$ | async" >
+          </mat-spinner>
+        </div>
+      </div>
   
       <div class="m-c-signup-link">
         <span class="text-signup"> ¿No tienes cuenta? </span>

@@ -1,13 +1,14 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable       } from '@angular/core';
 import { MenuLettersData  } from '../../classes/menu-letters-data';
-import { Router           } from '@angular/router';
 import { environment      } from '../../../environments/environment';
 import { GetTokenService  } from '../get-token.service';
 import { catchError, map  } from 'rxjs/operators';
 import { throwError       } from 'rxjs';
 import { AuthService      } from '../auth.service';
 import urljoin from 'url-join';
+import { Store } from '@ngxs/store';
+import { Logout } from 'src/app/store/actions/auth.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -20,8 +21,8 @@ export class SdLettersMenuService {
   constructor(
     private http:     HttpClient,
     private _auth:    AuthService,
-    private _router:  Router,
-    private getToken: GetTokenService
+    private getToken: GetTokenService,
+    private store:    Store
   ) {
 
     this.apiUrl = urljoin(environment.apiUrl, 'data');
@@ -51,8 +52,7 @@ export class SdLettersMenuService {
 
   handleError = (error: HttpErrorResponse) => {
     if (error.status === 401) {
-      this._router.navigateByUrl('');
-      this._auth.logout();
+      this.store.dispatch(new Logout());
       this._auth.showError('Inicia sesión con un usuario válido', 2000);
       return throwError('Usuario Invalido');
     }

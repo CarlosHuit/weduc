@@ -14,7 +14,7 @@
 
 <div mat-dialog-actions class="center-items">
   <div style="padding-bottom: 5px" class="center-items">
-    <button mat-flat-button color="warn" class="btn-selected" [mat-dialog-close]="iconSelected" cdkFocusInitial>Siguiente</button>
+    <button mat-flat-button color="warn" class="btn-selected" [mat-dialog-close]="iconSelected" [disabled]="!iconSelected" cdkFocusInitial >Siguiente</button>
   </div>
   <div class="center-items">
     <button mat-button color="primary" (click)="onNoClick()">Cancelar</button>

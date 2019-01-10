@@ -84,6 +84,7 @@
   font-weight:  normal;
   font-family:  sans-serif, 'Noto Sans', sans-serif;
   font-size:    32px;
+  margin: 5px 0;
 }
 
 .m-c-signup-form {
@@ -106,12 +107,23 @@
   font-size:        18px;
   font-family:      sans-serif;
   text-align:       center;
-  padding-top:      15px;
   margin:           0 auto;
   text-decoration:  underline;
   color:          #0a8ecd;
   cursor:           pointer;
 }
+
+.container-spinner {
+  height: 30px;
+  margin: 10px;
+  margin-bottom: 0px;
+}
+
+.container-spinner > div {
+  height: 30px;
+  width: 30px;
+}
+
 
 @media (max-height: 640px) and (orientation: portrait) {
 

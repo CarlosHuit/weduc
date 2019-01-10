@@ -18,8 +18,24 @@ body {
   display:          flex;
   justify-content:  center;
   align-items:      center;
-  margin-top:       56px;
+  margin-top:       0;
   position:         relative;
+  animation:        showContainer 1s;
+  /* animation:        translateContainer .25s; */
+}
+
+@keyframes showContainer {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes translateContainer {
+  from { transform: translateY(10%) }
+  to { transform: translateY(0) }
 }
 
 .overflow-auto {

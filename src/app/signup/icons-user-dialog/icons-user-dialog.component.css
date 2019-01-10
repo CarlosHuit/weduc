@@ -19,7 +19,7 @@
   width: 100px;
   box-sizing: border-box;
   height: 100px;
-  transition: 250ms;
+  transition: 160ms;
 }
 
 .m-c-image.selected {

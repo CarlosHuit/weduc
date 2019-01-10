@@ -1,10 +1,14 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormGroupDirective, NgForm } from '@angular/forms';
 import { User                } from '../classes/user';
 import { AuthService         } from '../services/auth.service';
 import { ErrorStateMatcher   } from '@angular/material/core';
-import { DetectMobileService } from '../services/detect-mobile.service';
-import { Router } from '@angular/router';
+import { Store, Select       } from '@ngxs/store';
+import { Login               } from '../store/actions/auth.actions';
+import { AuthState           } from '../store/state/auth.state';
+import { Observable          } from 'rxjs';
+import { ChangeTitle         } from '../store/actions/app.actions';
+import { AppState            } from '../store/state/app.state';
 
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -24,20 +28,18 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   styleUrls: ['./signin.component.css']
 })
 
-export class SigninComponent implements OnInit, OnDestroy {
+export class SigninComponent implements OnInit {
 
-  signinForm: FormGroup;
+  signinForm:     FormGroup;
   matcher =   new MyErrorStateMatcher();
+  @Select(AuthState.isLoading) isLoading$: Observable<boolean>;
+  @Select(AppState.isMobile)   isMobile$:  Observable<boolean>;
 
-  constructor(
-    private authService: AuthService,
-    private _mobile:     DetectMobileService,
-    private _router:     Router
-  ) { }
+  constructor( private authService: AuthService, private store: Store ) { }
 
   ngOnInit() {
 
-
+    this.store.dispatch( new ChangeTitle({title: 'Weduc - Iniciar sesión'}) );
     this.signinForm = new FormGroup({
       'email': new    FormControl(null, [Validators.required, Validators.email]),
       'password': new FormControl(
@@ -50,26 +52,11 @@ export class SigninComponent implements OnInit, OnDestroy {
       ),
     });
 
-    window.addEventListener('resize', this.isMobile);
 
   }
 
-
-  ngOnDestroy() {
-    window.removeEventListener('resize', this.isMobile);
-  }
-
-
-  isMobile = () => {
-    return this._mobile.isMobile();
-  }
-
-  goToHome = () => {
-    this._router.navigateByUrl('');
-  }
 
   onSubmit() {
-
 
     if (!this.signinForm.valid) {
       this.authService.showError('Los datos ingresados no son válidos. Verifica y vuelve a intentarlo.');
@@ -77,17 +64,11 @@ export class SigninComponent implements OnInit, OnDestroy {
 
     if (this.signinForm.valid) {
 
-      const { email, password } = this.signinForm.value;
-      const user = new User(email, password);
+      const user = new User(this.signinForm.value.email, this.signinForm.value.password);
+      this.store.dispatch( new Login(user));
 
-      this.authService.signin(user)
-        .subscribe(
-          this.authService.login,
-          this.authService.handleError
-        );
     }
+
   }
-
-
 
 }

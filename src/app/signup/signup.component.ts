@@ -1,25 +1,31 @@
-import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { IconsUserDialogComponent     } from './icons-user-dialog/icons-user-dialog.component';
+import { Observable          } from 'rxjs';
+import { ErrorStateMatcher   } from '@angular/material/core';
+import { MatDialog           } from '@angular/material';
+import { Navigate            } from '@ngxs/router-plugin';
+import { Store, Select       } from '@ngxs/store';
 import { CustomValidator     } from './equals-validator.directive';
 import { User                } from '../classes/user';
 import { AuthService         } from '../services/auth.service';
-import { ErrorStateMatcher   } from '@angular/material/core';
 import { DetectMobileService } from '../services/detect-mobile.service';
-import { Router } from '@angular/router';
+import { Signup              } from '../store/actions/auth.actions';
+import { AuthState           } from '../store/state/auth.state';
+import { ChangeTitle } from '../store/actions/app.actions';
 
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
-import { IconsUserDialogComponent } from './icons-user-dialog/icons-user-dialog.component';
-
-export interface DialogData {
-  animal: string;
-  name: string;
-}
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
-  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-    const isSubmitted = form && form.submitted;
-    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
+
+  isErrorState(
+    control: FormControl | null,
+    form:    FormGroupDirective | NgForm | null ): boolean {
+
+      const isSubmitted = form && form.submitted;
+      return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
+
   }
+
 }
 
 @Component({
@@ -33,19 +39,23 @@ export class SignupComponent implements OnInit, OnDestroy {
   signupForm: FormGroup;
   matcher =   new MyErrorStateMatcher();
   avatar:     string;
+
+  @Select(AuthState.isLoading) isLoading$: Observable<string>;
   constructor(
     private fb:           FormBuilder,
     private authService:  AuthService,
     private _mobile:      DetectMobileService,
-    private _router:      Router,
-    private dialog: MatDialog
-  ) {
-  }
+    private dialog:       MatDialog,
+    private store:        Store
+  ) { }
 
   ngOnInit() {
+
+    this.store.dispatch( new ChangeTitle({title: 'Weduc - Crear cuenta'}) );
     this.createForm();
     window.addEventListener('resize', this.isMobile);
     setTimeout(() => this.openDialog(), 100);
+
   }
 
   ngOnDestroy() {
@@ -53,39 +63,36 @@ export class SignupComponent implements OnInit, OnDestroy {
   }
 
 
-  openDialog(): void {
-    const dialogRef = this.dialog.open(
-      IconsUserDialogComponent, { disableClose: true }
-    );
+  openDialog() {
 
-    dialogRef.afterClosed().subscribe(avatar => this.avatar = avatar);
+    const d = this.dialog.open( IconsUserDialogComponent, { disableClose: true } );
+    d.afterClosed().subscribe(avatar => this.avatar = avatar);
+
   }
 
 
   createForm() {
-    this.signupForm = this.fb.group(
-      {
-        'firstName': ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
-        'lastName':  ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
-        'email':     ['', [Validators.required, Validators.email]],
-        'password':  ['',
-          [
-            Validators.required,
-            Validators.minLength(8),
-            Validators.maxLength(20),
-            Validators.pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/)
-          ]
-        ],
-        'password2': ['',
-          [
-            Validators.required,
-            Validators.minLength(8),
-            Validators.maxLength(20),
-            Validators.pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/)
-          ]
-        ],
-      }
-    );
+    this.signupForm = this.fb.group({
+      'firstName': ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
+      'lastName':  ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
+      'email':     ['', [Validators.required, Validators.email]],
+      'password':  ['',
+        [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.maxLength(20),
+          Validators.pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/)
+        ]
+      ],
+      'password2': ['',
+        [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.maxLength(20),
+          Validators.pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/)
+        ]
+      ],
+    });
 
     this.signupForm.get('password2').setValidators(
       CustomValidator.equals(this.signupForm.get('password'))
@@ -99,7 +106,7 @@ export class SignupComponent implements OnInit, OnDestroy {
   }
 
   goToHome = () => {
-    this._router.navigateByUrl('/');
+    this.store.dispatch( new Navigate(['/']) );
   }
 
   onSubmit() {
@@ -114,11 +121,8 @@ export class SignupComponent implements OnInit, OnDestroy {
       const { firstName, lastName, email, password, password2} = this.signupForm.value;
       const user = new User(email, password, password2, firstName, lastName, this.avatar);
 
-      this.authService.signup(user)
-        .subscribe(
-          this.authService.login,
-          this.authService.handleError
-        );
+      this.store.dispatch( new Signup(user) );
+
     }
   }
 }

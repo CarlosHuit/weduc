@@ -1,12 +1,10 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable           } from '@angular/core';
 import { environment          } from '../../../environments/environment';
 import { GetTokenService      } from '../get-token.service';
-import { catchError, map      } from 'rxjs/operators';
-import { throwError           } from 'rxjs';
+import { catchError           } from 'rxjs/operators';
 import { PronounceLetterData  } from '../../classes/pronounce-letter-data';
-import { AuthService          } from '../auth.service';
+import { HandleErrorService   } from '../../shared/handle-error.service';
 import urljoin from 'url-join';
 
 @Injectable({
@@ -19,10 +17,9 @@ export class SdPronounceLetterService {
   httpOptions: any;
 
   constructor(
-    private _router: Router,
     private http: HttpClient,
-    private _auth: AuthService,
     private getToken: GetTokenService,
+    private _err:     HandleErrorService
   ) {
 
     this.apiUrl = urljoin(environment.apiUrl, 'data/pronounce-letters');
@@ -41,18 +38,10 @@ export class SdPronounceLetterService {
 
     return this.http.post(this.apiUrl, data, this.httpOptions)
       .pipe(
-        catchError(this.handleError)
+        catchError(this._err.handleError)
       );
 
   }
 
-  handleError = (error: HttpErrorResponse) => {
-    if (error.status === 401) {
-      this._router.navigateByUrl('');
-      this._auth.logout();
-      this._auth.showError('Inicia sesión con un usuario válido', 2000);
-      return throwError('Usuario Invalido');
-    }
-  }
 
 }
