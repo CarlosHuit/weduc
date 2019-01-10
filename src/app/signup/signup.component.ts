@@ -4,15 +4,13 @@ import { IconsUserDialogComponent     } from './icons-user-dialog/icons-user-dia
 import { Observable          } from 'rxjs';
 import { ErrorStateMatcher   } from '@angular/material/core';
 import { MatDialog           } from '@angular/material';
-import { Navigate            } from '@ngxs/router-plugin';
 import { Store, Select       } from '@ngxs/store';
 import { CustomValidator     } from './equals-validator.directive';
 import { User                } from '../classes/user';
 import { AuthService         } from '../services/auth.service';
-import { DetectMobileService } from '../services/detect-mobile.service';
 import { Signup              } from '../store/actions/auth.actions';
-import { AuthState           } from '../store/state/auth.state';
-import { ChangeTitle } from '../store/actions/app.actions';
+import { ChangeTitle         } from '../store/actions/app.actions';
+import { AppState            } from '../store/state/app.state';
 
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -39,12 +37,11 @@ export class SignupComponent implements OnInit, OnDestroy {
   signupForm: FormGroup;
   matcher =   new MyErrorStateMatcher();
   avatar:     string;
+  @Select(AppState.isMobile)   isMobile$:  Observable<boolean>;
 
-  @Select(AuthState.isLoading) isLoading$: Observable<string>;
   constructor(
     private fb:           FormBuilder,
     private authService:  AuthService,
-    private _mobile:      DetectMobileService,
     private dialog:       MatDialog,
     private store:        Store
   ) { }
@@ -53,17 +50,14 @@ export class SignupComponent implements OnInit, OnDestroy {
 
     this.store.dispatch( new ChangeTitle({title: 'Weduc - Crear cuenta'}) );
     this.createForm();
-    window.addEventListener('resize', this.isMobile);
-    setTimeout(() => this.openDialog(), 100);
+    setTimeout(this.openDialog, 100);
 
   }
 
-  ngOnDestroy() {
-    window.removeEventListener('resize', this.isMobile);
-  }
+  ngOnDestroy() { }
 
 
-  openDialog() {
+  openDialog = () => {
 
     const d = this.dialog.open( IconsUserDialogComponent, { disableClose: true } );
     d.afterClosed().subscribe(avatar => this.avatar = avatar);
@@ -99,14 +93,6 @@ export class SignupComponent implements OnInit, OnDestroy {
     );
 
 
-  }
-
-  isMobile = () => {
-    return this._mobile.isMobile();
-  }
-
-  goToHome = () => {
-    this.store.dispatch( new Navigate(['/']) );
   }
 
   onSubmit() {

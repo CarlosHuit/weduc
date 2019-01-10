@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { Store } from '@ngxs/store';
-import { Logout } from '../store/actions/auth.actions';
 import { HttpErrorResponse } from '@angular/common/http';
-import { throwError } from 'rxjs';
-import { MatSnackBar } from '@angular/material';
+import { Injectable   } from '@angular/core';
+import { Store        } from '@ngxs/store';
+import { Logout       } from '../store/actions/auth.actions';
+import { throwError   } from 'rxjs';
+import { MatSnackBar  } from '@angular/material';
 
 @Injectable({ providedIn: 'root' })
 

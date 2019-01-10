@@ -8,7 +8,6 @@ import { Login               } from '../store/actions/auth.actions';
 import { AuthState           } from '../store/state/auth.state';
 import { Observable          } from 'rxjs';
 import { ChangeTitle         } from '../store/actions/app.actions';
-import { AppState            } from '../store/state/app.state';
 
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -33,7 +32,6 @@ export class SigninComponent implements OnInit {
   signinForm:     FormGroup;
   matcher =   new MyErrorStateMatcher();
   @Select(AuthState.isLoading) isLoading$: Observable<boolean>;
-  @Select(AppState.isMobile)   isMobile$:  Observable<boolean>;
 
   constructor( private authService: AuthService, private store: Store ) { }
 
