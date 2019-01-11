@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
-import { DetectMobileService  } from '../services/detect-mobile.service';
 import { MatSnackBar   } from '@angular/material';
 import { Subjects      } from '../classes/subjects';
 import { Store, Select } from '@ngxs/store';
@@ -21,8 +20,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild('contGrid') contGrid: ElementRef;
 
   subjects: Subjects[];
-  loading = true;
   search:   RegExp;
+  isMobile: boolean;
 
   @Select(CoursesState.courses)   courses$:     Observable<Course[]>;
   @Select(CoursesState.isLoading) isLoading$:   Observable<boolean>;
@@ -30,13 +29,13 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   constructor(
     public snackBar:      MatSnackBar,
-    private detectMobile: DetectMobileService,
     private store:        Store
   ) { }
 
   ngOnInit() {
     this.store.dispatch(new GetCourses());
-    this.courses$.subscribe(courses => this.subjects = courses);
+    this.courses$.subscribe(courses => this.subjects = courses );
+    this.isMobile$.subscribe( result => this.isMobile = result );
   }
 
   ngOnDestroy() {
@@ -52,14 +51,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   showError(message) {
     this.snackBar.open(message, 'Cerrar', { duration: 5000 });
-  }
-
-  generateUrl = (str: string) => {
-    return `/assets/courses-img/${str}.jpg`;
-  }
-
-  isMobile = () => {
-    return this.detectMobile.isMobile();
   }
 
   geoFindMe = () => {
@@ -106,7 +97,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   genCols = (el: HTMLDivElement) => {
 
-    if (this.isMobile()) {
+    if (this.isMobile) {
       const t = el.clientWidth % 320;
       const margin = 5 * 4;
       const minWidth = 300;
@@ -127,7 +118,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     }
 
-    if (!this.isMobile()) {
+    if (!this.isMobile) {
 
     }
 
