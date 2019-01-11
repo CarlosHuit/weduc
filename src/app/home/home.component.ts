@@ -4,6 +4,8 @@ import { MatSnackBar          } from '@angular/material';
 import { DetectMobileService  } from '../services/detect-mobile.service';
 import { Subjects             } from '../classes/subjects';
 import { GetCoursesService } from '../services/get-data/get-courses.service';
+import { Store } from '@ngxs/store';
+import { Navigate } from '@ngxs/router-plugin';
 
 @Component({
   selector: 'app-home',
@@ -25,6 +27,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     public snackBar:      MatSnackBar,
     private getCourses:   GetCoursesService,
     private detectMobile: DetectMobileService,
+    private store:        Store
   ) { }
 
   ngOnInit() {
@@ -46,7 +49,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   redirect = (course: string) => {
 
     const url = `${course}`;
-    this.router.navigateByUrl(url);
+    this.store.dispatch(new Navigate([url]));
 
   }
 

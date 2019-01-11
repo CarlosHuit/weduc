@@ -2,7 +2,7 @@ import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse  } from '@angu
 import { Injectable           } from '@angular/core';
 import { environment          } from '../../../environments/environment';
 import { Observable           } from 'rxjs';
-import { map, catchError      } from 'rxjs/operators';
+import { catchError, tap      } from 'rxjs/operators';
 import { GetTokenService      } from '../get-token.service';
 import { LocalStorageService  } from '../local-storage.service';
 import { InitialData          } from '../../classes/initial-data';
@@ -25,14 +25,14 @@ export class GetInitialDataService {
     private getToken: GetTokenService,
     private _storage: LocalStorageService,
     private _err:     HandleErrorService
-    ) {
-      this.apiUrl = urljoin(environment.apiUrl);
-      this.httpOpts = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': `${this.getToken.addToken()}`
+  ) {
+    this.apiUrl = urljoin(environment.apiUrl);
+    this.httpOpts = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `${this.getToken.addToken()}`
       })
-      };
+    };
   }
 
 
@@ -49,12 +49,7 @@ export class GetInitialDataService {
 
 
     return this.http.get(url, this.httpOpts)
-    .pipe(
-
-      map(x => { this.saveData(x); return x; }),
-      catchError(this._err.handleError)
-
-    );
+      .pipe(tap(this.saveData), catchError(this._err.handleError));
   }
 
   saveData = (x) => {
