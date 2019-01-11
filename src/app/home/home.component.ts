@@ -1,12 +1,14 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
-import { Router               } from '@angular/router';
-import { MatSnackBar          } from '@angular/material';
 import { DetectMobileService  } from '../services/detect-mobile.service';
-import { Subjects             } from '../classes/subjects';
-import { GetCoursesService } from '../services/get-data/get-courses.service';
-import { Store } from '@ngxs/store';
-import { Navigate } from '@ngxs/router-plugin';
-import { GetCourses } from '../store/actions/courses.actions';
+import { MatSnackBar   } from '@angular/material';
+import { Subjects      } from '../classes/subjects';
+import { Store, Select } from '@ngxs/store';
+import { Navigate      } from '@ngxs/router-plugin';
+import { GetCourses    } from '../store/actions/courses.actions';
+import { CoursesState  } from '../store/state/courses.state';
+import { Course        } from '../store/models/courses-state.model';
+import { Observable    } from 'rxjs';
+import { AppState } from '../store/state/app.state';
 
 @Component({
   selector: 'app-home',
@@ -21,27 +23,20 @@ export class HomeComponent implements OnInit, OnDestroy {
   subjects: Subjects[];
   loading = true;
   search:   RegExp;
-  listenerResize: any;
+
+  @Select(CoursesState.courses)   courses$:     Observable<Course[]>;
+  @Select(CoursesState.isLoading) isLoading$:   Observable<boolean>;
+  @Select(AppState.isMobile)      isMobile$:    Observable<boolean>;
 
   constructor(
-    private router:       Router,
     public snackBar:      MatSnackBar,
-    private getCourses:   GetCoursesService,
     private detectMobile: DetectMobileService,
     private store:        Store
   ) { }
 
   ngOnInit() {
     this.store.dispatch(new GetCourses());
-    this.getCourses.getCourses()
-      .subscribe(
-        (val: Subjects[]) => {
-          this.subjects = val;
-          this.loading  = false;
-          window.addEventListener('resize', () => this.genCols(this.contGrid.nativeElement));
-        },
-        (err) => console.log(err)
-      );
+    this.courses$.subscribe(courses => this.subjects = courses);
   }
 
   ngOnDestroy() {

@@ -2,7 +2,7 @@ import express from 'express'
 import Debug from 'debug'
 import jwt from 'jsonwebtoken'
 import { secret, nameProject } from '../config'
-import { User } from '../models'
+import { User, Courses } from '../models'
 import { hashSync as hash, compareSync as comparePassword } from 'bcryptjs'
 
 const app = express.Router()
@@ -31,10 +31,11 @@ app.post( '/signin', async (req,res, next) => {
   }
   
   
-  
+  const courses = await Courses.find({}, { __v:0});
   const token = createToken(user)
   res.status(200).json({
     token,
+    courses,
     message:   'Login Exitoso',
     userId:    user._id,
     firstName: user.firstName,

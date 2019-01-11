@@ -1,6 +1,7 @@
 export enum CoursesActionsType {
   GET_COURSES = '[Courses] get courses',
-  SELECT_COURSE = '[Courses] select course'
+  SELECT_COURSE = '[Courses] select course',
+  IS_LOADING_COURSES = '[Courses] loading courses'
 }
 
 export class GetCourses {
@@ -9,4 +10,9 @@ export class GetCourses {
 export class SelectCourse {
   static readonly type = CoursesActionsType.SELECT_COURSE;
   constructor(public payload: { _id: string }) {}
+}
+
+export class IsLoadingCourses {
+  static readonly type = CoursesActionsType.IS_LOADING_COURSES;
+  constructor(public payload: {state: boolean}) {}
 }

@@ -1,6 +1,7 @@
 export class CoursesStateModel {
   constructor(
-    public courses: Course[],
+    public courses:          Course[],
+    public isLoadingCourses: boolean,
   ) {}
 }
 

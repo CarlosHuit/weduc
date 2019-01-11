@@ -1,1 +1,5 @@
-<div class="spinner-loading center"></div>
+<div #container class="container-spinner">
+  <div [style.width.px]="container.innerHeight" style="height: 100%;" >
+    <mat-spinner></mat-spinner>
+  </div>
+</div>

@@ -77,6 +77,7 @@ export class AuthState {
     return this._authService.signin(action.payload).pipe(
       tap(res => {
 
+        console.log(res);
         this._authService.saveData(res);
         setState(initialAuth());
         dispatch(new Navigate(['/']));
@@ -116,6 +117,7 @@ export class AuthState {
     return this._authService.signup(action.payload).pipe(
       tap(res => {
 
+        console.log(res);
         this._authService.saveData(res);
         setState(initialAuth());
         dispatch(new Navigate(['/']));
