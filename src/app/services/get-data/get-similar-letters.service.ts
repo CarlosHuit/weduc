@@ -15,21 +15,13 @@ import urljoin from 'url-join';
 export class GetSimilarLettersService {
 
   apiUrl:   string;
-  httpOpts: any;
 
   constructor(
     private http:     HttpClient,
-    private getToken: GetTokenService,
     private _storage: LocalStorageService,
     private _err:     HandleErrorService
     ) {
       this.apiUrl = urljoin(environment.apiUrl);
-      this.httpOpts = {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json',
-          'Authorization': `${this.getToken.addToken()}`
-        })
-      };
     }
 
   getSimilarLetters = (letter: string): Observable<any | SimilarLetters[]> => {
@@ -56,14 +48,8 @@ export class GetSimilarLettersService {
   getSimilarLettersOfServer (letter: string): Observable<any | SimilarLetters[]> {
 
     const url = urljoin(this.apiUrl, `similar-letters/${letter}`);
-    this.httpOpts = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': `${this.getToken.addToken()}`
-      })
-    };
 
-    return this.http.get<SimilarLetters[]>(url, this.httpOpts)
+    return this.http.get<SimilarLetters[]>(url)
       .pipe(
         map(x => this.convertData(x, letter)),
         catchError(this._err.handleError)

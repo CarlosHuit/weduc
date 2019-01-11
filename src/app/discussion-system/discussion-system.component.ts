@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { User                     } from '../classes/user';
 import { LocalStorageService      } from '../services/local-storage.service';
-import { AuthService              } from '../services/auth.service';
+import { AuthService              } from '../auth/service/auth.service';
 import { Comments,                } from '../classes/comments';
 import { DiscussionSystemService  } from '../services/discussion-system/discussion-system.service';
 import { Answers, Answer          } from '../classes/answers';

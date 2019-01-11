@@ -17,11 +17,9 @@ import urljoin from 'url-join';
 export class UserProgressService {
 
   apiUrl:      string;
-  httpOpts: any;
 
   constructor(
     private http:     HttpClient,
-    private getToken: GetTokenService,
     private _storage: LocalStorageService,
     private _err:     HandleErrorService
   ) {
@@ -35,14 +33,8 @@ export class UserProgressService {
 
     const url   = this.apiUrl;
     const data  = JSON.stringify(obj);
-    this.httpOpts = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': `${this.getToken.addToken()}`
-      })
-    };
 
-    return this.http.post(url, data, this.httpOpts)
+    return this.http.post(url, data)
       .pipe( catchError(this._err.handleError) );
 
   }
@@ -50,14 +42,8 @@ export class UserProgressService {
   getUserProgress = (id: string): Observable< LearnedLetters[] | any > => {
 
     const url = urljoin(this.apiUrl, id);
-    this.httpOpts = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': `${this.getToken.addToken()}`
-      })
-    };
 
-    return this.http.get<LearnedLetters[]>(url, this.httpOpts)
+    return this.http.get<LearnedLetters[]>(url)
       .pipe(
         catchError(this._err.handleError)
       );

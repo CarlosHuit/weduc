@@ -4,7 +4,7 @@ import { Subjects               } from '../classes/subjects';
 import { DomSanitizer           } from '@angular/platform-browser';
 import { MatSnackBar            } from '@angular/material';
 import { DetectMobileService    } from '../services/detect-mobile.service';
-import { AuthService            } from '../services/auth.service';
+import { AuthService            } from '../auth/service/auth.service';
 import { User                   } from '../classes/user';
 import { GetCoursesService      } from '../services/get-data/get-courses.service';
 import { MediaMatcher           } from '@angular/cdk/layout';

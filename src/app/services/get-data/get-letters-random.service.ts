@@ -1,16 +1,12 @@
-import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse  } from '@angular/common/http';
-import { Injectable           } from '@angular/core';
-import { environment          } from '../../../environments/environment';
-import { Observable, throwError, of } from 'rxjs';
-import { catchError, map        } from 'rxjs/operators';
-import { GetTokenService      } from '../get-token.service';
-import { LocalStorageService  } from '../local-storage.service';
-import { Router               } from '@angular/router';
-import { AuthService          } from '../auth.service';
-import { RandomSimilarLetters } from '../../classes/random-similar-letters';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable              } from '@angular/core';
+import { environment             } from '../../../environments/environment';
+import { Observable, of          } from 'rxjs';
+import { catchError, map         } from 'rxjs/operators';
+import { LocalStorageService     } from '../local-storage.service';
+import { RandomSimilarLetters    } from '../../classes/random-similar-letters';
+import { HandleErrorService      } from '../../shared/handle-error.service';
 import urljoin from 'url-join';
-import { Store } from '@ngxs/store';
-import { Logout } from 'src/app/store/actions/auth.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -18,23 +14,13 @@ import { Logout } from 'src/app/store/actions/auth.actions';
 export class GetLettersRandomService {
 
   apiUrl:   string;
-  httpOpts: any;
 
   constructor(
-    private _router:  Router,
     private http:     HttpClient,
-    private _auth:    AuthService,
-    private getToken: GetTokenService,
     private _storage: LocalStorageService,
-    private store:    Store
+    private _err:     HandleErrorService
     ) {
       this.apiUrl = urljoin(environment.apiUrl);
-      this.httpOpts = {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json',
-          'Authorization': `${this.getToken.addToken()}`
-        })
-      };
     }
 
   getSimilarLettersRandom = (letter: string): Observable<any | RandomSimilarLetters> => {
@@ -54,17 +40,11 @@ export class GetLettersRandomService {
   getSimilarLettersRandomFromServer (letter: string): Observable<any | RandomSimilarLetters> {
 
     const url = urljoin(this.apiUrl, `similar-letters/random/${letter}`);
-    this.httpOpts = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': `${this.getToken.addToken()}`
-      })
-    };
 
-    return this.http.get<RandomSimilarLetters>(url, this.httpOpts)
+    return this.http.get<RandomSimilarLetters>(url)
       .pipe(
         map(x => { this.saveData(x); return x; }),
-        catchError(this.handleError)
+        catchError(this._err.handleError)
 
       );
   }
@@ -160,15 +140,6 @@ export class GetLettersRandomService {
 
   randomInt = (min, max) => {
     return Math.floor(Math.random() * (max - min)) + min;
-  }
-
-  handleError = (error: HttpErrorResponse) => {
-    if (error.status === 401) {
-      this._router.navigateByUrl('');
-      this.store.dispatch(new Logout());
-      this._auth.showError('Inicia sesión con un usuario válido', 2000);
-      return throwError('Usuario Invalido');
-    }
   }
 
 

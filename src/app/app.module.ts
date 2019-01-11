@@ -1,17 +1,18 @@
 import { BrowserModule, HAMMER_GESTURE_CONFIG, Title } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
-import { MaterialModule                   } from './material/material.module';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { HttpClientModule                 } from '@angular/common/http';
+import { MaterialModule                       } from './material/material.module';
+import { ReactiveFormsModule, FormsModule     } from '@angular/forms';
+import { HttpClientModule, HTTP_INTERCEPTORS  } from '@angular/common/http';
 
+import { TokenInterceptor                 } from './auth/token/token.interceptor';
 import { AppRoutingModule                 } from './app-routing.module';
 import { AppComponent                     } from './app.component';
 import { ServiceWorkerModule              } from '@angular/service-worker';
 import { environment                      } from '../environments/environment';
 import { BrowserAnimationsModule          } from '@angular/platform-browser/animations';
-import { SigninComponent                  } from './signin/signin.component';
-import { SignupComponent                  } from './signup/signup.component';
+import { SigninComponent                  } from './auth/signin/signin.component';
+import { SignupComponent                  } from './auth/signup/signup.component';
 import { ToolbarComponent                 } from './toolbar/toolbar.component';
 import { HomeComponent                    } from './home/home.component';
 import { DetailCourseComponent            } from './detail-course/detail-course.component';
@@ -32,7 +33,7 @@ import { GestureConfig                    } from '@angular/material';
 import { ControlCanvasComponent           } from './read/control-canvas/control-canvas.component';
 import { GuideLinesComponent              } from './read/guide-lines/guide-lines.component';
 import { DiscussionSystemComponent        } from './discussion-system/discussion-system.component';
-import { IconsUserDialogComponent         } from './signup/icons-user-dialog/icons-user-dialog.component';
+import { IconsUserDialogComponent         } from './auth/signup/icons-user-dialog/icons-user-dialog.component';
 import { DeleteCommentDialogComponent     } from './discussion-system/delete-comment-dialog/delete-comment-dialog.component';
 import { CommentComponent                 } from './discussion-system/comment/comment.component';
 import { WriteCommentComponent            } from './discussion-system/write-comment/write-comment.component';
@@ -99,7 +100,15 @@ import { NgxsStoreModule                  } from './store/store.module';
   ],
   providers: [
     Title,
-    {provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig}
+    {
+      provide:  HAMMER_GESTURE_CONFIG,
+      useClass: GestureConfig
+    },
+    {
+      provide:  HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi:    true
+    }
   ],
   bootstrap: [AppComponent]
 })

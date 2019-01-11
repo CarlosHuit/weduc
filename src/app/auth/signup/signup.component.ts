@@ -6,11 +6,11 @@ import { ErrorStateMatcher   } from '@angular/material/core';
 import { MatDialog           } from '@angular/material';
 import { Store, Select       } from '@ngxs/store';
 import { CustomValidator     } from './equals-validator.directive';
-import { User                } from '../classes/user';
-import { AuthService         } from '../services/auth.service';
-import { Signup              } from '../store/actions/auth.actions';
-import { ChangeTitle         } from '../store/actions/app.actions';
-import { AppState            } from '../store/state/app.state';
+import { User                } from '../../classes/user';
+import { AuthService         } from '../service/auth.service';
+import { Signup              } from '../../store/actions/auth.actions';
+import { ChangeTitle         } from '../../store/actions/app.actions';
+import { AppState            } from '../../store/state/app.state';
 
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {

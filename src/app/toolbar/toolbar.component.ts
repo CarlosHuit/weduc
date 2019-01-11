@@ -1,5 +1,5 @@
 import { Component, OnDestroy, ViewChild, OnInit, Output, EventEmitter } from '@angular/core';
-import { AuthService       } from '../services/auth.service';
+import { AuthService       } from '../auth/service/auth.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { MediaMatcher      } from '@angular/cdk/layout';
 import { MatSidenav        } from '@angular/material/sidenav';

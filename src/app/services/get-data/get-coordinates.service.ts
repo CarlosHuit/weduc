@@ -1,9 +1,8 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient              } from '@angular/common/http';
 import { Injectable              } from '@angular/core';
 import { environment             } from '../../../environments/environment';
 import { Observable, of          } from 'rxjs';
 import { catchError, map         } from 'rxjs/operators';
-import { GetTokenService         } from '../get-token.service';
 import { LocalStorageService     } from '../local-storage.service';
 import { Coordinates             } from '../../classes/coordinates';
 import { HandleErrorService      } from '../../shared/handle-error.service';
@@ -18,11 +17,9 @@ import urljoin from 'url-join';
 export class GetCoordinatesService {
 
   apiUrl: string;
-  httpOpts: any;
 
   constructor(
     private http:     HttpClient,
-    private getToken: GetTokenService,
     private _storage: LocalStorageService,
     private _error:   HandleErrorService
   ) {
@@ -48,15 +45,10 @@ export class GetCoordinatesService {
 
 
   getCoordinatesFromServer = (letter: string): Observable<any | Coordinates> => {
-    const url = urljoin(this.apiUrl, letter);
-    this.httpOpts = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': `${this.getToken.addToken()}`
-      })
-    };
 
-    return this.http.get<Coordinates>(url, this.httpOpts)
+    const url = urljoin(this.apiUrl, letter);
+
+    return this.http.get<Coordinates>(url)
       .pipe(
         map(x => this.saveData(x, letter)),
         catchError(this._error.handleError)
@@ -94,11 +86,10 @@ export class GetCoordinatesService {
 
   saveCoordinnates = (coordinates: Coordinates) => {
 
-    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
     const url = urljoin(this.apiUrl, 'guardar');
     const coo = JSON.stringify(coordinates);
 
-    return this.http.post(url, coo, httpOptions)
+    return this.http.post(url, coo)
       .pipe(
         catchError(this._error.handleError)
       );

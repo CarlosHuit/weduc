@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import urljoin from 'url-join';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { environment } from '../../environments/environment';
-import { User } from '../classes/user';
+import { environment } from '../../../environments/environment';
+import { User } from '../../classes/user';
 import { Router } from '@angular/router';
 import { MatSnackBar         } from '@angular/material';
 import { JwtHelperService    } from '@auth0/angular-jwt';
-import { LocalStorageService } from '../services/local-storage.service';
+import { LocalStorageService } from '../../services/local-storage.service';
 import { throwError } from 'rxjs';
-import { UserDataModel } from '../store/models/user-data.model';
+import { UserDataModel } from '../../store/models/user-data.model';
 
 
 

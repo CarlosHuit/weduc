@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormGroupDirective, NgForm } from '@angular/forms';
-import { User                } from '../classes/user';
-import { AuthService         } from '../services/auth.service';
+import { User                } from '../../classes/user';
+import { AuthService         } from '../service/auth.service';
 import { ErrorStateMatcher   } from '@angular/material/core';
 import { Store, Select       } from '@ngxs/store';
-import { Login               } from '../store/actions/auth.actions';
-import { AuthState           } from '../store/state/auth.state';
+import { Login               } from '../../store/actions/auth.actions';
+import { AuthState           } from '../../store/state/auth.state';
 import { Observable          } from 'rxjs';
-import { ChangeTitle         } from '../store/actions/app.actions';
+import { ChangeTitle         } from '../../store/actions/app.actions';
 
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {

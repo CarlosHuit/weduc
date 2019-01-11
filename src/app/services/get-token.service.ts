@@ -1,22 +1,21 @@
 import { Injectable } from '@angular/core';
+import { AuthState  } from '../store/state/auth.state';
+import { Observable } from 'rxjs';
+import { Select     } from '@ngxs/store';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GetTokenService {
 
-  constructor() { }
+  token: string;
+  @Select(AuthState.getToken) email$: Observable<string>;
 
-  getToken() {
-    const token = localStorage.getItem('token');
-    return `?token=${token}`;
+  constructor() {
+    this.email$.subscribe( token => this.token = token );
   }
 
-  addToken() {
-
-    const token = localStorage.getItem('token');
-    return `Bearer${token}`;
-
-  }
+  getToken = () => `?token=${this.token}`;
+  addToken = () => `Bearer${this.token}`;
 
 }

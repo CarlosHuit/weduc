@@ -4,7 +4,7 @@ import { Navigate         } from '@ngxs/router-plugin';
 import { tap, catchError  } from 'rxjs/operators';
 import { throwError       } from 'rxjs';
 import { User             } from '../../classes/user';
-import { AuthService      } from '../../services/auth.service';
+import { AuthService      } from '../../auth/service/auth.service';
 import { AuthStateModel   } from '../models/auth-state.model';
 import { UserDataModel    } from '../models/user-data.model';
 import { CloseDrawer      } from '../actions/drawer.actions';

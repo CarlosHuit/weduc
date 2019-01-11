@@ -1,9 +1,8 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient              } from '@angular/common/http';
 import { Injectable              } from '@angular/core';
 import { environment             } from '../../../environments/environment';
 import { Observable, of          } from 'rxjs';
 import { catchError, map         } from 'rxjs/operators';
-import { GetTokenService         } from '../get-token.service';
 import { Words                   } from '../../classes/words';
 import { RandomWords             } from '../../classes/random-words';
 import { LocalStorageService     } from '../local-storage.service';
@@ -19,22 +18,14 @@ export class GetWordsService {
 
 
   apiUrl:   string;
-  httpOpts: any;
 
   constructor(
     private http:     HttpClient,
-    private getToken: GetTokenService,
     private _storage: LocalStorageService,
     private _err:     HandleErrorService
   ) {
 
     this.apiUrl = urljoin(environment.apiUrl, 'words');
-    this.httpOpts = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': `${this.getToken.addToken()}`
-      })
-    };
 
   }
 
@@ -55,14 +46,8 @@ export class GetWordsService {
   getWordsOfLetterFromServer = (letter: string): Observable<any | Words> => {
 
     const url = urljoin(this.apiUrl, letter);
-    this.httpOpts = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': `${this.getToken.addToken()}`
-      })
-    };
 
-    return this.http.get<Words>(url, this.httpOpts)
+    return this.http.get<Words>(url)
       .pipe(
         map(x => this.saveData(x)),
         catchError(this._err.handleError)
@@ -107,14 +92,8 @@ export class GetWordsService {
   getRandomWordsOfServer = (letter: string): Observable<RandomWords | any> => {
 
     const url = urljoin(this.apiUrl, `/random/${letter}`);
-    this.httpOpts = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': `${this.getToken.addToken()}`
-      })
-    };
 
-    return this.http.get<RandomWords>(url, this.httpOpts)
+    return this.http.get<RandomWords>(url)
       .pipe(
         map( x => this.saveAllWords(x) ),
         catchError(this._err.handleError)

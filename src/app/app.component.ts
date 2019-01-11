@@ -4,7 +4,7 @@ import { ChangeTitle, DetectMobile        } from './store/actions/app.actions';
 import { Title          } from '@angular/platform-browser';
 import { Select, Store  } from '@ngxs/store';
 import { Observable     } from 'rxjs';
-import { AuthService    } from './services/auth.service';
+import { AuthService    } from './auth/service/auth.service';
 import { AppState       } from './store/state/app.state';
 import { DrawerState    } from './store/state/drawer.state';
 import { AuthState      } from './store/state/auth.state';
