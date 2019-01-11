@@ -6,6 +6,7 @@ import { Subjects             } from '../classes/subjects';
 import { GetCoursesService } from '../services/get-data/get-courses.service';
 import { Store } from '@ngxs/store';
 import { Navigate } from '@ngxs/router-plugin';
+import { GetCourses } from '../store/actions/courses.actions';
 
 @Component({
   selector: 'app-home',
@@ -31,6 +32,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.store.dispatch(new GetCourses());
     this.getCourses.getCourses()
       .subscribe(
         (val: Subjects[]) => {

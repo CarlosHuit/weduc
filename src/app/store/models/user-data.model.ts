@@ -12,3 +12,4 @@ export class UserDataModel {
     fullName  = () => `${this.firstName} ${this.lastName}`;
 
 }
+

@@ -6,3 +6,4 @@ export class ChangeStateDrawer {
 export class CloseDrawer {
   static readonly type = '[Drawer] close drawer';
 }
+
