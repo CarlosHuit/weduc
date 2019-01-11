@@ -1,20 +1,15 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { environment          } from '../../../environments/environment';
+import { User                 } from '../../classes/user';
+import { MatSnackBar          } from '@angular/material';
+import { JwtHelperService     } from '@auth0/angular-jwt';
+import { LocalStorageService  } from '../../services/local-storage.service';
+import { throwError, Observable           } from 'rxjs';
+import { UserDataModel        } from '../../store/models/user-data.model';
 import urljoin from 'url-join';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
-import { User } from '../../classes/user';
-import { Router } from '@angular/router';
-import { MatSnackBar         } from '@angular/material';
-import { JwtHelperService    } from '@auth0/angular-jwt';
-import { LocalStorageService } from '../../services/local-storage.service';
-import { throwError } from 'rxjs';
-import { UserDataModel } from '../../store/models/user-data.model';
+import { ResponseAuth } from '../models/response-auth.model';
 
-
-
-const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-};
 
 @Injectable({ providedIn: 'root' })
 
@@ -27,7 +22,6 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    private router: Router,
     public snackBar: MatSnackBar,
     private _storage: LocalStorageService
   ) {
@@ -36,34 +30,32 @@ export class AuthService {
 
 
 
-  signup(user: User) {
+  signup(user: User): Observable<ResponseAuth> {
 
     const body = JSON.stringify(user);
     const url  = urljoin(this.url, 'signup');
-    return this.http.post(url, body, httpOptions);
+    return this.http.post<ResponseAuth>(url, body);
 
   }
 
 
-  signin(user: User) {
+  signin(user: User): Observable<ResponseAuth> {
 
     const body = JSON.stringify(user);
     const url  = urljoin(this.url, 'signin');
-    return this.http.post(url, body, httpOptions);
+    return this.http.post<ResponseAuth>(url, body);
 
   }
 
 
   greetToUser = (response: any) => {
+
     const name = response.firstName;
     const gender = response.avatar;
-    if (gender === 'man') {
-      this.showError(`Bienvenido ${name}`);
-    }
 
-    if (gender === 'woman') {
-      this.showError(`Bienvenida ${name}`);
-    }
+    if (gender === 'man')   { this.showError(`Bienvenido ${name}`); }
+    if (gender === 'woman') { this.showError(`Bienvenida ${name}`); }
+
   }
 
 

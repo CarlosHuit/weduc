@@ -33,16 +33,21 @@ app.post( '/signin', async (req,res, next) => {
   
   const courses = await Courses.find({}, { __v:0});
   const token = createToken(user)
-  res.status(200).json({
-    token,
-    courses,
-    message:   'Login Exitoso',
-    userId:    user._id,
-    firstName: user.firstName,
-    lastName:  user.lastName,
-    email:     user.email,
-    avatar:    user.avatar
-  })
+
+  const response = {
+    auth: {
+      token,
+      courses,
+      message:   'Login Exitoso',
+      userId:    user._id,
+      firstName: user.firstName,
+      lastName:  user.lastName,
+      email:     user.email,
+      avatar:    user.avatar
+    },
+    courses    
+  }
+  res.status(200).json(response)
   
   
   debug(`El email y el password han sido verificados correctamente}`)

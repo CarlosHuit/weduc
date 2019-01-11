@@ -1,14 +1,15 @@
 import { State, Selector, StateContext, Action      } from '@ngxs/store';
-import { Login, Logout, IsLoading, HasError, Signup } from '../actions/auth.actions';
-import { Navigate         } from '@ngxs/router-plugin';
-import { tap, catchError  } from 'rxjs/operators';
-import { throwError       } from 'rxjs';
-import { User             } from '../../classes/user';
-import { AuthService      } from '../../auth/service/auth.service';
-import { AuthStateModel   } from '../models/auth-state.model';
-import { UserDataModel    } from '../models/user-data.model';
-import { CloseDrawer      } from '../actions/drawer.actions';
-import { HttpErrorResponse } from '@angular/common/http';
+import { Login, Logout, IsLoading, HasError, Signup, LoginSuccess } from '../actions/auth.actions';
+import { Navigate           } from '@ngxs/router-plugin';
+import { tap, catchError    } from 'rxjs/operators';
+import { User               } from '../../classes/user';
+import { AuthService        } from '../../auth/service/auth.service';
+import { AuthStateModel     } from '../models/auth-state.model';
+import { UserDataModel      } from '../models/user-data.model';
+import { CloseDrawer        } from '../actions/drawer.actions';
+import { HttpErrorResponse  } from '@angular/common/http';
+import { ResponseAuth       } from '../../auth/models/response-auth.model';
+import { GetCoursesSuccess } from '../actions/courses.actions';
 
 @State<AuthStateModel>({
   name: 'auth',
@@ -18,42 +19,27 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class AuthState {
 
   @Selector()
-  static isLoggedIn(state: AuthStateModel) {
-    return state.isLoggedIn;
-  }
+  static urlAvatar({ user }: AuthStateModel) { return `/assets/icon-user-min/${user.avatar}-min.png`; }
 
   @Selector()
-  static isLoading(state: AuthStateModel) {
-    return state.isLoading;
-  }
+  static fullName({ user }: AuthStateModel) { return `${user.firstName} ${user.lastName}`; }
 
   @Selector()
-  static getToken(state: AuthStateModel) {
-    return state.token;
-  }
+  static isLoggedIn({ isLoggedIn }: AuthStateModel) { return isLoggedIn; }
 
   @Selector()
-  static getUser(state: AuthStateModel) {
-    return state.user;
-  }
+  static isLoading({ isLoading }: AuthStateModel) { return isLoading; }
 
   @Selector()
-  static getEmail(state: AuthStateModel) {
-    return state.user.email;
-  }
+  static getEmail({ user }: AuthStateModel) { return user.email; }
 
   @Selector()
-  static fullName(state: AuthStateModel) {
-    return `${state.user.firstName} ${state.user.lastName}`;
-  }
+  static getToken({ token }: AuthStateModel) { return token; }
 
   @Selector()
-  static urlAvatar(state: AuthStateModel) {
-    return `/assets/icon-user-min/${state.user.avatar}-min.png`;
-  }
+  static getUser({ user }: AuthStateModel) { return user; }
 
   constructor(private _authService: AuthService) { }
-
 
   @Action(Logout)
   logout({ setState, dispatch }: StateContext<AuthStateModel>, action: Logout) {
@@ -61,38 +47,37 @@ export class AuthState {
     dispatch( new CloseDrawer() );
     dispatch(new Navigate(['/signin']));
     setState({
-      isLoading: false,
+      isLoading:  false,
       isLoggedIn: false,
-      token: null,
-      user: null,
+      token:      null,
+      user:       null,
     });
   }
 
 
   @Action(Login)
-  login({ setState, dispatch }: StateContext<AuthStateModel>, action: Login) {
+  login({ dispatch }: StateContext<AuthStateModel>, action: Login) {
 
     dispatch(new IsLoading({ state: true }));
 
     return this._authService.signin(action.payload).pipe(
-      tap(res => {
 
-        console.log(res);
-        this._authService.saveData(res);
-        setState(initialAuth());
-        dispatch(new Navigate(['/']));
-        this._authService.greetToUser(res);
+      tap((res: ResponseAuth) =>  dispatch(new LoginSuccess(res))),
+      catchError((err: HttpErrorResponse) => dispatch(new HasError(err)))
 
-      }),
-      catchError((err: HttpErrorResponse) => {
-
-        dispatch(new HasError());
-        return this._authService.handleError(err);
-
-      })
     );
   }
 
+  @Action(LoginSuccess)
+  loginSuccess({ dispatch, setState }: StateContext<AuthStateModel>, { payload }: LoginSuccess) {
+
+    this._authService.saveData(payload.auth);
+    setState(initialAuth());
+    dispatch( new GetCoursesSuccess(payload.courses));
+    dispatch( new Navigate(['/']) );
+    this._authService.greetToUser(payload.auth);
+
+  }
 
   @Action(IsLoading)
   isLoading({ patchState, getState }: StateContext<AuthStateModel>, action: IsLoading) {
@@ -105,31 +90,23 @@ export class AuthState {
 
   @Action(HasError)
   hasError(context: StateContext<AuthStateModel>, action: HasError) {
+
     context.dispatch(new IsLoading({ state: false }));
+    return this._authService.handleError(action.payload);
+
   }
 
 
   @Action(Signup)
-  Signup({ dispatch, setState, getState }: StateContext<AuthStateModel>, action: Signup) {
+  Signup({ dispatch }: StateContext<AuthStateModel>, action: Signup) {
 
     dispatch( new IsLoading({state: true}) );
 
     return this._authService.signup(action.payload).pipe(
-      tap(res => {
 
-        console.log(res);
-        this._authService.saveData(res);
-        setState(initialAuth());
-        dispatch(new Navigate(['/']));
-        this._authService.greetToUser(res);
+      tap((res: ResponseAuth) => dispatch(new LoginSuccess(res))),
+      catchError((err: HttpErrorResponse) => dispatch(new HasError(err)))
 
-      }),
-      catchError((err: HttpErrorResponse) => {
-
-        dispatch(new HasError());
-        return this._authService.handleError(err);
-
-      })
     );
 
   }
