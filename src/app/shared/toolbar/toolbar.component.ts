@@ -1,15 +1,15 @@
 import { Component, OnDestroy, ViewChild, OnInit, Output, EventEmitter } from '@angular/core';
-import { AuthService       } from '../auth/service/auth.service';
+import { AuthService       } from '../../auth/service/auth.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { MediaMatcher      } from '@angular/cdk/layout';
 import { MatSidenav        } from '@angular/material/sidenav';
 import { Store, Select     } from '@ngxs/store';
-import { Logout            } from '../store/actions/auth.actions';
-import { AuthState         } from '../store/state/auth.state';
+import { Logout            } from '../../store/actions/auth.actions';
+import { AuthState         } from '../../store/state/auth.state';
 import { Observable        } from 'rxjs';
 import { Navigate          } from '@ngxs/router-plugin';
-import { ChangeStateDrawer } from '../store/actions/drawer.actions';
-import { DrawerState } from '../store/state/drawer.state';
+import { ChangeStateDrawer } from '../../store/actions/drawer.actions';
+import { DrawerState } from '../../store/state/drawer.state';
 
 @Component({
   selector: 'app-toolbar',

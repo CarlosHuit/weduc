@@ -15,7 +15,7 @@ import { TokenInterceptor                 } from './auth/token/token.interceptor
 import { IconsUserDialogComponent         } from './auth/signup/icons-user-dialog/icons-user-dialog.component';
 import { SigninComponent                  } from './auth/signin/signin.component';
 import { SignupComponent                  } from './auth/signup/signup.component';
-import { ToolbarComponent                 } from './toolbar/toolbar.component';
+import { ToolbarComponent                 } from './shared/toolbar/toolbar.component';
 import { HomeComponent                    } from './home/home.component';
 import { CourseDetailComponent            } from './course-detail/course-detail.component';
 import { DetailsAndCommentsComponent      } from './course-detail/details-and-comments/details-and-comments.component';
@@ -28,7 +28,7 @@ import { HandwritingComponent             } from './read/handwriting/handwriting
 import { DrawLetterComponent              } from './read/draw-letter/draw-letter.component';
 import { SpinnerComponent                 } from './shared/spinner/spinner.component';
 import { SuccessAnimationComponent        } from './shared/success-animation/success-animation.component';
-import { CatComponent                     } from './cat/cat.component';
+import { CatComponent                     } from './shared/cat/cat.component';
 import { GameComponent                    } from './read/game/game.component';
 import { FindLetterComponent              } from './read/find-letter/find-letter.component';
 import { SelectWordsComponent             } from './read/select-words/select-words.component';
