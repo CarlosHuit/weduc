@@ -2,11 +2,11 @@ import { HttpClient, HttpParams  } from '@angular/common/http';
 import { Injectable         } from '@angular/core';
 import { Observable         } from 'rxjs';
 import { catchError         } from 'rxjs/operators';
-import { Comments           } from '../../classes/comments';
-import { Answer             } from '../../classes/answers';
+import { Answer             } from '../../shared/discussion-system/models/answers';
 import { HandleErrorService } from '../../shared/handle-error.service';
 import { environment        } from '../../../environments/environment';
 import urljoin from 'url-join';
+import { Comments } from 'src/app/shared/discussion-system/models/comments';
 
 @Injectable({
   providedIn: 'root'

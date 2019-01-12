@@ -1,4 +1,4 @@
-import { User } from './user';
+import { User } from '../../../classes/user';
 
 export class Answers {
   constructor(

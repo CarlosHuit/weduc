@@ -1,14 +1,14 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { User                     } from '../classes/user';
-import { LocalStorageService      } from '../services/local-storage.service';
-import { AuthService              } from '../auth/service/auth.service';
-import { Comments,                } from '../classes/comments';
-import { DiscussionSystemService  } from '../services/discussion-system/discussion-system.service';
-import { Answers, Answer          } from '../classes/answers';
+import { Component, OnInit } from '@angular/core';
+import { User                     } from '../../classes/user';
+import { LocalStorageService      } from '../../services/local-storage.service';
+import { AuthService              } from '../../auth/service/auth.service';
+import { DiscussionSystemService  } from '../../services/discussion-system/discussion-system.service';
+import { Answers, Answer          } from './models/answers';
+import { Comments                 } from './models/comments';
 
 import { MatDialog                    } from '@angular/material';
 import { DeleteCommentDialogComponent } from './delete-comment-dialog/delete-comment-dialog.component';
-import { CoursesState } from '../store/state/courses.state';
+import { CoursesState } from '../../store/state/courses.state';
 import { Observable } from 'rxjs';
 import { Select } from '@ngxs/store';
 
