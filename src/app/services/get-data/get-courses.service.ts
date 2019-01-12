@@ -5,6 +5,7 @@ import { Observable              } from 'rxjs';
 import { catchError              } from 'rxjs/operators';
 import { Subjects                } from '../../classes/subjects';
 import { HandleErrorService      } from '../../shared/handle-error.service';
+import { Course } from '../../store/models/courses-state.model';
 import urljoin from 'url-join';
 
 
@@ -37,11 +38,11 @@ export class GetCoursesService {
     );
   }
 
-  getCourseData = (course: string): Observable<any | Subjects> => {
+  getCourseData = (course: string): Observable<Course> => {
 
     const url = urljoin(this.apiUrl, course);
 
-    return this.http.get<Subjects>(url)
+    return this.http.get<Course>(url)
       .pipe(
         catchError(this._err.handleError)
       );

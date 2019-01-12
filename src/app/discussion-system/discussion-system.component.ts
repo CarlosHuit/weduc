@@ -8,6 +8,9 @@ import { Answers, Answer          } from '../classes/answers';
 
 import { MatDialog                    } from '@angular/material';
 import { DeleteCommentDialogComponent } from './delete-comment-dialog/delete-comment-dialog.component';
+import { CoursesState } from '../store/state/courses.state';
+import { Observable } from 'rxjs';
+import { Select } from '@ngxs/store';
 
 
 @Component({
@@ -20,7 +23,7 @@ import { DeleteCommentDialogComponent } from './delete-comment-dialog/delete-com
 export class DiscussionSystemComponent implements OnInit {
 
 
-  @Input() course_id: string;
+  course_id: string;
   loadingComments:    boolean;
   comments:           Comments[];
   currentUser:        User;
@@ -28,6 +31,11 @@ export class DiscussionSystemComponent implements OnInit {
   commented:          boolean;
   writeAnswer:        string;
   showAnswers         = {};
+
+  sss: string;
+
+  @Select(CoursesState.courseId) courseId$:   Observable<string>;
+  @Select(CoursesState.isLoading) isLoading$: Observable<boolean>;
 
   constructor(
 
@@ -50,14 +58,20 @@ export class DiscussionSystemComponent implements OnInit {
   }
 
   ngOnInit() {
-    this._discussionSystem.getAllCommments(this.course_id)
-      .subscribe(
-        (comments: Comments[]) => {
-          this.comments        = this.sortByDate(comments);
-          this.loadingComments = false;
-        },
-        (error) => { const e = error; }
-      );
+
+    this.courseId$.subscribe(_id => {
+      console.log(_id);
+      this.course_id = _id;
+      this._discussionSystem.getAllCommments(this.course_id)
+        .subscribe(
+          (comments: Comments[]) => {
+            this.comments        = this.sortByDate(comments);
+            this.loadingComments = false;
+          },
+          (error) => { const e = error; }
+        );
+    });
+
   }
 
   openDialog = (id: string) => {

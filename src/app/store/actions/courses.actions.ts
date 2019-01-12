@@ -3,6 +3,7 @@ import { Course } from '../models/courses-state.model';
 export enum CoursesActionsType {
   GET_COURSES         = '[Courses] get courses',
   GET_COURSES_SUCCESS = '[Courses] get courses success',
+  GET_COURSE_SUCCESS  = '[Courses] get course success',
   SELECT_COURSE       = '[Courses] select course',
   IS_LOADING_COURSES  = '[Courses] loading courses'
 }
@@ -17,10 +18,14 @@ export class GetCoursesSuccess {
   constructor(public payload: Course[]) {}
 }
 
+export class GetCourseSuccess {
+  static readonly type = CoursesActionsType.GET_COURSE_SUCCESS;
+  constructor(public payload: Course) {}
+}
 
 export class SelectCourse {
   static readonly type = CoursesActionsType.SELECT_COURSE;
-  constructor(public payload: { _id: string }) {}
+  constructor(public payload: { course: string }) {}
 }
 
 export class IsLoadingCourses {

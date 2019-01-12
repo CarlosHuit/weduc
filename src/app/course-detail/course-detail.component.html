@@ -1,24 +1,23 @@
 <div
   class="container"
   style="display: block"
-  [class.overflow-auto]="isMobile() === true"
+  [class.overflow-auto]="(isMobile$ | async)"
   >
 
 
   <!-------- Desktop version -------->
-  <div
+<div
     class="c-desktop hide"
-    [class.show]="!loading"
-    *ngIf="!loading && isMobile() === false"
+    [class.show]="!(isLoading$ | async)"
+    *ngIf="!(isLoading$ | async) && !(isMobile$ | async)"
     >
 
     <div
       #cdVideo
       class="c-d-video-desc"
-      [class.quit-scroll-bar]="!isMobile()"
+      [class.quit-scroll-bar]="!(isMobile$ | async)"
       >
 
-      <!-------- Video -------->
       <div #videoDesktop class="c-d-video">
 
         <iframe
@@ -26,7 +25,7 @@
           width="1012"
           frameborder="0"
           allowfullscreen
-          [src]="videoUrl"
+          [src]="urlVideo$ | async"
           class="iframe-youtube"
           allow="autoplay; encrypted-media"
           >
@@ -35,21 +34,11 @@
 
       </div>
 
-      <!----- Description ----->
       <div class="c-d-description">
 
-        <app-card-details
-          [data]="data"
-          *ngIf="!mobileQuery.matches"
-          >
-        </app-card-details>
+        <app-card-details *ngIf="!mobileQuery.matches"></app-card-details>
+        <app-details-and-comments *ngIf="mobileQuery.matches"></app-details-and-comments>
 
-        <app-details-and-comments 
-          [data]="data"
-          [course_id]="course_id"
-          *ngIf="mobileQuery.matches"
-          >
-        </app-details-and-comments>
 
       </div>
 
@@ -64,10 +53,7 @@
         <h2>Comentarios</h2>
       </div>
 
-      <app-discussion-system
-        [course_id]="course_id"
-        >
-      </app-discussion-system>
+      <app-discussion-system></app-discussion-system>
 
     </div>
 
@@ -78,8 +64,8 @@
   <!-------- Mobile Version -------->
   <div
     class="hide"
-    [class.show]="!loading"
-    *ngIf="!loading && isMobile() === true"
+    [class.show]="!(isLoading$ | async)"
+    *ngIf="!(isLoading$ | async) && (isMobile$ | async)"
     style="overflow: auto"
     >
 
@@ -97,7 +83,7 @@
         width="1012"
         frameborder="0"
         allowfullscreen
-        [src]="videoUrl"
+        [src]="urlVideo$ | async"
         class="iframe-youtube"
         allow="autoplay; encrypted-media"
         >
@@ -109,11 +95,7 @@
 
 
     <div class="m-c-detail-course">
-      <app-details-and-comments 
-        [data]="data"
-        [course_id]="course_id"
-        >
-      </app-details-and-comments>
+      <app-details-and-comments></app-details-and-comments>
     </div>
 
 
@@ -121,5 +103,5 @@
 
 
 
-  <div *ngIf="loading" id="loading" style=" display:flex; justify-content:center; align-items:center "></div>
+  <div *ngIf="isLoading$ | async" id="isLoading" style=" display:flex; justify-content:center; align-items:center "></div>
 </div>

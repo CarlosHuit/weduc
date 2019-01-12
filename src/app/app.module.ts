@@ -4,18 +4,22 @@ import { NgModule } from '@angular/core';
 import { MaterialModule                       } from './material/material.module';
 import { ReactiveFormsModule, FormsModule     } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS  } from '@angular/common/http';
+import { GestureConfig                        } from '@angular/material';
+import { ServiceWorkerModule                  } from '@angular/service-worker';
+import { BrowserAnimationsModule              } from '@angular/platform-browser/animations';
 
-import { TokenInterceptor                 } from './auth/token/token.interceptor';
 import { AppRoutingModule                 } from './app-routing.module';
 import { AppComponent                     } from './app.component';
-import { ServiceWorkerModule              } from '@angular/service-worker';
 import { environment                      } from '../environments/environment';
-import { BrowserAnimationsModule          } from '@angular/platform-browser/animations';
+import { TokenInterceptor                 } from './auth/token/token.interceptor';
+import { IconsUserDialogComponent         } from './auth/signup/icons-user-dialog/icons-user-dialog.component';
 import { SigninComponent                  } from './auth/signin/signin.component';
 import { SignupComponent                  } from './auth/signup/signup.component';
 import { ToolbarComponent                 } from './toolbar/toolbar.component';
 import { HomeComponent                    } from './home/home.component';
-import { DetailCourseComponent            } from './detail-course/detail-course.component';
+import { CourseDetailComponent            } from './course-detail/course-detail.component';
+import { DetailsAndCommentsComponent      } from './course-detail/details-and-comments/details-and-comments.component';
+import { CardDetailsComponent             } from './course-detail/card-details/card-details.component';
 import { LettersMenuComponent             } from './read/letters-menu/letters-menu.component';
 import { SpinnerLoadingComponent          } from './spinner-loading/spinner-loading.component';
 import { LettersDetailComponent           } from './read/letters-detail/letters-detail.component';
@@ -29,18 +33,14 @@ import { GameComponent                    } from './read/game/game.component';
 import { FindLetterComponent              } from './read/find-letter/find-letter.component';
 import { SelectWordsComponent             } from './read/select-words/select-words.component';
 import { PronounceLetterComponent         } from './read/pronounce-letter/pronounce-letter.component';
-import { GestureConfig                    } from '@angular/material';
 import { ControlCanvasComponent           } from './read/control-canvas/control-canvas.component';
 import { GuideLinesComponent              } from './read/guide-lines/guide-lines.component';
 import { DiscussionSystemComponent        } from './discussion-system/discussion-system.component';
-import { IconsUserDialogComponent         } from './auth/signup/icons-user-dialog/icons-user-dialog.component';
 import { DeleteCommentDialogComponent     } from './discussion-system/delete-comment-dialog/delete-comment-dialog.component';
 import { CommentComponent                 } from './discussion-system/comment/comment.component';
 import { WriteCommentComponent            } from './discussion-system/write-comment/write-comment.component';
 import { WriteAnswerComponent             } from './discussion-system/write-answer/write-answer.component';
 import { AnswerComponent                  } from './discussion-system/answer/answer.component';
-import { DetailsAndCommentsComponent      } from './detail-course/details-and-comments/details-and-comments.component';
-import { CardDetailsComponent             } from './detail-course/card-details/card-details.component';
 import { LearnedLettersComponent          } from './read/letters-menu/learned-letters/learned-letters.component';
 import { AlphabetComponent                } from './read/letters-menu/alphabet/alphabet.component';
 import { SearchComponent                  } from './home/search/search.component';
@@ -53,7 +53,6 @@ import { NgxsStoreModule                  } from './store/store.module';
     SignupComponent,
     ToolbarComponent,
     HomeComponent,
-    DetailCourseComponent,
     LettersMenuComponent,
     SpinnerLoadingComponent,
     LettersDetailComponent,
@@ -81,6 +80,7 @@ import { NgxsStoreModule                  } from './store/store.module';
     LearnedLettersComponent,
     AlphabetComponent,
     SearchComponent,
+    CourseDetailComponent,
   ],
   imports: [
     MaterialModule,

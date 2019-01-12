@@ -1,6 +1,9 @@
+import { SafeResourceUrl } from '@angular/platform-browser';
+
 export class CoursesStateModel {
   constructor(
     public courses:          Course[],
+    public selectedCourse:   Course,
     public isLoadingCourses: boolean,
   ) {}
 }

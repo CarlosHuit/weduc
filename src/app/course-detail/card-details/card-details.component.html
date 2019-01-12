@@ -1,0 +1,28 @@
+<mat-card class="c-d-detail mobile" *ngIf="!(isLoading$ | async)">
+
+
+  <div class="title-course">
+ 
+    <img [src]="course.imageUrl">
+    <h1 style="text-transform: capitalize">
+      {{course.title}}
+    </h1>
+ 
+  </div>
+
+  <div class="c-description">
+    <p>{{course.description}}</p>
+  </div>
+
+  <div class="c-button">
+    <button
+      color="warn"
+      mat-flat-button
+      (click)="redirect(course.title, course.subtitle)"
+      >
+      Empezar Curso
+    </button>
+  </div>
+
+
+</mat-card>
