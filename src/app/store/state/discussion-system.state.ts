@@ -22,7 +22,9 @@ import {
   WriteAnswerFor,
   DeleteAnswer,
   AddAnswerToDelete,
-  AddCommentToDelete
+  AddCommentToDelete,
+  DeleteAnswerSuccess,
+  DeleteCommentSuccess
 } from '../actions/discussion-system.actions';
 import { Comments } from 'src/app/shared/discussion-system/models/comments';
 import { AuthState } from './auth.state';
@@ -34,64 +36,50 @@ import { Answers, Answer } from 'src/app/shared/discussion-system/models/answers
   name: 'comments',
   defaults: {
     comments:             [],
-    isLoadingComments:    false,
-    showAnswersOf:        {},
     answersTemporaryIds:  [],
     commentsTemporaryIds: [],
-    writeAnswerFor:       '',
+    showAnswersOf:        {},
     answersToDelete:      {},
     commentsToDelete:     {},
+    writeAnswerFor:       '',
+    isLoadingComments:    false,
   },
 })
 
 export class DiscussionSystemState {
 
 
+  @Selector()
+  static isLoadingComments({ isLoadingComments }: DiscussionSystemStateModel) { return isLoadingComments; }
 
+  @Selector()
+  static commentsToDelete({ commentsToDelete }: DiscussionSystemStateModel) { return commentsToDelete; }
+
+  @Selector()
+  static answersToDelete({ answersToDelete }: DiscussionSystemStateModel) { return answersToDelete; }
+
+  @Selector()
+  static writeAnswerFor({ writeAnswerFor }: DiscussionSystemStateModel) { return writeAnswerFor; }
+
+  @Selector()
+  static showAnswers({ showAnswersOf }: DiscussionSystemStateModel) { return showAnswersOf; }
   @Selector()
   static comments({ comments }: DiscussionSystemStateModel) { return comments; }
 
-  @Selector()
-  static isLoadingComments( { isLoadingComments }: DiscussionSystemStateModel ) { return isLoadingComments; }
 
-  @Selector()
-  static showAnswers({ showAnswersOf }: DiscussionSystemStateModel ) {
-    return showAnswersOf;
-  }
-
-  @Selector()
-  static writeAnswerFor({ writeAnswerFor }: DiscussionSystemStateModel) {
-    return writeAnswerFor;
-  }
-
-  @Selector()
-  static answersToDelete( { answersToDelete }: DiscussionSystemStateModel ) {
-    return answersToDelete;
-  }
-
-  @Selector()
-  static commentsToDelete( { commentsToDelete }: DiscussionSystemStateModel ) {
-    return commentsToDelete;
-  }
-
-  constructor(
-    private _discussionSystem: DiscussionSystemService,
-    private store: Store
-  ) {}
+  constructor(private _discussionSystem: DiscussionSystemService, private store: Store) { }
 
 
-
-
-  /* ------ Actions Comment ------ */
+  /* ------ Comments Actions ------ */
   @Action(GetComments)
-  getComments({ dispatch, getState }: StateContext<DiscussionSystemStateModel>, { payload }: GetComments) {
+  getComments({ dispatch }: StateContext<DiscussionSystemStateModel>, { payload }: GetComments) {
 
-    dispatch(new IsLoadingComments({state: true}));
+    dispatch(new IsLoadingComments({ state: true }));
 
     return this._discussionSystem.getAllCommments(payload.course_id)
-    .pipe(
-      tap((comments: Comments[]) => dispatch(new GetCommentsSuccess(comments)) ),
-    );
+      .pipe(
+        tap((comments: Comments[]) => dispatch(new GetCommentsSuccess(comments))),
+      );
 
   }
 
@@ -101,31 +89,31 @@ export class DiscussionSystemState {
     setState({
 
       ...getState(),
-      comments:             payload,
-      isLoadingComments:    false,
-      answersTemporaryIds:  [],
+      comments: payload,
+      isLoadingComments: false,
+      answersTemporaryIds: [],
       commentsTemporaryIds: [],
-      showAnswersOf:        {},
-      writeAnswerFor:       ''
+      showAnswersOf: {},
+      writeAnswerFor: ''
     });
 
-    return dispatch( new IsLoadingComments({state: false}) );
+    return dispatch(new IsLoadingComments({ state: false }));
 
   }
 
   @Action(AddComment)
   addComment({ setState, getState, dispatch }: StateContext<DiscussionSystemStateModel>, { payload }: AddComment) {
 
-    const text     = payload.text;
-    const user     = this.store.selectSnapshot(AuthState.getUser);
+    const text = payload.text;
+    const user = this.store.selectSnapshot(AuthState.getUser);
     const courseId = this.store.selectSnapshot(CoursesState.courseId);
-    const date     = new Date();
+    const date = new Date();
 
-    const tmp_id     = this.generateTemporaryId([...getState().commentsTemporaryIds], user._id);
+    const tmp_id = this.generateTemporaryId([...getState().commentsTemporaryIds], user._id);
     const newAnswers = new Answers(tmp_id, []);
 
     const commentToSend = new Comments(null, user._id, text, date, courseId, tmp_id);
-    const localComment  = new Comments(null, user,     text, date, courseId, tmp_id, newAnswers);
+    const localComment = new Comments(null, user, text, date, courseId, tmp_id, newAnswers);
 
 
     setState({
@@ -141,17 +129,17 @@ export class DiscussionSystemState {
     });
 
     return this._discussionSystem.addComment(commentToSend).pipe(
-      tap( comment => dispatch(new AddCommentSuccess(comment)) )
+      tap(comment => dispatch(new AddCommentSuccess(comment)))
     );
 
   }
 
   @Action(AddCommentSuccess)
-  addCommentSuccess(ctx: StateContext<DiscussionSystemStateModel>, { payload }: AddCommentSuccess) {
+  addCommentSuccess({ patchState, getState }: StateContext<DiscussionSystemStateModel>, { payload }: AddCommentSuccess) {
 
 
-    ctx.patchState({
-      comments: ctx.getState().comments.map((comment => {
+    patchState({
+      comments: getState().comments.map((comment => {
 
         if (comment.temp_id === payload.temp_id) {
 
@@ -159,7 +147,7 @@ export class DiscussionSystemState {
             _id: payload._id,
             answers_id: {
               comment_id: payload._id,
-              _id:        payload.answers_id,
+              _id: payload.answers_id,
               answers: []
             },
           });
@@ -178,9 +166,9 @@ export class DiscussionSystemState {
   }
 
   @Action(DeleteComment)
-  deleteComment({ patchState, getState, dispatch }: StateContext<DiscussionSystemStateModel>, { payload }: DeleteComment) {
+  deleteComment({ getState, dispatch }: StateContext<DiscussionSystemStateModel>, { payload }: DeleteComment) {
 
-    dispatch(new AddCommentToDelete({commentId: payload.comment_id}));
+    dispatch(new AddCommentToDelete({ commentId: payload.comment_id }));
 
     const comments = [...getState().comments];
     const user = this.store.selectSnapshot(AuthState.getUser);
@@ -191,20 +179,24 @@ export class DiscussionSystemState {
     if (isUserOwner) {
 
       return this._discussionSystem.deleteComment(courseId, payload.comment_id).pipe(
-        tap(res => {
-          patchState({
-            comments: getState().comments.filter(comment => comment._id !== payload.comment_id)
-          });
-        })
+        tap(res => dispatch(new DeleteCommentSuccess({ comment_id: payload.comment_id })))
       );
-
 
     }
 
   }
 
+  @Action(DeleteCommentSuccess)
+  deleteCommentSuccess({ getState, patchState }: StateContext<DiscussionSystemStateModel>, { payload }: DeleteCommentSuccess) {
+
+    return patchState({
+      comments: getState().comments.filter(comment => comment._id !== payload.comment_id)
+    });
+
+  }
+
   @Action(AddCommentToDelete)
-  addCommentToDelete({ getState, patchState }: StateContext<DiscussionSystemStateModel>, {payload}: AddCommentToDelete) {
+  addCommentToDelete({ getState, patchState }: StateContext<DiscussionSystemStateModel>, { payload }: AddCommentToDelete) {
 
     const t = Object.assign({}, getState().commentsToDelete);
     t[payload.commentId] = payload.commentId;
@@ -227,20 +219,20 @@ export class DiscussionSystemState {
 
 
 
-  /* ------ Actions answer ------ */
+  /* ------ Answer Actions ------ */
   @Action(AddAnswer)
   addAnswer({ patchState, getState, dispatch }: StateContext<DiscussionSystemStateModel>, { payload }: AddAnswer) {
 
-    const user       = this.store.selectSnapshot(AuthState.getUser);
-    const temp_id    = this.generateTemporaryId([...getState().answersTemporaryIds], user._id);
+    const user = this.store.selectSnapshot(AuthState.getUser);
+    const temp_id = this.generateTemporaryId([...getState().answersTemporaryIds], user._id);
     const comment_id = payload.comment_id;
-    const text       = payload.text;
-    const date       = new Date();
+    const text = payload.text;
+    const date = new Date();
 
     const t = Object.assign({}, getState().showAnswersOf);
     t[comment_id] = comment_id;
 
-    const localAnswer  = new Answer(user, text, date, comment_id, null, temp_id);
+    const localAnswer = new Answer(user, text, date, comment_id, null, temp_id);
     const answerToSend = new Answer(null, text, date, comment_id, null, temp_id, user._id);
 
     patchState({
@@ -252,9 +244,9 @@ export class DiscussionSystemState {
 
           return Object.assign({}, comment, {
             answers_id: {
-              '_id':      comment.answers_id._id,
+              '_id': comment.answers_id._id,
               comment_id: comment.answers_id.comment_id,
-              answers:    [
+              answers: [
                 ...comment.answers_id.answers,
                 localAnswer
               ]
@@ -274,25 +266,25 @@ export class DiscussionSystemState {
     });
 
     return this._discussionSystem.addAnswer(answerToSend).pipe(
-      tap(answer => dispatch(new AddAnswerSuccess({answer})))
+      tap(answer => dispatch(new AddAnswerSuccess({ answer })))
     );
 
   }
 
   @Action(AddAnswerSuccess)
-  addAnswerSuccess({patchState, getState}: StateContext<DiscussionSystemStateModel>, { payload }: AddAnswerSuccess) {
+  addAnswerSuccess({ patchState, getState }: StateContext<DiscussionSystemStateModel>, { payload }: AddAnswerSuccess) {
 
     let answerUpdated: Answer[];
-    const state    = getState();
+    const state = getState();
     const iComment = state.comments.findIndex(comment => comment._id === payload.answer.comment_id);
 
-    if ( iComment > -1 ) {
+    if (iComment > -1) {
       answerUpdated = state.comments[iComment].answers_id.answers.map(answer => {
 
 
         if (answer.temp_id === payload.answer.temp_id) {
 
-          const newAnswer =  Object.assign({}, answer, { _id: payload.answer._id });
+          const newAnswer = Object.assign({}, answer, { _id: payload.answer._id });
           delete newAnswer.temp_id;
           return newAnswer;
 
@@ -314,7 +306,7 @@ export class DiscussionSystemState {
           return Object.assign({}, comment, {
             answers_id: {
               comment_id: payload.answer.comment_id,
-              answers:    answerUpdated
+              answers: answerUpdated
             }
 
           });
@@ -351,16 +343,16 @@ export class DiscussionSystemState {
   }
 
   @Action(WriteAnswerFor)
-  writeAnswerFor( {getState, patchState}: StateContext<DiscussionSystemStateModel>, { payload }: WriteAnswerFor ) {
+  writeAnswerFor({ patchState }: StateContext<DiscussionSystemStateModel>, { payload }: WriteAnswerFor) {
     patchState({
       writeAnswerFor: payload.commentId
     });
   }
 
   @Action(DeleteAnswer)
-  deleteAnswer({ getState, patchState, dispatch }: StateContext<DiscussionSystemStateModel>, { payload }: DeleteAnswer) {
+  deleteAnswer({ getState, dispatch }: StateContext<DiscussionSystemStateModel>, { payload }: DeleteAnswer) {
 
-    dispatch(new AddAnswerToDelete({answerId: payload.answerId}));
+    dispatch(new AddAnswerToDelete({ answerId: payload.answerId }));
 
     let answersUpdated;
     const comments = [...getState().comments];
@@ -370,32 +362,36 @@ export class DiscussionSystemState {
       answersUpdated = comments[iComment].answers_id.answers.filter(answer => answer._id !== payload.answerId);
     }
 
-
-
     return this._discussionSystem.deleteAnswer(payload.commentId, payload.answerId).pipe(
-      tap((res: {message: string}) => {
-
-        patchState({
-          comments: getState().comments.map(comment => {
-            if (comment._id === payload.commentId) {
-              return Object.assign({}, comment, {
-                answers_id: {
-                  comment_id: comment._id,
-                  answers:        answersUpdated
-                }
-              });
-            }
-            return comment;
-          })
-        });
-
-      })
+      tap(res => dispatch(new DeleteAnswerSuccess({ commentId: payload.commentId, answersUpdated })))
     );
 
   }
 
+  @Action(DeleteAnswerSuccess)
+  deleteAnswerSuccess({ patchState, getState }: StateContext<DiscussionSystemStateModel>, { payload }: DeleteAnswerSuccess) {
+
+    patchState({
+      comments: getState().comments.map(comment => {
+
+
+        if (comment._id === payload.commentId) {
+
+          return Object.assign({}, comment, {
+            answers_id: { comment_id: comment._id, answers: payload.answersUpdated }
+          });
+
+        }
+
+        return comment;
+
+      })
+    });
+
+  }
+
   @Action(AddAnswerToDelete)
-  addAnswerToDelete( { patchState, getState }: StateContext<DiscussionSystemStateModel>, { payload }: AddAnswerToDelete ) {
+  addAnswerToDelete({ patchState, getState }: StateContext<DiscussionSystemStateModel>, { payload }: AddAnswerToDelete) {
 
     const t = Object.assign({}, getState().answersToDelete);
     t[payload.answerId] = payload.answerId;
@@ -419,7 +415,7 @@ export class DiscussionSystemState {
 
     if (arrTmpIds.length > 0) {
 
-      const lastEl    = arrTmpIds[arrTmpIds.length - 1];
+      const lastEl = arrTmpIds[arrTmpIds.length - 1];
       const lastIndex = parseInt(lastEl.slice(-2), 10);
 
       number = lastIndex + 1;
