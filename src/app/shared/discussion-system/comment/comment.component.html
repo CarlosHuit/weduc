@@ -3,18 +3,13 @@
   <div class="comment-author">
 
 
-
     <div class="m-c-avatar">
-
-      <img
-        mat-card-avatar
-        class="author-avatar"
-        [src]="genUrl(data.user_id.avatar)"
-        >
-
+      <img mat-card-avatar class="author-avatar" [src]="genUrl(data.user_id.avatar)">
     </div>
 
+
     <div class="m-c-comment-data">
+
 
       <div class="m-c-name-date">
 
@@ -26,9 +21,10 @@
           {{ data.date | date }}
         </small>
 
+
       </div>
 
-      <div class="m-c-button-delete">
+      <div class="m-c-button-delete center">
 
         <button
           mat-icon-button
@@ -43,18 +39,17 @@
             delete_forever
           </mat-icon>
         </button>
-        <!-- commentsToDelete$ -->
+
         <div style="width: 30px; height: 30px;" *ngIf="(commentsToDelete$ | async)[data._id]" >
-            <app-spinner-loading></app-spinner-loading>
-          </div>
+          <app-spinner-loading></app-spinner-loading>
+        </div>
 
       </div>
 
     </div>
 
-
+    
   </div>
-
 
   <mat-card-content>
     <p class="comment-text">{{data.text}}</p>

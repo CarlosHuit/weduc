@@ -1,4 +1,3 @@
-import { User } from '../../../classes/user';
 import { UserDataModel } from 'src/app/store/models/user-data.model';
 
 export class Answers {
@@ -12,7 +11,7 @@ export class Answers {
 
 export class Answer {
   constructor (
-    public user_id:     User | string | UserDataModel,
+    public user_id:     UserDataModel | string ,
     public text:        string,
     public date:        Date,
     public comment_id?: string,
