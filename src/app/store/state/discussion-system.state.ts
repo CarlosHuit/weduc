@@ -84,14 +84,22 @@ export class DiscussionSystemState {
 
   /* ------ Comments Actions ------ */
   @Action(GetComments)
-  getComments({ dispatch }: StateContext<DiscussionSystemStateModel>, { payload }: GetComments) {
+  getComments({ dispatch, getState }: StateContext<DiscussionSystemStateModel>, action: GetComments) {
 
-    dispatch(new IsLoadingComments({ state: true }));
 
-    return this._discussionSystem.getAllCommments(payload.course_id)
-      .pipe(
-        tap((comments: Comments[]) => dispatch(new GetCommentsSuccess(comments))),
-      );
+    const isLoggedIn = this.store.selectSnapshot(AuthState.isLoggedIn);
+
+
+    if (isLoggedIn && !getState().isLoadingComments) {
+
+      dispatch(new IsLoadingComments({ state: true }));
+      const courseId   = this.store.selectSnapshot(CoursesState.courseId);
+
+      return this._discussionSystem.getAllCommments(courseId)
+        .pipe( tap((comments: Comments[]) => dispatch(new GetCommentsSuccess(comments))) );
+
+    }
+
 
   }
 

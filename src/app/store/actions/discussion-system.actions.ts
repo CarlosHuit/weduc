@@ -44,7 +44,6 @@ export enum DiscussionSystemActionsType {
 /* -- actions get Comments -- */
 export class GetComments {
   static readonly type = DiscussionSystemActionsType.GET_COMMENTS;
-  constructor(public payload: { course_id: string }) {}
 }
 
 export class GetCommentsSuccess {

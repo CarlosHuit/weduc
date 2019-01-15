@@ -31,7 +31,6 @@ export class GetCoursesService {
   getCourses = (): Observable<any | Subjects[]> => {
 
     const url     = this.apiUrl;
-
     return this.http.get(url)
     .pipe(
       catchError(this._err.handleError)

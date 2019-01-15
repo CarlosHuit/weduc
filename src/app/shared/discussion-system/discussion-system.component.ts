@@ -1,9 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
-import { DiscussionSystemState } from 'src/app/store/state/discussion-system.state';
+import { DiscussionSystemState } from '../../store/state/discussion-system.state';
 import { Select, Store } from '@ngxs/store';
-import { CoursesState } from '../../store/state/courses.state';
-import { Comments } from './models/comments';
+import { Observable    } from 'rxjs';
+import { Comments      } from './models/comments';
 import {
   GetComments,
   ShowAnswersOf,
@@ -22,31 +21,19 @@ import {
 
 export class DiscussionSystemComponent implements OnInit, OnDestroy {
 
-
-  courseSubscription: Subscription;
-
   @Select(DiscussionSystemState.isLoadingComments)  loadingComments$:     Observable<boolean>;
   @Select(DiscussionSystemState.writeAnswerFor)   writeAnswerFor$:    Observable<string>;
   @Select(DiscussionSystemState.showAnswers)  showAnswers$:        Observable<{}>;
   @Select(DiscussionSystemState.comments)   comments$:        Observable<Comments[]>;
-  @Select(CoursesState.courseId)          courseId$:      Observable<string>;
 
   constructor(private store: Store) { }
 
-  ngOnInit() {
-    this.courseSubscription = this.courseId$.subscribe(
-      _id => this.store.dispatch(new GetComments({ course_id: _id }))
-    );
+  ngOnInit() { this.store.dispatch(new GetComments()); }
+  ngOnDestroy() { this.store.dispatch(new ResetDiscussionSystem()); }
 
-  }
 
-  ngOnDestroy() {
-    this.courseSubscription.unsubscribe();
-    this.store.dispatch(new ResetDiscussionSystem());
-  }
-
-  showAnswersOf = (commentId: string) => this.store.dispatch(new ShowAnswersOf({ commentId }));
-  hideAnswersOf = (commentId: string) => this.store.dispatch(new HideAnswersOf({ commentId }));
-  writeAnswerFor = (commentId: string) => this.store.dispatch(new WriteAnswerFor({ commentId }));
+  showAnswersOf  = (commentId: string) => this.store.dispatch( new ShowAnswersOf( { commentId }));
+  hideAnswersOf  = (commentId: string) => this.store.dispatch( new HideAnswersOf( { commentId }));
+  writeAnswerFor = (commentId: string) => this.store.dispatch( new WriteAnswerFor({ commentId }));
 
 }

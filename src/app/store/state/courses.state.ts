@@ -12,7 +12,6 @@ import { tap               } from 'rxjs/operators';
 import { Subjects          } from 'src/app/classes/subjects';
 import { State, Action, StateContext, Selector } from '@ngxs/store';
 import { DomSanitizer } from '@angular/platform-browser';
-import { DiscussionSystemStateModel } from '../models/discussion-system.model';
 
 const initialData: CoursesStateModel = {
   courses: [],
@@ -56,7 +55,6 @@ export class CoursesState {
 
   @Action( GetCourses )
   getCourses({ getState, dispatch }: StateContext<CoursesStateModel>, action: GetCourses ) {
-
     const state = getState();
 
     if (state.courses.length === 0) {

@@ -47,17 +47,19 @@ export class AuthState {
 
   @Action(Logout)
   logout({ setState, dispatch }: StateContext<AuthStateModel>, action: Logout) {
+
     localStorage.clear();
     dispatch( new CloseDrawer() );
     dispatch( new ResetCoursesData() );
     dispatch( new ResetDiscussionSystem() );
-    dispatch( new Navigate(['/signin']));
+    dispatch( new Navigate(['/signin'])   );
     setState({
       isLoading:  false,
       isLoggedIn: false,
       token:      null,
       user:       null,
     });
+
   }
 
 
@@ -78,8 +80,8 @@ export class AuthState {
   loginSuccess({ dispatch, setState }: StateContext<AuthStateModel>, { payload }: LoginSuccess) {
 
     this._authService.saveData(payload.auth);
-    setState(initialAuth());
-    dispatch( new GetCoursesSuccess(payload.courses));
+    setState( initialAuth() );
+    dispatch( new GetCoursesSuccess(payload.courses) );
     dispatch( new Navigate(['/']) );
     this._authService.greetToUser(payload.auth);
 
@@ -130,8 +132,10 @@ function initialAuth() {
   if (token && user) {
 
     return new AuthStateModel(
-      true, false,
-      token, new UserDataModel(user.email, user.firstName, user.lastName, user.avatar, user._id)
+      true,
+      false,
+      token,
+      new UserDataModel(user.email, user.firstName, user.lastName, user.avatar, user._id)
     );
 
   } else {

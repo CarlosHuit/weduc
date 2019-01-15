@@ -37,7 +37,6 @@ app.post( '/signin', async (req,res, next) => {
   const response = {
     auth: {
       token,
-      courses,
       message:   'Login Exitoso',
       userId:    user._id,
       firstName: user.firstName,
@@ -86,23 +85,27 @@ app.post('/signup', async ( req, res, next ) => {
 
   const currentUser = new User( { firstName, lastName, email, password: hash(password, 10), avatar } )
   const user        = await currentUser.save()
+  const courses     = await Courses.find({}, { __v:0});
   const token       = createToken( user )
   
-  
-  res.status(201).json(
-    {
-      message: 'Usuario Guardado',
+  const response = {
+    auth: {
       token,
+      message: 'Login Success',
       userId: user._id,
       firstName,
       lastName,
       email,
       avatar
-    }
-  )
+
+    },
+    courses
+  }
+  
+  res.status(201).json(response)
+  debug(`Cuenta registrada con el email: ${currentUser.email}`)
 
 
-  debug(`Registrando cuenta con el email: ${currentUser.email}`)
 
 
 })

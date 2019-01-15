@@ -50,7 +50,7 @@ export class ToolbarComponent implements OnDestroy, OnInit {
 
 
   toggleDrawer = () => this.store.dispatch( new ChangeStateDrawer({status: !this.statusDrawer}) );
-  logout    = () => this.store.dispatch(new Logout());
+  logout    = () => this.store.dispatch( new Logout());
   redirect  = () => this.store.dispatch( new Navigate([`user/${this.authService.currentUser.email}`]) );
   goToHome  = () => this.store.dispatch( new Navigate(['/']) );
 
