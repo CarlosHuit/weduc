@@ -91,7 +91,7 @@ app.get('/:course_id', verifyToken, validateUser, async (req, res) => {
       .populate({
         path: 'comments.answers_id',
         populate: {
-          path: 'answers.user_id'
+          path: 'answers.user'
         }
       })
 

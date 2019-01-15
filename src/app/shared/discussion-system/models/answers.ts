@@ -11,11 +11,12 @@ export class Answers {
 
 export class Answer {
   constructor (
-    public user_id:     UserDataModel | string ,
+    public user:     UserDataModel,
     public text:        string,
     public date:        Date,
     public comment_id?: string,
     public _id?:        string,
     public temp_id?:    string,
+    public user_id?:    string,
   ) {}
 }

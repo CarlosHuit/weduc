@@ -11,6 +11,7 @@ import { AuthService         } from '../service/auth.service';
 import { Signup              } from '../../store/actions/auth.actions';
 import { ChangeTitle         } from '../../store/actions/app.actions';
 import { AppState            } from '../../store/state/app.state';
+import { AuthState } from 'src/app/store/state/auth.state';
 
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -37,7 +38,8 @@ export class SignupComponent implements OnInit, OnDestroy {
   signupForm: FormGroup;
   matcher =   new MyErrorStateMatcher();
   avatar:     string;
-  @Select(AppState.isMobile)   isMobile$:  Observable<boolean>;
+  @Select(AppState.isMobile)    isMobile$:  Observable<boolean>;
+  @Select(AuthState.isLoading) isLoading$:  Observable<boolean>;
 
   constructor(
     private fb:           FormBuilder,

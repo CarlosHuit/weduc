@@ -16,9 +16,8 @@ app.post('/', verifyToken, validateUser, async (req, res) => {
 
     const { user_id, text, date,  comment_id, temp_id } = req.body
     debug(temp_id)
-    const answer    = { _id: new mongoose.Types.ObjectId(), user_id, text, date }
+    const answer    = { _id: new mongoose.Types.ObjectId(), user: user_id, text, date }
     const addAnswer = await AnswerModel.findOneAndUpdate({comment_id}, {$push: {answers: answer } })
-      // .populate('answers.user_id', { __v: 0, password: 0, email: 0 })
 
     answer['temp_id']    = temp_id
     answer['comment_id'] = comment_id
@@ -43,7 +42,7 @@ app.get('/:comment_id', verifyToken, validateUser, async (req, res) => {
 
     const course_id = req.params.course_id
     const data      = await CommentsModel.findOne({course_id}, {__v: 0})
-      .populate('comments.user_id', { __v: 0, password: 0, email: 0 })
+      .populate('comments.user', { __v: 0, password: 0, email: 0 })
 
     const result = data ? data.comments : []
 

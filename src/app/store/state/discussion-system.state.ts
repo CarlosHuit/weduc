@@ -241,7 +241,7 @@ export class DiscussionSystemState {
     t[comment_id] = comment_id;
 
     const localAnswer  = new Answer(user, text, date, comment_id, null, temp_id);
-    const answerToSend = new Answer(user._id, text, date, comment_id, null, temp_id);
+    const answerToSend = new Answer(null, text, date, comment_id, null, temp_id, user._id);
 
     patchState({
 
