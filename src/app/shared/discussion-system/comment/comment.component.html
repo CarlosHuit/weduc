@@ -1,4 +1,4 @@
-<mat-card class="m-c-box-comment">
+<mat-card class="m-c-box-comment" *ngIf="!(loadingComments | async)" >
 
   <div class="comment-author">
 
@@ -33,12 +33,20 @@
         <button
           mat-icon-button
           (click)="evOpenDialog(data._id)"
-          *ngIf="idCurrentUser === data.user_id._id && !data.temp_id && answers === 0"
+          *ngIf="
+          (userId$ | async) === data.user_id._id
+          && !data.temp_id && answers === 0
+          && !(commentsToDelete$ | async)[data._id]
+          "
           >
           <mat-icon color="warn">
             delete_forever
           </mat-icon>
         </button>
+        <!-- commentsToDelete$ -->
+        <div style="width: 30px; height: 30px;" *ngIf="(commentsToDelete$ | async)[data._id]" >
+            <app-spinner-loading></app-spinner-loading>
+          </div>
 
       </div>
 

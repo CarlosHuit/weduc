@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams  } from '@angular/common/http';
 import { Injectable         } from '@angular/core';
 import { Observable         } from 'rxjs';
-import { catchError         } from 'rxjs/operators';
+import { catchError, tap         } from 'rxjs/operators';
 import { Answer             } from '../../shared/discussion-system/models/answers';
 import { HandleErrorService } from '../../shared/handle-error.service';
 import { environment        } from '../../../environments/environment';
@@ -26,11 +26,11 @@ export class DiscussionSystemService {
     }
 
 
-  addComment = (comment: Comments): Observable<any | Comments> => {
+  addComment = (comment: Comments): Observable<Comments> => {
 
     const data = JSON.stringify(comment);
 
-    return this.http.post(this.apiUrl, data)
+    return this.http.post<Comments>(this.apiUrl, data)
       .pipe(
         catchError( this._error.handleError )
       );
@@ -79,7 +79,7 @@ export class DiscussionSystemService {
 
   }
 
-  addAnswer = (answer: Answer): Observable<Answer | any> => {
+  addAnswer = (answer: Answer): Observable<Answer> => {
 
     const url = urljoin(this.apiUrl, 'answers');
     const data = JSON.stringify(answer);

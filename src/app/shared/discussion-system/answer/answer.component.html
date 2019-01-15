@@ -24,13 +24,25 @@
 
       </div>
 
-      <div class="m-c-button-delete">
+      <div class="m-c-button-delete center">
 
-        <button mat-icon-button (click)="evOpenDialog(data._id)" *ngIf="idCurrentUser === data.user_id._id && !data.temp_id">
+        <button
+          mat-icon-button
+          (click)="evOpenDialog(data._id)"
+          *ngIf="
+          (userId$ | async) === data.user_id._id
+          && !data.temp_id
+          && !(answersToDelete$ | async)[data._id]
+          "
+        >
           <mat-icon color="warn">
             delete_forever
           </mat-icon>
         </button>
+
+        <div style="width: 30px; height: 30px;" *ngIf="(answersToDelete$ | async)[data._id]" >
+          <app-spinner-loading></app-spinner-loading>
+        </div>
 
       </div>
 

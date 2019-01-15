@@ -1,5 +1,6 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { User } from 'src/app/classes/user';
+import { Component, Input } from '@angular/core';
+import { AddAnswer } from 'src/app/store/actions/discussion-system.actions';
+import { Store } from '@ngxs/store';
 
 
 @Component({
@@ -7,28 +8,27 @@ import { User } from 'src/app/classes/user';
   templateUrl: './write-answer.component.html',
   styleUrls: ['./write-answer.component.css']
 })
-export class WriteAnswerComponent implements OnInit {
+export class WriteAnswerComponent {
 
-  @Input()  currentUser:    User;
-  @Output() evsWriteComments = new EventEmitter<string>();
-
+  @Input()  commentId:    string;
   commented: boolean;
 
-  constructor() { }
-
-  ngOnInit() { }
+  constructor(private store: Store) { }
 
   reqAddComment = (el: HTMLTextAreaElement) => {
 
-    // const text = escape(el.value.trim());
     const text = el.value.trim();
 
-    if (text.length > 0 && this.currentUser._id) {
-      this.evsWriteComments.emit(text);
+    if (text.length > 0 ) {
+      this.addAnswer(text, this.commentId);
     }
 
     el.value = '';
 
+  }
+
+  addAnswer = (text: string, comment_id: string) => {
+    this.store.dispatch(new AddAnswer({text, comment_id}));
   }
 
 }

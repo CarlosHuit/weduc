@@ -31,6 +31,16 @@
   cursor:           pointer;
 }
 
+.m-c-msg-hide-answers {
+  color:          #1c88b3;
+  font-weight:      bolder;
+  text-align:       center;
+  text-decoration:  underline;
+  letter-spacing:   0.2px;
+  margin:           10px 0; 
+  cursor:           pointer;
+}
+
 .m-c-answers mat-card {
   margin: 5px 0;
 }

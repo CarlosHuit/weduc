@@ -1,59 +1,49 @@
 <div class="m-c-comments">
 
 
-  <div>
+  <div *ngIf="!(loadingComments$ | async)">
+    
     
     <!-- AddComment -->
     <div class="m-c-container-addComment">
-
-
-      <!----- Add Comment ----->
-      <app-write-comment
-        [currentUser]="currentUser"
-        (evsWriteComments)="addComment($event)"
-        >
-      </app-write-comment>
-      
-
+      <app-write-comment></app-write-comment>
     </div>
-  
-    <!-- AllComments -->
-    <div class="m-c-container-comments" *ngIf="!loadingComments">
 
-      <div class="m-c-container-comment" *ngFor="let item of comments" >
+
+    <!-- AllComments -->
+    <div class="m-c-container-comments" *ngIf="!(loadingComments$ | async)">
+
+      <div class="m-c-container-comment" *ngFor="let item of comments$ | async">
 
         <!----- box comments ----->
         <app-comment
           [data]="item"
           [answers]="item.answers_id.answers.length"
-          (evsComment)="openDialog($event)"
-          [idCurrentUser]="currentUser._id"
           >
         </app-comment>
-
         <div class="m-c-container-answers" >
 
           <!----- box answers ----->
           <div class="m-c-answers" >
 
-            <div *ngIf="item.answers_id.answers.length > 0 && !showAnswers[item._id]" >
+            <div *ngIf="item.answers_id.answers.length > 0 && !(showAnswers$ | async)[item._id]" >
 
               <p
                 class="m-c-msg-show-answers"
-                (click)="showAnswers[item._id] = item._id"
+                (click)="showAnswersOf(item._id)"
                 >
                 Ver todas las respuestas
               </p>
 
             </div>
 
-            <div *ngIf="item.answers_id && showAnswers[item._id] === item._id" >
+            <div *ngIf="item.answers_id && (showAnswers$ | async)[item._id]">
 
               <app-answer
-                *ngFor="let answer of item.answers_id.answers"
+                *ngFor="let answer of item.answers_id.answers; let i=index"
                 [data]="answer"
-                (evsComment)="openDialogAnswer($event, item._id)"
-                [idCurrentUser]="currentUser._id"
+                [comment_id]="item._id"
+                [indexAnswer]="i"
                 >
               </app-answer>
 
@@ -61,28 +51,34 @@
 
           </div>
 
+          <p
+            *ngIf="
+              (showAnswers$ | async)[item._id]
+              && (writeAnswerFor$ | async) !== item._id
+              && item.answers_id.answers.length > 0"
+            class="m-c-msg-hide-answers"
+            (click)="hideAnswersOf(item._id)"
+            >
+            Ocultar todas las respuestas
+          </p>
+
           <!----- Write answer  ----->
-          <div class="m-c-answers" *ngIf="writeAnswer === item._id">
+          <div class="m-c-answers" *ngIf="(writeAnswerFor$ | async) === item._id ">
             <app-write-answer 
-              [currentUser]="currentUser"
-              (evsWriteComments)="addAnswer($event, item._id)"
+              [commentId]="item._id"
               >
             </app-write-answer>
           </div>
 
 
-          <div
-            class="m-c-comment-guide"
-            >
-          </div>
-
+          <div class="m-c-comment-guide"></div>
           <div class="m-c-container-buttons-answer">
 
             <button
               mat-raised-button
               class="m-c-btn-write-answer"
-              *ngIf="writeAnswer !== item._id"
-              (click)="writeAnswer = item._id"
+              *ngIf="(writeAnswerFor$ | async) !== item._id"
+              (click)="writeAnswerFor(item._id)"
               >
               Responder
             </button>
@@ -90,9 +86,9 @@
             <button
               mat-button
               color="primary"
-              (click)="writeAnswer = ''"
               class="m-c-btn-hide-write-answer"
-              *ngIf="writeAnswer === item._id"
+              (click)="writeAnswerFor('')"
+              *ngIf="(writeAnswerFor$ | async) === item._id"
               >
               Ocultar
             </button>
@@ -103,13 +99,15 @@
 
 
       </div>
+
     </div>
+
 
   </div>
 
 
   <!-- Spinner -->
-  <div class="m-c-spinner center" *ngIf="loadingComments">
+  <div class="m-c-spinner center" *ngIf="(loadingComments$ | async)" >
 
     <div class="box-spinner">
       <mat-spinner></mat-spinner>
@@ -117,5 +115,10 @@
 
   </div>
 
+
+</div>
+
+
+<div *ngFor="let item of items; let i=index" >
 
 </div>

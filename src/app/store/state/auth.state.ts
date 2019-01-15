@@ -37,6 +37,9 @@ export class AuthState {
   static getToken({ token }: AuthStateModel) { return token; }
 
   @Selector()
+  static userId({ user }: AuthStateModel) { return user._id; }
+
+  @Selector()
   static getUser({ user }: AuthStateModel) { return user; }
 
   constructor(private _authService: AuthService) { }
