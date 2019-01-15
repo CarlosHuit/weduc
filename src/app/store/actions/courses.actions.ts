@@ -5,7 +5,8 @@ export enum CoursesActionsType {
   GET_COURSES_SUCCESS = '[Courses] get courses success',
   GET_COURSE_SUCCESS  = '[Courses] get course success',
   SELECT_COURSE       = '[Courses] select course',
-  IS_LOADING_COURSES  = '[Courses] loading courses'
+  IS_LOADING_COURSES  = '[Courses] loading courses',
+  RESET_DATA          = '[Courses] reset state'
 }
 
 export class GetCourses {
@@ -31,4 +32,8 @@ export class SelectCourse {
 export class IsLoadingCourses {
   static readonly type = CoursesActionsType.IS_LOADING_COURSES;
   constructor(public payload: {state: boolean}) {}
+}
+
+export class ResetCoursesData {
+  static readonly type = CoursesActionsType.RESET_DATA;
 }

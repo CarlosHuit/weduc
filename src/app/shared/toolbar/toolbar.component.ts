@@ -1,8 +1,7 @@
-import { Component, OnDestroy, ViewChild, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService       } from '../../auth/service/auth.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { MediaMatcher      } from '@angular/cdk/layout';
-import { MatSidenav        } from '@angular/material/sidenav';
 import { Store, Select     } from '@ngxs/store';
 import { Logout            } from '../../store/actions/auth.actions';
 import { AuthState         } from '../../store/state/auth.state';
@@ -19,15 +18,14 @@ import { DrawerState } from '../../store/state/drawer.state';
 
 export class ToolbarComponent implements OnDestroy, OnInit {
 
-  mobileQuery: MediaQueryList;
-  @ViewChild('snav') sidenav: MatSidenav;
+  mobileQuery:  MediaQueryList;
+  statusDrawer: boolean;
+  private _mobileQueryListener: () => void;
 
   @Select(AuthState.isLoggedIn)   isLoggedIn$:  Observable<boolean>;
   @Select(AuthState.fullName)     fullName$:    Observable<string>;
   @Select(DrawerState.opened)     opened$:      Observable<boolean>;
 
-  private _mobileQueryListener: () => void;
-  statusDrawer: boolean;
 
   constructor(
     private authService:        AuthService,
@@ -42,34 +40,19 @@ export class ToolbarComponent implements OnDestroy, OnInit {
 
   }
 
-  ngOnDestroy(): void {
+  ngOnInit() {
+    this.opened$.subscribe(status => this.statusDrawer = status );
+  }
+  ngOnDestroy() {
     this.mobileQuery.removeListener(this._mobileQueryListener);
   }
 
-  ngOnInit() {
-    this.opened$.subscribe((status: boolean) => this.statusDrawer = status );
-  }
 
 
-  toggleDrawer = () => {
-    this.store.dispatch( new ChangeStateDrawer({status: !this.statusDrawer}) );
-  }
+  toggleDrawer = () => this.store.dispatch( new ChangeStateDrawer({status: !this.statusDrawer}) );
+  logout    = () => this.store.dispatch(new Logout());
+  redirect  = () => this.store.dispatch( new Navigate([`user/${this.authService.currentUser.email}`]) );
+  goToHome  = () => this.store.dispatch( new Navigate(['/']) );
 
-  urlImage = () => {
-    const t = this.authService.currentUser.avatar;
-    return `/assets/icon-user-min/${t}-min.png`;
-  }
-
-  logout = () => {
-    this.store.dispatch(new Logout());
-  }
-
-
-  redirect = () => {
-
-    const url = `user/${this.authService.currentUser.email}`;
-    this.store.dispatch( new Navigate([url]) );
-
-  }
 
 }

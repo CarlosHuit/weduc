@@ -1,18 +1,28 @@
 import { CoursesStateModel } from '../models/courses-state.model';
 import { GetCoursesService } from '../../services/get-data/get-courses.service';
-import { GetCourses, IsLoadingCourses, GetCoursesSuccess, SelectCourse, GetCourseSuccess } from '../actions/courses.actions';
+import {
+  GetCourses,
+  IsLoadingCourses,
+  GetCoursesSuccess,
+  SelectCourse,
+  GetCourseSuccess,
+  ResetCoursesData
+} from '../actions/courses.actions';
 import { tap               } from 'rxjs/operators';
 import { Subjects          } from 'src/app/classes/subjects';
 import { State, Action, StateContext, Selector } from '@ngxs/store';
 import { DomSanitizer } from '@angular/platform-browser';
+import { DiscussionSystemStateModel } from '../models/discussion-system.model';
+
+const initialData: CoursesStateModel = {
+  courses: [],
+  selectedCourse: null,
+  isLoadingCourses: false,
+};
 
 @State<CoursesStateModel>({
   name: 'courses',
-  defaults: {
-    courses: [],
-    selectedCourse: null,
-    isLoadingCourses: false,
-  }
+  defaults: initialData
 })
 
 export class CoursesState {
@@ -118,6 +128,11 @@ export class CoursesState {
 
     }
 
+  }
+
+  @Action(ResetCoursesData)
+  resetCoursesData ( {setState}: StateContext<CoursesStateModel>, action: ResetCoursesData) {
+    setState(initialData);
   }
 
 }

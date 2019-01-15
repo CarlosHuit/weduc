@@ -9,7 +9,8 @@ import { UserDataModel      } from '../models/user-data.model';
 import { CloseDrawer        } from '../actions/drawer.actions';
 import { HttpErrorResponse  } from '@angular/common/http';
 import { ResponseAuth       } from '../../auth/models/response-auth.model';
-import { GetCoursesSuccess } from '../actions/courses.actions';
+import { GetCoursesSuccess, ResetCoursesData } from '../actions/courses.actions';
+import { ResetDiscussionSystem } from '../actions/discussion-system.actions';
 
 @State<AuthStateModel>({
   name: 'auth',
@@ -48,7 +49,9 @@ export class AuthState {
   logout({ setState, dispatch }: StateContext<AuthStateModel>, action: Logout) {
     localStorage.clear();
     dispatch( new CloseDrawer() );
-    dispatch(new Navigate(['/signin']));
+    dispatch( new ResetCoursesData() );
+    dispatch( new ResetDiscussionSystem() );
+    dispatch( new Navigate(['/signin']));
     setState({
       isLoading:  false,
       isLoggedIn: false,

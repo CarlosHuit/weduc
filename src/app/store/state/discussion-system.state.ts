@@ -25,7 +25,7 @@ import {
   AddCommentToDelete,
   DeleteAnswerSuccess,
   DeleteCommentSuccess,
-  ResetData
+  ResetDiscussionSystem
 } from '../actions/discussion-system.actions';
 import { Comments } from 'src/app/shared/discussion-system/models/comments';
 import { AuthState } from './auth.state';
@@ -414,8 +414,8 @@ export class DiscussionSystemState {
 
   }
 
-  @Action( ResetData )
-  ResetData({ setState }: StateContext<DiscussionSystemStateModel>, action: ResetData ) {
+  @Action( ResetDiscussionSystem )
+  resetDiscussionSystem({ setState }: StateContext<DiscussionSystemStateModel>, action: ResetDiscussionSystem ) {
     setState(initialData);
   }
 
