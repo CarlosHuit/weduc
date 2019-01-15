@@ -1,10 +1,10 @@
 import { HttpClient, HttpParams  } from '@angular/common/http';
 import { Injectable         } from '@angular/core';
 import { Observable         } from 'rxjs';
-import { catchError, tap         } from 'rxjs/operators';
-import { Answer             } from '../../shared/discussion-system/models/answers';
-import { HandleErrorService } from '../../shared/handle-error.service';
-import { environment        } from '../../../environments/environment';
+import { catchError        } from 'rxjs/operators';
+import { Answer             } from '../models/answers';
+import { HandleErrorService } from '../../handle-error.service';
+import { environment        } from '../../../../environments/environment';
 import urljoin from 'url-join';
 import { Comments } from 'src/app/shared/discussion-system/models/comments';
 
@@ -36,7 +36,7 @@ export class DiscussionSystemService {
       );
   }
 
-  getAllCommments = (course_id: string): Observable<any | Comments[]> => {
+  getAllCommments = (course_id: string): Observable<Comments[]> => {
 
     const url     = urljoin(this.apiUrl, `${course_id}`);
 

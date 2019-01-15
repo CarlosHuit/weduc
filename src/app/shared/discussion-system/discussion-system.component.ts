@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { GetComments, ShowAnswersOf, HideAnswersOf, WriteAnswerFor } from 'src/app/store/actions/discussion-system.actions';
+import { GetComments, ShowAnswersOf, HideAnswersOf, WriteAnswerFor, ResetData } from 'src/app/store/actions/discussion-system.actions';
 import { Observable, Subscription } from 'rxjs';
 import { DiscussionSystemState    } from 'src/app/store/state/discussion-system.state';
 import { Select, Store            } from '@ngxs/store';
@@ -36,6 +36,7 @@ export class DiscussionSystemComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.courseSubscription.unsubscribe();
+    this.store.dispatch(new ResetData());
   }
 
   showAnswersOf  = (commentId: string) => this.store.dispatch( new ShowAnswersOf( {commentId} ) );

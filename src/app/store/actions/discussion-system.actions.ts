@@ -36,6 +36,8 @@ export enum DiscussionSystemActionsType {
   SHOW_ANSWERS           = '[Discussion System] show answers',
   HIDE_ANSWERS           = '[Discussion System] hide answers',
   WRITE_ANSWER_FOR       = '[Discussion System] write answer for',
+
+  RESET_DATA             = '[Discussion System] reset data'
 }
 
 
@@ -177,4 +179,8 @@ export class HideAnswersOf {
 export class WriteAnswerFor {
   static readonly type = DiscussionSystemActionsType.WRITE_ANSWER_FOR;
   constructor(public payload: { commentId: string }) {}
+}
+
+export class ResetData {
+  static readonly type = DiscussionSystemActionsType.RESET_DATA;
 }

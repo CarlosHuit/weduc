@@ -1,5 +1,5 @@
 import { DiscussionSystemStateModel } from '../models/discussion-system.model';
-import { DiscussionSystemService } from '../../services/discussion-system/discussion-system.service';
+import { DiscussionSystemService } from '../../shared/discussion-system/services/discussion-system.service';
 import { tap } from 'rxjs/operators';
 import {
   State,
@@ -24,17 +24,33 @@ import {
   AddAnswerToDelete,
   AddCommentToDelete,
   DeleteAnswerSuccess,
-  DeleteCommentSuccess
+  DeleteCommentSuccess,
+  ResetData
 } from '../actions/discussion-system.actions';
 import { Comments } from 'src/app/shared/discussion-system/models/comments';
 import { AuthState } from './auth.state';
 import { CoursesState } from './courses.state';
 import { Answers, Answer } from 'src/app/shared/discussion-system/models/answers';
 
+const initialData: DiscussionSystemStateModel = {
+  comments:             [],
+  answersTemporaryIds:  [],
+  commentsTemporaryIds: [],
+  showAnswersOf:        {},
+  answersToDelete:      {},
+  commentsToDelete:     {},
+  writeAnswerFor:       '',
+  isLoadingComments:    false,
+};
 
 @State<DiscussionSystemStateModel>({
   name: 'comments',
-  defaults: {
+  defaults: initialData,
+})
+
+export class DiscussionSystemState {
+
+  static initialData = () => ({
     comments:             [],
     answersTemporaryIds:  [],
     commentsTemporaryIds: [],
@@ -43,11 +59,7 @@ import { Answers, Answer } from 'src/app/shared/discussion-system/models/answers
     commentsToDelete:     {},
     writeAnswerFor:       '',
     isLoadingComments:    false,
-  },
-})
-
-export class DiscussionSystemState {
-
+  })
 
   @Selector()
   static isLoadingComments({ isLoadingComments }: DiscussionSystemStateModel) { return isLoadingComments; }
@@ -402,6 +414,10 @@ export class DiscussionSystemState {
 
   }
 
+  @Action( ResetData )
+  ResetData({ setState }: StateContext<DiscussionSystemStateModel>, action: ResetData ) {
+    setState(initialData);
+  }
 
   generateTemporaryId = (arrTmpIds: string[], comment_id: string) => {
 
