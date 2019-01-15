@@ -39,7 +39,6 @@
     "@angular/router": "~7.0.0",
     "@angular/service-worker": "~7.0.0",
     "@auth0/angular-jwt": "^2.0.0",
-    "@ngxs-labs/immer-adapter": "^1.1.2",
     "@ngxs/router-plugin": "^3.3.4",
     "@ngxs/store": "^3.3.4",
     "async-to-generator": "^1.1.0",
