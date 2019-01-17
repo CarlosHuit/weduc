@@ -27,12 +27,15 @@ export class GetInitialDataService {
   }
 
 
-  getInitialData = (): Observable<any | InitialData> => {
+  getInitialData = (): Observable<InitialData> => {
 
     const url     = urljoin(this.apiUrl, `initial-data`);
 
     return this.http.get(url)
-      .pipe(tap(this.saveData), catchError(this._err.handleError));
+      .pipe(
+        tap(this.saveData),
+        catchError(this._err.handleError)
+      );
   }
 
   saveData = (x: any) => {
@@ -72,8 +75,6 @@ export class GetInitialDataService {
       });
 
     }
-
-
   }
 
 

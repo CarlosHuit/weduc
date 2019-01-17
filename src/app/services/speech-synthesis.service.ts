@@ -33,9 +33,9 @@ export class SpeechSynthesisService {
     (window as any).speechSynthesis.speak(this.utterance);
     (window as any).addEventListener('beforeunload', () => this.cancel(), false);
 
-    this.utterance.onend = () => {
-      (window as any).removeEventListener('beforeunload', () => this.cancel(), false );
-    };
+    // this.utterance.onend = () => {
+    //   (window as any).removeEventListener('beforeunload', () => this.cancel(), false );
+    // };
 
     return this.utterance;
   }

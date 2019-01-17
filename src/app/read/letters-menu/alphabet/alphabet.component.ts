@@ -1,50 +1,63 @@
-import { Component, OnInit, Input, EventEmitter, Output   } from '@angular/core';
-import { DetectMobileService } from '../../../services/detect-mobile.service';
+import { Component, Input, EventEmitter, Output, OnDestroy, OnInit   } from '@angular/core';
+import { Select, Store } from '@ngxs/store';
+import { ReadingCourseState } from 'src/app/store/state/reading-course.state';
+import { Observable, Subscription } from 'rxjs';
+import { AppState } from 'src/app/store/state/app.state';
+import { SpeechSynthesisService } from 'src/app/services/speech-synthesis.service';
+import { ActiveRedirection, SelectLetter } from 'src/app/store/actions/reading-course.actions';
 
 @Component({
   selector: 'app-alphabet',
   templateUrl: './alphabet.component.html',
   styleUrls: ['./alphabet.component.css']
 })
-export class AlphabetComponent implements OnInit {
+export class AlphabetComponent implements OnDestroy, OnInit {
 
-  @Input()  letters:      any;
-  @Input()  selections:   {};
-  @Input()  wordsUrl:     {};
   @Input()  contGrid:     HTMLDivElement;
-  @Output() evsAlphabet    = new EventEmitter<string>();
-  @Output() evsSoundLetter = new EventEmitter<string>();
 
-  constructor(
-    private _mobile: DetectMobileService
-  ) { }
-
-  ngOnInit() {}
+  isMobile:      boolean;
+  canSpeech:     boolean;
+  subsIsMobile:  Subscription;
+  subsCanSpeech: Subscription;
+  letterSounds: {};
 
 
-  isMobile = () => {
-    return this._mobile.isMobile();
+  @Select(ReadingCourseState.selectedLetter) selectedLetter$: Observable<string>;
+  @Select(ReadingCourseState.lettersMenu)       lettersMenu$: Observable<{letter: string, imgUrl: string, word: string}[]>;
+  @Select(ReadingCourseState.canSpeech)           canSpeech$: Observable<boolean>;
+  @Select(AppState.isMobile) isMobile$: Observable<boolean>;
+
+
+  constructor( private store: Store, private speech: SpeechSynthesisService ) { }
+
+
+  ngOnInit() {
+    this.letterSounds  = this.store.selectSnapshot( state => state.readingCourse.data.letterSounds);
+    this.subsIsMobile  = this.isMobile$.subscribe( status => this.isMobile = status);
+    this.subsCanSpeech = this.canSpeech$.subscribe(x => this.canSpeech = x);
   }
 
-
-  openModal = (letter: string) => {
-    this.evsAlphabet.emit(letter);
+  ngOnDestroy() {
+    this.subsIsMobile.unsubscribe();
+    this.subsCanSpeech.unsubscribe();
   }
 
-
-  getImage = (letter) => {
-    return `/assets/img100X100/${this.wordsUrl[letter]}-min.png`;
-  }
 
 
   listenLetter = (letter: string) => {
-    this.evsSoundLetter.emit(letter);
+
+    if (this.canSpeech) {
+      this.store.dispatch(new SelectLetter({letter}));
+      const speech = this.speech.speak(this.letterSounds[letter]);
+      speech.addEventListener('end', () => this.store.dispatch(new SelectLetter({letter: ''})));
+    }
+
   }
 
 
   genCols = (el: HTMLDivElement) => {
 
-    if ( this.isMobile() ) {
+    if ( this.isMobile ) {
 
       const t = el.clientWidth % 320;
       const margin = 5 * 4;
@@ -64,7 +77,7 @@ export class AlphabetComponent implements OnInit {
       }
     }
 
-    if ( !this.isMobile() ) {
+    if ( !this.isMobile ) {
 
       const width = el.clientWidth;
 
@@ -81,6 +94,14 @@ export class AlphabetComponent implements OnInit {
       }
     }
 
+  }
+
+  redirect = (letter: string) => {
+    if ( this.canSpeech ) {
+      const msg    = `Bien, Seleccionaste la letra: ... ${this.letterSounds[letter]}`;
+      const url    = `lectura/detalle-letra/${letter}`;
+      this.store.dispatch( new ActiveRedirection({letter, msg, url}) );
+    }
   }
 
 

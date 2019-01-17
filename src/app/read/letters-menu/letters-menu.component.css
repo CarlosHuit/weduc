@@ -221,3 +221,8 @@
   opacity:                0.4;
 }
 
+
+
+.container-loading {
+  height: 40px; margin-top: 20px
+}

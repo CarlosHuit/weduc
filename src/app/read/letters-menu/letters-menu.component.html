@@ -1,13 +1,13 @@
-<div #contGrid class="container" [style.overflow]="isMobile() ? 'auto' : 'auto'">
+<div #contGrid class="container" [style.overflow]="(isMobile$ | async) ? 'hidden' : 'auto'">
 
 
   <!------ Desktop Version ------>
-  <div class="d-c-menu-letters" *ngIf="!loading && !isMobile() && !mobileQuery.matches">
+  <div class="d-c-menu-letters" *ngIf="!(loading$ | async) && !(isMobile$ | async) && !mobileQuery.matches">
 
 
     <mat-card class="d-c-cards">
 
-      <div [class.show]="showC" class="d-c-title center hide" (click)="instructions()">
+      <div class="d-c-title center" (click)="instructions()">
         <h1> El Abecedario </h1>
       </div>
 
@@ -15,11 +15,11 @@
       <div class="d-c-grids">
 
         <!-- letter card -->
-        <mat-card class="d-c-card" *ngFor="let letter of letters" >
+        <mat-card class="d-c-card" *ngFor="let item of lettersMenu$ | async" >
 
 
-          <div class="d-c-image center" (click)="listenWord(letter)">
-            <img [src]="getImage(letter)">
+          <div class="d-c-image center" (click)="listenWord(item.letter, item.word)">
+            <img [src]="item.imgUrl">
           </div>
 
 
@@ -27,43 +27,38 @@
 
             <div class="d-c-upper">
               <button
-                (click)="listenLetter(letter, 'u')"
+                (click)="listenLetter(item.letter, 'u')"
                 [disabled]="speaking === true"
-                [class.highlight]="selections[letter] === letter"
-                [class.highlight]=" highlightLetter[letter] === letter &&
-                                    highlightLetter['type'] === 'u'"
+                [class.highlight]="( selectedLetter$ | async ) === item.letter"
+                [class.highlight]=" ( highlightLetter$ | async )['letter'] === item.letter &&
+                                    ( highlightLetter$ | async )['type'] === 'u'"
                 >
-                {{letter | uppercase}}
+                {{item.letter | uppercase}}
               </button>
             </div>
 
             <div class="d-c-lower">
               <button
-                (click)="listenLetter(letter, 'l')"
+                (click)="listenLetter(item.letter, 'l')"
                 [disabled]="speaking === true"
-                [class.highlight]="selections[letter] === letter"
-                [class.highlight]=" highlightLetter[letter] === letter &&
-                                    highlightLetter['type'] === 'l' "
+                [class.highlight]=" ( selectedLetter$ | async ) === item.letter"
+                [class.highlight]=" ( highlightLetter$ | async ).letter === item.letter &&
+                                    ( highlightLetter$ | async ).type === 'l'"
                 >
-                {{letter | lowercase}}
+                {{item.letter | lowercase}}
               </button>
             </div>
 
           </div>
 
           <button 
-            color="warn"
-            mat-raised-button
-            class="d-c-button"
-            (click)="openModal(letter)"
+            color="warn" mat-raised-button
+            class="d-c-button" (click)="redirect(item.letter)"
             >
             Empezar
           </button>
 
-          <mat-icon
-            class="d-ic-sound center"
-            (click)="listenSoundLetter(letter)"
-            >
+          <mat-icon class="d-ic-sound center" (click)="listenSoundLetter(item.letter)">
             volume_up
           </mat-icon>
 
@@ -80,20 +75,7 @@
         <h1>Progreso</h1>
       </div>
 
-      <app-learned-letters
-        [learneds]="learneds"
-        [sortedState]="sortedState"
-        [combinations]="combinations"
-        [sortAlphaState]="sortAlphaState"
-        [sortRatingState]="sortRatingState"
-        (evOpenItem)="itemOpened($event)"
-        (evCloseItem)="itemClosed($event)"
-        (evSortAlpha)="sortAlpha($event)"
-        (evSortRating)="sortRating($event)"
-        (evlistenLetter)="listen($event)"
-        (evRepractice)="repractice($event)"
-        >
-      </app-learned-letters>
+      <app-learned-letters></app-learned-letters>
 
     </mat-card>
 
@@ -102,7 +84,14 @@
 
 
   <!------ Mobile Version ------>
-  <div class="m-c-menu-letters" *ngIf="(!loading && isMobile()) || (!loading && !isMobile() && mobileQuery.matches)">
+  <div
+    class="m-c-menu-letters"
+    *ngIf="
+      ( !(loading$ | async) && (isMobile$ | async) )
+      ||
+      ( !(loading$ | async) && !(isMobile$ | async) && mobileQuery.matches )
+      "
+    >
 
     
     <div class="m-c-alphabet">
@@ -116,29 +105,16 @@
             <span
               class="center tab-title"
               (click)="goToAlphabet()"
-              [class.lowOpacity]="!showAlphabet"
+              [class.lowOpacity]="(activeTab$ | async) !== 'alphabet'"
               >
               <mat-icon class="icon-alphabet">font_download</mat-icon>
               Abecedario
             </span>
           </ng-template>
 
-
           <div class="c-cards">
-
-            <app-alphabet
-              [contGrid]="contGrid"
-              [letters]="letters"
-              [selections]="selections"
-              [wordsUrl]="wordsUrl"
-              (evsAlphabet)="openModal($event)"
-              (evsSoundLetter)="listenSoundLetter($event)"
-              >
-            </app-alphabet>
-
+            <app-alphabet [contGrid]="contGrid"></app-alphabet>
           </div>
-
-
 
         </mat-tab>
 
@@ -148,29 +124,15 @@
 
           <ng-template mat-tab-label>
             <span 
-              (click)="goToLearnedLetters()"
-              class="center tab-title"
-              [class.lowOpacity]="showAlphabet"
+              (click)="goToLearnedLetters()" class="center tab-title"
+              [class.lowOpacity]="(activeTab$ | async) !== 'learneds'"
               >
               <mat-icon class="icon-star">star</mat-icon>
               Aprendidas
             </span>
           </ng-template>
 
-          <app-learned-letters
-            [learneds]="learneds"
-            [sortedState]="sortedState"
-            [combinations]="combinations"
-            [sortAlphaState]="sortAlphaState"
-            [sortRatingState]="sortRatingState"
-            (evOpenItem)="itemOpened($event)"
-            (evCloseItem)="itemClosed($event)"
-            (evSortAlpha)="sortAlpha($event)"
-            (evSortRating)="sortRating($event)"
-            (evlistenLetter)="listen($event)"
-            (evRepractice)="repractice($event)"
-            >
-          </app-learned-letters>
+          <app-learned-letters></app-learned-letters>
 
         </mat-tab>
 
@@ -181,5 +143,10 @@
 
   </div>
 
-  <app-spinner-loading *ngIf="loading"></app-spinner-loading>
+
+  <div *ngIf="loading$ | async" class="container-loading">
+    <app-spinner-loading></app-spinner-loading>
+  </div>
+
+
 </div>

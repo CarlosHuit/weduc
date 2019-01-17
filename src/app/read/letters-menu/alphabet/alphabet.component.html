@@ -1,12 +1,11 @@
-<!-- <div *ngIf="isMobile()"> -->
 <div [ngStyle]="genCols(contGrid)" class="c-cont-grids" >
-  <mat-card *ngFor="let letter of letters" class="m-c-card">
+  <mat-card *ngFor="let item of lettersMenu$ | async" class="m-c-card">
   
     <button
       color="warn"
       class="ic-sound center"
       mat-raised-button
-      (click)="listenLetter(letter)"
+      (click)="listenLetter(item.letter)"
       >
   
       <mat-icon class="sound-icon center" >volume_up</mat-icon>
@@ -14,25 +13,25 @@
     </button>
   
   
-    <div class="letters" (click)="openModal(letter)">
+    <div class="letters" (click)="redirect(item.letter)">
   
   
       <div class="upper center">
-        <button [class.highlight]="selections[letter] === letter">
-          {{letter | uppercase}}
+        <button [class.highlight]="( selectedLetter$ | async ) === item.letter">
+          {{item.letter | uppercase}}
         </button>
       </div>
   
   
       <div class="lower center">
-        <button [class.highlight]="selections[letter] === letter">
-          {{letter | lowercase}}
+        <button [class.highlight]="( selectedLetter$ | async ) === item.letter">
+          {{item.letter | lowercase}}
         </button>
       </div>
   
   
     </div>
   
-    <div class="image center" (click)="openModal(letter)"> <img [src]="getImage(letter)"> </div>
+    <div class="image center" (click)="redirect(letter)"> <img [src]="item.imgUrl"> </div>
   </mat-card>
 </div>

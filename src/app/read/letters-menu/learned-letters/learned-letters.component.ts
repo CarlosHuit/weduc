@@ -1,7 +1,13 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
-import { LearnedLetters      } from '../../../classes/learned-letters';
-import { MatAccordion        } from '@angular/material';
-import { DetectMobileService } from '../../../services/detect-mobile.service';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { LearnedLetters         } from '../../../classes/learned-letters';
+import { MatAccordion           } from '@angular/material';
+import { Select, Store          } from '@ngxs/store';
+import { ReadingCourseState     } from 'src/app/store/state/reading-course.state';
+import { Observable             } from 'rxjs';
+import { AppState               } from 'src/app/store/state/app.state';
+import { Navigate               } from '@ngxs/router-plugin';
+import { SpeechSynthesisService } from 'src/app/services/speech-synthesis.service';
+import { SortLearnedLettersByRating, SortLearnedLettersByAlphabet } from 'src/app/store/actions/reading-course.actions';
 
 @Component({
   selector: 'app-learned-letters',
@@ -10,31 +16,20 @@ import { DetectMobileService } from '../../../services/detect-mobile.service';
 })
 export class LearnedLettersComponent implements OnInit {
 
-  @Input() learneds:     LearnedLetters[];
-  @Input() combinations:    {};
-  @Input() sortedState:     {};
-  @Input() sortRatingState: boolean;
-  @Input() sortAlphaState:  boolean;
-
-  @Output() evOpenItem    = new EventEmitter<string>();
-  @Output() evcloseItem   = new EventEmitter<string>();
-  @Output() evSortRating  = new EventEmitter<boolean>();
-  @Output() evSortAlpha   = new EventEmitter<boolean>();
-  @Output() evRepractice  = new EventEmitter<string>();
-
-  @Output() evlistenLetter    = new EventEmitter<{}>();
-  @Output() evlistenSyllable  = new EventEmitter<string>();
 
   @ViewChild(MatAccordion) accordion: MatAccordion;
   multi: boolean;
 
-  constructor( private _mobile: DetectMobileService ) { }
+  letterSounds: {};
 
-  ngOnInit() {}
+  @Select(ReadingCourseState.learnedLetters) data$:   Observable<LearnedLetters[]>;
+  @Select(ReadingCourseState.sortedBy) sortedBy$:   Observable<string>;
+  @Select(AppState.isMobile)        isMobile$:    Observable<boolean>;
 
+  constructor(private store: Store, private speechSynthesis: SpeechSynthesisService) { }
 
-  noLearneds = () => {
-    return this.learneds.length === 0 ? true : false;
+  ngOnInit( ) {
+    this.letterSounds = this.store.selectSnapshot(state => state.readingCourse.data.letterSounds);
   }
 
 
@@ -47,25 +42,53 @@ export class LearnedLettersComponent implements OnInit {
   }
 
 
+
   itemOpened = (letter: string) => {
-    this.evOpenItem.emit(letter.toString());
+    // this.speechSynthesis.cancel();
+    // const index = this.userData.tab_learned.previewLetters.findIndex(e => e.letter === letter);
+    // const time = this.genDate.generateData().fullTime;
+    // const t  = new Times(time, 'N/A');
+
+    // if (index === -1) {
+
+    //   const s = [];
+    //   this.combinations[letter].forEach(i => s.push(new Syllable(i.w, [])));
+    //   const el = new PreviewLetter(letter, [t], [], [], s, 'N/D');
+    //   this.userData.tab_learned.previewLetters.push(el);
+
+    // } else {
+
+    //   const path = this.userData.tab_learned.previewLetters;
+    //   const item = path[index].time.push(t);
+
+    // }
+
+    console.log('opened');
+
+
   }
 
 
   itemClosed = (letter: string) => {
-    this.evcloseItem.emit(letter.toString());
-  }
 
+    // this.speechSynthesis.cancel();
+    // const t     = this.genDate.generateData().fullTime;
+    // const path  = this.userData.tab_learned.previewLetters;
+    // const index = path.findIndex( e => e.letter === letter);
+    // const el    = path[index].time;
+    // const val   = index > -1 ? el[el.length - 1].finalTime = t : null;
+    console.log('closed');
+  }
 
   sortRating = () => {
     this.closeAllExpansion();
-    this.evSortRating.emit(true);
+    this.store.dispatch(new SortLearnedLettersByRating());
   }
 
 
   sortAlpha = () => {
     this.closeAllExpansion();
-    this.evSortAlpha.emit(true);
+    this.store.dispatch( new SortLearnedLettersByAlphabet() );
   }
 
 
@@ -75,20 +98,29 @@ export class LearnedLettersComponent implements OnInit {
   }
 
 
-  isMobile = () => {
-    return this._mobile.isMobile();
+  repractice = (letter: string) => {
+    const url = `lectura/detalle-letra/${letter.toLowerCase()}`;
+    this.store.dispatch(new Navigate([url]));
   }
 
   listenLetter = (letter: string, type: string) => {
-    this.evlistenLetter.emit({code: 'letter', letter, type});
+
+    const lSound = this.letterSounds[letter];
+    const lType  = type === 'l' ? 'minúscula' : 'mayúscula';
+    const msg    = `${lSound} ... ${lType}`;
+    const speech = this.speechSynthesis.speak(msg, 0.8);
+
+
   }
 
-  listenCombination = (syllableP: string, syllableW: string, letter: string ) => {
-    this.evlistenLetter.emit({code: 'combinations', syllableP, syllableW, letter});
+
+
+
+
+  listenCombination = (syllableP: string, syllableW: string, letter: string) => {
+    const speech = this.speechSynthesis.speak(syllableP, .8);
   }
 
-  repractice = (letter: string) => {
-    this.evRepractice.emit(letter);
-  }
+
 
 }

@@ -1,19 +1,19 @@
-<div class="m-c-learned-letters" [class.quit-padding]="!isMobile()" *ngIf="!noLearneds()" >
-  <div class="m-c-accordion"  [class.desktop]="isMobile() === false" >
+<div class="m-c-learned-letters" [class.quit-padding]="!(isMobile$ | async)" *ngIf="!(data$ | async).lenght" >
+  <div class="m-c-accordion"  [class.desktop]="!(isMobile$ | async)" >
 
 
     <div class="m-c-icons-sorted">
 
 
       <button mat-button (click)="sortAlpha()" >
-        <mat-icon [class.bold]="sortedState['alpha'] === true">
+        <mat-icon [class.bold]="(sortedBy$ | async) === 'alphabet'">
           sort_by_alpha
         </mat-icon>
       </button>
 
 
       <button mat-button (click)="sortRating()">
-        <mat-icon [class.bold]="sortedState['rating'] === true">
+        <mat-icon [class.bold]="(sortedBy$ | async) === 'rating'">
           sort
         </mat-icon>
       </button>
@@ -25,7 +25,7 @@
 
     <mat-accordion [multi]="multi" class="m-c-accordion">
       <mat-expansion-panel
-        *ngFor="let itemLetter of learneds"
+        *ngFor="let itemLetter of data$ | async"
         (closed)="itemClosed(itemLetter.letter)"
         (opened)="itemOpened(itemLetter.letter)"
         >
@@ -40,10 +40,7 @@
 
             <div>
 
-              <mat-icon
-                class="icon-star"
-                *ngFor="let i of countStars(itemLetter.rating)"
-                >
+              <mat-icon class="icon-star" *ngFor="let i of countStars(itemLetter.rating)">
                 star
               </mat-icon>
 
@@ -80,7 +77,7 @@
               <button
                 class="m-c-btn-syllable"
                 mat-flat-button color="warn"
-                *ngFor="let combination of combinations[itemLetter.letter]"
+                *ngFor="let combination of itemLetter.combinations"
                 (click)="listenCombination(combination.p, combination.w, itemLetter.letter)"
                 >
                 {{combination.w}}
@@ -112,7 +109,7 @@
 
 
 <div
-  *ngIf="noLearneds()"
+  *ngIf="(data$ | async).lenght"
   style="padding-top: 0"
   class="m-c-learned-letters center"
   >

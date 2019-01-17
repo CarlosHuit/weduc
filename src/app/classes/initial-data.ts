@@ -3,9 +3,9 @@ import { LearnedLetters } from './learned-letters';
 
 export class InitialData {
   constructor(
-    public words:           Words[],
-    public letters:         Letters,
-    public learnedLetters:  LearnedLetters[],
+    public words:            Words[],
+    public letters:          Letters,
+    public learnedLetters:   LearnedLetters[],
     public similarLetters?:  SimilarLetters[],
     public coordinates?:     Coordinates[],
   ) {}
