@@ -12,7 +12,6 @@ import { ReadingCourseState   } from 'src/app/store/state/reading-course.state';
 import { Store, Select      } from '@ngxs/store';
 import { MediaMatcher     } from '@angular/cdk/layout';
 import { AppState       } from 'src/app/store/state/app.state';
-import { Navigate     } from '@ngxs/router-plugin';
 
 
 @Component({
@@ -69,7 +68,6 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
     this.s2 = this.letterSounds$.subscribe( x => this.letterSounds = x );
     this.s3 = this.hasLearnedLetters$.subscribe( status => this.hasLearnedLetters = status );
 
-    this.instructions('y');
     (window as any).onresize = () => (this.genCols(this.contGrid.nativeElement), this.isMobile);
 
   }
@@ -87,23 +85,9 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
   }
 
-  goToAlphabet = () => {
+  goToAlphabet       = () => this.store.dispatch(new ChangeActiveTab({tab: 'alphabet'}));
+  goToLearnedLetters = () => this.store.dispatch(new ChangeActiveTab({tab: 'learneds'}));
 
-    this.store.dispatch(new ChangeActiveTab({tab: 'alphabet'}));
-    this.instructions('y');
-  }
-
-  goToLearnedLetters = () => {
-
-    this.store.dispatch(new ChangeActiveTab({tab: 'learneds'}));
-
-    const msg1 = 'Aquí aparecerán las letras que vayas aprendiendo';
-    const msg2 = 'Estas son las letras que has aprendido';
-    const msg = this.hasLearnedLetters ? msg1 : msg2;
-
-    this.speechSynthesis.speak(msg, 0.9);
-
-  }
 
   listenWord = (letter: string, word: string) => {
 
@@ -156,15 +140,6 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
   }
 
-  instructions = (type?: string) => {
-
-    const msg1 = `Este es el abecedario. Selecciona una letra para continuar.`;
-    const msg2 = 'El abecedario';
-    const msg = type ? msg1 : msg2;
-
-    this.speechSynthesis.speak(msg);
-
-  }
 
   listenSoundLetter = (letter: string) => {
 

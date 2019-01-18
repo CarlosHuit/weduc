@@ -8,6 +8,7 @@ export enum ReadingCourseActionsType {
   SORT_LEARNED_LETTERS_BY_ALPHABET  = '[Reading Course] Sort Learned Letters By Alphabet',
   SORT_LEARNED_LETTERS_BY_RATING    = '[Reading Course] Sort Learned Letters By Rating',
 
+  LISTEN_MESSAGE             = '[Reading Course Menu] Listen Message',
   CHANGE_SORTER              = '[Reading Course Menu] Change Sorter',
   CHANGE_ACTIVE_TAB          = '[Reading Course Menu] Change Active Tab',
   SELECT_LETTER              = '[Reading Course Menu] Select Letter',
@@ -35,6 +36,16 @@ export class SortLearnedLettersByAlphabet {
 
 export class SortLearnedLettersByRating {
   static readonly type = ReadingCourseActionsType.SORT_LEARNED_LETTERS_BY_RATING;
+}
+
+
+
+
+/* ---------- Actions menu ---------- */
+
+export class ListenMessage {
+  static readonly type = ReadingCourseActionsType.LISTEN_MESSAGE;
+  constructor( public payload: { msg: string } ) {}
 }
 
 export class ChangerSorter {

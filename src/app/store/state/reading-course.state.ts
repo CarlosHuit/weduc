@@ -1,4 +1,4 @@
-import { ReadingCourseModel, ReadingCourseDataModel } from '../models/reading-course/reading-course.model';
+import { ReadingCourseModel, ReadingCourseDataModel, ReadingCourseMenu } from '../models/reading-course/reading-course.model';
 import {
   GetInitialData,
   GetInitialDataSuccess,
@@ -10,12 +10,14 @@ import {
   SelectLetter,
   HighlightLetter,
   ActiveRedirection,
+  ListenMessage,
 } from '../actions/reading-course.actions';
 import { State, Action, StateContext, Selector } from '@ngxs/store';
 import { GetInitialDataService } from 'src/app/services/get-data/get-initial-data.service';
 import { tap } from 'rxjs/operators';
 import { Navigate } from '@ngxs/router-plugin';
 import { SpeechSynthesisService } from 'src/app/services/speech-synthesis.service';
+import { InitialData } from 'src/app/classes/initial-data';
 
 @State<ReadingCourseModel>({
   name: 'readingCourse',
@@ -63,33 +65,45 @@ export class ReadingCourseState {
 
   @Selector()
   static canSpeech({ menu }: ReadingCourseModel) {
-    const val1 = menu.highlight;
-    const val2 = menu.selectedLetter;
-    const val = (
-                  (val1.letter === '' && val1.type === '')
-                  || ( !val1.letter && !val1.type )
-                )
-                &&
-                (val2 === '' || !val2)
-                && !menu.activeRedirection ;
+    const v1 = menu.highlight;
+    const v2 = menu.selectedLetter;
+    const val = ( (v1.letter === '' && v1.type === '') || (!v1.letter && !v1.type) )
+                && (v2 === '' || !v2)
+                && !menu.activeRedirection;
     return val ? true : false;
   }
 
   constructor(
     private _readingCourse: GetInitialDataService,
-    private _speech:        SpeechSynthesisService,
+    private _speech: SpeechSynthesisService,
   ) { }
 
   /* ---------- data handler actions ---------- */
 
   @Action(GetInitialData)
-  getInitialData({ dispatch }: StateContext<ReadingCourseModel>, action: GetInitialData) {
+  getInitialData({ dispatch, getState }: StateContext<ReadingCourseModel>, action: GetInitialData) {
 
-    dispatch(new IsLoadingDataOfReadingCourse({ state: true }));
+    const hasData = getState().data ? true : false;
 
-    return this._readingCourse.getInitialData().pipe(
-      tap(data => dispatch(new GetInitialDataSuccess({ data })))
-    );
+    if (hasData) {
+      console.log('not request data');
+      dispatch(new SortLearnedLettersByAlphabet);
+      dispatch(new ChangeActiveTab({ tab: 'alphabet' }));
+      dispatch(new IsLoadingDataOfReadingCourse({ state: false }));
+      dispatch(new ListenMessage({ msg: 'Este es el abecedario. Selecciona una letra para continuar.' }));
+    }
+
+    if (!hasData) {
+
+      console.log('request data');
+      dispatch(new IsLoadingDataOfReadingCourse({ state: true }));
+
+      return this._readingCourse.getInitialData().pipe(
+        tap(data => dispatch(new GetInitialDataSuccess({ data })))
+      );
+
+    }
+
 
   }
 
@@ -129,17 +143,18 @@ export class ReadingCourseState {
         ...getState().menu,
         highlight: {
           letter: '',
-          type:   ''
+          type: ''
         },
         activeRedirection: false,
-        selectedLetter:    '',
-        activeTab:         'alphabet',
-        sortedBy:          'alphabet'
+        selectedLetter: '',
+        activeTab: 'alphabet',
+        sortedBy: 'alphabet'
       }
     });
-    dispatch( new SortLearnedLettersByAlphabet );
-    dispatch( new ChangeActiveTab({tab: 'alphabet'}) );
-    dispatch( new IsLoadingDataOfReadingCourse({ state: false }) );
+    dispatch(new SortLearnedLettersByAlphabet);
+    dispatch(new ChangeActiveTab({ tab: 'alphabet' }));
+    dispatch(new IsLoadingDataOfReadingCourse({ state: false }));
+    dispatch(new ListenMessage({ msg: 'Este es el abecedario. Selecciona una letra para continuar.' }));
 
   }
 
@@ -194,10 +209,17 @@ export class ReadingCourseState {
     ctx.dispatch(new ChangerSorter({ sorter: 'rating' }));
   }
 
-    /* ---------- menu handler actions ---------- */
+  /* ---------- menu handler actions ---------- */
+
+  @Action(ListenMessage)
+  listenInstructions(ctx: StateContext<ReadingCourseModel>, { payload }: ListenMessage) {
+
+    this._speech.speak(payload.msg);
+
+  }
 
   @Action(ChangerSorter)
-  changerSorter( { patchState, getState }: StateContext<ReadingCourseModel>, { payload }: ChangerSorter) {
+  changerSorter({ patchState, getState }: StateContext<ReadingCourseModel>, { payload }: ChangerSorter) {
     patchState({
       menu: {
         ...getState().menu,
@@ -207,7 +229,8 @@ export class ReadingCourseState {
   }
 
   @Action(ChangeActiveTab)
-  changeActiveTab( { patchState, getState }: StateContext<ReadingCourseModel>, { payload }: ChangeActiveTab ) {
+  changeActiveTab({ patchState, getState, dispatch }: StateContext<ReadingCourseModel>, { payload }: ChangeActiveTab) {
+
 
     patchState({
       menu: {
@@ -216,10 +239,27 @@ export class ReadingCourseState {
       }
     });
 
+    if (payload.tab === 'alphabet') {
+
+      const msg = 'Este es el abecedario. Selecciona una letra para continuar.';
+      dispatch( new ListenMessage({msg}) );
+
+    }
+
+    if (payload.tab === 'learneds') {
+
+      const hasLearnedLetters = getState().data.learnedLetters.length;
+      const msg1 = 'Aquí aparecerán las letras que vayas aprendiendo';
+      const msg2 = 'Estas son las letras que has aprendido';
+      const msg = hasLearnedLetters === 0 ? msg1 : msg2;
+      dispatch( new ListenMessage({msg}) );
+
+    }
+
   }
 
   @Action(SelectLetter)
-  selectLetter( { patchState, getState }: StateContext<ReadingCourseModel>, { payload }: SelectLetter ) {
+  selectLetter({ patchState, getState }: StateContext<ReadingCourseModel>, { payload }: SelectLetter) {
 
     patchState({
       menu: {
@@ -239,7 +279,7 @@ export class ReadingCourseState {
         selectedLetter: payload.letter,
         highlight: {
           letter: payload.letter,
-          type:   payload.type,
+          type: payload.type,
         },
       }
     });
@@ -249,7 +289,7 @@ export class ReadingCourseState {
   @Action(ActiveRedirection)
   activeRedirection({ patchState, getState, dispatch }: StateContext<ReadingCourseModel>, { payload }: ActiveRedirection) {
 
-    dispatch( new SelectLetter({letter: payload.letter}) );
+    dispatch(new SelectLetter({ letter: payload.letter }));
     patchState({
       menu: {
         ...getState().menu,
@@ -259,8 +299,8 @@ export class ReadingCourseState {
 
 
     const redirectionsucces = () => {
-      dispatch( new Navigate([payload.url] ));
-      dispatch( new SelectLetter({letter: ''}));
+      dispatch(new Navigate([payload.url]));
+      dispatch(new SelectLetter({ letter: '' }));
       patchState({
         menu: {
           ...getState().menu,
@@ -277,6 +317,8 @@ export class ReadingCourseState {
     });
 
   }
+
+
 
 
 }
