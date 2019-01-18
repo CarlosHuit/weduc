@@ -1,10 +1,10 @@
-import { Component, Input, EventEmitter, Output, OnDestroy, OnInit   } from '@angular/core';
-import { Select, Store } from '@ngxs/store';
-import { ReadingCourseState } from 'src/app/store/state/reading-course.state';
+import { Component, Input, OnDestroy, OnInit   } from '@angular/core';
+import { ActiveRedirection, SelectLetter } from 'src/app/store/actions/reading-course/reading-course-menu.actions';
 import { Observable, Subscription } from 'rxjs';
-import { AppState } from 'src/app/store/state/app.state';
 import { SpeechSynthesisService } from 'src/app/services/speech-synthesis.service';
-import { ActiveRedirection, SelectLetter } from 'src/app/store/actions/reading-course.actions';
+import { ReadingCourseState } from 'src/app/store/state/reading-course.state';
+import { Select, Store } from '@ngxs/store';
+import { AppState } from 'src/app/store/state/app.state';
 
 @Component({
   selector: 'app-alphabet',

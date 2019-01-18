@@ -14,6 +14,10 @@ import {
   MemoryGame, Historial, Couples,
 } from '../../classes/letters-detail-data';
 import { GetSimilarLettersService } from '../../services/get-data/get-similar-letters.service';
+import { Store, Select } from '@ngxs/store';
+import { ReadingCourseState } from 'src/app/store/state/reading-course.state';
+import { map } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
 
 
 
@@ -48,6 +52,9 @@ export class LettersDetailComponent implements OnInit, OnDestroy {
   idOPtions:      {};
   currentIds:     string[];
 
+  @Select(ReadingCourseState.pandas('s')) babyPandas$: Observable<string[]>;
+  pandasSubs: Subscription;
+
   constructor(
     private router:   Router,
     private _shuffle: ShuffleService,
@@ -60,6 +67,7 @@ export class LettersDetailComponent implements OnInit, OnDestroy {
     private speech:   SpeechSynthesisService,
     private _sendData: SdLettersDetailService,
     private _sl:       GetSimilarLettersService,
+    private store: Store
   ) {
     this.letterParam    = this._route.snapshot.paramMap.get('letter');
 
@@ -67,10 +75,12 @@ export class LettersDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getData(this.letterParam);
+    this.pandasSubs = this.babyPandas$.subscribe(x => console.log(x));
   }
 
   ngOnDestroy () {
     this.speech.cancel();
+    this.pandasSubs.unsubscribe();
   }
 
   getData = (letter: string) => {
@@ -133,9 +143,9 @@ export class LettersDetailComponent implements OnInit, OnDestroy {
 
     const type   = this.currentLetter === this.currentLetter.toLowerCase() ? 'minúscula' : 'mayúscula';
     const letter = JSON.parse(localStorage.getItem('letter_sounds'))[this.letterParam];
-
     const msg    = `Encuentra la pareja de letras: ${letter}.. "${type}"`;
     const speak  = this.speech.speak(msg);
+
 
     speak.addEventListener('end', e => ( this.canPlayGame = true, this.show = false));
 

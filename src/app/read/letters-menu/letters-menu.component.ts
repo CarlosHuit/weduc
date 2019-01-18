@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild, OnDestroy, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { GetInitialData } from 'src/app/store/actions/reading-course/reading-course-data.actions';
 import {
-  GetInitialData,
   ChangeActiveTab,
   SelectLetter,
   HighlightLetter,
   ActiveRedirection
-} from 'src/app/store/actions/reading-course.actions';
+} from 'src/app/store/actions/reading-course/reading-course-menu.actions';
 import { Observable, Subscription } from 'rxjs';
 import { SpeechSynthesisService } from '../../services/speech-synthesis.service';
 import { ReadingCourseState   } from 'src/app/store/state/reading-course.state';

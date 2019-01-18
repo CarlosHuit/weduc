@@ -31,7 +31,7 @@ export class Words {
 export class SimilarLetters {
   constructor(
     public l: string,
-    public m: string,
+    public sl: string,
   ) {}
 }
 

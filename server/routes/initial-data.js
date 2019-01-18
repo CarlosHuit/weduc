@@ -24,7 +24,7 @@ app.get('/', verifyToken, validateUser, async (req, res) => {
 
     l = lLetters ? lLetters.learnedLetters : [];
     words.forEach(x => w.push({ l: x.letter, w: x.words }))
-    sL.forEach(x => t.push({l: x.letter, m:  x.similarLetters}))
+    sL.forEach(x => t.push({l: x.letter, sl:  x.similarLetters}))
     
     res.status(200).json({
         words:          w,

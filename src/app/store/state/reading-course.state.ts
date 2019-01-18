@@ -1,23 +1,25 @@
-import { ReadingCourseModel, ReadingCourseDataModel, ReadingCourseMenu } from '../models/reading-course/reading-course.model';
+import { ReadingCourseModel } from '../models/reading-course/reading-course.model';
 import {
   GetInitialData,
   GetInitialDataSuccess,
   IsLoadingDataOfReadingCourse,
   SortLearnedLettersByAlphabet,
   SortLearnedLettersByRating,
+} from '../actions/reading-course/reading-course-data.actions';
+import {
   ChangerSorter,
   ChangeActiveTab,
   SelectLetter,
   HighlightLetter,
   ActiveRedirection,
   ListenMessage,
-} from '../actions/reading-course.actions';
-import { State, Action, StateContext, Selector } from '@ngxs/store';
+} from '../actions/reading-course/reading-course-menu.actions';
+import { State, Action, StateContext, Selector, createSelector } from '@ngxs/store';
 import { GetInitialDataService } from 'src/app/services/get-data/get-initial-data.service';
 import { tap } from 'rxjs/operators';
 import { Navigate } from '@ngxs/router-plugin';
 import { SpeechSynthesisService } from 'src/app/services/speech-synthesis.service';
-import { InitialData } from 'src/app/classes/initial-data';
+import { ReadingCourseDataModel } from '../models/reading-course/data/reading-course-data.model';
 
 @State<ReadingCourseModel>({
   name: 'readingCourse',
@@ -50,6 +52,11 @@ export class ReadingCourseState {
     return data.learnedLetters.length > 0 ? true : false;
   }
 
+  @Selector()
+  static currentLetter({ data }: ReadingCourseModel) {
+    return data.currentLetter;
+  }
+
 
   @Selector()
   static sortedBy({ menu }: ReadingCourseModel) { return menu.sortedBy; }
@@ -61,7 +68,10 @@ export class ReadingCourseState {
   static selectedLetter({ menu }: ReadingCourseModel) { return menu.selectedLetter; }
 
   @Selector()
-  static highlightLetter({ menu }: ReadingCourseModel) { return menu.highlight; }
+  static highlightLetter({ menu }: ReadingCourseModel) {
+    console.log('ss');
+    return menu.sortedBy;
+  }
 
   @Selector()
   static canSpeech({ menu }: ReadingCourseModel) {
@@ -73,13 +83,23 @@ export class ReadingCourseState {
     return val ? true : false;
   }
 
+
+  static pandas(letter: string) {
+    return createSelector([ReadingCourseState], (state: ReadingCourseModel) => {
+      console.log('you send the letter:' + letter);
+      return state.data.lettersMenu.filter(x => x.letter === letter);
+    });
+  }
+​
+
+
   constructor(
     private _readingCourse: GetInitialDataService,
     private _speech: SpeechSynthesisService,
   ) { }
 
-  /* ---------- data handler actions ---------- */
 
+  /* ---------- data handler actions ---------- */
   @Action(GetInitialData)
   getInitialData({ dispatch, getState }: StateContext<ReadingCourseModel>, action: GetInitialData) {
 
@@ -132,9 +152,11 @@ export class ReadingCourseState {
     lLetters.forEach(l => l['combinations'] = combinations[l.letter]);
 
     const data: ReadingCourseDataModel = {
-      lettersMenu: alphabetList,
+      lettersMenu:    alphabetList,
       learnedLetters: lLetters,
-      letterSounds: payload.data.letters.sound_letters,
+      letterSounds:   payload.data.letters.sound_letters,
+      currentLetter:  '',
+      similarLetters: payload.data.similarLetters
     };
 
     patchState({
@@ -209,8 +231,8 @@ export class ReadingCourseState {
     ctx.dispatch(new ChangerSorter({ sorter: 'rating' }));
   }
 
-  /* ---------- menu handler actions ---------- */
 
+  /* ---------- menu handler actions ---------- */
   @Action(ListenMessage)
   listenInstructions(ctx: StateContext<ReadingCourseModel>, { payload }: ListenMessage) {
 
@@ -299,12 +321,18 @@ export class ReadingCourseState {
 
 
     const redirectionsucces = () => {
-      dispatch(new Navigate([payload.url]));
-      dispatch(new SelectLetter({ letter: '' }));
+      dispatch([
+        new Navigate([payload.url]),
+        new SelectLetter({ letter: '' })
+      ]);
       patchState({
         menu: {
           ...getState().menu,
           activeRedirection: false
+        },
+        data: {
+          ...getState().data,
+          currentLetter: payload.letter
         }
       });
 
@@ -319,6 +347,8 @@ export class ReadingCourseState {
   }
 
 
+  /* letterDetail hadler actions */
+  // @Action )
 
 
 }

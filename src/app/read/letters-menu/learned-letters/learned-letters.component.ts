@@ -7,7 +7,10 @@ import { Observable             } from 'rxjs';
 import { AppState               } from 'src/app/store/state/app.state';
 import { Navigate               } from '@ngxs/router-plugin';
 import { SpeechSynthesisService } from 'src/app/services/speech-synthesis.service';
-import { SortLearnedLettersByRating, SortLearnedLettersByAlphabet } from 'src/app/store/actions/reading-course.actions';
+import {
+  SortLearnedLettersByRating,
+  SortLearnedLettersByAlphabet
+} from 'src/app/store/actions/reading-course/reading-course-data.actions';
 
 @Component({
   selector: 'app-learned-letters',
