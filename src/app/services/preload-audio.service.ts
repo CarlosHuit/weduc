@@ -23,6 +23,8 @@ export class PreloadAudioService {
     this.incorrect.pause();
     this.incorrect.currentTime = 0;
     this.incorrect.play();
+
+    return this.incorrect;
   }
 
 }

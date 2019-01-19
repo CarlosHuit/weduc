@@ -37,6 +37,6 @@ export class Words {
 export class SimilarLetters {
   constructor(
     public l: string,
-    public sl: string,
+    public sl: string[],
   ) {}
 }

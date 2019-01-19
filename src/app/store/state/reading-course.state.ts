@@ -20,12 +20,39 @@ import { tap } from 'rxjs/operators';
 import { Navigate } from '@ngxs/router-plugin';
 import { SpeechSynthesisService } from 'src/app/services/speech-synthesis.service';
 import { ReadingCourseDataModel } from '../models/reading-course/data/reading-course-data.model';
+import {
+  SetInitialDataLD,
+  IsSettingDataLD,
+  ShowLetterCardLD,
+  HideLetterCardLD,
+  ShowAllCardsLD,
+  HideAllCardsLD,
+  SelectLetterLD,
+  AddFirstSelectionLD,
+  AddSecondSelectionLD,
+  LettersAreSameLD,
+  LettersAreNotSameLD,
+  ValidateSelectionsLD,
+  ShowSuccessScreenLD,
+  HideSuccessScreenLD
+} from '../actions/reading-course/reading-course-letter-detail.actions';
+import { ShuffleService } from 'src/app/services/shuffle/shuffle.service';
+import { GenerateIdsService } from 'src/app/services/generate-ids/generate-ids.service';
+import { SLData } from '../models/reading-course/letter-detail/reading-course-letter-detail.model';
+import { PreloadAudioService } from 'src/app/services/preload-audio.service';
 
 @State<ReadingCourseModel>({
   name: 'readingCourse',
 })
 
 export class ReadingCourseState {
+
+
+  /* Selectors reading course data */
+  @Selector()
+  static hasData(state: ReadingCourseModel) {
+    return state.data ? true : false;
+   }
 
   @Selector()
   static isLoadingData({ data }: ReadingCourseModel) {
@@ -58,6 +85,8 @@ export class ReadingCourseState {
   }
 
 
+
+  /* Selector menu */
   @Selector()
   static sortedBy({ menu }: ReadingCourseModel) { return menu.sortedBy; }
 
@@ -69,7 +98,6 @@ export class ReadingCourseState {
 
   @Selector()
   static highlightLetter({ menu }: ReadingCourseModel) {
-    console.log('ss');
     return menu.sortedBy;
   }
 
@@ -77,9 +105,9 @@ export class ReadingCourseState {
   static canSpeech({ menu }: ReadingCourseModel) {
     const v1 = menu.highlight;
     const v2 = menu.selectedLetter;
-    const val = ( (v1.letter === '' && v1.type === '') || (!v1.letter && !v1.type) )
-                && (v2 === '' || !v2)
-                && !menu.activeRedirection;
+    const val = ((v1.letter === '' && v1.type === '') || (!v1.letter && !v1.type))
+      && (v2 === '' || !v2)
+      && !menu.activeRedirection;
     return val ? true : false;
   }
 
@@ -90,12 +118,40 @@ export class ReadingCourseState {
       return state.data.lettersMenu.filter(x => x.letter === letter);
     });
   }
-​
 
+
+
+  /*---- selectors letter-detail ----*/
+  @Selector()
+  static sLCurrentData({ letterDetail }: ReadingCourseModel) { return letterDetail.currentData; }
+
+  @Selector()
+  static sLIsSettingData({ letterDetail }: ReadingCourseModel) { return letterDetail.isSettingData; }
+
+  @Selector()
+  static sLShowLetterCard({ letterDetail }: ReadingCourseModel) { return letterDetail.showLetterCard; }
+
+  @Selector()
+  static sLShowAllCards({ letterDetail }: ReadingCourseModel) { return letterDetail.showAllCards; }
+
+  @Selector()
+  static sLsel1({letterDetail}: ReadingCourseModel) { return letterDetail.selections.selection1; }
+
+  @Selector()
+  static sLsel2({letterDetail}: ReadingCourseModel) { return letterDetail.selections.selection2; }
+
+  @Selector()
+  static sLCanPlayGame({letterDetail}: ReadingCourseModel) { return letterDetail.canPlayGame; }
+
+  @Selector()
+  static sLshowSuccessScreen({letterDetail}: ReadingCourseModel) { return letterDetail.showSuccessScreen; }
 
   constructor(
     private _readingCourse: GetInitialDataService,
     private _speech: SpeechSynthesisService,
+    private _shuffle: ShuffleService,
+    private _ids: GenerateIdsService,
+    private _audio:   PreloadAudioService,
   ) { }
 
 
@@ -107,10 +163,12 @@ export class ReadingCourseState {
 
     if (hasData) {
       console.log('not request data');
-      dispatch(new SortLearnedLettersByAlphabet);
-      dispatch(new ChangeActiveTab({ tab: 'alphabet' }));
-      dispatch(new IsLoadingDataOfReadingCourse({ state: false }));
-      dispatch(new ListenMessage({ msg: 'Este es el abecedario. Selecciona una letra para continuar.' }));
+      dispatch([
+        new SortLearnedLettersByAlphabet(),
+        new ChangeActiveTab({ tab: 'alphabet' }),
+        new IsLoadingDataOfReadingCourse({ state: false }),
+        new ListenMessage({ msg: 'Este es el abecedario. Selecciona una letra para continuar.' }),
+      ]);
     }
 
     if (!hasData) {
@@ -152,10 +210,10 @@ export class ReadingCourseState {
     lLetters.forEach(l => l['combinations'] = combinations[l.letter]);
 
     const data: ReadingCourseDataModel = {
-      lettersMenu:    alphabetList,
+      lettersMenu: alphabetList,
       learnedLetters: lLetters,
-      letterSounds:   payload.data.letters.sound_letters,
-      currentLetter:  '',
+      letterSounds: payload.data.letters.sound_letters,
+      currentLetter: '',
       similarLetters: payload.data.similarLetters
     };
 
@@ -234,7 +292,7 @@ export class ReadingCourseState {
 
   /* ---------- menu handler actions ---------- */
   @Action(ListenMessage)
-  listenInstructions(ctx: StateContext<ReadingCourseModel>, { payload }: ListenMessage) {
+  listenMessage(ctx: StateContext<ReadingCourseModel>, { payload }: ListenMessage) {
 
     this._speech.speak(payload.msg);
 
@@ -264,7 +322,7 @@ export class ReadingCourseState {
     if (payload.tab === 'alphabet') {
 
       const msg = 'Este es el abecedario. Selecciona una letra para continuar.';
-      dispatch( new ListenMessage({msg}) );
+      dispatch(new ListenMessage({ msg }));
 
     }
 
@@ -274,7 +332,7 @@ export class ReadingCourseState {
       const msg1 = 'Aquí aparecerán las letras que vayas aprendiendo';
       const msg2 = 'Estas son las letras que has aprendido';
       const msg = hasLearnedLetters === 0 ? msg1 : msg2;
-      dispatch( new ListenMessage({msg}) );
+      dispatch(new ListenMessage({ msg }));
 
     }
 
@@ -347,66 +405,287 @@ export class ReadingCourseState {
   }
 
 
-  /* letterDetail hadler actions */
-  // @Action )
+
+  /* Letter Detail Actions */
+  @Action(SetInitialDataLD)
+  setInitialDataLD({ getState, dispatch, patchState }: StateContext<ReadingCourseModel>, action: SetInitialDataLD) {
+
+    const data = getState().data;
+    this._audio.loadAudio();
+
+    if ( !data.currentLetter || !data || data.currentLetter === '') {
+      dispatch( new Navigate(['/lectura/abecedario']));
+    }
+
+
+    if (data && data.currentLetter && data.currentLetter !== '') {
+
+      dispatch( new IsSettingDataLD({state: true}) );
+
+      const letterLC = data.currentLetter.toLowerCase();
+      const letterUC = data.currentLetter.toUpperCase();
+
+      const smLowerCase = [...data.similarLetters.find(x => x.l === letterLC ).sl];
+      const smUpperCase = [...data.similarLetters.find(x => x.l === letterUC ).sl];
+
+      const idsLower = this._ids.generateIDs(this._shuffle.shuffle(smLowerCase, letterLC, 2));
+      const idsUpper = this._ids.generateIDs(this._shuffle.shuffle(smUpperCase, letterUC, 2));
+
+      const dataLowerCase = new SLData(letterLC, idsLower, 'minúscula');
+      const dataUpperCase = new SLData(letterUC, idsUpper, 'mayúscula');
+
+      patchState({
+        ...getState(),
+        letterDetail: {
+          ...getState().letterDetail,
+          data:           [ dataLowerCase, dataUpperCase ],
+          selections:     { selection1: null, selection2: null },
+          currentData:    dataLowerCase,
+          showLetterCard: false,
+          showAllCards:   true,
+          canPlayGame:    false,
+          showSuccessScreen: false,
+        }
+      });
+
+      dispatch( [
+        new IsSettingDataLD({state: false}),
+        new ShowLetterCardLD()
+      ] );
+
+    }
+
+
+  }
+
+  @Action(IsSettingDataLD)
+  isSettingDataLD({ patchState, getState }: StateContext<ReadingCourseModel>, { payload }: IsSettingDataLD) {
+    patchState({
+      letterDetail: {
+        ...getState().letterDetail,
+        isSettingData: payload.state
+      }
+    });
+  }
+
+  @Action(ShowLetterCardLD)
+  showLetterCardLD( { patchState, getState, dispatch }: StateContext<ReadingCourseModel>, action: ShowLetterCardLD ) {
+
+    const state  = getState();
+    const letter = state.data.currentLetter;
+    const sound  = state.data.letterSounds[letter];
+    const type   = state.letterDetail.currentData.type;
+    const msg    = `Esta letra es la ... ... ${sound} ... ${type}`;
+
+    patchState({
+      letterDetail: { ...state.letterDetail, showLetterCard: true }
+    });
+
+    dispatch( new ListenMessage({msg}));
+
+  }
+
+  @Action(HideLetterCardLD)
+  hideLetterCardLD({ patchState, getState, dispatch }: StateContext<ReadingCourseModel>, { payload }: HideLetterCardLD) {
+
+    patchState({
+      letterDetail: {
+        ...getState().letterDetail,
+        showLetterCard: false
+      }
+    });
+
+    if ( payload.listenMsg ) {
+
+      const state  = getState();
+      const letter = state.letterDetail.currentData.letter.toLowerCase();
+      const sound  = state.data.letterSounds[letter];
+      const type   = state.letterDetail.currentData.type;
+      const msg    = `Encuentra la pareja de letras: ${sound}.. "${type}"`;
+
+      this._speech.speak(msg).addEventListener('end', () => dispatch( new HideAllCardsLD() ));
+
+    }
+
+  }
+
+  @Action(ShowAllCardsLD)
+  showAllCardsLD( { getState, patchState }: StateContext<ReadingCourseModel>, action: ShowAllCardsLD  ) {
+    patchState({
+      letterDetail: {
+        ...getState().letterDetail,
+        showAllCards: true,
+        canPlayGame:  false
+      }
+    });
+  }
+
+  @Action(HideAllCardsLD)
+  hideAllCardsLD( { getState, patchState }: StateContext<ReadingCourseModel>, action: ShowAllCardsLD  ) {
+
+    patchState({
+      letterDetail: {
+        ...getState().letterDetail,
+        showAllCards: false,
+        canPlayGame:  true
+      }
+    });
+
+  }
+
+  @Action(SelectLetterLD)
+  selectLetterLD( { getState, dispatch }: StateContext<ReadingCourseModel>, { payload }: SelectLetterLD ) {
+
+    const ldData    = getState().letterDetail;
+    const letter    = ldData.currentData.letter;
+    const sel       = ldData.selections;
+    const isCorrect = payload.letterId[0] === letter;
+    const letterId  = payload.letterId;
+
+    return !sel.selection1
+      ? dispatch( new AddFirstSelectionLD( { letterId , isCorrect } ) )
+      : dispatch( new AddSecondSelectionLD( { letterId , isCorrect } ) );
+
+  }
+
+  @Action(AddFirstSelectionLD)
+  addFirstSelectionLD( { getState, patchState, dispatch }: StateContext<ReadingCourseModel>, { payload }: AddFirstSelectionLD ) {
+    console.log('Add First Letter');
+    const state =  getState();
+    const stateLD = state.letterDetail;
+
+    patchState({
+      letterDetail: {
+        ...stateLD,
+        selections: { ...stateLD.selections, selection1: payload.letterId }
+      }
+    });
+
+    if ( payload.isCorrect) {
+
+      const sound = state.data.letterSounds[payload.letterId[0]];
+      const type  = stateLD.currentData.type;
+      dispatch( new ListenMessage({msg: `${sound} ${type}`}));
+
+    }
+
+
+    if ( !payload.isCorrect ) { this._audio.playAudio(); }
+
+  }
+
+  @Action(AddSecondSelectionLD)
+  addSecondSelectionLD( { getState, patchState, dispatch }: StateContext<ReadingCourseModel>, { payload }: AddSecondSelectionLD ) {
+
+    console.log('Add Second Letter');
+    const state  = getState();
+    const sound  = state.data.letterSounds[payload.letterId[0]];
+    const type   = state.letterDetail.currentData.type;
+    const msg    = `${sound} ${type}`;
+
+
+    patchState({
+      letterDetail: {
+        ...state.letterDetail,
+        selections: {
+          ...state.letterDetail.selections,
+          selection2: payload.letterId
+        },
+        canPlayGame: false
+      }
+    });
+
+
+    if ( payload.isCorrect) {
+
+      const speech = this._speech.speak(msg);
+
+      speech.addEventListener('end', function x() {
+        dispatch( new ValidateSelectionsLD() );
+        speech.removeEventListener('end', x);
+      });
+
+    }
+
+    if ( !payload.isCorrect ) {
+
+      const audio = this._audio.playAudio();
+
+      audio.addEventListener('ended', function x () {
+        dispatch( new ValidateSelectionsLD());
+        audio.removeEventListener('ended', x);
+      });
+
+    }
+
+
+  }
+
+  @Action(ValidateSelectionsLD)
+  validateSelectionsLD( { getState, dispatch }: StateContext<ReadingCourseModel>, action: ValidateSelectionsLD ) {
+
+    const state   = getState();
+    const sel     = state.letterDetail.selections;
+    const letter  = state.letterDetail.currentData.letter;
+    const same    = sel.selection1[0] === letter && sel.selection2[0] === letter;
+    const notSame = sel.selection1[0] !== letter || sel.selection2[0] !== letter;
+
+    return same
+      ? dispatch(new LettersAreSameLD())
+      : notSame
+        ? dispatch(new LettersAreNotSameLD())
+        : null;
+
+  }
+
+  @Action(LettersAreSameLD)
+  lettersAreSameLD( { getState, patchState, dispatch }: StateContext<ReadingCourseModel>, action: LettersAreSameLD ) {
+    dispatch( new ShowSuccessScreenLD() );
+  }
+
+  @Action(LettersAreNotSameLD)
+  lettersAreNotSameLD( { getState, patchState }: StateContext<ReadingCourseModel>, action: LettersAreSameLD ) {
+    console.log('are not same');
+    patchState({
+      letterDetail: {
+        ...getState().letterDetail,
+        canPlayGame: true,
+        selections: {
+          selection1: null,
+          selection2: null,
+        }
+      },
+
+    });
+
+  }
+
+  @Action(ShowSuccessScreenLD)
+  showSuccessScreenLD( { getState, patchState }: StateContext<ReadingCourseModel>, action: ShowSuccessScreenLD ) {
+
+    patchState({
+      letterDetail: {
+        ...getState().letterDetail,
+        showSuccessScreen: true
+      }
+    });
+
+  }
+
+  @Action(HideSuccessScreenLD)
+  hideSuccessScreenLD( { getState, patchState }: StateContext<ReadingCourseModel>, action: ShowSuccessScreenLD ) {
+
+    patchState({
+      letterDetail: {
+        ...getState().letterDetail,
+        showSuccessScreen: false
+      }
+    });
+
+  }
+
 
 
 }
 
 
-
-/* sortAlpha = () => {
-
-  this.addSortingCount('alphabet');
-
-  this.sortRatingState = false;
-  this.sortedState.alpha = true;
-  this.sortedState.rating = false;
-
-  if (!this.sortAlphaState) {
-
-    this.learneds.sort((a, b) => {
-
-      if (a.letter > b.letter) { return 1; }
-      if (a.letter < b.letter) { return -1; }
-      return 0;
-    });
-
-    this.sortAlphaState = !this.sortAlphaState;
-
-  } else {
-
-    this.learneds.sort((b, a) => {
-
-      if (a.letter > b.letter) { return 1; }
-      if (a.letter < b.letter) { return -1; }
-
-      return 0;
-    });
-
-    this.sortAlphaState = !this.sortAlphaState;
-
-  }
-}
- */
-
-/* sortRating = () => {
-
-  this.addSortingCount('rating');
-
-  this.sortAlphaState = false;
-  this.sortedState.alpha = false;
-  this.sortedState.rating = true;
-
-  if (!this.sortRatingState) {
-
-    this.learneds.sort((a, b) => b.rating - a.rating);
-    this.sortRatingState = !this.sortRatingState;
-
-  } else {
-
-    this.learneds.sort((b, a) => b.rating - a.rating);
-    this.sortRatingState = !this.sortRatingState;
-
-  }
-} */

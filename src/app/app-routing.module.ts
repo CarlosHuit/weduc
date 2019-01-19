@@ -13,6 +13,9 @@ import { FindLetterComponent      } from './read/find-letter/find-letter.compone
 import { SelectWordsComponent     } from './read/select-words/select-words.component';
 import { PronounceLetterComponent } from './read/pronounce-letter/pronounce-letter.component';
 import { CourseDetailComponent    } from './course-detail/course-detail.component';
+import { CheckDataReadingCourseGuard } from './check-data-reading-course.guard';
+
+const vAuthDataRC = [AuthGuard, CheckDataReadingCourseGuard];
 
 const routes: Routes = [
 
@@ -21,12 +24,12 @@ const routes: Routes = [
   { path: 'signup',                                   component: SignupComponent,                 canActivate: [IsLoggedInGuard]  },
   { path: ':course',                                  component: CourseDetailComponent,           canActivate: [AuthGuard]        },
   { path: 'lectura/abecedario',                       component: LettersMenuComponent,            canActivate: [AuthGuard]        },
-  { path: 'lectura/detalle-letra/:letter',            component: LettersDetailComponent,          canActivate: [AuthGuard]        },
-  { path: 'lectura/juego/:letter',                    component: GameComponent,                   canActivate: [AuthGuard]        },
-  { path: 'lectura/dibujar-letra/:letter',            component: DrawLetterComponent,             canActivate: [AuthGuard]        },
-  { path: 'lectura/encontrar-letras/:letter',         component: FindLetterComponent,             canActivate: [AuthGuard]        },
-  { path: 'lectura/seleccionar-palabras/:letter',     component: SelectWordsComponent,            canActivate: [AuthGuard]        },
-  { path: 'lectura/pronunciar-letra/:letter',         component: PronounceLetterComponent,        canActivate: [AuthGuard]        }
+  { path: 'lectura/detalle-letra/:letter',            component: LettersDetailComponent,          canActivate: vAuthDataRC        },
+  { path: 'lectura/juego/:letter',                    component: GameComponent,                   canActivate: vAuthDataRC        },
+  { path: 'lectura/dibujar-letra/:letter',            component: DrawLetterComponent,             canActivate: vAuthDataRC        },
+  { path: 'lectura/encontrar-letras/:letter',         component: FindLetterComponent,             canActivate: vAuthDataRC        },
+  { path: 'lectura/seleccionar-palabras/:letter',     component: SelectWordsComponent,            canActivate: vAuthDataRC        },
+  { path: 'lectura/pronunciar-letra/:letter',         component: PronounceLetterComponent,        canActivate: vAuthDataRC        }
 
 ];
 
