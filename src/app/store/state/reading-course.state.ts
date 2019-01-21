@@ -50,7 +50,7 @@ import { PreloadAudioService } from 'src/app/services/preload-audio.service';
 export class ReadingCourseState {
 
 
-  /* Selectors reading course data */
+  /* ---------- Selectors reading course data ---------- */
   @Selector()
   static hasData(state: ReadingCourseModel) {
     return state.data ? true : false;
@@ -88,7 +88,7 @@ export class ReadingCourseState {
 
 
 
-  /* Selector menu */
+  /* ---------- Selectors reading course menu ---------- */
   @Selector()
   static sortedBy({ menu }: ReadingCourseModel) { return menu.sortedBy; }
 
@@ -116,44 +116,43 @@ export class ReadingCourseState {
 
   static pandas(letter: string) {
     return createSelector([ReadingCourseState], (state: ReadingCourseModel) => {
-      console.log('you send the letter:' + letter);
       return state.data.lettersMenu.filter(x => x.letter === letter);
     });
   }
 
 
 
-  /*---- selectors letter-detail ----*/
+  /*---------- selectors reading course letter-detail ----------*/
   @Selector()
-  static sLCurrentData({ letterDetail }: ReadingCourseModel) { return letterDetail.currentData; }
+  static ldCurrentData({ letterDetail }: ReadingCourseModel) { return letterDetail.currentData; }
 
   @Selector()
-  static sLIsSettingData({ letterDetail }: ReadingCourseModel) { return letterDetail.isSettingData; }
+  static ldIsSettingData({ letterDetail }: ReadingCourseModel) { return letterDetail.isSettingData; }
 
   @Selector()
-  static sLShowLetterCard({ letterDetail }: ReadingCourseModel) { return letterDetail.showLetterCard; }
+  static ldShowLetterCard({ letterDetail }: ReadingCourseModel) { return letterDetail.showLetterCard; }
 
   @Selector()
-  static sLShowAllCards({ letterDetail }: ReadingCourseModel) { return letterDetail.showAllCards; }
+  static ldShowAllCards({ letterDetail }: ReadingCourseModel) { return letterDetail.showAllCards; }
 
   @Selector()
-  static sLsel1({ letterDetail }: ReadingCourseModel) { return letterDetail.selections.selection1; }
+  static ldsel1({ letterDetail }: ReadingCourseModel) { return letterDetail.selections.selection1; }
 
   @Selector()
-  static sLsel2({ letterDetail }: ReadingCourseModel) { return letterDetail.selections.selection2; }
+  static ldsel2({ letterDetail }: ReadingCourseModel) { return letterDetail.selections.selection2; }
 
   @Selector()
-  static sLCanPlayGame({ letterDetail }: ReadingCourseModel) { return letterDetail.canPlayGame; }
+  static ldCanPlayGame({ letterDetail }: ReadingCourseModel) { return letterDetail.canPlayGame; }
 
   @Selector()
-  static sLshowSuccessScreen({ letterDetail }: ReadingCourseModel) { return letterDetail.showSuccessScreen; }
+  static ldshowSuccessScreen({ letterDetail }: ReadingCourseModel) { return letterDetail.showSuccessScreen; }
 
   constructor(
     private _readingCourse: GetInitialDataService,
-    private _speech: SpeechSynthesisService,
-    private _shuffle: ShuffleService,
-    private _ids: GenerateIdsService,
-    private _audio: PreloadAudioService,
+    private _shuffle:       ShuffleService,
+    private _speech:        SpeechSynthesisService,
+    private _audio:         PreloadAudioService,
+    private _ids:           GenerateIdsService,
   ) { }
 
 
@@ -164,7 +163,6 @@ export class ReadingCourseState {
     const hasData = getState().data ? true : false;
 
     if (hasData) {
-      console.log('not request data');
       dispatch([
         new SortLearnedLettersByAlphabet(),
         new ChangeActiveTab({ tab: 'alphabet' }),
@@ -175,7 +173,6 @@ export class ReadingCourseState {
 
     if (!hasData) {
 
-      console.log('request data');
       dispatch(new IsLoadingDataOfReadingCourse({ state: true }));
 
       return this._readingCourse.getInitialData().pipe(
@@ -465,17 +462,11 @@ export class ReadingCourseState {
   @Action(SetCurrentData)
   setCurrentData({ patchState, getState, dispatch }: StateContext<ReadingCourseModel>, action: SetCurrentData) {
 
-    const letter = getState().data.currentLetter;
     const state = getState().letterDetail;
     const index = state.currentIndex === null ? -1 : state.currentIndex;
     const nextIndex = index + 1;
 
-    if (nextIndex >= state.data.length) {
-      dispatch( new Navigate([`lectura/juego/${letter}`]) );
-    }
-
     if (nextIndex < state.data.length) {
-      console.log(new Date(), 'settingData', `nextIndex ${nextIndex}`);
       patchState({
         letterDetail: {
           ...getState().letterDetail,
@@ -677,18 +668,37 @@ export class ReadingCourseState {
   }
 
   @Action(LettersAreSameLD)
-  lettersAreSameLD({ dispatch }: StateContext<ReadingCourseModel>, action: LettersAreSameLD) {
+  lettersAreSameLD({ dispatch, getState }: StateContext<ReadingCourseModel>, action: LettersAreSameLD) {
 
     dispatch(new ShowSuccessScreenLD());
 
     const speech = this._speech.speak('Bien Hecho!', .90);
     speech.addEventListener('end', function a() {
 
-      dispatch(new SetCurrentData());
-      dispatch([
-        new HideSuccessScreenLD(),
-        new ShowLetterCardLD()
-      ]);
+      const letter = getState().data.currentLetter;
+      const state = getState().letterDetail;
+      const index = state.currentIndex === null ? -1 : state.currentIndex;
+      const nextIndex = index + 1;
+
+      /* Redirection */
+      if (nextIndex >= state.data.length) {
+        dispatch([
+          new Navigate([`lectura/juego/${letter}`]),
+          new ResetLetterDetailData()
+        ]);
+
+      }
+
+      /* Change Data */
+      if (nextIndex < state.data.length) {
+        dispatch([
+          new SetCurrentData(),
+          new ShowLetterCardLD(),
+          new HideSuccessScreenLD(),
+        ]);
+      }
+
+
 
       speech.removeEventListener('end', a);
 
@@ -738,7 +748,7 @@ export class ReadingCourseState {
   }
 
   @Action(ResetLetterDetailData)
-  resetLetterDetailData( { patchState }: StateContext<ReadingCourseModel>, action: ResetLetterDetailData ) {
+  resetLetterDetailData({ patchState }: StateContext<ReadingCourseModel>, action: ResetLetterDetailData) {
     patchState({ letterDetail: null });
   }
 

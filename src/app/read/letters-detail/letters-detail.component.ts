@@ -24,15 +24,15 @@ export class LettersDetailComponent implements OnInit, OnDestroy {
   sub1: Subscription;
 
 
-  @Select(ReadingCourseState.sLShowLetterCard) showLetterCard$: Observable<boolean>;
-  @Select(ReadingCourseState.sLIsSettingData)   isSettingData$: Observable<boolean>;
-  @Select(ReadingCourseState.sLCanPlayGame)       canPlayGame$: Observable<boolean>;
-  @Select(ReadingCourseState.sLShowAllCards)      showAllCard$: Observable<boolean>;
+  @Select(ReadingCourseState.ldShowLetterCard) showLetterCard$: Observable<boolean>;
+  @Select(ReadingCourseState.ldIsSettingData)   isSettingData$: Observable<boolean>;
+  @Select(ReadingCourseState.ldCanPlayGame)       canPlayGame$: Observable<boolean>;
+  @Select(ReadingCourseState.ldShowAllCards)      showAllCard$: Observable<boolean>;
   @Select(AppState.isMobile)                         isMobile$: Observable<boolean>;
-  @Select(ReadingCourseState.sLCurrentData)              data$: Observable<SLData>;
-  @Select(ReadingCourseState.sLsel1)                     sel1$: Observable<string>;
-  @Select(ReadingCourseState.sLsel2)                     sel2$: Observable<string>;
-  @Select(ReadingCourseState.sLshowSuccessScreen) showSuccessScreen$: Observable<boolean>;
+  @Select(ReadingCourseState.ldCurrentData)              data$: Observable<SLData>;
+  @Select(ReadingCourseState.ldsel1)                     sel1$: Observable<string>;
+  @Select(ReadingCourseState.ldsel2)                     sel2$: Observable<string>;
+  @Select(ReadingCourseState.ldshowSuccessScreen) showSuccessScreen$: Observable<boolean>;
 
   constructor( private speech: SpeechSynthesisService, private store: Store ) { }
 
