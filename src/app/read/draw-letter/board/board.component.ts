@@ -1,11 +1,11 @@
 import { Component, OnDestroy, ViewChild, ElementRef, AfterViewInit, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { GetCoordinatesService  } from '../../services/get-data/get-coordinates.service';
-import { SpeechSynthesisService } from '../../services/speech-synthesis.service';
+import { GetCoordinatesService  } from '../../../services/get-data/get-coordinates.service';
+import { SpeechSynthesisService } from '../../../services/speech-synthesis.service';
 import { ActivatedRoute         } from '@angular/router';
-import { GenerateDatesService   } from '../../services/generate-dates.service';
-import { DetectMobileService    } from '../../services/detect-mobile.service';
-import { Board, SizeCanvas      } from '../../classes/draw-letter-data';
-import { Coordinates            } from '../../classes/coordinates';
+import { GenerateDatesService   } from '../../../services/generate-dates.service';
+import { DetectMobileService    } from '../../../services/detect-mobile.service';
+import { Board, SizeCanvas      } from '../../../classes/draw-letter-data';
+import { Coordinates            } from '../../../classes/coordinates';
 import { Store } from '@ngxs/store';
 
 @Component(
@@ -59,7 +59,7 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
     private coordinateService: GetCoordinatesService,
     private genDates:          GenerateDatesService,
     private _mobile:           DetectMobileService,
-    private store: Store
+    private store: Store,
   ) {
     this.success = false;
     this.letterParam = this._route.snapshot.paramMap.get('letter');

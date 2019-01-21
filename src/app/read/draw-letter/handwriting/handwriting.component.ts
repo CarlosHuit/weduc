@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit, Output, ElementRef, AfterViewInit, Input, OnDestroy, EventEmitter } from '@angular/core';
-import { SpeechSynthesisService } from '../../services/speech-synthesis.service';
-import { GenerateDatesService   } from '../../services/generate-dates.service';
-import { DetectMobileService   } from '../../services/detect-mobile.service';
+import { SpeechSynthesisService } from '../../../services/speech-synthesis.service';
+import { GenerateDatesService   } from '../../../services/generate-dates.service';
+import { DetectMobileService   } from '../../../services/detect-mobile.service';
 import { Store } from '@ngxs/store';
 
 interface HandwritingData {

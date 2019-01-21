@@ -1,16 +1,16 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { Router, ActivatedRoute           } from '@angular/router';
-import { HandwritingComponent             } from '../handwriting/handwriting.component';
-import { BoardComponent                   } from '../board/board.component';
-import { SpeechSynthesisService           } from '../../services/speech-synthesis.service';
-import { GenerateDatesService             } from '../../services/generate-dates.service';
-import { SdDrawLettersService             } from '../../services/send-user-data/sd-draw-letters.service';
-import { DetectMobileService              } from '../../services/detect-mobile.service';
-import { LocalStorageService              } from '../../services/local-storage.service';
-import { DrawLettersData, Board           } from '../../classes/draw-letter-data';
-import { ControlCanvas                    } from '../../classes/control-canvas';
-import { GetCoordinatesService            } from '../../services/get-data/get-coordinates.service';
-import { Coordinates                      } from '../../classes/coordinates';
+import { Router, ActivatedRoute } from '@angular/router';
+import { HandwritingComponent   } from './handwriting/handwriting.component';
+import { BoardComponent         } from './board/board.component';
+import { SpeechSynthesisService } from '../../services/speech-synthesis.service';
+import { GenerateDatesService   } from '../../services/generate-dates.service';
+import { SdDrawLettersService   } from '../../services/send-user-data/sd-draw-letters.service';
+import { DetectMobileService    } from '../../services/detect-mobile.service';
+import { LocalStorageService    } from '../../services/local-storage.service';
+import { DrawLettersData, Board } from '../../classes/draw-letter-data';
+import { ControlCanvas          } from '../../classes/control-canvas';
+import { GetCoordinatesService  } from '../../services/get-data/get-coordinates.service';
+import { Coordinates            } from '../../classes/coordinates';
 import { Store } from '@ngxs/store';
 
 @Component({

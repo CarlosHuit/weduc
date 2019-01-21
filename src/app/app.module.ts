@@ -23,8 +23,6 @@ import { CardDetailsComponent             } from './course-detail/card-details/c
 import { LettersMenuComponent             } from './read/letters-menu/letters-menu.component';
 import { SpinnerLoadingComponent          } from './shared/spinner-loading/spinner-loading.component';
 import { LettersDetailComponent           } from './read/letters-detail/letters-detail.component';
-import { BoardComponent                   } from './read/board/board.component';
-import { HandwritingComponent             } from './read/handwriting/handwriting.component';
 import { DrawLetterComponent              } from './read/draw-letter/draw-letter.component';
 import { SpinnerComponent                 } from './shared/spinner/spinner.component';
 import { SuccessAnimationComponent        } from './shared/success-animation/success-animation.component';
@@ -34,7 +32,6 @@ import { FindLetterComponent              } from './read/find-letter/find-letter
 import { SelectWordsComponent             } from './read/select-words/select-words.component';
 import { PronounceLetterComponent         } from './read/pronounce-letter/pronounce-letter.component';
 import { ControlCanvasComponent           } from './read/control-canvas/control-canvas.component';
-import { GuideLinesComponent              } from './read/guide-lines/guide-lines.component';
 import { DiscussionSystemComponent        } from './shared/discussion-system/discussion-system.component';
 import { DeleteCommentDialogComponent     } from './shared/discussion-system/delete-comment-dialog/delete-comment-dialog.component';
 import { CommentComponent                 } from './shared/discussion-system/comment/comment.component';
@@ -45,6 +42,9 @@ import { LearnedLettersComponent          } from './read/letters-menu/learned-le
 import { AlphabetComponent                } from './read/letters-menu/alphabet/alphabet.component';
 import { SearchComponent                  } from './home/search/search.component';
 import { NgxsStoreModule                  } from './store/store.module';
+import { BoardComponent } from './read/draw-letter/board/board.component';
+import { HandwritingComponent } from './read/draw-letter/handwriting/handwriting.component';
+import { GuideLinesComponent } from './read/draw-letter/guide-lines/guide-lines.component';
 
 @NgModule({
   declarations: [
