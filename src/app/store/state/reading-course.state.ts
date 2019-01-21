@@ -34,7 +34,9 @@ import {
   LettersAreNotSameLD,
   ValidateSelectionsLD,
   ShowSuccessScreenLD,
-  HideSuccessScreenLD
+  HideSuccessScreenLD,
+  SetCurrentData,
+  ResetLetterDetailData
 } from '../actions/reading-course/reading-course-letter-detail.actions';
 import { ShuffleService } from 'src/app/services/shuffle/shuffle.service';
 import { GenerateIdsService } from 'src/app/services/generate-ids/generate-ids.service';
@@ -52,7 +54,7 @@ export class ReadingCourseState {
   @Selector()
   static hasData(state: ReadingCourseModel) {
     return state.data ? true : false;
-   }
+  }
 
   @Selector()
   static isLoadingData({ data }: ReadingCourseModel) {
@@ -135,23 +137,23 @@ export class ReadingCourseState {
   static sLShowAllCards({ letterDetail }: ReadingCourseModel) { return letterDetail.showAllCards; }
 
   @Selector()
-  static sLsel1({letterDetail}: ReadingCourseModel) { return letterDetail.selections.selection1; }
+  static sLsel1({ letterDetail }: ReadingCourseModel) { return letterDetail.selections.selection1; }
 
   @Selector()
-  static sLsel2({letterDetail}: ReadingCourseModel) { return letterDetail.selections.selection2; }
+  static sLsel2({ letterDetail }: ReadingCourseModel) { return letterDetail.selections.selection2; }
 
   @Selector()
-  static sLCanPlayGame({letterDetail}: ReadingCourseModel) { return letterDetail.canPlayGame; }
+  static sLCanPlayGame({ letterDetail }: ReadingCourseModel) { return letterDetail.canPlayGame; }
 
   @Selector()
-  static sLshowSuccessScreen({letterDetail}: ReadingCourseModel) { return letterDetail.showSuccessScreen; }
+  static sLshowSuccessScreen({ letterDetail }: ReadingCourseModel) { return letterDetail.showSuccessScreen; }
 
   constructor(
     private _readingCourse: GetInitialDataService,
     private _speech: SpeechSynthesisService,
     private _shuffle: ShuffleService,
     private _ids: GenerateIdsService,
-    private _audio:   PreloadAudioService,
+    private _audio: PreloadAudioService,
   ) { }
 
 
@@ -406,27 +408,27 @@ export class ReadingCourseState {
 
 
 
-  /* Letter Detail Actions */
+  /*--------- Letter Detail Actions ---------*/
   @Action(SetInitialDataLD)
   setInitialDataLD({ getState, dispatch, patchState }: StateContext<ReadingCourseModel>, action: SetInitialDataLD) {
 
     const data = getState().data;
     this._audio.loadAudio();
 
-    if ( !data.currentLetter || !data || data.currentLetter === '') {
-      dispatch( new Navigate(['/lectura/abecedario']));
+    if (!data.currentLetter || !data || data.currentLetter === '') {
+      dispatch(new Navigate(['/lectura/abecedario']));
     }
 
 
     if (data && data.currentLetter && data.currentLetter !== '') {
 
-      dispatch( new IsSettingDataLD({state: true}) );
+      dispatch(new IsSettingDataLD({ state: true }));
 
       const letterLC = data.currentLetter.toLowerCase();
       const letterUC = data.currentLetter.toUpperCase();
 
-      const smLowerCase = [...data.similarLetters.find(x => x.l === letterLC ).sl];
-      const smUpperCase = [...data.similarLetters.find(x => x.l === letterUC ).sl];
+      const smLowerCase = [...data.similarLetters.find(x => x.l === letterLC).sl];
+      const smUpperCase = [...data.similarLetters.find(x => x.l === letterUC).sl];
 
       const idsLower = this._ids.generateIDs(this._shuffle.shuffle(smLowerCase, letterLC, 2));
       const idsUpper = this._ids.generateIDs(this._shuffle.shuffle(smUpperCase, letterUC, 2));
@@ -438,20 +440,50 @@ export class ReadingCourseState {
         ...getState(),
         letterDetail: {
           ...getState().letterDetail,
-          data:           [ dataLowerCase, dataUpperCase ],
-          selections:     { selection1: null, selection2: null },
-          currentData:    dataLowerCase,
+          data: [dataLowerCase, dataUpperCase],
+          selections: { selection1: null, selection2: null },
+          currentIndex: null,
+          currentData: null,
           showLetterCard: false,
-          showAllCards:   true,
-          canPlayGame:    false,
+          showAllCards: true,
+          canPlayGame: false,
           showSuccessScreen: false,
         }
       });
 
-      dispatch( [
-        new IsSettingDataLD({state: false}),
+      dispatch([
+        new SetCurrentData(),
+        new IsSettingDataLD({ state: false }),
         new ShowLetterCardLD()
-      ] );
+      ]);
+
+    }
+
+
+  }
+
+  @Action(SetCurrentData)
+  setCurrentData({ patchState, getState, dispatch }: StateContext<ReadingCourseModel>, action: SetCurrentData) {
+
+    const letter = getState().data.currentLetter;
+    const state = getState().letterDetail;
+    const index = state.currentIndex === null ? -1 : state.currentIndex;
+    const nextIndex = index + 1;
+
+    if (nextIndex >= state.data.length) {
+      dispatch( new Navigate([`lectura/juego/${letter}`]) );
+    }
+
+    if (nextIndex < state.data.length) {
+      console.log(new Date(), 'settingData', `nextIndex ${nextIndex}`);
+      patchState({
+        letterDetail: {
+          ...getState().letterDetail,
+          currentIndex: nextIndex,
+          currentData: state.data[nextIndex],
+          showAllCards: true
+        }
+      });
 
     }
 
@@ -468,24 +500,24 @@ export class ReadingCourseState {
     });
   }
 
-  @Action(ShowLetterCardLD)
-  showLetterCardLD( { patchState, getState, dispatch }: StateContext<ReadingCourseModel>, action: ShowLetterCardLD ) {
+  @Action(ShowLetterCardLD) // prensent letter card
+  showLetterCardLD({ patchState, getState, dispatch }: StateContext<ReadingCourseModel>, action: ShowLetterCardLD) {
 
-    const state  = getState();
+    const state = getState();
     const letter = state.data.currentLetter;
-    const sound  = state.data.letterSounds[letter];
-    const type   = state.letterDetail.currentData.type;
-    const msg    = `Esta letra es la ... ... ${sound} ... ${type}`;
+    const sound = state.data.letterSounds[letter];
+    const type = state.letterDetail.currentData.type;
+    const msg = `Esta letra es la ... ... ${sound} ... ${type}`;
 
     patchState({
       letterDetail: { ...state.letterDetail, showLetterCard: true }
     });
 
-    dispatch( new ListenMessage({msg}));
+    dispatch(new ListenMessage({ msg }));
 
   }
 
-  @Action(HideLetterCardLD)
+  @Action(HideLetterCardLD) // prensent letter card
   hideLetterCardLD({ patchState, getState, dispatch }: StateContext<ReadingCourseModel>, { payload }: HideLetterCardLD) {
 
     patchState({
@@ -495,64 +527,69 @@ export class ReadingCourseState {
       }
     });
 
-    if ( payload.listenMsg ) {
+    if (payload.listenMsg) {
 
-      const state  = getState();
+      const state = getState();
       const letter = state.letterDetail.currentData.letter.toLowerCase();
-      const sound  = state.data.letterSounds[letter];
-      const type   = state.letterDetail.currentData.type;
-      const msg    = `Encuentra la pareja de letras: ${sound}.. "${type}"`;
+      const sound = state.data.letterSounds[letter];
+      const type = state.letterDetail.currentData.type;
+      const msg = `Encuentra la pareja de letras: ${sound}.. "${type}"`;
 
-      this._speech.speak(msg).addEventListener('end', () => dispatch( new HideAllCardsLD() ));
+      this._speech.speak(msg).addEventListener('end', () => dispatch(new HideAllCardsLD()));
 
     }
 
   }
 
   @Action(ShowAllCardsLD)
-  showAllCardsLD( { getState, patchState }: StateContext<ReadingCourseModel>, action: ShowAllCardsLD  ) {
+  showAllCardsLD({ getState, patchState }: StateContext<ReadingCourseModel>, action: ShowAllCardsLD) {
     patchState({
       letterDetail: {
         ...getState().letterDetail,
         showAllCards: true,
-        canPlayGame:  false
+        canPlayGame: false
       }
     });
   }
 
   @Action(HideAllCardsLD)
-  hideAllCardsLD( { getState, patchState }: StateContext<ReadingCourseModel>, action: ShowAllCardsLD  ) {
+  hideAllCardsLD({ getState, patchState }: StateContext<ReadingCourseModel>, action: HideAllCardsLD) {
 
     patchState({
       letterDetail: {
         ...getState().letterDetail,
         showAllCards: false,
-        canPlayGame:  true
+        canPlayGame: true,
+        selections: {
+          selection1: null,
+          selection2: null
+        }
       }
     });
 
   }
 
   @Action(SelectLetterLD)
-  selectLetterLD( { getState, dispatch }: StateContext<ReadingCourseModel>, { payload }: SelectLetterLD ) {
+  selectLetterLD({ getState, dispatch }: StateContext<ReadingCourseModel>, { payload }: SelectLetterLD) {
 
-    const ldData    = getState().letterDetail;
-    const letter    = ldData.currentData.letter;
-    const sel       = ldData.selections;
+    const ldData = getState().letterDetail;
+    const letter = ldData.currentData.letter;
+    const sel = ldData.selections;
     const isCorrect = payload.letterId[0] === letter;
-    const letterId  = payload.letterId;
+    const letterId = payload.letterId;
 
     return !sel.selection1
-      ? dispatch( new AddFirstSelectionLD( { letterId , isCorrect } ) )
-      : dispatch( new AddSecondSelectionLD( { letterId , isCorrect } ) );
+      ? dispatch(new AddFirstSelectionLD({ letterId, isCorrect }))
+      : dispatch(new AddSecondSelectionLD({ letterId, isCorrect }));
 
   }
 
   @Action(AddFirstSelectionLD)
-  addFirstSelectionLD( { getState, patchState, dispatch }: StateContext<ReadingCourseModel>, { payload }: AddFirstSelectionLD ) {
-    console.log('Add First Letter');
-    const state =  getState();
+  addFirstSelectionLD({ getState, patchState, dispatch }: StateContext<ReadingCourseModel>, { payload }: AddFirstSelectionLD) {
+
+    const state = getState();
     const stateLD = state.letterDetail;
+    const letter = payload.letterId[0].toLowerCase();
 
     patchState({
       letterDetail: {
@@ -561,27 +598,28 @@ export class ReadingCourseState {
       }
     });
 
-    if ( payload.isCorrect) {
+    if (payload.isCorrect) {
 
-      const sound = state.data.letterSounds[payload.letterId[0]];
-      const type  = stateLD.currentData.type;
-      dispatch( new ListenMessage({msg: `${sound} ${type}`}));
+      const sound = state.data.letterSounds[letter];
+      const type = stateLD.currentData.type;
+      dispatch(new ListenMessage({ msg: `${sound} ${type}` }));
 
     }
 
 
-    if ( !payload.isCorrect ) { this._audio.playAudio(); }
+    if (!payload.isCorrect) { this._audio.playAudio(); }
 
   }
 
   @Action(AddSecondSelectionLD)
-  addSecondSelectionLD( { getState, patchState, dispatch }: StateContext<ReadingCourseModel>, { payload }: AddSecondSelectionLD ) {
+  addSecondSelectionLD({ getState, patchState, dispatch }: StateContext<ReadingCourseModel>, { payload }: AddSecondSelectionLD) {
 
-    console.log('Add Second Letter');
-    const state  = getState();
-    const sound  = state.data.letterSounds[payload.letterId[0]];
-    const type   = state.letterDetail.currentData.type;
-    const msg    = `${sound} ${type}`;
+
+    const state = getState();
+    const letter = payload.letterId[0].toLowerCase();
+    const sound = state.data.letterSounds[letter];
+    const type = state.letterDetail.currentData.type;
+    const msg = `${sound} ${type}`;
 
 
     patchState({
@@ -596,23 +634,23 @@ export class ReadingCourseState {
     });
 
 
-    if ( payload.isCorrect) {
+    if (payload.isCorrect) {
 
       const speech = this._speech.speak(msg);
 
       speech.addEventListener('end', function x() {
-        dispatch( new ValidateSelectionsLD() );
+        dispatch(new ValidateSelectionsLD());
         speech.removeEventListener('end', x);
       });
 
     }
 
-    if ( !payload.isCorrect ) {
+    if (!payload.isCorrect) {
 
       const audio = this._audio.playAudio();
 
-      audio.addEventListener('ended', function x () {
-        dispatch( new ValidateSelectionsLD());
+      audio.addEventListener('ended', function x() {
+        dispatch(new ValidateSelectionsLD());
         audio.removeEventListener('ended', x);
       });
 
@@ -622,12 +660,12 @@ export class ReadingCourseState {
   }
 
   @Action(ValidateSelectionsLD)
-  validateSelectionsLD( { getState, dispatch }: StateContext<ReadingCourseModel>, action: ValidateSelectionsLD ) {
+  validateSelectionsLD({ getState, dispatch }: StateContext<ReadingCourseModel>, action: ValidateSelectionsLD) {
 
-    const state   = getState();
-    const sel     = state.letterDetail.selections;
-    const letter  = state.letterDetail.currentData.letter;
-    const same    = sel.selection1[0] === letter && sel.selection2[0] === letter;
+    const state = getState();
+    const sel = state.letterDetail.selections;
+    const letter = state.letterDetail.currentData.letter;
+    const same = sel.selection1[0] === letter && sel.selection2[0] === letter;
     const notSame = sel.selection1[0] !== letter || sel.selection2[0] !== letter;
 
     return same
@@ -639,13 +677,28 @@ export class ReadingCourseState {
   }
 
   @Action(LettersAreSameLD)
-  lettersAreSameLD( { getState, patchState, dispatch }: StateContext<ReadingCourseModel>, action: LettersAreSameLD ) {
-    dispatch( new ShowSuccessScreenLD() );
+  lettersAreSameLD({ dispatch }: StateContext<ReadingCourseModel>, action: LettersAreSameLD) {
+
+    dispatch(new ShowSuccessScreenLD());
+
+    const speech = this._speech.speak('Bien Hecho!', .90);
+    speech.addEventListener('end', function a() {
+
+      dispatch(new SetCurrentData());
+      dispatch([
+        new HideSuccessScreenLD(),
+        new ShowLetterCardLD()
+      ]);
+
+      speech.removeEventListener('end', a);
+
+    });
+
   }
 
   @Action(LettersAreNotSameLD)
-  lettersAreNotSameLD( { getState, patchState }: StateContext<ReadingCourseModel>, action: LettersAreSameLD ) {
-    console.log('are not same');
+  lettersAreNotSameLD({ getState, patchState }: StateContext<ReadingCourseModel>, action: LettersAreSameLD) {
+
     patchState({
       letterDetail: {
         ...getState().letterDetail,
@@ -661,7 +714,7 @@ export class ReadingCourseState {
   }
 
   @Action(ShowSuccessScreenLD)
-  showSuccessScreenLD( { getState, patchState }: StateContext<ReadingCourseModel>, action: ShowSuccessScreenLD ) {
+  showSuccessScreenLD({ getState, patchState }: StateContext<ReadingCourseModel>, action: ShowSuccessScreenLD) {
 
     patchState({
       letterDetail: {
@@ -673,7 +726,7 @@ export class ReadingCourseState {
   }
 
   @Action(HideSuccessScreenLD)
-  hideSuccessScreenLD( { getState, patchState }: StateContext<ReadingCourseModel>, action: ShowSuccessScreenLD ) {
+  hideSuccessScreenLD({ getState, patchState }: StateContext<ReadingCourseModel>, action: ShowSuccessScreenLD) {
 
     patchState({
       letterDetail: {
@@ -684,7 +737,10 @@ export class ReadingCourseState {
 
   }
 
-
+  @Action(ResetLetterDetailData)
+  resetLetterDetailData( { patchState }: StateContext<ReadingCourseModel>, action: ResetLetterDetailData ) {
+    patchState({ letterDetail: null });
+  }
 
 }
 

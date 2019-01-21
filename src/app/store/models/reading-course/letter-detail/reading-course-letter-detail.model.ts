@@ -2,6 +2,7 @@ export class ReadingCourseLetterDetail {
 
   constructor(
     public data:           SLData[],
+    public currentIndex:          number,
     public currentData:    SLData,
     public selections:     SLSelections,
     public isSettingData:  boolean,

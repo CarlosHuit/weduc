@@ -157,13 +157,13 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
   }
 
   redirect = (letter: string) => {
-
-    console.log('redicrection desktop');
-
     if ( this.canSpeech ) {
+
+      console.log('redicrection desktop');
       const msg    = `Bien, Seleccionaste la letra: ... ${this.letterSounds[letter]}`;
       const url    = `lectura/detalle-letra/${letter}`;
       this.store.dispatch( new ActiveRedirection({letter, msg, url}) );
+
     }
   }
 

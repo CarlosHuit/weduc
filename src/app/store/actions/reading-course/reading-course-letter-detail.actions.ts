@@ -1,5 +1,6 @@
 export enum ReadingCourseLetterDetailActionsType {
   SET_INITIAL_DATA = '[Reading Course Letter Detail] Set Initial Data',
+  SET_CURRENT_DATA = '[Reading Course Letter Detail] Set Current Data',
   IS_SETTING_DATA  = '[Reading Course Letter Detail] Is Setting Data',
   SHOW_LETTER_CARD = '[Reading Course Letter Detail] Show Letter Card',
   HIDE_LETTER_CARD = '[Reading Course Letter Detail] Hide Letter Card',
@@ -13,10 +14,15 @@ export enum ReadingCourseLetterDetailActionsType {
   LETTERS_ARE_NOT_SAME   = '[Reading Course Letter Detail] Letters Are Not Same',
   SHOW_SUCCESS_SCREEN    = '[Reading Course Letter Detail] Show Success Screen',
   HIDE_SUCCESS_SCREEN    = '[Reading Course Letter Detail] Hide Success Screen',
+  RESET_DATA             = '[Reading Course Letter Detail] Reset Letter Detail Data'
 }
 
 export class SetInitialDataLD {
   static readonly type = ReadingCourseLetterDetailActionsType.SET_INITIAL_DATA;
+}
+
+export class SetCurrentData {
+  static readonly type = ReadingCourseLetterDetailActionsType.SET_CURRENT_DATA;
 }
 
 export class IsSettingDataLD {
@@ -75,3 +81,9 @@ export class ShowSuccessScreenLD {
 export class HideSuccessScreenLD {
   static readonly type = ReadingCourseLetterDetailActionsType.HIDE_SUCCESS_SCREEN;
 }
+
+export class ResetLetterDetailData {
+  static readonly type = ReadingCourseLetterDetailActionsType.RESET_DATA;
+}
+
+
