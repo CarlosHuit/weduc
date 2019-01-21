@@ -10,6 +10,7 @@ import { ShuffleService               } from '../../services/shuffle/shuffle.ser
 import { Words                        } from '../../classes/words';
 import { FindLetterData, Options, Selection } from '../../classes/find-letter-data';
 import { GetWordsService              } from '../../services/get-data/get-words.service';
+import { Store } from '@ngxs/store';
 
 
 @Component({
@@ -36,6 +37,7 @@ export class FindLetterComponent implements OnDestroy, OnInit {
   totalWords:   number;
   currentIndex  = 0;
   selection     = {};
+  letterSounds: any;
 
   constructor(
     private router:    Router,
@@ -48,12 +50,14 @@ export class FindLetterComponent implements OnDestroy, OnInit {
     private _sound:    PreloadAudioService,
     private _storage:  LocalStorageService,
     private _shuffle:  ShuffleService,
+    private store: Store
   ) {
 
     this.loading      = true;
     this.letterParam  = this._route.snapshot.paramMap.get('letter');
     this.url          = `/lectura/seleccionar-palabras/${this.letterParam}`;
     this.words        = this._storage.getElement(`${this.letterParam}_w`);
+    this.store.selectSnapshot(state => this.letterSounds = state.readingCourse.data.letterSounds );
   }
 
   ngOnInit() {
@@ -220,7 +224,7 @@ export class FindLetterComponent implements OnDestroy, OnInit {
   instructions = () => {
 
     this.addCount(this.word, 'instructions');
-    const s   = this._storage.getElement('letter_sounds')[this.letterParam];
+    const s   = this.letterSounds[this.letterParam];
     const msg = `Selecciona todas las letras ... ${s} ... de la palabra ... ${this.word}`;
 
     setTimeout(() =>  this._speech.speak(msg), 500);

@@ -8,6 +8,7 @@ import { LocalStorageService            } from '../../services/local-storage.ser
 import { PronounceLetterData, Historial } from '../../classes/pronounce-letter-data';
 import { UserProgressService            } from '../../services/user-progress/user-progress.service';
 import { LearnedLetters } from 'src/app/classes/learned-letters';
+import { Store } from '@ngxs/store';
 
 
 @Component({
@@ -31,6 +32,7 @@ export class PronounceLetterComponent implements OnInit, OnDestroy {
   success:  Boolean;
   userData: PronounceLetterData;
   Data:     PronounceLetterData[] = [];
+  letterSounds: any;
 
 
 
@@ -43,11 +45,13 @@ export class PronounceLetterComponent implements OnInit, OnDestroy {
     private _storage:     LocalStorageService,
     private _route:       ActivatedRoute,
     private router:       Router,
+    private store: Store
   ) {
     this.letterParam = this._route.snapshot.paramMap.get('letter');
     this.loading = true;
     this.success = false;
     this.urlToRedirect = '/lectura/abecedario';
+    this.store.selectSnapshot(state => this.letterSounds = state.readingCourse.data.letterSounds );
   }
 
 
@@ -198,7 +202,7 @@ export class PronounceLetterComponent implements OnInit, OnDestroy {
   help = () => {
 
     this.addCountHelp();
-    const letter = JSON.parse(localStorage.getItem('letter_sounds'))[this.letterParam];
+    const letter = this.letterSounds[this.letterParam];
     const type   = this.letter === this.letter.toLowerCase() ? 'minúscula' : 'mayúscula';
     const msg    = `Esta es la letra: ${letter} ${type}`;
 

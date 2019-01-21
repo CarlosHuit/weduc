@@ -9,6 +9,7 @@ import { RandomWords                  } from '../../classes/random-words';
 import { SelectWordsData, Historial   } from '../../classes/select-words-data';
 import { SdSelectWordsService         } from '../../services/send-user-data/sd-select-words.service';
 import { GetWordsService              } from '../../services/get-data/get-words.service';
+import { Store } from '@ngxs/store';
 
 
 
@@ -38,6 +39,7 @@ export class SelectWordsComponent implements OnInit, OnDestroy {
   selections  =   {};
   urlToRedirect:  string;
   totalCorrects: number;
+  letterSounds: any;
 
 
   constructor(
@@ -48,10 +50,12 @@ export class SelectWordsComponent implements OnInit, OnDestroy {
     private genDates:  GenerateDatesService,
     private _sendData: SdSelectWordsService,
     private _mobile:   DetectMobileService,
-    private _storage:  LocalStorageService
+    private _storage:  LocalStorageService,
+    private store:     Store
   ) {
     this.letterParam   = this._route.snapshot.paramMap.get('letter');
     this.urlToRedirect = `lectura/pronunciar-letra/${this.letterParam}`;
+    this.store.selectSnapshot(state => this.letterSounds = state.readingCourse.data.letterSounds );
   }
 
   ngOnInit() {
@@ -102,7 +106,7 @@ export class SelectWordsComponent implements OnInit, OnDestroy {
 
   instructions = () => {
 
-    const letter     = JSON.parse(localStorage.getItem('letter_sounds'))[this.letterParam];
+    const letter     = this.letterSounds[this.letterParam];
     const typeLetter = this.state === 'lowerCase' ? 'minúscula' : 'mayúscula';
     const msg        = `Selecciona todas las palabras que al menos tengan: ... una letra ${letter} ${typeLetter}`;
 

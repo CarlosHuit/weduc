@@ -9,6 +9,7 @@ import { GetLettersRandomService } from '../../services/get-data/get-letters-ran
 import { RandomSimilarLetters   } from '../../classes/random-similar-letters';
 import { SdGameDataService      } from '../../services/send-user-data/sd-game-data.service';
 import { GameData, History } from '../../classes/game-data';
+import { Store } from '@ngxs/store';
 
 @Component({
   selector: 'app-game',
@@ -48,6 +49,7 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   listenerRestartData:   any;
   listenerDetectMobile: any;
 
+  letterSounds: any;
 
   constructor (
     private router:        Router,
@@ -59,6 +61,7 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     private _storage:      LocalStorageService,
     private genDates:      GenerateDatesService,
     private speechService: SpeechSynthesisService,
+    private store:         Store
   ) {
 
     this.success       = false;
@@ -68,7 +71,7 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-
+    this.store.selectSnapshot(state => this.letterSounds = state.readingCourse.data.letterSounds );
     this.getLettersRandom();
 
   }
@@ -183,7 +186,7 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     this.countRepetitions();
 
     const type    = this.letter === this.letter.toLowerCase() ? 'minúscula' : 'mayúscula';
-    const letter  = JSON.parse(localStorage.getItem('letter_sounds'))[this.letterParam];
+    const letter  = this.letterSounds[this.letterParam];
     const sentece = `Presiona todas las letras ${letter} ${type}`;
 
     setTimeout(() => {
@@ -213,7 +216,7 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
     const letter      = id[0];
-    const letterSound = JSON.parse(localStorage.getItem('letter_sounds'))[this.letterParam];
+    const letterSound = this.letterSounds[this.letterParam];
     const type        = this.letter === this.letter.toLowerCase() ? 'minúscula' : 'mayúscula';
     const msg         = `${letterSound} ${type}`;
 

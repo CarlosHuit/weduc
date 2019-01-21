@@ -2,6 +2,7 @@ import { Component, ViewChild, OnInit, Output, ElementRef, AfterViewInit, Input,
 import { SpeechSynthesisService } from '../../services/speech-synthesis.service';
 import { GenerateDatesService   } from '../../services/generate-dates.service';
 import { DetectMobileService   } from '../../services/detect-mobile.service';
+import { Store } from '@ngxs/store';
 
 interface HandwritingData {
   startTime?:  string;
@@ -47,14 +48,16 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
   // showGuidLines       = true;
 
   userData: HandwritingData = {};
+  letterSounds: any;
 
 
   constructor(
     private speechSynthesis: SpeechSynthesisService,
     private genDates:        GenerateDatesService,
-    private _mobile:         DetectMobileService
+    private _mobile:         DetectMobileService,
+    private store: Store
   ) {
-
+    this.store.selectSnapshot(state => this.letterSounds = state.readingCourse.data.letterSounds );
   }
 
   ngAfterViewInit() {
@@ -109,7 +112,7 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
     this.evsHandWriting.emit(data);
 
     const type  = this.letter === this.letter.toLowerCase() ? 'minúscula' : 'mayúscula';
-    const sound = JSON.parse(localStorage.getItem('letter_sounds'))[this.letter.toLowerCase()];
+    const sound = this.letterSounds[this.letter.toLowerCase()];
     const msg   = `Bien, ahora practica escribir la letra: .... ${sound} ..... ${type}`;
 
     this.speechSynthesis.speak(msg);
@@ -181,7 +184,7 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
 
 
     const type  = this.letter === this.letter.toLowerCase() ? 'minúscula' : 'mayúscula';
-    const sound = JSON.parse(localStorage.getItem('letter_sounds'))[this.letter.toLowerCase()];
+    const sound = this.letterSounds[this.letter.toLowerCase()];
     const msg   = `Por ahora no puedo mostrarte como escribir la letra: ${sound} .... "${type}"`;
 
     this.speechSynthesis.speak(msg);
@@ -196,7 +199,7 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
     this.setValues();
 
     const type   = this.letter === this.letter.toLowerCase() ? 'minúscula' : 'mayúscula';
-    const sound  = JSON.parse(localStorage.getItem('letter_sounds'))[this.letter.toLowerCase()];
+    const sound  = this.letterSounds[this.letter.toLowerCase()];
     const msg    = `Mira atentamente, así se escribe la letra: ... ${sound} .... "${type}"`;
     const speech = this.speechSynthesis.speak(msg);
 

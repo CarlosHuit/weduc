@@ -9,7 +9,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  animation: showContainer 100ms;
+  /* animation: showContainer 100ms; */
 }
 
 @keyframes showContainer {

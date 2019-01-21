@@ -11,6 +11,7 @@ import { DrawLettersData, Board           } from '../../classes/draw-letter-data
 import { ControlCanvas                    } from '../../classes/control-canvas';
 import { GetCoordinatesService            } from '../../services/get-data/get-coordinates.service';
 import { Coordinates                      } from '../../classes/coordinates';
+import { Store } from '@ngxs/store';
 
 @Component({
   selector: 'app-draw-letter',
@@ -41,6 +42,7 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
   lineWidth:      number;
   lineColor:      string;
   showGuidLines:  boolean;
+  letterSounds: any;
 
   constructor(
     private _getData:    GetCoordinatesService,
@@ -50,7 +52,8 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
     private genDates:    GenerateDatesService,
     private _sendData:   SdDrawLettersService,
     private dMobile:     DetectMobileService,
-    private _storage:    LocalStorageService
+    private _storage:    LocalStorageService,
+    private store:       Store
   ) {
     this.letterParam   = this._route.snapshot.paramMap.get('letter');
     this.loading       = true;
@@ -61,6 +64,8 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
     this.lineColor     = this.colors[0];
     this.showGuidLines = true;
     this.urlToRedirect = `lectura/encontrar-letras/${this.letterParam}`;
+    this.store.selectSnapshot(state => this.letterSounds = state.readingCourse.data.letterSounds );
+
   }
 
   ngOnInit() {
@@ -171,7 +176,7 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
 
     const nextIndex = this.letters.indexOf(this.currentLetter) + 1;
     const type      = this.currentLetter === this.currentLetter.toLowerCase() ? 'minúscula' : 'mayúscula';
-    const sound     = JSON.parse(localStorage.getItem('letter_sounds'))[this.letterParam.toLowerCase()];
+    const sound     = this.letterSounds[this.letterParam.toLowerCase()];
     const msg       = `Bien, ahora ya sabes escribir la letra: ${sound} .... "${type}"`;
 
 
@@ -278,7 +283,6 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
         return {
           'width': '100%',
           'height': 'calc(100vh - 56px)',
-          'margin-top': '56px'
         };
       } else {
         return {

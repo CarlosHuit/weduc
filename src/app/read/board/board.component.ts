@@ -6,6 +6,7 @@ import { GenerateDatesService   } from '../../services/generate-dates.service';
 import { DetectMobileService    } from '../../services/detect-mobile.service';
 import { Board, SizeCanvas      } from '../../classes/draw-letter-data';
 import { Coordinates            } from '../../classes/coordinates';
+import { Store } from '@ngxs/store';
 
 @Component(
   {
@@ -50,17 +51,20 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
   coordinates:    Coordinates;
   userData:       Board;
   loading       = true;
+  letterSounds: any;
 
   constructor(
     private _route:            ActivatedRoute,
     private speechSynthesis:   SpeechSynthesisService,
     private coordinateService: GetCoordinatesService,
     private genDates:          GenerateDatesService,
-    private _mobile:           DetectMobileService
+    private _mobile:           DetectMobileService,
+    private store: Store
   ) {
     this.success = false;
     this.letterParam = this._route.snapshot.paramMap.get('letter');
     this.colors    = ['#f44336', '#239B56', '#007cc0', '#fc793c'].sort(e => Math.random() - 0.5);
+    this.store.selectSnapshot(state => this.letterSounds = state.readingCourse.data.letterSounds );
   }
 
   ngAfterViewInit() {
