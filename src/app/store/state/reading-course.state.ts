@@ -1131,9 +1131,11 @@ export class ReadingCourseState {
   genDataG = (sl: string[], letter: string, type: string, contWidth: number) => {
 
     let isMobile: boolean;
+    const w = window.innerWidth;
     this.store.selectSnapshot(state => isMobile =  state.app.isMobile);
 
-    const width   = isMobile ? 80 : 100; // ancho del cubo
+    const width = isMobile ? 80 : w < 640 ? 80 : 100;
+    // const width   = isMobile ? 80 : 100; // ancho del cubo
     const columns = Math.floor(contWidth / width);
     const filas = Math.round(35 / columns);
     const elements = columns * filas;

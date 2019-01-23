@@ -1,19 +1,19 @@
 /* Cambios en la version Desktop */
 .d-c-game {
-  width:          80%;
+  width:          100%;
   max-width:      1080px;
-  height:         85%;
+  height:         100%;
   display:        inline-flex;
   flex-direction: column;
   z-index:        20;
   transition:     0ms;
   position:       relative;
-  border:         6px solid #1c637f;
-  border-radius:  22px 22px 17px 17px;
+  border:         6px solid #1976d2;
+  box-sizing: border-box;
 }
 
 .d-c-toolbar {
-  background:    #1a6080;
+  background:    #1976d2;
   display:         flex;
   justify-content: space-between;
   align-items:     center;
@@ -21,7 +21,7 @@
   height:          60px;
   width:           100%;
   padding:         0 10px;
-  border-radius:   10px 10px 0 0;
+  position: relative;
 }
 
 .d-c-letters {
@@ -35,7 +35,10 @@
   justify-content:       space-evenly;
   overflow:              auto;
   z-index:               20;
-  background: rgba(20, 20, 20)
+  background: rgba(20, 20, 20);
+  padding-top: 10px;
+  padding-bottom: 10px;
+  box-sizing: border-box;
 }
 
 .d-c-letters::-webkit-scrollbar {
@@ -51,6 +54,15 @@
   width: 95%;
   height: 95%;
   font-size: 50px;
+}
+
+
+@media (min-width: 1080px) {
+  .d-c-game {
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
+    margin: 10px;
+  }
 }
 
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { SpeechSynthesisService } from '../../services/speech-synthesis.service';
 import { Store, Select          } from '@ngxs/store';
 import { AppState               } from 'src/app/store/state/app.state';
@@ -13,6 +13,7 @@ import {
   ResetDataG,
   UseHelpG
 } from 'src/app/store/actions/reading-course/reading-course-game.actions';
+import { MediaMatcher } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-game',
@@ -25,6 +26,8 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild('mcGame') mcLetters:    ElementRef;
   mcGameEl:         HTMLDivElement;
+  _mobileQueryListener:  () => any;
+  mobileQuery:       MediaQueryList;
 
   @Select(ReadingCourseState.gIsSettingData)  isSettingData$: Observable<boolean>;
   @Select(ReadingCourseState.gSelections)        selections$: Observable<{}>;
@@ -38,9 +41,14 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor (
     private speechService: SpeechSynthesisService,
-    private store:         Store
+    private store:         Store,
+    public changeDetectorRef: ChangeDetectorRef,
+    public media: MediaMatcher,
   ) {
     this.store.dispatch( new IsSettingDataG({state: true}) );
+    this.mobileQuery = media.matchMedia('(max-width: 640px)');
+    this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+    this.mobileQuery.addListener(this._mobileQueryListener);
   }
 
   ngAfterViewInit() {
