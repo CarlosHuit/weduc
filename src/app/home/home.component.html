@@ -1,6 +1,6 @@
 <div #contGrid class="container">
 
-  <div *ngIf="!(isLoading$ | async) && (isMobile$ | async) " >
+  <div *ngIf="!(isLoading$ | async) && (isMobile$ | async) || mobileQuery.matches " >
 
     <div class="m-c-search hide" [class.show]="!(isLoading$ | async)">
         
@@ -8,8 +8,8 @@
   
     </div>
   
+    <!-- [ngStyle]="genCols(contGrid)" -->
     <div
-       [ngStyle]="genCols(contGrid)"
        [class.show]="!(isLoading$ | async)"
        class="c-cards hide"
        >
@@ -47,7 +47,7 @@
 
 
 
-  <div class="dc-c-courses" *ngIf="!(isLoading$ | async) && !(isMobile$ | async)">
+  <div class="dc-c-courses" *ngIf="!(isLoading$ | async) && !(isMobile$ | async) && !mobileQuery.matches">
 
     <!----- Search ----->
     <div class="d-c-container-search center">

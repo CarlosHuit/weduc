@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { MatSnackBar   } from '@angular/material';
 import { Subjects      } from '../classes/subjects';
 import { Store, Select } from '@ngxs/store';
@@ -8,6 +8,7 @@ import { CoursesState  } from '../store/state/courses.state';
 import { Course        } from '../store/models/courses-state.model';
 import { Observable    } from 'rxjs';
 import { AppState } from '../store/state/app.state';
+import { MediaMatcher } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-home',
@@ -22,6 +23,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   subjects: Subjects[];
   search:   RegExp;
   isMobile: boolean;
+  _mobileQueryListener:  () => any;
+  mobileQuery:       MediaQueryList;
 
   @Select(CoursesState.courses)   courses$:     Observable<Course[]>;
   @Select(CoursesState.isLoading) isLoading$:   Observable<boolean>;
@@ -29,17 +32,23 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   constructor(
     public snackBar:      MatSnackBar,
-    private store:        Store
+    private store:        Store,
+    public changeDetectorRef: ChangeDetectorRef,
+    public media: MediaMatcher,
   ) { }
 
   ngOnInit() {
     this.store.dispatch(new GetCourses());
     this.courses$.subscribe(courses => this.subjects = courses );
     this.isMobile$.subscribe( result => this.isMobile = result );
+    this.mobileQuery = this.media.matchMedia('(max-width: 640px)');
+    this._mobileQueryListener = () => this.changeDetectorRef.detectChanges();
+    this.mobileQuery.addListener(this._mobileQueryListener);
   }
 
   ngOnDestroy() {
     window.removeEventListener('resize', () => this.genCols(this.contGrid.nativeElement));
+    this.mobileQuery.removeListener(this._mobileQueryListener);
   }
 
   redirect = (course: string) => {

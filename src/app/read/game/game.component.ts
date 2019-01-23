@@ -63,6 +63,7 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     this.speechService.cancel();
     this.store.dispatch( new ResetDataG() );
     window.removeEventListener('resize', this.restartData);
+    this.mobileQuery.removeListener(this._mobileQueryListener);
   }
 
 
