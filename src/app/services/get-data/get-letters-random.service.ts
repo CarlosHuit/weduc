@@ -1,11 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable              } from '@angular/core';
-import { environment             } from '../../../environments/environment';
-import { Observable, of          } from 'rxjs';
-import { catchError, map         } from 'rxjs/operators';
-import { LocalStorageService     } from '../local-storage.service';
-import { RandomSimilarLetters    } from '../../classes/random-similar-letters';
-import { HandleErrorService      } from '../../shared/handle-error.service';
+import { Injectable } from '@angular/core';
+import { environment } from '../../../environments/environment';
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { LocalStorageService } from '../local-storage.service';
+import { RandomSimilarLetters } from '../../classes/random-similar-letters';
+import { HandleErrorService } from '../../shared/handle-error.service';
 import urljoin from 'url-join';
 
 @Injectable({
@@ -13,15 +13,15 @@ import urljoin from 'url-join';
 })
 export class GetLettersRandomService {
 
-  apiUrl:   string;
+  apiUrl: string;
 
   constructor(
-    private http:     HttpClient,
+    private http: HttpClient,
     private _storage: LocalStorageService,
-    private _err:     HandleErrorService
-    ) {
-      this.apiUrl = urljoin(environment.apiUrl);
-    }
+    private _err: HandleErrorService
+  ) {
+    this.apiUrl = urljoin(environment.apiUrl);
+  }
 
   getSimilarLettersRandom = (letter: string): Observable<any | RandomSimilarLetters> => {
 
@@ -31,13 +31,13 @@ export class GetLettersRandomService {
       return this.getSimilarLettersRandomFromServer(letter);
     }
 
-    if ( Storage && t !== null) {
+    if (Storage && t !== null) {
       return of(this.getDataFromStorage(letter));
     }
 
   }
 
-  getSimilarLettersRandomFromServer (letter: string): Observable<any | RandomSimilarLetters> {
+  getSimilarLettersRandomFromServer(letter: string): Observable<any | RandomSimilarLetters> {
 
     const url = urljoin(this.apiUrl, `similar-letters/random/${letter}`);
 
@@ -64,56 +64,56 @@ export class GetLettersRandomService {
     const letterLC = letter.toLowerCase();
     const letterUC = letter.toUpperCase();
 
-    try {
 
-      const data = this._storage.getElement(`${letter.toLowerCase()}_sl`);
+    const data = this._storage.getElement(`${letter.toLowerCase()}_sl`);
 
-      const similarLowerCase = data[letterLC];
-      const similarUpperCase = data[letterUC];
+    const similarLowerCase = data[letterLC];
+    const similarUpperCase = data[letterUC];
 
-      const lowerCaseRandom = [];
-      const upperCaseRandom = [];
-      const amountLowerCase = this.randomInt(8, 12);
-      const amountUpperCase = this.randomInt(8, 12);
+    const lowerCaseRandom = [];
+    const upperCaseRandom = [];
+    const amountLowerCase = this.randomInt(8, 12);
+    const amountUpperCase = this.randomInt(8, 12);
 
-      for (let i = 0; i < amountLowerCase; i++) { lowerCaseRandom.push(letterLC); }
-      for (let i = 0; i < amountUpperCase; i++) { upperCaseRandom.push(letterUC); }
-
-
-      for (let i = 0; i < 3; i++) {
-
-        lowerCaseRandom.push(similarLowerCase[i]);
-        upperCaseRandom.push(similarUpperCase[i]);
-
-        similarLowerCase.forEach(ltr => lowerCaseRandom.push(ltr));
-        similarUpperCase.forEach(ltr => upperCaseRandom.push(ltr));
-
-      }
-
-
-      const randomLowerCase = this.messUpWords(lowerCaseRandom);
-      const randomUpperCase = this.messUpWords(upperCaseRandom);
-
-      const upper = [];
-      const lower = [];
-
-      for (let i = 0; i < randomLowerCase.length; i++) {
-        const element = `${randomLowerCase[i]}${i}`;
-        lower.push(element);
-      }
-
-      for (let i = 0; i < randomUpperCase.length; i++) {
-        const element = `${randomUpperCase[i]}${i}`;
-        upper.push(element);
-      }
-
-      // return { upperCase: upper,  lowerCase: lower };
-      return new RandomSimilarLetters(upper, lower, similarUpperCase, similarLowerCase);
-
-
-    } catch (error) {
-      console.log(error);
+    for (let i = 0; i < amountLowerCase; i++) {
+      lowerCaseRandom.push(letterLC);
     }
+
+
+    for (let i = 0; i < amountUpperCase; i++) {
+      upperCaseRandom.push(letterUC);
+    }
+
+
+    for (let i = 0; i < 3; i++) {
+
+      lowerCaseRandom.push(similarLowerCase[i]);
+      upperCaseRandom.push(similarUpperCase[i]);
+
+      similarLowerCase.forEach(ltr => lowerCaseRandom.push(ltr));
+      similarUpperCase.forEach(ltr => upperCaseRandom.push(ltr));
+
+    }
+
+
+    const randomLowerCase = this.messUpWords(lowerCaseRandom);
+    const randomUpperCase = this.messUpWords(upperCaseRandom);
+
+    const upper = [];
+    const lower = [];
+
+    for (let i = 0; i < randomLowerCase.length; i++) {
+      const element = `${randomLowerCase[i]}${i}`;
+      lower.push(element);
+    }
+
+    for (let i = 0; i < randomUpperCase.length; i++) {
+      const element = `${randomUpperCase[i]}${i}`;
+      upper.push(element);
+    }
+
+    return new RandomSimilarLetters(upper, lower, similarUpperCase, similarLowerCase);
+
   }
 
   messUpWords = (words) => {
@@ -125,10 +125,10 @@ export class GetLettersRandomService {
       if (!words.length) { break; }
 
       const extraction = words.shift();
-      const random     = Math.floor(Math.random() * (messy.length + 1));
-      const start      = messy.slice(0, random);
-      const medium     = extraction;
-      const end        = messy.slice(random, messy.length);
+      const random = Math.floor(Math.random() * (messy.length + 1));
+      const start = messy.slice(0, random);
+      const medium = extraction;
+      const end = messy.slice(random, messy.length);
 
       messy = (start).concat(medium).concat(end);
 

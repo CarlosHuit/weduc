@@ -161,7 +161,7 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
       console.log('redicrection desktop');
       const msg    = `Bien, Seleccionaste la letra: ... ${this.letterSounds[letter]}`;
-      const url    = `lectura/detalle-letra/${letter}`;
+      const url    = `lectura/juego/${letter}`;
       this.store.dispatch( new ActiveRedirection({letter, msg, url}) );
 
     }

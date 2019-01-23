@@ -35,6 +35,7 @@
   justify-content:       space-evenly;
   overflow:              auto;
   z-index:               20;
+  background: rgba(20, 20, 20)
 }
 
 .d-c-letters::-webkit-scrollbar {
@@ -51,14 +52,6 @@
   height: 95%;
   font-size: 50px;
 }
-
-.d-c-background {
-  background-color: rgba(20, 20, 20);
-  width: 100%;
-  height: calc(100% - 40px);
-  border-radius: 0 0 10px 10px;
-}
-
 
 
 
@@ -189,7 +182,10 @@ canvas {
 }
 
 .destroy {
-  animation: quitar  .4s;
+  /* animation: quitar  .4s; */
+  transition: .4s;
+  height: 0px;
+  margin: 0;
 }
 
 .m-circle-letter.clear {

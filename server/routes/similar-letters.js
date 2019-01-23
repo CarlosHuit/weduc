@@ -54,7 +54,7 @@ app.get('/:letter', async (req, res) => {
 
       const x = [
         {
-          letter:         letterLower,
+          letter: letterLower,
           similarLetters: findSimilarLettersLower.similarLetters
         },
         {

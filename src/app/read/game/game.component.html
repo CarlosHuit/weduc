@@ -1,101 +1,160 @@
-<div class="container" [class.desktop]="!isMobile()" >
+<div class="container">
 
 
   <!-- desktop version -->
-  <div #mcGame class="d-c-game hide" [class.show]="showGame" *ngIf="!isMobile()" >
+  <div #mcGame class="d-c-game" *ngIf="!(isMobile$ | async)">
 
-    <div class="d-c-toolbar" #toolbGame >
-      <div class="m-c-count">
-        <span class="failed" > {{failedCount}} </span>
-        <span class="succes" > {{succesCount}} </span>
+
+    <div class="d-c-toolbar">
+
+      <div class="m-c-count" *ngIf="(isSettingData$ | async) === false" >
+        <span class="failed"> {{ (data$ | async).countIncorrects }} </span>
+        <span class="succes"> {{ (data$ | async).countCorrects }} </span>
       </div>
-      <div class="help resize" (click)="instructions('y')" >?</div>
+      <button
+        class="help resize"
+        (click)="help()"
+        *ngIf="(isSettingData$ | async) === false && (data$ | async).opportunities > 0"
+        [disabled]="showCorrectLetters$ | async"
+        >
+        ?
+      </button>
+
     </div>
 
-    <div class="d-c-letters" *ngIf="loading === false" id="s" #mcLetters>
 
-      <div class="d-c-letter" *ngFor="let group of letterIDs">
-        <div
-          class="d-c-option center"
-          *ngFor="let letterID of group"
-          [class.destroy]="letterID[0] === letter && letterID === elToDestroy"
-          >
-          <button
-            class="m-circle-letter d-c-resize press"
-            (click)="onSelect(letterID)"
-            [disabled]="lettersValidation[letterID] === letterID"
-            [class.showOpt]="letterID[0] === letter && show === true"
-            [class.clear]="clearEl[letterID] === letterID"
+
+    <div style="width: 100%; height: calc(100% - 60px); background: rgb(20, 20, 20)">
+
+      <div class="d-c-letters" *ngIf="!(isSettingData$ | async)">
+
+        <div class="d-c-letter" *ngFor="let group of gData$ | async">
+  
+          <div
+            *ngFor="let letterID of group"
+            class="d-c-option center"
+            [class.destroy]="
+              (data$ | async)['letter'] === letterID[0]
+              && (selections$ | async)[letterID] === letterID
+            "
             >
-            {{letterID[0]}}
-          </button>
+            <button
+              class="m-circle-letter d-c-resize press"
+              (click)="onSelect(letterID)"
+              [disabled]="(selections$ | async)[letterID] === letterID"
+              [class.clear]="(selections$ | async)[letterID] === letterID"
+              [class.showOpt]="letterID[0] === (letter$ | async) && (showCorrectLetters$ | async) === true"
+              >
+              {{letterID[0]}}
+            </button>
+          </div>
+  
         </div>
-      </div>
-      
-    </div>
-    
-    <app-spinner-loading *ngIf="loading === true" ></app-spinner-loading>
-    <canvas class="d-c-background" #canvas id="canvas">no</canvas>
 
-    
+      </div>
+
+      <div style="height: 40px; width: 40px; margin: 10px auto">
+        <app-spinner-loading
+          *ngIf="isSettingData$ | async"
+          >
+        </app-spinner-loading>
+      </div>
+
+    </div>
+
+
+
   </div>
 
 
 
   <!-- mobile version -->
-  <div #mcGame class="m-c-game hide" [class.show]="showGame" *ngIf="isMobile()" >
+  <div #mcGame class="m-c-game" *ngIf="isMobile$ | async">
 
 
-    <div class="m-c-toolbar" style="position: relative;" #toolbGame >
+    <div class="m-c-toolbar" style="position: relative;">
 
       <mat-progress-bar
-        *ngIf="!loading && isMobile()" style="position: absolute; top: 0px; left: 0;"
-        color="warn" [mode]="determinate" [value]="progress()" >
+        *ngIf="!(isSettingData$ | async)"
+        style="position: absolute; top: 0px; left: 0;"
+        color="warn"
+        [mode]="determinate"
+        [value]="(progress$ | async)"
+        >
       </mat-progress-bar>
 
-      <div class="m-c-count">
-        <span class="failed" > {{failedCount}} </span>
-        <span class="succes" > {{succesCount}} </span>
+      <div class="m-c-count" *ngIf="(isSettingData$ | async) === false" >
+        <span class="failed"> {{(data$ | async).countIncorrects}} </span>
+        <span class="succes"> {{(data$ | async).countCorrects}} </span>
       </div>
-      <div class="help center" (click)="instructions('y')" >?</div>
+
+      <button 
+        class="help center"
+        (click)="help()"
+        *ngIf="(isSettingData$ | async) === false && (data$ | async).opportunities > 0"
+        [disabled]="showCorrectLetters$ | async"
+        >
+        ?
+      </button>
 
     </div>
 
 
-
-    <div class="m-c-letters" *ngIf="loading === false" id="s" #mcLetters>
-
-      <div class="m-c-letter" *ngFor="let group of letterIDs">
-        <div
-          class="c-m-option"
-          *ngFor="let letterID of group" style="height: 75px;"
-          [class.destroy]="letterID[0] === letter && letterID === elToDestroy"
-          >
-          <button
-            class="m-circle-letter press"
-            (click)="onSelect(letterID)"
-            [disabled]="lettersValidation[letterID] === letterID"
-            [class.showOpt]="letterID[0] === letter && show === true"
-            [class.clear]="clearEl[letterID] === letterID"
-            >
-            {{letterID[0]}}
-          </button>
-        </div>
-      </div>
+    <div style="width: 100%; height: calc(100% - 40px); background: rgb(20, 20, 20)">
       
-    </div>
-    
-    <app-spinner-loading *ngIf="loading === true" ></app-spinner-loading>
-
-    
-  </div>
+      <div
+      class="m-c-letters"
+      *ngIf="(isSettingData$ | async) === false"
+      >
   
+        <div
+          class="m-c-letter"
+          *ngFor="let group of gData$ | async"
+          >
+          <div
+            class="c-m-option"
+            *ngFor="let letterID of group"
+            [class.destroy]="
+              (data$ | async)['letter'] === letterID[0]
+              && (selections$ | async)[letterID] === letterID
+            "
+            >
+
+            <button
+              class="m-circle-letter press"
+              (click)="onSelect(letterID)"
+              [disabled]="(selections$ | async)[letterID] === letterID"
+              [class.clear]="(selections$ | async)[letterID] === letterID"
+              [class.showOpt]="letterID[0] === (letter$ | async) && (showCorrectLetters$ | async) === true" 
+              >
+              {{letterID[0]}}
+            </button>
+
+          </div>
+        </div>
+  
+      </div>
+
+
+      <div style="height: 40px; width: 40px; margin: 10px auto">
+        <app-spinner-loading
+          *ngIf="isSettingData$ | async"
+          >
+        </app-spinner-loading>
+      </div>
+
+
+    </div>
+
+
+
+  </div>
+
+
   <app-success-animation
-    *ngIf="success"
+    *ngIf="showSuccessScreen$ | async"
     class="modify-s"
-    [class.showSuccess]="success"
-    [class.hideSuccess]="!success"
     >
   </app-success-animation>
-  
+
 </div>

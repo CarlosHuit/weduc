@@ -1,12 +1,14 @@
 import { ReadingCourseMenu } from './menu/reading-course-menu.model';
 import { ReadingCourseDataModel } from './data/reading-course-data.model';
 import { ReadingCourseLetterDetail } from './letter-detail/reading-course-letter-detail.model';
+import { ReadingCourseGameStateModel } from './game/reading-course-game.model';
 
 export class ReadingCourseModel {
   constructor(
     public data:         ReadingCourseDataModel,
     public menu:         ReadingCourseMenu,
-    public letterDetail: ReadingCourseLetterDetail
+    public letterDetail: ReadingCourseLetterDetail,
+    public game:         ReadingCourseGameStateModel
   ) {}
 }
 
