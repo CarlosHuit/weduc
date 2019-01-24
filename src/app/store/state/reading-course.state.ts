@@ -60,6 +60,16 @@ import {
   UseHelpG
 } from '../actions/reading-course/reading-course-game.actions';
 import { GData } from '../models/reading-course/game/reading-course-game.model';
+import {
+  SetInitialDataDL,
+  IsSettingDataDL,
+  SetCurrentDataDL,
+  ChangeLineWidthDL,
+  ChangeLineColorDL,
+  ToggleGuideLinesDL
+} from '../actions/reading-course/reading-course-draw-letter.actions';
+import { Coordinates } from 'src/app/classes/coordinates';
+import { DrawLetterData, ConfigData, Preferences } from '../models/reading-course/draw-letter/reading-course-draw-letter.model';
 
 @State<ReadingCourseModel>({
   name: 'readingCourse',
@@ -67,7 +77,8 @@ import { GData } from '../models/reading-course/game/reading-course-game.model';
     data: null,
     letterDetail: null,
     menu: null,
-    game: null
+    game: null,
+    drawLetter: null
   }
 })
 
@@ -203,6 +214,22 @@ export class ReadingCourseState {
   @Selector()
   static gShowSuccessScreen({ game }: ReadingCourseModel) { return game.showSuccessScreen; }
 
+
+
+  /* ---------- Selectore Draw Letter ---------- */
+  @Selector()
+  static dlCurrentData( {drawLetter}: ReadingCourseModel ) { return drawLetter.currentData; }
+
+  @Selector()
+  static dlConfigData({ drawLetter }: ReadingCourseModel ) { return drawLetter.configData; }
+
+  @Selector()
+  static dlPreferences({ drawLetter }: ReadingCourseModel ) { return drawLetter.preferences; }
+
+  @Selector()
+  static dlIsSettingData({ drawLetter }: ReadingCourseModel) { return drawLetter.isSettingData; }
+
+
   constructor(
     private _readingCourse: GetInitialDataService,
     private _shuffle:       ShuffleService,
@@ -213,6 +240,9 @@ export class ReadingCourseState {
   ) {
     this._audio.loadAudio();
   }
+
+
+
 
 
   /* ---------- data handler actions ---------- */
@@ -249,6 +279,7 @@ export class ReadingCourseState {
     const lLetters = payload.data.learnedLetters;
     const combinations = payload.data.letters.combinations;
     const alphabetList = [];
+    const coordinates = payload.data.coordinates;
 
     payload.data.words.forEach(w => {
 
@@ -268,11 +299,12 @@ export class ReadingCourseState {
     lLetters.forEach(l => l['combinations'] = combinations[l.letter]);
 
     const data: ReadingCourseDataModel = {
-      lettersMenu: alphabetList,
+      currentLetter:  '',
+      lettersMenu:    alphabetList,
       learnedLetters: lLetters,
-      letterSounds: payload.data.letters.sound_letters,
-      currentLetter: '',
-      similarLetters: payload.data.similarLetters
+      letterSounds:   payload.data.letters.sound_letters,
+      similarLetters: payload.data.similarLetters,
+      coordinates
     };
 
     patchState({
@@ -346,6 +378,9 @@ export class ReadingCourseState {
 
     ctx.dispatch(new ChangerSorter({ sorter: 'rating' }));
   }
+
+
+
 
 
   /* ---------- menu handler actions ---------- */
@@ -461,6 +496,8 @@ export class ReadingCourseState {
     });
 
   }
+
+
 
 
 
@@ -810,6 +847,7 @@ export class ReadingCourseState {
   resetLetterDetailData({ patchState }: StateContext<ReadingCourseModel>, action: ResetLetterDetailData) {
     patchState({ letterDetail: null });
   }
+
 
 
 
@@ -1168,6 +1206,130 @@ export class ReadingCourseState {
 
   }
 
+
+
+
+
+  /* ---------- Drawe Letter Actions ---------- */
+  @Action( SetInitialDataDL )
+  async setInitialDataDL({ patchState, getState, dispatch }: StateContext<ReadingCourseModel>, action: SetInitialDataDL) {
+
+    const letter   = getState().data.currentLetter;
+    const letterUC = letter.toUpperCase();
+    const letterLC = letter.toLowerCase();
+
+    const coordinatesLC = getState().data.coordinates.find(c => c.letter === letterLC).coordinates;
+    const coordinatesUC = getState().data.coordinates.find(c => c.letter === letterUC).coordinates;
+
+    const dataLowerCase = new DrawLetterData(coordinatesLC, letterLC, 'minúscula');
+    const dataUpperCase = new DrawLetterData(coordinatesUC, letterLC, 'mayúscula');
+
+    const colors = ['#1976d2', '#f44336', '#009494', '#fc793c'];
+    const configLineWidth = { min: 1, max: 24, width: 14, step: 1 };
+    const configData  = new ConfigData(colors, configLineWidth);
+    const preferences = new Preferences(14, colors[0], true);
+
+
+    const data = [ dataLowerCase, dataUpperCase ];
+
+    patchState({
+      drawLetter: {
+        ...getState().drawLetter,
+        data,
+        currentIndex: -1,
+        configData,
+        preferences,
+        showSuccessScreen: false,
+      }
+    });
+
+    await dispatch( new SetCurrentDataDL() );
+
+    dispatch( new IsSettingDataDL({state: false}) );
+
+  }
+
+  @Action( IsSettingDataDL )
+  isSettingDataDL({ patchState, getState }: StateContext<ReadingCourseModel>, { payload }: IsSettingDataDL) {
+    patchState({
+      drawLetter: {
+        ...getState().drawLetter,
+        isSettingData: payload.state
+      }
+    });
+  }
+
+  @Action( SetCurrentDataDL )
+  setCurrentDataDL( { patchState, getState }: StateContext<ReadingCourseModel>, action: SetCurrentDataDL ) {
+
+    const state = getState().drawLetter;
+    const index = state.currentIndex === null ? -1 : state.currentIndex;
+    const nextIndex = index + 1;
+
+    if (nextIndex < state.data.length) {
+
+      patchState({
+        drawLetter: {
+          ...getState().drawLetter,
+          currentIndex: nextIndex,
+          currentData: state.data[nextIndex],
+        }
+      });
+
+    }
+
+  }
+
+  @Action( ChangeLineWidthDL )
+  changeLineWidthDL({ patchState, getState }: StateContext<ReadingCourseModel>, { payload }: ChangeLineWidthDL) {
+    const state = getState();
+    patchState({
+      drawLetter: {
+        ...state.drawLetter,
+        configData: {
+          ...state.drawLetter.configData,
+          lineWidth: {
+            ...state.drawLetter.configData.lineWidth,
+            width: payload.lineWidth
+          }
+        },
+        preferences: {
+          ...state.drawLetter.preferences,
+          lineWidth: payload.lineWidth
+        }
+      }
+    });
+  }
+
+  @Action( ChangeLineColorDL )
+  changeLineColorDL( { patchState, getState }: StateContext<ReadingCourseModel>, { payload }: ChangeLineColorDL) {
+    const state = getState().drawLetter;
+    patchState({
+      drawLetter: {
+        ...state,
+        preferences: {
+          ...state.preferences,
+          lineColor: payload.color
+        }
+      }
+    });
+  }
+
+  @Action( ToggleGuideLinesDL )
+  toggleGuideLinesDL({ patchState, getState }: StateContext<ReadingCourseModel>, action: ToggleGuideLinesDL) {
+    const state = getState();
+    const stateGuideLines = state.drawLetter.preferences.showGuideLines;
+
+    patchState({
+      drawLetter: {
+        ...state.drawLetter,
+        preferences: {
+          ...state.drawLetter.preferences,
+          showGuideLines: !stateGuideLines
+        }
+      }
+    });
+  }
 
 }
 

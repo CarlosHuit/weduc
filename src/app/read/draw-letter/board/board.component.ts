@@ -3,10 +3,13 @@ import { GetCoordinatesService  } from '../../../services/get-data/get-coordinat
 import { SpeechSynthesisService } from '../../../services/speech-synthesis.service';
 import { ActivatedRoute         } from '@angular/router';
 import { GenerateDatesService   } from '../../../services/generate-dates.service';
-import { DetectMobileService    } from '../../../services/detect-mobile.service';
 import { Board, SizeCanvas      } from '../../../classes/draw-letter-data';
 import { Coordinates            } from '../../../classes/coordinates';
-import { Store } from '@ngxs/store';
+import { Store, Select } from '@ngxs/store';
+import { AppState } from 'src/app/store/state/app.state';
+import { Observable } from 'rxjs';
+import { ReadingCourseState } from 'src/app/store/state/reading-course.state';
+import { Preferences } from 'src/app/store/models/reading-course/draw-letter/reading-course-draw-letter.model';
 
 @Component(
   {
@@ -25,8 +28,6 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
   @Output() evsBoard       = new EventEmitter<string>();
   @Output() next           = new EventEmitter<string>();
-  @Input()  lineWidth:     number;
-  @Input()  lineColor:     string;
   @Input()  showGuidLines: boolean;
 
   private ctx: CanvasRenderingContext2D;
@@ -44,7 +45,6 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
   styleLine:     string;
   currentLetter: string;
   letterParam:   string;
-  colors:        string[];
   traces:        any[];
   points:        any[];
 
@@ -53,17 +53,22 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
   loading       = true;
   letterSounds: any;
 
+  @Select(AppState.isMobile) isMobile$: Observable<boolean>;
+  @Select(AppState.queryMobileMatch) queryMobileMatch$: Observable<boolean>;
+  @Select(ReadingCourseState.dlPreferences) preferences$: Observable<Preferences>;
+  isMobile: boolean;
+  queryMobileMatch: boolean;
+  preferences: Preferences;
+
   constructor(
     private _route:            ActivatedRoute,
     private speechSynthesis:   SpeechSynthesisService,
     private coordinateService: GetCoordinatesService,
     private genDates:          GenerateDatesService,
-    private _mobile:           DetectMobileService,
     private store: Store,
   ) {
     this.success = false;
     this.letterParam = this._route.snapshot.paramMap.get('letter');
-    this.colors    = ['#f44336', '#239B56', '#007cc0', '#fc793c'].sort(e => Math.random() - 0.5);
     this.store.selectSnapshot(state => this.letterSounds = state.readingCourse.data.letterSounds );
   }
 
@@ -71,18 +76,21 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
     this.canvas = this.canvasEl.nativeElement as HTMLCanvasElement;
     this.ctx    = this.canvas.getContext('2d');
 
-    if (this.isMobile()) {
+    if (this.isMobile || this.queryMobileMatch) {
+
       this.contCanvas = this.containerCanvas.nativeElement;
       this.cw     = this.canvas.width   = this.contCanvas.clientWidth;
       this.ch     = this.canvas.height  = this.contCanvas.clientHeight;
+
     }
 
 
-    if (!this.isMobile()) {
+    if (!this.isMobile && !this.queryMobileMatch) {
+
       this.cw = this.canvas.width  = 600;
       this.ch = this.canvas.height = 300;
-    }
 
+    }
 
 
     this.dibujar   = false;
@@ -101,7 +109,10 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
   ngOnInit() {
 
     this.currentLetter = this.letterParam;
+    this.isMobile$.subscribe(state => this.isMobile = state);
     window.addEventListener('resize', this.limpiar);
+    this.queryMobileMatch$.subscribe(state => this.queryMobileMatch = state);
+    this.preferences$.subscribe(p => this.preferences = p);
   }
 
   ngOnDestroy() {
@@ -113,14 +124,17 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
   resetCanvasSize = () => {
 
-    if (this.isMobile()) {
+    console.log(this.queryMobileMatch);
+    if (this.isMobile || this.queryMobileMatch) {
+      console.log('mobile');
       this.contCanvas = this.containerCanvas.nativeElement;
-      this.cw     = this.canvas.width   = this.contCanvas.clientWidth;
-      this.ch     = this.canvas.height  = this.contCanvas.clientHeight;
+      this.cw         = this.canvas.width   = this.contCanvas.clientWidth;
+      this.ch         = this.canvas.height  = this.contCanvas.clientHeight;
     }
 
 
-    if (!this.isMobile()) {
+    if (!this.isMobile && !this.queryMobileMatch ) {
+      console.log('desktop');
       this.cw = this.canvas.width  = 600;
       this.ch = this.canvas.height = 300;
     }
@@ -129,7 +143,6 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
   }
 
 
-  isMobile = () => this._mobile.isMobile();
 
   save = (): void => {
 
@@ -143,12 +156,6 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
       );
   }
 
-
-  changeColor = (color: string) => {
-    this.lineColor = color;
-    this.limpiar();
-  }
-
   nextLetter = (): void => {
 
     this.addCoordinates(false);
@@ -160,7 +167,7 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
   startup = (el): void => {
 
-    const mobile = this.isMobile();
+    const mobile = this.isMobile;
 
     if (mobile === true) {
       el.addEventListener('touchstart', this.handleStart, false);
@@ -179,7 +186,7 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
   }
 
   removeListeners = (el) => {
-    const mobile = this.isMobile();
+    const mobile = this.isMobile;
 
     if (mobile === true) {
       el.removeEventListener('touchstart', this.handleStart );
@@ -198,7 +205,7 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
   handleStart = (evt): void => {
 
-    if (this.isMobile()) { evt.preventDefault(); }
+    if (this.isMobile) { evt.preventDefault(); }
 
     this.dibujar = true;
     this.points.length = 0;
@@ -210,7 +217,7 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
   onMousePosition = (canvas, ev): { x: any, y: any } => {
 
     const ClientRect = canvas.getBoundingClientRect();
-    const mobile = this.isMobile();
+    const mobile = this.isMobile;
 
     if (mobile) {
       return {
@@ -238,8 +245,8 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
       this.ctx.lineTo(m.x, m.y);
 
-      this.ctx.lineWidth   = this.lineWidth;
-      this.ctx.strokeStyle = this.lineColor;
+      this.ctx.lineWidth   = this.preferences.lineWidth;
+      this.ctx.strokeStyle = this.preferences.lineColor;
       this.ctx.lineCap     = this.styleLine as any;
 
       this.ctx.stroke();

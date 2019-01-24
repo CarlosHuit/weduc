@@ -2,7 +2,6 @@ export class Coordinates {
   constructor(
     public coordinates: Coordinate[][],
     public letter:      string,
-
   ) {}
 }
 

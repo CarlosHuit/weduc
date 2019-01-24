@@ -1,17 +1,16 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { IsSettingDataDL, SetInitialDataDL } from 'src/app/store/actions/reading-course/reading-course-draw-letter.actions';
 import { HandwritingComponent   } from './handwriting/handwriting.component';
 import { BoardComponent         } from './board/board.component';
-import { SpeechSynthesisService } from '../../services/speech-synthesis.service';
-import { GenerateDatesService   } from '../../services/generate-dates.service';
-import { SdDrawLettersService   } from '../../services/send-user-data/sd-draw-letters.service';
-import { DetectMobileService    } from '../../services/detect-mobile.service';
-import { LocalStorageService    } from '../../services/local-storage.service';
 import { DrawLettersData, Board } from '../../classes/draw-letter-data';
 import { ControlCanvas          } from '../../classes/control-canvas';
-import { GetCoordinatesService  } from '../../services/get-data/get-coordinates.service';
 import { Coordinates            } from '../../classes/coordinates';
-import { Store } from '@ngxs/store';
+import { Store, Select          } from '@ngxs/store';
+import { AppState               } from 'src/app/store/state/app.state';
+import { Observable             } from 'rxjs';
+import { ReadingCourseState     } from 'src/app/store/state/reading-course.state';
+import { Preferences            } from 'src/app/store/models/reading-course/draw-letter/reading-course-draw-letter.model';
+import { Navigate               } from '@ngxs/router-plugin';
 
 @Component({
   selector: 'app-draw-letter',
@@ -24,96 +23,42 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
   @ViewChild(HandwritingComponent) handWriting: HandwritingComponent;
   @ViewChild(BoardComponent) boardComponent: BoardComponent;
 
-  letters:        string[] = [];
-  letterParam:    string;
   currentLetter:  string;
-  urlToRedirect:  string;
-  loading:        boolean;
   showBoard:      boolean;
-  showDraw:       boolean;
-  coordinates:    any;
-  success =       false;
-  currentCoordinates:        {};
 
-  userData:       DrawLettersData;
-  data:           DrawLettersData[] = [];
 
-  colors:         string[];
-  lineWidth:      number;
-  lineColor:      string;
-  showGuidLines:  boolean;
-  letterSounds: any;
 
-  constructor(
-    private _getData:    GetCoordinatesService,
-    private _route:      ActivatedRoute,
-    private router:      Router,
-    private speech:      SpeechSynthesisService,
-    private genDates:    GenerateDatesService,
-    private _sendData:   SdDrawLettersService,
-    private dMobile:     DetectMobileService,
-    private _storage:    LocalStorageService,
-    private store:       Store
-  ) {
-    this.letterParam   = this._route.snapshot.paramMap.get('letter');
-    this.loading       = true;
-    this.showDraw      = false;
-    this.colors        = ['#f44336', '#009494', '#007cc0', '#fc793c'].sort(e => Math.random() - 0.5);
-    this.lineWidth     = 14;
-    this.lineColor     = '#007cc0';
-    this.lineColor     = this.colors[0];
-    this.showGuidLines = true;
-    this.urlToRedirect = `lectura/encontrar-letras/${this.letterParam}`;
-    this.store.selectSnapshot(state => this.letterSounds = state.readingCourse.data.letterSounds );
+  @Select(AppState.isMobile) isMobile$: Observable<boolean>;
+  @Select(AppState.queryMobileMatch) queryMobileMatch$: Observable<boolean>;
+  @Select(ReadingCourseState.dlCurrentData) data$: Observable<Coordinates>;
+  @Select(ReadingCourseState.dlPreferences) preferences$: Observable<Preferences>;
+  @Select(ReadingCourseState.dlIsSettingData) isSettingData$: Observable<boolean>;
+  @Select(ReadingCourseState.currentLetter) currentLetter$: Observable<string>;
 
+  isMobile: boolean;
+
+  constructor( private store: Store ) {
+    this.store.dispatch( new IsSettingDataDL({state: true}) );
   }
 
   ngOnInit() {
-    this.setValues();
-    window.addEventListener('resize', this.isMobile);
+    this.store.dispatch(new SetInitialDataDL());
+    this.isMobile$.subscribe(state => this.isMobile = state);
+    this.currentLetter$.subscribe(l => this.currentLetter = l);
   }
 
   ngOnDestroy() {
-    window.removeEventListener('resize', this.isMobile);
   }
 
-  setValues = () => {
-
-    this.letters.push(this.letterParam.toUpperCase());
-    this.letters.push(this.letterParam.toLowerCase());
-    this.currentLetter = this.letters[0];
-
-    this.getCoordinates();
-
-  }
-
-  getCoordinates = () => {
-    this._getData.getCoordinates(this.letterParam)
-      .subscribe(
-        (coordinates: Coordinates) => {
-
-          this.coordinates        = coordinates;
-          this.currentCoordinates = this.coordinates.coordinates[this.currentLetter];
-          this.loading            = false;
-          setTimeout(() =>  this.showDraw = true , 10);
-          this.initUserData();
-
-        }
-      );
-  }
 
   eventsControlCanvas = (ev: ControlCanvas) => {
     const x = ev;
-    this.lineColor = ev.color;
-    this.lineWidth = ev.lineWidth;
-    this.showGuidLines = ev.showGuideLines;
     this.boardComponent.limpiar();
   }
 
   eventsHandWriting = (ev) => {
 
     if ( ev === 'repeat' ) {
-      this.addRepeatTime();
     } else {
 
       this.showBoard = true;
@@ -128,7 +73,6 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
 
     if (ev === 'repeat') {
 
-      this.addRepeatTime();
       this.showHandWritingAndAnimate();
 
     } else {
@@ -138,12 +82,10 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
 
       if (data.showHandwriting === true) {
 
-        this.userData.board.push(d);
         this.showHandWritingAndAnimate();
 
       } else {
 
-        this.userData.board.push(d);
 
       }
 
@@ -160,90 +102,37 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
 
   }
 
-  isMobile = (): boolean => {
-    return this.dMobile.isMobile();
-  }
 
-  nextElement = (ev) => {
-    this.boardComponent.nextLetter();
-  }
-
-  next = (ev) => {
-
-    this.addFinalTime();
-    this.data.push(this.userData);
-
-
-    const nextIndex = this.letters.indexOf(this.currentLetter) + 1;
-    const type      = this.currentLetter === this.currentLetter.toLowerCase() ? 'minúscula' : 'mayúscula';
-    const sound     = this.letterSounds[this.letterParam.toLowerCase()];
-    const msg       = `Bien, ahora ya sabes escribir la letra: ${sound} .... "${type}"`;
-
-
-    if (nextIndex < this.letters.length) {
-
-      this.success   = true;
-      this.showBoard = false;
-      this.changeData(nextIndex);
-      this.initUserData();
-
-      const speech = this.speech.speak(msg);
-      speech.addEventListener('end', e => this.nextLetter());
-
-    } else {
-
-      this.success = true;
-      this.sendDrawLetterData();
-
-      const speech = this.speech.speak(msg);
-      speech.addEventListener('end', this.redirect);
-
-    }
-  }
-
-  changeData = (index: number) => {
-
-    this.currentLetter = this.letters[index];
-    this.currentCoordinates = this.coordinates.coordinates[this.currentLetter];
-
-  }
-
-  nextLetter = () => {
-
-    this.success = false;
-    this.handWriting.limpiar();
-    this.handWriting.startExample();
-
-  }
+  // const msg       = `Bien, ahora ya sabes escribir la letra: ${sound} .... "${type}"`;
 
   redirect = (): void => {
 
-    const url = `lectura/encontrar-letras/${this.letterParam}`;
-    this.router.navigateByUrl(url);
+    const url = `lectura/encontrar-letras/${this.currentLetter}`;
+    this.store.dispatch( new Navigate([url]) );
 
   }
 
-  initUserData = () => {
-    const t  = this.genDates.generateData();
-    const id = this._storage.getElement('user')['userId'];
+  // initUserData = () => {
+  //   const t  = this.genDates.generateData();
+  //   const id = this._storage.getElement('user')['userId'];
 
-    this.userData = new DrawLettersData(id, t.fullTime, 'N/A', t.fullDate, this.currentLetter, [], []);
+  //   this.userData = new DrawLettersData(id, t.fullTime, 'N/A', t.fullDate, this.currentLetter, [], []);
 
-  }
+  // }
 
-  addRepeatTime = () => {
+  // addRepeatTime = () => {
 
-    const t = this.genDates.generateData().fullTime;
-    this.userData.handWriting.push(t);
+  //   const t = this.genDates.generateData().fullTime;
+  //   this.userData.handWriting.push(t);
 
-  }
+  // }
 
-  addFinalTime = () => {
+  // addFinalTime = () => {
 
-    const t = this.genDates.generateData().fullTime;
-    this.userData.finalTime = t;
+  //   const t = this.genDates.generateData().fullTime;
+  //   this.userData.finalTime = t;
 
-  }
+  // }
 
   repeatHandWriting = () => {
     this.handWriting.repeat();
@@ -265,18 +154,9 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
     this.boardComponent.nextLetter();
   }
 
-  landscape = () => {
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-    if (w > h) {
-      return true;
-    } else {
-      return false;
-    }
-  }
 
   genContainer = () => {
-    if (this.isMobile()) {
+    if (this.isMobile) {
       const w = window.innerWidth;
       const h = window.innerHeight;
       if (w < h) {
@@ -292,14 +172,6 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
     }
   }
 
-  sendDrawLetterData = () => {
 
-    this._sendData.sendDrawLetters(this.data)
-      .subscribe(
-        val => { const t = val; },
-        err => { const e = err; }
-      );
-
-  }
 
 }

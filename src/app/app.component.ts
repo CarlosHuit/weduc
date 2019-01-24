@@ -1,9 +1,9 @@
-import { Component, OnInit, HostListener  } from '@angular/core';
+import { Component, OnInit, HostListener, OnDestroy  } from '@angular/core';
 import { ChangeStateDrawer, CloseDrawer   } from './store/actions/drawer.actions';
-import { ChangeTitle, DetectMobile        } from './store/actions/app.actions';
+import { DetectMobile   } from './store/actions/app.actions';
 import { Title          } from '@angular/platform-browser';
 import { Select, Store  } from '@ngxs/store';
-import { Observable     } from 'rxjs';
+import { Observable, Subscription     } from 'rxjs';
 import { AuthService    } from './auth/service/auth.service';
 import { AppState       } from './store/state/app.state';
 import { DrawerState    } from './store/state/drawer.state';
@@ -14,10 +14,14 @@ import { AuthState      } from './store/state/auth.state';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
 
   title = 'weduc';
   statusDrawer: boolean;
+
+  sub1: Subscription;
+  sub2: Subscription;
+
   @Select(AppState.getTitle)         title$:         Observable<string>;
   @Select(AuthState.urlAvatar)       urlAvatat$:     Observable<string>;
   @Select(AuthState.fullName)        fullName$:      Observable<string>;
@@ -29,28 +33,29 @@ export class AppComponent implements OnInit {
   constructor (
     private _titleService: Title,
     private _auth:         AuthService,
-    private store:         Store
+    private store:         Store,
   ) { }
 
   ngOnInit() {
-    this.title$.subscribe(title => this._titleService.setTitle(title));
-    this.opened$.subscribe((status: boolean) => this.statusDrawer = status );
+    this.sub1 = this.title$.subscribe(title => this._titleService.setTitle(title));
+    this.sub2 = this.opened$.subscribe((status: boolean) => this.statusDrawer = status );
+  }
+
+  ngOnDestroy() {
+    this.sub1.unsubscribe();
+    this.sub2.unsubscribe();
   }
 
   @HostListener('window :resize') onResize() {
     this.store.dispatch(new DetectMobile());
   }
 
-  isLoggedIn = () => {
-    return this._auth.isLoggedIn();
-  }
+  isLoggedIn = () =>  this._auth.isLoggedIn();
+  closeDrawer = () => this.store.dispatch( new CloseDrawer() );
 
   toogleDrawer = ($event: boolean) => {
     this.store.dispatch( new ChangeStateDrawer({status: !this.statusDrawer}) );
   }
 
-  closeDrawer = () => {
-    this.store.dispatch( new CloseDrawer() );
-  }
 
 }

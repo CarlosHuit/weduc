@@ -1,56 +1,34 @@
 <div
-  [class.container]="!isMobile()"
-  [ngStyle]="genContainer()"
   style="overflow: auto"
+  [ngStyle]="genContainer()"
+  [class.container]="!(isMobile$ | async) || !(queryMobileMatch$ | async)"
   >
 
 
 
   <!-- desktop Version -->
   <mat-card 
-    *ngIf="!loading && !isMobile()"
-    class="hide container-slider"
-    [class.show]="showDraw"
+    class="container-slider"
+    *ngIf="!(isSettingData$ | async) && !(isMobile$ | async) && !(queryMobileMatch$ | async) "
     >
-    <div  class="d-c-slider" [class.show-board]="showBoard === true" >
+
+    <div
+      class="d-c-slider"
+      [class.show-board]="showBoard === true"
+      >
 
 
       <div class="d-c-control-canvas">
-        
-        <app-control-canvas
-          [colors]="colors"
-          [lineWidth]="lineWidth"
-          [lineColor]="lineColor"
-          [showGuidLines]="showGuidLines"
-          (eventsNext)="nextElement($event)"
-          (evsControlCanvas)="eventsControlCanvas($event)"
-        >
-        </app-control-canvas>
-  
+        <app-control-canvas></app-control-canvas>
       </div>
 
+
       <div class="d-c-box one">
-        <app-handwriting
-          [letter]="currentLetter"
-          [coordinates]="currentCoordinates"
-          [lineWidth]="lineWidth"
-          [lineColor]="lineColor"
-          [showGuidLines]="showGuidLines"
-          (evsHandWriting)="eventsHandWriting($event)"
-          >
-        </app-handwriting>
+        <app-handwriting (evsHandWriting)="eventsHandWriting($event)" ></app-handwriting>
       </div>
 
       <div class="d-c-box two">
-        <app-board
-          [letter]="currentLetter"
-          [lineWidth]="lineWidth"
-          [lineColor]="lineColor"
-          [showGuidLines]="showGuidLines"
-          (evsBoard)="eventsBoard($event)"
-          (next)="next($event)"
-          >
-        </app-board>
+        <app-board (evsBoard)="eventsBoard($event)" (next)="next($event)"></app-board>
       </div>
 
 
@@ -61,52 +39,61 @@
 
   <!-- mobile version -->
   <div 
-    *ngIf="!loading && isMobile()"
-    class="hide container-slider-mobile"
-    [class.show]="showDraw"
+    class=" container-slider-mobile"
+    *ngIf="!(isSettingData$ | async) && (isMobile$ | async) || (queryMobileMatch$ | async)"
     >
 
     <div class="m-c-slider" [class.show-board]="showBoard === true" >
 
       <div class="box one">
 
+
+
+
         <div class="d-c-control-canvas" style="display: flex">
 
           <div style="width: 140px">
-            <app-control-canvas
-              [colors]="colors"
-              [lineWidth]="lineWidth"
-              [lineColor]="lineColor"
-              [showGuidLines]="showGuidLines"
-              (eventsNext)="nextElement($event)"
-              (evsControlCanvas)="eventsControlCanvas($event)"
-            >
-            </app-control-canvas>
+            <app-control-canvas> </app-control-canvas>
           </div>
 
-          <div class="m-c-buttons-extra" [style.background]="lineColor">
-            <button mat-flat-button (click)="repeatHandWriting()" style="background: #fa7e29">
-              <mat-icon class="fz-36 center">replay</mat-icon>
+          <div
+            class="m-c-buttons-extra"
+            [style.background]="(preferences$ | async).lineColor"
+            >
+
+            <button
+              mat-flat-button
+              (click)="repeatHandWriting()"
+              style="background: #fa7e29"
+              >
+              <mat-icon
+                class="fz-36 center"
+                >
+                replay
+              </mat-icon>
             </button>
       
-            <button mat-flat-button (click)="hideHandWriting()" style="background: #239B56">
-              <mat-icon class="fz-36 center">arrow_forward</mat-icon>
+            <button
+              mat-flat-button
+              (click)="hideHandWriting()"
+              style="background: #239B56"
+              >
+              <mat-icon
+                class="fz-36 center"
+                >
+                arrow_forward
+              </mat-icon>
             </button>
+
           </div>
     
         </div>
 
         <div style="height: calc(100% - 50px)">
-          <app-handwriting
-            [letter]="currentLetter"
-            [coordinates]="currentCoordinates"
-            [lineWidth]="lineWidth"
-            [lineColor]="lineColor"
-            [showGuidLines]="showGuidLines"
-            (evsHandWriting)="eventsHandWriting($event)"
-            >
-          </app-handwriting>
+          <app-handwriting (evsHandWriting)="eventsHandWriting($event)"></app-handwriting>
         </div>
+
+
 
       </div>
 
@@ -115,42 +102,55 @@
         <div class="d-c-control-canvas" style="display: flex">
 
           <div style="width: 140px">
-            <app-control-canvas
-              [colors]="colors"
-              [lineWidth]="lineWidth"
-              [lineColor]="lineColor"
-              [showGuidLines]="showGuidLines"
-              (eventsNext)="nextElement($event)"
-              (evsControlCanvas)="eventsControlCanvas($event)"
-            >
-            </app-control-canvas>
+            <app-control-canvas ></app-control-canvas>
           </div>
 
-          <div class="m-c-buttons-extra" [style.background]="lineColor">
-            <button mat-flat-button (click)="hideBoard()" style="background: #fa7e29">
-              <mat-icon class="fz-36 center">replay</mat-icon>
+          <div
+            class="m-c-buttons-extra"
+            [style.background]="(preferences$ | async).lineColor"
+            >
+            <button
+              mat-flat-button
+              (click)="hideBoard()"
+              style="background: #fa7e29"
+              >
+              <mat-icon
+                class="fz-36 center"
+                >
+                replay
+              </mat-icon>
             </button>
       
-            <button mat-flat-button (click)="clearCanvasBoard()" style="background: #007cc0">
-              <mat-icon class="fz-36 center">delete_forever</mat-icon>
+            <button
+              mat-flat-button
+              (click)="clearCanvasBoard()"
+              style="background: #007cc0"
+              >
+              <mat-icon
+                class="fz-36 center"
+                >
+                delete_forever
+              </mat-icon>
             </button>
-            <button mat-flat-button (click)="nextElementBoard()" style="background: #239B56">
-              <mat-icon class="fz-36 center">arrow_forward</mat-icon>
+
+            <button
+              mat-flat-button
+              (click)="nextElementBoard()"
+              style="background: #239B56"
+              >
+              <mat-icon
+                class="fz-36 center"
+                >
+                arrow_forward
+              </mat-icon>
             </button>
+
           </div>
     
         </div>
 
         <div style="height: calc(100% - 50px)">
-          <app-board
-            [letter]="currentLetter"
-            [lineWidth]="lineWidth"
-            [lineColor]="lineColor"
-            [showGuidLines]="showGuidLines"
-            (evsBoard)="eventsBoard($event)"
-            (next)="next($event)"
-            >
-          </app-board>
+          <app-board (evsBoard)="eventsBoard($event)" (next)="next($event)"></app-board>
         </div>
 
       </div>
@@ -159,7 +159,16 @@
 
   </div>
 
-  <app-success-animation *ngIf="success" class="hideSuccess"  [class.showSuccess]="success === false"></app-success-animation>
-  <app-spinner-loading   *ngIf="loading"></app-spinner-loading>
+  <app-success-animation
+    *ngIf="success"
+    class="hideSuccess"
+    [class.showSuccess]="success === false"
+    >
+  </app-success-animation>
+
+  <app-spinner-loading
+    *ngIf="isSettingData$ | async"
+    >
+  </app-spinner-loading>
   
   </div>

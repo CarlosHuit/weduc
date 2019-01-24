@@ -1,8 +1,11 @@
 import { Component, ViewChild, OnInit, Output, ElementRef, AfterViewInit, Input, OnDestroy, EventEmitter } from '@angular/core';
 import { SpeechSynthesisService } from '../../../services/speech-synthesis.service';
-import { GenerateDatesService   } from '../../../services/generate-dates.service';
-import { DetectMobileService   } from '../../../services/detect-mobile.service';
-import { Store } from '@ngxs/store';
+import { Store, Select } from '@ngxs/store';
+import { AppState } from 'src/app/store/state/app.state';
+import { Observable } from 'rxjs';
+import { ReadingCourseState } from 'src/app/store/state/reading-course.state';
+import { Preferences, DrawLetterData } from 'src/app/store/models/reading-course/draw-letter/reading-course-draw-letter.model';
+import { Coordinates } from 'src/app/classes/draw-letter-data';
 
 interface HandwritingData {
   startTime?:  string;
@@ -20,11 +23,8 @@ interface HandwritingData {
 export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
 
 
-  @Input() coordinates:    any;
-  @Input() letter:         string;
-  @Input() lineWidth:      number;
-  @Input() lineColor:      string;
-  @Input() showGuidLines:  boolean;
+  coordinates:    Coordinates[][];
+  letter:         string;
 
   @Output() evsHandWriting = new EventEmitter<string>();
   @ViewChild('canvasDraw') canvasEl: ElementRef;
@@ -38,23 +38,26 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
   velocity:     number;
   styleLine:    string;
   type:         string;
-  colors:       string[];
   timeClear:    any;
-  info:         any[] = [];
+  info:         Coordinates[][];
   tiempos:      any[] = [];
   totalTimes:   any[] = [];
   timeOutsLine        = [];
   timeOutsGroup       = [];
-  // showGuidLines       = true;
 
   userData: HandwritingData = {};
   letterSounds: any;
+  preferences: Preferences;
+
+  @Select(AppState.isMobile)                   isMobile$: Observable<boolean>;
+  @Select(AppState.queryMobileMatch)   queryMobileMatch$: Observable<boolean>;
+  @Select(ReadingCourseState.dlPreferences) preferences$: Observable<Preferences>;
+  @Select(ReadingCourseState.currentLetter) currentLetter$: Observable<string>;
+  @Select(ReadingCourseState.dlCurrentData) currentData$:   Observable<DrawLetterData>;
 
 
   constructor(
     private speechSynthesis: SpeechSynthesisService,
-    private genDates:        GenerateDatesService,
-    private _mobile:         DetectMobileService,
     private store: Store
   ) {
     this.store.selectSnapshot(state => this.letterSounds = state.readingCourse.data.letterSounds );
@@ -72,13 +75,15 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
     this.styleLine = 'round';
     this.velocity  = 150;
 
-    this.startExample();
   }
 
   ngOnInit() {
 
+    this.preferences$.subscribe(p => this.preferences = p);
     window.addEventListener('resize', this.startExample);
-
+    this.currentData$.subscribe(data => this.coordinates = data.coordinates);
+    this.currentLetter$.subscribe(letter => this.letter = letter);
+    setTimeout(() => this.startExample(), 500);
   }
 
   ngOnDestroy() {
@@ -93,16 +98,11 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
     this.timeOutsGroup = [];
     this.timeOutsLine  = [];
 
-    this.info = this.coordinates;
+    this.info = JSON.parse(JSON.stringify(this.coordinates));
     this.type = this.letter === this.letter.toLowerCase() ? 'minúscula' : 'mayúscula';
 
     this.info.forEach(e => e.push(e[e.length - 1]));
 
-  }
-
-  changeColor = (color: string): void => {
-    this.lineColor = color;
-    this.startExample();
   }
 
   hide = () => {
@@ -119,10 +119,7 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
     this.limpiar();
   }
 
-  repeat = () => {
-    this.evsHandWriting.emit('repeat');
-    this.startExample();
-  }
+  repeat = () => this.startExample();
 
   draw = (): void => {
 
@@ -133,8 +130,8 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
       this.limpiar();
       this.generateTimes();
 
-      this.ctx.lineWidth   = this.lineWidth;
-      this.ctx.strokeStyle = this.lineColor;
+      this.ctx.lineWidth   = this.preferences.lineWidth;
+      this.ctx.strokeStyle = this.preferences.lineColor;
       this.ctx.lineCap     = this.styleLine as any;
 
 
@@ -174,13 +171,13 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
 
     } else {
 
-      this.faisToDraw();
+      this.failToDraw();
 
     }
 
   }
 
-  faisToDraw = () => {
+  failToDraw = () => {
 
 
     const type  = this.letter === this.letter.toLowerCase() ? 'minúscula' : 'mayúscula';
@@ -191,7 +188,6 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
 
   }
 
-  isMobile = () => this._mobile.isMobile();
 
   startExample = () => {
 

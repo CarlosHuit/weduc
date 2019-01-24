@@ -31,7 +31,6 @@ import { GameComponent                    } from './read/game/game.component';
 import { FindLetterComponent              } from './read/find-letter/find-letter.component';
 import { SelectWordsComponent             } from './read/select-words/select-words.component';
 import { PronounceLetterComponent         } from './read/pronounce-letter/pronounce-letter.component';
-import { ControlCanvasComponent           } from './read/control-canvas/control-canvas.component';
 import { DiscussionSystemComponent        } from './shared/discussion-system/discussion-system.component';
 import { DeleteCommentDialogComponent     } from './shared/discussion-system/delete-comment-dialog/delete-comment-dialog.component';
 import { CommentComponent                 } from './shared/discussion-system/comment/comment.component';
@@ -45,6 +44,7 @@ import { NgxsStoreModule                  } from './store/store.module';
 import { BoardComponent } from './read/draw-letter/board/board.component';
 import { HandwritingComponent } from './read/draw-letter/handwriting/handwriting.component';
 import { GuideLinesComponent } from './read/draw-letter/guide-lines/guide-lines.component';
+import { ControlCanvasComponent } from './read/draw-letter/control-canvas/control-canvas.component';
 
 @NgModule({
   declarations: [

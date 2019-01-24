@@ -1,4 +1,4 @@
-<div class="m-c-mini-toolbar" [style.background]="lineColor">
+<div class="m-c-mini-toolbar" [style.background]="(preferences$ | async).lineColor">
 
 
   <!-- Slider menu -->
@@ -12,8 +12,8 @@
 
       <div class="line-width-example">
         <hr
-          [style.borderBottomWidth.px]="lineWidth"
-          [style.borderBottomColor]="lineColor"
+          [style.borderBottomWidth.px]="(preferences$ | async).lineWidth"
+          [style.borderBottomColor]="(preferences$ | async).lineColor"
           >
       </div>
 
@@ -21,10 +21,10 @@
         <mat-slider
           #slid
           class="m-c-slider"
-          [max]="24"
-          [min]="1"
-          [step]="1"
-          [value]="lineWidth"
+          [max]="(configData$ | async).lineWidth.max"
+          [min]="(configData$ | async).lineWidth.min"
+          [step]="(configData$ | async).lineWidth.step"
+          [value]="(configData$ | async).lineWidth.width"
           (input)="changeWidth(slid.value)"
           >
         </mat-slider>
@@ -45,13 +45,13 @@
 
     <div class="m-c-color-buttons">
       <button
-        *ngFor="let color of colors"
+        *ngFor="let color of (configData$ | async).colors"
         [style.background]="color"
         (click)="changeColor(color)"
         class="btn-color"
         mat-icon-button
         >
-        <mat-icon style="padding: 0" *ngIf="color === lineColor" >check_circle</mat-icon>
+        <mat-icon style="padding: 0" *ngIf="color === (preferences$ | async).lineColor" >check_circle</mat-icon>
       </button>
     </div>
 
@@ -64,7 +64,7 @@
 
     <mat-icon
       class="fz-30"
-      *ngIf="showGuidLines"
+      *ngIf="(preferences$ | async).showGuideLines"
       (click)="toggleGuideLines()"
       >
       visibility
@@ -72,7 +72,7 @@
 
     <mat-icon
       class="fz-30"
-      *ngIf="!showGuidLines"
+      *ngIf="!(preferences$ | async).showGuideLines"
       (click)="toggleGuideLines()"
       >
       visibility_off
@@ -84,7 +84,7 @@
   <button
     mat-flat-button
     class="btn-next"
-    *ngIf="!isMobile()"
+    *ngIf="!(isMobile$ | async) && !(queryMobileMatch$ | async)"
     (click)="nextLetter()"
     >
     <mat-icon class="icon-next"> arrow_forward</mat-icon>

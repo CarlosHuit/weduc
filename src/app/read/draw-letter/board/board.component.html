@@ -1,9 +1,9 @@
 <!-- desktop version -->
-<div class="d-c-board center" *ngIf="!isMobile()" >
+<div class="d-c-board center" *ngIf="!(isMobile$ | async) && !(queryMobileMatch$ | async)" >
 
   <div class="d-c-container-canvas">
-    <app-guide-lines [top]="30" *ngIf="showGuidLines" ></app-guide-lines>
-    <button mat-icon-button class="icon-gesture" [style.background]="lineColor" (click)="clearCanvas()" >
+    <app-guide-lines [top]="30" *ngIf="(preferences$ | async).showGuideLines"></app-guide-lines>
+    <button mat-icon-button class="icon-gesture" [style.background]="(preferences$ | async).lineColor" (click)="clearCanvas()" >
       <mat-icon class="center" >delete_forever</mat-icon>
 
     </button>
@@ -14,7 +14,7 @@
 </div>
 
 <!-- version mobile -->
-<div class="container-board center" *ngIf="isMobile()" >
+<div class="container-board center" *ngIf="(isMobile$ | async) || (queryMobileMatch$ | async)" >
 
   <div #containerCanvas class="container-canvas">
 
@@ -28,7 +28,7 @@
   </div>
 
   <div class="m-c-guide-lines">
-    <app-guide-lines [top]="0" *ngIf="showGuidLines"></app-guide-lines>
+    <app-guide-lines [top]="0" *ngIf="(preferences$ | async).showGuideLines"></app-guide-lines>
   </div>
 
 </div>
