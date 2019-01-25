@@ -1232,7 +1232,7 @@ export class ReadingCourseState {
     const colors = ['#1976d2', '#f44336', '#009494', '#fc793c'];
     const configLineWidth = { min: 1, max: 24, width: 14, step: 1 };
     const configData  = new ConfigData(colors, configLineWidth);
-    const preferences = new Preferences(14, colors[0], true);
+    const preferences = new Preferences(14, colors[0], true, 'round');
 
 
     const data = [ dataLowerCase, dataUpperCase ];

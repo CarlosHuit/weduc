@@ -2,12 +2,22 @@
 <div class="d-c-board center" *ngIf="!(isMobile$ | async) && !(queryMobileMatch$ | async)" >
 
   <div class="d-c-container-canvas">
-    <app-guide-lines [top]="30" *ngIf="(preferences$ | async).showGuideLines"></app-guide-lines>
-    <button mat-icon-button class="icon-gesture" [style.background]="(preferences$ | async).lineColor" (click)="clearCanvas()" >
+    <app-guide-lines
+      [top]="30"
+      *ngIf="(preferences$ | async).showGuideLines"
+      >
+    </app-guide-lines>
+
+    <button
+      mat-icon-button
+      class="icon-gesture"
+      [style.background]="(preferences$ | async).lineColor"
+      (click)="clearCanvas()"
+      >
       <mat-icon class="center" >delete_forever</mat-icon>
 
     </button>
-    <canvas class="d-c-canvas" id="canvasEl" #canvasEl></canvas>
+    <canvas class="d-c-canvas" #canvasEl></canvas>
   </div>
 
 
@@ -18,7 +28,7 @@
 
 
   <div #containerCanvas class="container-canvas">
-    <canvas class="m-c-canvas mob" id="canvasEl" #canvasEl></canvas>
+    <canvas class="m-c-canvas mob" #canvasEl></canvas>
   </div>
 
 
@@ -27,14 +37,22 @@
   </div>
 
 
-  <div class="container-float-buttons" >
-    <button mat-mini-fab color="warn" (click)="deleteStokes()">
-      <mat-icon style="font-size: 24px">clear</mat-icon>
+
+  <button mat-fab color="warn" class="btn-done">
+    <mat-icon style="font-weight: bold">done</mat-icon>
+  </button>
+
+  <div class="m-c-float-buttons" >
+
+    <button mat-icon-button color="warn" (click)="showHandwriting()">
+      <mat-icon>replay</mat-icon>
     </button>
-  
-    <button mat-fab color="warn" (click)="showHandwriting()">
-      <mat-icon style="font-size: 24px">replay</mat-icon>
+
+    <button mat-icon-button color="warn" (click)="deleteStokes()" >
+      <mat-icon>clear</mat-icon>
     </button>
+
   </div>
+
 
 </div>

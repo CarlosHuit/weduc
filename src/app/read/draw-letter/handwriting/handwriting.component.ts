@@ -1,11 +1,12 @@
-import { Component, ViewChild, OnInit, Output, ElementRef, AfterViewInit, Input, OnDestroy, EventEmitter } from '@angular/core';
-import { Store, Select } from '@ngxs/store';
-import { AppState } from 'src/app/store/state/app.state';
-import { Observable } from 'rxjs';
-import { ReadingCourseState } from 'src/app/store/state/reading-course.state';
+import { Component, ViewChild, OnInit, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
 import { Preferences, DrawLetterData } from 'src/app/store/models/reading-course/draw-letter/reading-course-draw-letter.model';
-import { Coordinates } from 'src/app/classes/draw-letter-data';
+import { Coordinates            } from 'src/app/classes/draw-letter-data';
 import { ListenHandwritingMsgDL } from 'src/app/store/actions/reading-course/reading-course-draw-letter.actions';
+import { SpeechSynthesisService } from 'src/app/services/speech-synthesis.service';
+import { Store, Select      } from '@ngxs/store';
+import { AppState           } from 'src/app/store/state/app.state';
+import { Observable         } from 'rxjs';
+import { ReadingCourseState } from 'src/app/store/state/reading-course.state';
 
 @Component({
   selector: 'app-handwriting',
@@ -16,38 +17,28 @@ import { ListenHandwritingMsgDL } from 'src/app/store/actions/reading-course/rea
 export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
 
 
-  coordinates:    Coordinates[][];
-  letter:         string;
-
-  @Output() evsHandWriting = new EventEmitter<string>();
   @ViewChild('canvasDraw') canvasEl: ElementRef;
 
-  private ctx:    CanvasRenderingContext2D;
-  private canvas: HTMLCanvasElement;
-
-  cw:           number;
-  ch:           number;
-  smoothing:    number;
-  velocity:     number;
-  styleLine:    string;
-  type:         string;
-  timeClear:    any;
-  info:         Coordinates[][];
-  tiempos:      any[] = [];
-  totalTimes:   any[] = [];
-  timeOutsLine        = [];
-  timeOutsGroup       = [];
-
-  preferences: Preferences;
+  ctx:           CanvasRenderingContext2D;
+  canvas:        HTMLCanvasElement;
+  info:          Coordinates[][];
+  coordinates:   Coordinates[][];
+  preferences:   Preferences;
+  timeOutsLine:  NodeJS.Timer[] = [];
+  timeOutsGroup: NodeJS.Timer[] = [];
+  totalTimes:    number[] = [];
+  tiempos:       any[]    = [];
+  cw:            number;
+  ch:            number;
+  velocity:      number;
 
   @Select(AppState.isMobile)                   isMobile$: Observable<boolean>;
   @Select(AppState.queryMobileMatch)   queryMobileMatch$: Observable<boolean>;
   @Select(ReadingCourseState.dlPreferences) preferences$: Observable<Preferences>;
-  @Select(ReadingCourseState.currentLetter) currentLetter$: Observable<string>;
   @Select(ReadingCourseState.dlCurrentData) currentData$:   Observable<DrawLetterData>;
 
 
-  constructor(private store: Store) { }
+  constructor(private store: Store, private _speech: SpeechSynthesisService) { }
 
   ngAfterViewInit() {
 
@@ -56,9 +47,6 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
     this.cw     = this.canvas.width = 300;
     this.ch     = this.canvas.height = 300;
 
-
-    this.smoothing = 5;
-    this.styleLine = 'round';
     this.velocity  = 150;
 
   }
@@ -67,7 +55,6 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
 
     this.preferences$.subscribe(p => this.preferences = p);
     this.currentData$.subscribe(data => this.coordinates = data.coordinates);
-    this.currentLetter$.subscribe(letter => this.letter = letter);
 
     window.addEventListener('resize', this.startExample);
     setTimeout(() => this.startExample(), 500);
@@ -75,7 +62,11 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   ngOnDestroy() {
+
+    this._speech.cancel();
+    this.limpiar();
     window.removeEventListener('resize', this.startExample);
+
   }
 
   setValues = () => {
@@ -84,19 +75,15 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
     this.totalTimes    = [];
     this.timeOutsGroup = [];
     this.timeOutsLine  = [];
+    this.info          = [];
 
-    this.info = JSON.parse(JSON.stringify(this.coordinates));
-    this.type = this.letter === this.letter.toLowerCase() ? 'minúscula' : 'mayúscula';
-
-    this.info.forEach(e => e.push(e[e.length - 1]));
+    this.coordinates.forEach((e, i) => this.info[i] = [...e, e[e.length - 1]]);
 
   }
 
   // const msg   = `Bien, ahora practica escribir la letra: .... ${sound} ..... ${type}`;
 
-  repeat = () => this.startExample();
-
-  draw = (): void => {
+  draw = () => {
 
     let time = 0;
 
@@ -107,7 +94,7 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
 
       this.ctx.lineWidth   = this.preferences.lineWidth;
       this.ctx.strokeStyle = this.preferences.lineColor;
-      this.ctx.lineCap     = this.styleLine as any;
+      this.ctx.lineCap     = this.preferences.styleLine;
 
 
       for (let n = 0; n < this.info.length; n++) {
@@ -139,9 +126,12 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
             }, tiempos[i]);
 
             this.timeOutsLine.push(tt);
+
           }
         }, currentTime);
+
         this.timeOutsGroup.push(tg);
+
       }
 
     } else {
@@ -153,26 +143,15 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   failToDraw = () => {
-
-
-    // const type  = this.letter === this.letter.toLowerCase() ? 'minúscula' : 'mayúscula';
-    // const sound = this.letterSounds[this.letter.toLowerCase()];
-    // const msg   = `Por ahora no puedo mostrarte como escribir la letra: ${sound} .... "${type}"`;
-    console.log('Por ahora no puedo mostrarte como escribir la letra');
-    // this.speechSynthesis.speak(msg);
-
+    console.log('Por ahora no puedo mostrarte como escribir esta letra la letra');
   }
 
 
   startExample = () => {
-
     this.limpiar();
     this.setValues();
-
     this.store.dispatch(new ListenHandwritingMsgDL());
     setTimeout(e => this.draw(), 500);
-
-
   }
 
   getTotalTime = (position: number) => {
@@ -234,7 +213,6 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
 
     this.ctx.clearRect(0, 0, this.cw, this.ch);
 
-    clearTimeout(this.timeClear);
     this.timeOutsGroup.forEach(e => clearTimeout(e));
     this.timeOutsLine.forEach(e => clearTimeout(e));
 

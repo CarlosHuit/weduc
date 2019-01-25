@@ -56,7 +56,6 @@
   z-index:           3;
   overflow:          hidden;
   position:          absolute;
-  /* background-color: #f8f8f8; */
   display:          flex;
   flex-direction:   column;
   align-items:      center;
@@ -76,21 +75,29 @@
 
 }
 
-.container-float-buttons {
-  height:    120px;
-  width:     60px;
-  position:  absolute;
-  bottom:    15px;
-  right:     15px;
-  z-index:   20;
-  display:         flex;
-  flex-direction:  column;
-  align-items:     center;
-  justify-content: space-evenly;
+.btn-done {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  z-index: 20;
+  background: #239B56
 }
 
+.m-c-float-buttons {
+  position:      absolute;
+  bottom:        20px;
+  border:        1px solid rgba(0,0,0,.3);
+  border-radius: 70px;
+  z-index:       20;
+  width:         120px;
+  padding:       0;
+  display:         flex;
+  justify-content: space-evenly;
+  background: white;
+  box-shadow: 0 3px 7px 0 rgba(0,0,0,.5);
+}
 
-@media (max-height: 360px) and (orientation: landscape) {
+@media (max-height: 500px) and (orientation: landscape) {
 
   .m-c-guide-lines {
     z-index: 2;
@@ -98,12 +105,26 @@
     margin-top: 0;
   }
 
+  .m-c-float-buttons {
+    right: 20px;
+    height: 120px;
+    flex-direction: column;
+    width: unset;
+    bottom: 85px;
+  }
 
 }
+
 @media (min-height: 360px) and (orientation: landscape) {
 
   .m-c-guide-lines {
     margin-top: calc(300px * 0.1);
   }
 
+}
+
+@media( max-height: 640px ) and ( orientation: portrait ) {
+  .m-c-float-buttons {
+    background: rgba( 255, 255, 255, 0.3 );
+  }
 }

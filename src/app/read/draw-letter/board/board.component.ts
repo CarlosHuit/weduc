@@ -21,7 +21,6 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
   @ViewChild('canvasEl')        canvasEl:        ElementRef;
   @ViewChild('containerCanvas') containerCanvas: ElementRef;
 
-
   private ctx: CanvasRenderingContext2D;
   private canvas: HTMLCanvasElement;
 

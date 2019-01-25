@@ -29,6 +29,7 @@ export class Preferences {
     public lineWidth:      number,
     public lineColor:      string,
     public showGuideLines: boolean,
+    public styleLine:      CanvasLineCap,
   ) {}
 }
 
