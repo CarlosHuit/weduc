@@ -9,7 +9,7 @@ export class ReadingCourseDrawLetterModel {
     public isSettingData:     boolean,
     public showSuccessScreen: boolean,
     public showBoard:         boolean,
-    public showDraw:          boolean,
+    public showHandwriting:   boolean,
     public preferences:       Preferences,
     public configData:        ConfigData,
   ) {}

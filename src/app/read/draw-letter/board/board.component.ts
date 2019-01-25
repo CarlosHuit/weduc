@@ -1,15 +1,11 @@
-import { Component, OnDestroy, ViewChild, ElementRef, AfterViewInit, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { GetCoordinatesService  } from '../../../services/get-data/get-coordinates.service';
+import { Component, OnDestroy, ViewChild, ElementRef, AfterViewInit, OnInit } from '@angular/core';
 import { SpeechSynthesisService } from '../../../services/speech-synthesis.service';
-import { ActivatedRoute         } from '@angular/router';
-import { GenerateDatesService   } from '../../../services/generate-dates.service';
-import { Board, SizeCanvas      } from '../../../classes/draw-letter-data';
-import { Coordinates            } from '../../../classes/coordinates';
-import { Store, Select } from '@ngxs/store';
-import { AppState } from 'src/app/store/state/app.state';
-import { Observable } from 'rxjs';
-import { ReadingCourseState } from 'src/app/store/state/reading-course.state';
-import { Preferences } from 'src/app/store/models/reading-course/draw-letter/reading-course-draw-letter.model';
+import { ReadingCourseState     } from 'src/app/store/state/reading-course.state';
+import { ShowHandwritingDL      } from 'src/app/store/actions/reading-course/reading-course-draw-letter.actions';
+import { Store, Select  } from '@ngxs/store';
+import { AppState       } from 'src/app/store/state/app.state';
+import { Observable     } from 'rxjs';
+import { Preferences    } from 'src/app/store/models/reading-course/draw-letter/reading-course-draw-letter.model';
 
 @Component(
   {
@@ -21,58 +17,36 @@ import { Preferences } from 'src/app/store/models/reading-course/draw-letter/rea
 
 export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
-  @Input() letter: string;
 
   @ViewChild('canvasEl')        canvasEl:        ElementRef;
   @ViewChild('containerCanvas') containerCanvas: ElementRef;
 
-  @Output() evsBoard       = new EventEmitter<string>();
-  @Output() next           = new EventEmitter<string>();
-  @Input()  showGuidLines: boolean;
 
   private ctx: CanvasRenderingContext2D;
   private canvas: HTMLCanvasElement;
 
   contCanvas: HTMLDivElement;
 
-  smoothing:     number;
-  cw:            number;
-  ch:            number;
-  dibujar:       boolean;
-  success:       boolean;
-  inUse:         boolean;
-  showDraw:      boolean;
-  styleLine:     string;
-  currentLetter: string;
-  letterParam:   string;
-  traces:        any[];
-  points:        any[];
-
-  coordinates:    Coordinates;
-  userData:       Board;
-  loading       = true;
-  letterSounds: any;
-
-  @Select(AppState.isMobile) isMobile$: Observable<boolean>;
-  @Select(AppState.queryMobileMatch) queryMobileMatch$: Observable<boolean>;
-  @Select(ReadingCourseState.dlPreferences) preferences$: Observable<Preferences>;
-  isMobile: boolean;
+  smoothing:        number;
+  cw:               number;
+  ch:               number;
+  dibujar:          boolean;
+  styleLine:        string;
+  traces:           any[];
+  points:           any[];
+  isMobile:         boolean;
   queryMobileMatch: boolean;
-  preferences: Preferences;
+  preferences:      Preferences;
 
-  constructor(
-    private _route:            ActivatedRoute,
-    private speechSynthesis:   SpeechSynthesisService,
-    private coordinateService: GetCoordinatesService,
-    private genDates:          GenerateDatesService,
-    private store: Store,
-  ) {
-    this.success = false;
-    this.letterParam = this._route.snapshot.paramMap.get('letter');
-    this.store.selectSnapshot(state => this.letterSounds = state.readingCourse.data.letterSounds );
-  }
+
+  @Select(AppState.isMobile)                   isMobile$: Observable<boolean>;
+  @Select(AppState.queryMobileMatch)   queryMobileMatch$: Observable<boolean>;
+  @Select(ReadingCourseState.dlPreferences) preferences$: Observable<Preferences>;
+
+  constructor(private store: Store) { }
 
   ngAfterViewInit() {
+
     this.canvas = this.canvasEl.nativeElement as HTMLCanvasElement;
     this.ctx    = this.canvas.getContext('2d');
 
@@ -96,7 +70,7 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
     this.dibujar   = false;
     this.traces    = [];
     this.points    = [];
-    this.smoothing = 5; // 5
+    this.smoothing = 5;
     this.styleLine = 'round';
 
 
@@ -108,19 +82,22 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
   ngOnInit() {
 
-    this.currentLetter = this.letterParam;
     this.isMobile$.subscribe(state => this.isMobile = state);
-    window.addEventListener('resize', this.limpiar);
     this.queryMobileMatch$.subscribe(state => this.queryMobileMatch = state);
     this.preferences$.subscribe(p => this.preferences = p);
+    window.addEventListener('resize', this.limpiar);
+
   }
 
   ngOnDestroy() {
-    this.speechSynthesis.cancel();
+
     this.removeListeners(this.canvas);
     window.removeEventListener('resize', this.limpiar);
+
   }
 
+  deleteStokes = () => this.limpiar();
+  showHandwriting = () => this.store.dispatch( new ShowHandwritingDL() );
 
   resetCanvasSize = () => {
 
@@ -141,29 +118,6 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
 
   }
-
-
-
-  save = (): void => {
-
-    const letter = prompt('letra?');
-    const data = { letter: letter, coordinates: this.traces };
-
-    this.coordinateService.saveCoordinnates(data)
-      .subscribe(
-        val => console.log(`Save Ok:${val}`),
-        err => console.log(err)
-      );
-  }
-
-  nextLetter = (): void => {
-
-    this.addCoordinates(false);
-
-    this.next.emit('next');
-
-  }
-
 
   startup = (el): void => {
 
@@ -282,9 +236,7 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
   }
 
-  saveTraces = (newPoints) => {
-    this.traces.push(newPoints);
-  }
+  saveTraces = (newPoints) => this.traces.push(newPoints);
 
 
   smoothStrokes = (traces): void => {
@@ -311,7 +263,6 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
   }
 
-
   calcControlPoint = (ry, a, b): { x: any, y: any } => {
 
     const controlPoint = { x: 0, y: 0 };
@@ -322,23 +273,9 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
   }
 
-  clearCanvas = () => {
+  clearCanvas = () => (this.resetCanvasSize(), this.limpiar());
 
-
-    this.resetCanvasSize();
-    this.addCoordinates(false);
-    this.limpiar();
-  }
-
-  showModal = (): void => {
-    this.evsBoard.emit('repeat');
-    this.showDraw = false;
-    this.resetCanvasSize();
-    this.addCoordinates(true);
-  }
-
-
-  limpiar = (): void => {
+  limpiar = () => {
 
     this.resetCanvasSize();
     this.dibujar = false;
@@ -348,22 +285,18 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
   }
 
-  addCoordinates = (state: boolean) => {
-
-
-    if ( this.traces.length > 0 ) {
-      const t = this.genDates.generateData().fullTime;
-      const d = JSON.parse( JSON.stringify(this.traces) );
-      const x = new SizeCanvas(this.canvas.width, this.canvas.height);
-      const s = new Board(d, x, t);
-
-      const data = JSON.stringify({boardData: s, showHandwriting: state});
-      this.evsBoard.emit(data);
-
-    }
-
-  }
 
 }
 
 
+/*   save = (): void => {
+
+    const letter = prompt('letra?');
+    const data = { letter: letter, coordinates: this.traces };
+
+    this.coordinateService.saveCoordinnates(data)
+      .subscribe(
+        val => console.log(`Save Ok:${val}`),
+        err => console.log(err)
+      );
+  } */

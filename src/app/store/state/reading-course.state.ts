@@ -66,7 +66,10 @@ import {
   SetCurrentDataDL,
   ChangeLineWidthDL,
   ChangeLineColorDL,
-  ToggleGuideLinesDL
+  ToggleGuideLinesDL,
+  ShowHandwritingDL,
+  HideHandwritingDL,
+  ListenHandwritingMsgDL
 } from '../actions/reading-course/reading-course-draw-letter.actions';
 import { Coordinates } from 'src/app/classes/coordinates';
 import { DrawLetterData, ConfigData, Preferences } from '../models/reading-course/draw-letter/reading-course-draw-letter.model';
@@ -229,6 +232,8 @@ export class ReadingCourseState {
   @Selector()
   static dlIsSettingData({ drawLetter }: ReadingCourseModel) { return drawLetter.isSettingData; }
 
+  @Selector()
+  static dlShowHandwriting({ drawLetter }: ReadingCourseModel) { return drawLetter.showHandwriting; }
 
   constructor(
     private _readingCourse: GetInitialDataService,
@@ -1243,7 +1248,10 @@ export class ReadingCourseState {
       }
     });
 
-    await dispatch( new SetCurrentDataDL() );
+    await dispatch([
+      new SetCurrentDataDL(),
+      new ShowHandwritingDL()
+    ]);
 
     dispatch( new IsSettingDataDL({state: false}) );
 
@@ -1329,6 +1337,39 @@ export class ReadingCourseState {
         }
       }
     });
+  }
+
+  @Action( ShowHandwritingDL )
+  showHandwritingDL({ patchState, getState }: StateContext<ReadingCourseModel>, action: ShowHandwritingDL) {
+    const state = getState().drawLetter;
+    patchState({
+      drawLetter: {
+        ...state,
+        showHandwriting: true
+      }
+    });
+  }
+
+  @Action( HideHandwritingDL )
+  hideHandwritingDL({ patchState, getState }: StateContext<ReadingCourseModel>, action: HideHandwritingDL) {
+    const state = getState().drawLetter;
+    patchState({
+      drawLetter: {
+        ...state,
+        showHandwriting: false
+      }
+    });
+  }
+
+  @Action( ListenHandwritingMsgDL )
+  listenHandwritingMsgDL({ getState, dispatch }: StateContext<ReadingCourseModel>, action: ListenHandwritingMsgDL) {
+    // const t = getState().data.letterSounds
+    const letter = getState().drawLetter.currentData.letter.toLowerCase();
+    const type = getState().drawLetter.currentData.type;
+    const letterSound = getState().data.letterSounds[letter];
+    const msg = `Mira atentamente, así se escribe la letra: ... ${letterSound} .... "${type}"`;
+    dispatch(new ListenMessage({msg}));
+
   }
 
 }

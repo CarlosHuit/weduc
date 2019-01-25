@@ -76,7 +76,18 @@
 
 }
 
-
+.container-float-buttons {
+  height:    120px;
+  width:     60px;
+  position:  absolute;
+  bottom:    15px;
+  right:     15px;
+  z-index:   20;
+  display:         flex;
+  flex-direction:  column;
+  align-items:     center;
+  justify-content: space-evenly;
+}
 
 
 @media (max-height: 360px) and (orientation: landscape) {

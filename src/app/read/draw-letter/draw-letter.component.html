@@ -1,21 +1,11 @@
-<div
-  style="overflow: auto"
-  [ngStyle]="genContainer()"
-  [class.container]="!(isMobile$ | async) || !(queryMobileMatch$ | async)"
-  >
+<div style="overflow: auto" class="container">
 
 
 
   <!-- desktop Version -->
-  <mat-card 
-    class="container-slider"
-    *ngIf="!(isSettingData$ | async) && !(isMobile$ | async) && !(queryMobileMatch$ | async) "
-    >
+  <mat-card class="container-slider" *ngIf="!(isSettingData$ | async) && !(isMobile$ | async) && !(queryMobileMatch$ | async) ">
 
-    <div
-      class="d-c-slider"
-      [class.show-board]="showBoard === true"
-      >
+    <div class="d-c-slider" [class.show-board]="showBoard === true">
 
 
       <div class="d-c-control-canvas">
@@ -24,7 +14,7 @@
 
 
       <div class="d-c-box one">
-        <app-handwriting (evsHandWriting)="eventsHandWriting($event)" ></app-handwriting>
+        <app-handwriting (evsHandWriting)="eventsHandWriting($event)"></app-handwriting>
       </div>
 
       <div class="d-c-box two">
@@ -34,141 +24,57 @@
 
     </div>
   </mat-card>
-  
+
 
 
   <!-- mobile version -->
-  <div 
-    class=" container-slider-mobile"
-    *ngIf="!(isSettingData$ | async) && (isMobile$ | async) || (queryMobileMatch$ | async)"
+  <div class=" container-slider-mobile"
+    *ngIf="
+      !(isSettingData$ | async)
+      && ((isMobile$ | async) || (queryMobileMatch$ | async))
+      "
     >
 
-    <div class="m-c-slider" [class.show-board]="showBoard === true" >
 
-      <div class="box one">
+    <div class="d-c-control-canvas">
+      <app-control-canvas> </app-control-canvas>
+    </div>
 
+    <div class="m-c-slider">
+      <app-board></app-board>
+    </div>
 
+    <div
+      id="handWriting"
+      *ngIf="showHandwriting$ | async"
+      (click)="closeHandwriting($event)"
+      class="container-handwriting-dialog"
+      >
 
+      <mat-card class="card-handwriting">
 
-        <div class="d-c-control-canvas" style="display: flex">
-
-          <div style="width: 140px">
-            <app-control-canvas> </app-control-canvas>
-          </div>
-
-          <div
-            class="m-c-buttons-extra"
-            [style.background]="(preferences$ | async).lineColor"
-            >
-
-            <button
-              mat-flat-button
-              (click)="repeatHandWriting()"
-              style="background: #fa7e29"
-              >
-              <mat-icon
-                class="fz-36 center"
-                >
-                replay
-              </mat-icon>
-            </button>
-      
-            <button
-              mat-flat-button
-              (click)="hideHandWriting()"
-              style="background: #239B56"
-              >
-              <mat-icon
-                class="fz-36 center"
-                >
-                arrow_forward
-              </mat-icon>
-            </button>
-
-          </div>
-    
+        <div class="m-c-box-handwrinting">
+          <app-handwriting></app-handwriting>
         </div>
 
-        <div style="height: calc(100% - 50px)">
-          <app-handwriting (evsHandWriting)="eventsHandWriting($event)"></app-handwriting>
+        <div class="m-c-practice">
+          <button mat-flat-button color="warn" (click)="hideHandwriting()">Practicar</button>
         </div>
 
-
-
-      </div>
-
-      <div class="box two">
-
-        <div class="d-c-control-canvas" style="display: flex">
-
-          <div style="width: 140px">
-            <app-control-canvas ></app-control-canvas>
-          </div>
-
-          <div
-            class="m-c-buttons-extra"
-            [style.background]="(preferences$ | async).lineColor"
-            >
-            <button
-              mat-flat-button
-              (click)="hideBoard()"
-              style="background: #fa7e29"
-              >
-              <mat-icon
-                class="fz-36 center"
-                >
-                replay
-              </mat-icon>
-            </button>
-      
-            <button
-              mat-flat-button
-              (click)="clearCanvasBoard()"
-              style="background: #007cc0"
-              >
-              <mat-icon
-                class="fz-36 center"
-                >
-                delete_forever
-              </mat-icon>
-            </button>
-
-            <button
-              mat-flat-button
-              (click)="nextElementBoard()"
-              style="background: #239B56"
-              >
-              <mat-icon
-                class="fz-36 center"
-                >
-                arrow_forward
-              </mat-icon>
-            </button>
-
-          </div>
-    
-        </div>
-
-        <div style="height: calc(100% - 50px)">
-          <app-board (evsBoard)="eventsBoard($event)" (next)="next($event)"></app-board>
-        </div>
-
-      </div>
-
+      </mat-card>
     </div>
 
   </div>
 
-  <app-success-animation
-    *ngIf="success"
-    class="hideSuccess"
-    [class.showSuccess]="success === false"
-    >
-  </app-success-animation>
 
-  <app-spinner-loading
-    *ngIf="isSettingData$ | async"
-    >
-  </app-spinner-loading>
   
+  <app-success-animation *ngIf="success" class="hideSuccess">
+  </app-success-animation>
+  
+  <div style="height: 40px; width: 40px; position: absolute; top: 15px;" *ngIf="isSettingData$ | async" >
+    <app-spinner-loading >
+    </app-spinner-loading>
   </div>
+
+</div>
+

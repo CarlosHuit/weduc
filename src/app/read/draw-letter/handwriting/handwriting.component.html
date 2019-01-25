@@ -1,4 +1,7 @@
-<div class="d-c-handwriting center" *ngIf="!(isMobile$ | async)  && !(queryMobileMatch$ | async)">
+<div
+  class="d-c-handwriting center"
+  *ngIf="!(isMobile$ | async)  && !(queryMobileMatch$ | async)"
+  >
 
   <div class="d-c-container-canvas center">
 
@@ -17,32 +20,37 @@
       <mat-icon >replay</mat-icon>
     </button>
 
-    <canvas id="canvasEl" #canvasDraw style="z-index: 2" ></canvas>
+    <canvas #canvasDraw style="z-index: 2" ></canvas>
 
   </div>
 
 </div>
 
 <div
+  style="background: white"
   class="container-handwriting center"
   *ngIf="(isMobile$ | async) || (queryMobileMatch$ | async)"
   >
 
+  <button
+    mat-icon-button
+    color="warn"
+    style="position: absolute; top: 0; right: 0;"
+    >
+    <mat-icon
+      (click)="startExample()"
+      style="font-size: 36px; height: 36px; width: 36px; line-height: 36px;"
+      >
+      replay
+    </mat-icon>
+  </button>
 
+  <div class="m-c-container-canvas">
 
-    <div class="m-c-container-canvas">
-      <canvas
-        id="canvasEl"
-        #canvasDraw
-        style="z-index: 2"
-        >
-      </canvas>
-      <app-guide-lines
-        [top]="0"
-        *ngIf="(preferences$ | async).showGuideLines"
-        >
-      </app-guide-lines>
-    </div>
+    <canvas #canvasDraw style="z-index: 2"></canvas>
+    <app-guide-lines [top]="0"></app-guide-lines>
+
+  </div>
 
 
 

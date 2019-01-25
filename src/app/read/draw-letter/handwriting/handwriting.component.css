@@ -1,32 +1,32 @@
 /* ------ styles desktop version ------ */
 .d-c-handwriting {
-  height:          100%;
-  width:           100%;
-  position:        relative;
+  height:   100%;
+  width:    100%;
+  position: relative;
 }
 
 .d-c-container-canvas {
-  width:             600px;
-  height:            300px;
-  z-index:           2;
-  overflow:          hidden;
-  position:          relative;
-  border:            1px solid #cccccc;
-  border-radius:     0px;
-  background-color: #ebedee;
-  position:         relative;
-  padding-top:      30px;
+  width:         600px;
+  height:        300px;
+  z-index:       2;
+  overflow:      hidden;
+  position:      relative;
+  border:        1px solid #cccccc;
+  border-radius: 0px;
+  background:    #ebedee;
+  position:      relative;
+  padding-top:   30px;
 }
 
 .icon-replay {
-  position:           absolute;
-  top:                10px;
-  left:               10px;
-  height:             48px;
-  width:              48px;
-  border-radius:      50%;
-  z-index:            3;
-  color:           white;
+  position:      absolute;
+  top:           10px;
+  left:          10px;
+  height:        48px;
+  width:         48px;
+  border-radius: 50%;
+  z-index:       3;
+  color:         white;
 }
 
 .icon-replay mat-icon {
@@ -34,6 +34,8 @@
   width:     36px;
   margin:    0 auto;
 }
+
+
 
 /* ------ styles mobile version ------ */
 .container-handwriting {
@@ -47,7 +49,7 @@
 
 .m-c-container-canvas {
   position:         relative;
-  width:            90%;
+  width:            calc(100% - 90px);
   height:           300px;
   margin-top:       calc(300px * 0.31);
   display:          flex;
@@ -65,7 +67,7 @@
 
 }
 
-@media (max-height: 360px) and (orientation: landscape) {
+@media (max-height: 420px) and (orientation: landscape) {
 
   .m-c-content-handwriting {
     align-items: unset;
@@ -74,7 +76,6 @@
   .m-c-container-canvas {
     margin-top: 0px;
     transform: scale(.8);
-    /* padding:   0; */
   }
 
 }

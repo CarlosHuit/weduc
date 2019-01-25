@@ -16,19 +16,25 @@
 <!-- version mobile -->
 <div class="container-board center" *ngIf="(isMobile$ | async) || (queryMobileMatch$ | async)" >
 
-  <div #containerCanvas class="container-canvas">
 
-    <canvas
-      class="m-c-canvas"
-      id="canvasEl"
-      #canvasEl
-      >
-    </canvas>
-    
+  <div #containerCanvas class="container-canvas">
+    <canvas class="m-c-canvas mob" id="canvasEl" #canvasEl></canvas>
   </div>
+
 
   <div class="m-c-guide-lines">
     <app-guide-lines [top]="0" *ngIf="(preferences$ | async).showGuideLines"></app-guide-lines>
+  </div>
+
+
+  <div class="container-float-buttons" >
+    <button mat-mini-fab color="warn" (click)="deleteStokes()">
+      <mat-icon style="font-size: 24px">clear</mat-icon>
+    </button>
+  
+    <button mat-fab color="warn" (click)="showHandwriting()">
+      <mat-icon style="font-size: 24px">replay</mat-icon>
+    </button>
   </div>
 
 </div>

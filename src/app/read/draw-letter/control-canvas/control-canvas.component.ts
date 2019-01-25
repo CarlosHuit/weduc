@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { AppState } from 'src/app/store/state/app.state';
 import { Observable } from 'rxjs';
@@ -18,7 +18,6 @@ import {
 })
 export class ControlCanvasComponent {
 
-  @Input()  showGuidLines:   boolean;
 
   @Select( AppState.isMobile )                     isMobile$: Observable<boolean>;
   @Select( AppState.queryMobileMatch )     queryMobileMatch$: Observable<boolean>;

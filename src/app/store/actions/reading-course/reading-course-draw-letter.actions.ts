@@ -4,9 +4,13 @@ export enum ReadingCourseDrawLetterActionsType {
   SET_CURRENT_DATA = '[Reading Course Draw Letter] Set Current Data',
   CHANGE_CURRENT_DATA = '[Reading Course Draw Letter] Change Current Data',
 
-  CHANGE_LINE_WIDTH = '[Reading Course Draw Letter] Change Line Width',
-  CHANGE_LINE_COLOR = '[Reading Course Draw Letter] Change Line Color',
-  TOGGLE_GUIDE_LINES = '[Reading Course Draw Letter] Toggle Guide Lines'
+  CHANGE_LINE_WIDTH  = '[Reading Course Draw Letter] Change Line Width',
+  CHANGE_LINE_COLOR  = '[Reading Course Draw Letter] Change Line Color',
+  TOGGLE_GUIDE_LINES = '[Reading Course Draw Letter] Toggle Guide Lines',
+  SHOW_HANDWRITING   = '[Reading Course Draw Letter] Show Handwriting',
+  HIDE_HANDWRITING   = '[Reading Course Draw Letter] Hide Handwriting',
+
+  LISTEN_HANDWRITING_MSG = '[Reading Course Draw Letter] Listen Handwriting Message',
 }
 
 export class IsSettingDataDL {
@@ -38,4 +42,16 @@ export class ChangeLineColorDL {
 
 export class ToggleGuideLinesDL {
   static readonly type = ReadingCourseDrawLetterActionsType.TOGGLE_GUIDE_LINES;
+}
+
+export class ShowHandwritingDL {
+  static readonly type = ReadingCourseDrawLetterActionsType.SHOW_HANDWRITING;
+}
+
+export class HideHandwritingDL {
+  static readonly type = ReadingCourseDrawLetterActionsType.HIDE_HANDWRITING;
+}
+
+export class ListenHandwritingMsgDL {
+  static readonly type = ReadingCourseDrawLetterActionsType.LISTEN_HANDWRITING_MSG;
 }

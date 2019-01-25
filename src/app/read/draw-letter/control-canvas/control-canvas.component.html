@@ -1,7 +1,10 @@
 <div class="m-c-mini-toolbar" [style.background]="(preferences$ | async).lineColor">
 
+  <div>
 
-  <!-- Slider menu -->
+  </div>
+
+  <!-- Slider line Width -->
   <button mat-icon-button [matMenuTriggerFor]="menuFontSize">
     <mat-icon class="fz-30">create</mat-icon>
   </button>
@@ -36,7 +39,7 @@
 
 
 
-  <!-- font color menu -->
+  <!-- select line color -->
   <button mat-icon-button [matMenuTriggerFor]="menuColor">
     <mat-icon class="fz-30">format_color_fill</mat-icon>
   </button>
@@ -80,15 +83,12 @@
 
   </button>
 
-  <!-- button next *if( !isMobile ) -->
-  <button
-    mat-flat-button
-    class="btn-next"
-    *ngIf="!(isMobile$ | async) && !(queryMobileMatch$ | async)"
-    (click)="nextLetter()"
-    >
-    <mat-icon class="icon-next"> arrow_forward</mat-icon>
-  </button>
 
+  <div>
+    <button mat-flat-button color="warn" (click)="nextElementBoard()" style="background: #239B56">
+      <mat-icon>arrow_forward</mat-icon>
+    </button>
+  </div>
 
 </div>
+

@@ -1,16 +1,19 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { IsSettingDataDL, SetInitialDataDL } from 'src/app/store/actions/reading-course/reading-course-draw-letter.actions';
-import { HandwritingComponent   } from './handwriting/handwriting.component';
-import { BoardComponent         } from './board/board.component';
-import { DrawLettersData, Board } from '../../classes/draw-letter-data';
-import { ControlCanvas          } from '../../classes/control-canvas';
-import { Coordinates            } from '../../classes/coordinates';
-import { Store, Select          } from '@ngxs/store';
-import { AppState               } from 'src/app/store/state/app.state';
-import { Observable             } from 'rxjs';
-import { ReadingCourseState     } from 'src/app/store/state/reading-course.state';
-import { Preferences            } from 'src/app/store/models/reading-course/draw-letter/reading-course-draw-letter.model';
-import { Navigate               } from '@ngxs/router-plugin';
+import { HandwritingComponent } from './handwriting/handwriting.component';
+import { ReadingCourseState } from 'src/app/store/state/reading-course.state';
+import { BoardComponent  } from './board/board.component';
+import { ControlCanvas } from '../../classes/control-canvas';
+import { Store, Select } from '@ngxs/store';
+import { Coordinates } from '../../classes/coordinates';
+import { Preferences } from 'src/app/store/models/reading-course/draw-letter/reading-course-draw-letter.model';
+import { Observable } from 'rxjs';
+import { AppState  } from 'src/app/store/state/app.state';
+import {
+  IsSettingDataDL,
+  SetInitialDataDL,
+  HideHandwritingDL
+} from 'src/app/store/actions/reading-course/reading-course-draw-letter.actions';
+import { SpeechSynthesisService } from 'src/app/services/speech-synthesis.service';
 
 @Component({
   selector: 'app-draw-letter',
@@ -24,20 +27,19 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
   @ViewChild(BoardComponent) boardComponent: BoardComponent;
 
   currentLetter:  string;
-  showBoard:      boolean;
 
 
-
-  @Select(AppState.isMobile) isMobile$: Observable<boolean>;
-  @Select(AppState.queryMobileMatch) queryMobileMatch$: Observable<boolean>;
-  @Select(ReadingCourseState.dlCurrentData) data$: Observable<Coordinates>;
-  @Select(ReadingCourseState.dlPreferences) preferences$: Observable<Preferences>;
-  @Select(ReadingCourseState.dlIsSettingData) isSettingData$: Observable<boolean>;
-  @Select(ReadingCourseState.currentLetter) currentLetter$: Observable<string>;
+  @Select(AppState.isMobile)                           isMobile$: Observable<boolean>;
+  @Select(AppState.queryMobileMatch)           queryMobileMatch$: Observable<boolean>;
+  @Select(ReadingCourseState.dlCurrentData)                data$: Observable<Coordinates>;
+  @Select(ReadingCourseState.dlPreferences)         preferences$: Observable<Preferences>;
+  @Select(ReadingCourseState.currentLetter)       currentLetter$: Observable<string>;
+  @Select(ReadingCourseState.dlIsSettingData)     isSettingData$: Observable<boolean>;
+  @Select(ReadingCourseState.dlShowHandwriting) showHandwriting$: Observable<boolean>;
 
   isMobile: boolean;
 
-  constructor( private store: Store ) {
+  constructor( private store: Store, private _speech: SpeechSynthesisService ) {
     this.store.dispatch( new IsSettingDataDL({state: true}) );
   }
 
@@ -48,55 +50,15 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this._speech.cancel();
   }
 
 
-  eventsControlCanvas = (ev: ControlCanvas) => {
-    const x = ev;
-    this.boardComponent.limpiar();
-  }
+  eventsControlCanvas = (ev: ControlCanvas) => this.boardComponent.limpiar();
 
-  eventsHandWriting = (ev) => {
-
-    if ( ev === 'repeat' ) {
-    } else {
-
-      this.showBoard = true;
-      this.handWriting.limpiar();
-      this.boardComponent.limpiar();
-
-    }
-
-  }
-
-  eventsBoard = (ev?) => {
-
-    if (ev === 'repeat') {
-
-      this.showHandWritingAndAnimate();
-
-    } else {
-
-      const data     = JSON.parse(ev);
-      const d: Board = data.boardData;
-
-      if (data.showHandwriting === true) {
-
-        this.showHandWritingAndAnimate();
-
-      } else {
-
-
-      }
-
-    }
-
-
-  }
 
   showHandWritingAndAnimate = () => {
 
-    this.showBoard = false;
     this.handWriting.limpiar();
     this.handWriting.startExample();
 
@@ -105,73 +67,15 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
 
   // const msg       = `Bien, ahora ya sabes escribir la letra: ${sound} .... "${type}"`;
 
-  redirect = (): void => {
-
-    const url = `lectura/encontrar-letras/${this.currentLetter}`;
-    this.store.dispatch( new Navigate([url]) );
-
-  }
-
-  // initUserData = () => {
-  //   const t  = this.genDates.generateData();
-  //   const id = this._storage.getElement('user')['userId'];
-
-  //   this.userData = new DrawLettersData(id, t.fullTime, 'N/A', t.fullDate, this.currentLetter, [], []);
-
-  // }
-
-  // addRepeatTime = () => {
-
-  //   const t = this.genDates.generateData().fullTime;
-  //   this.userData.handWriting.push(t);
-
-  // }
-
-  // addFinalTime = () => {
-
-  //   const t = this.genDates.generateData().fullTime;
-  //   this.userData.finalTime = t;
-
-  // }
-
-  repeatHandWriting = () => {
-    this.handWriting.repeat();
-  }
-
-  hideHandWriting = () => {
-    this.handWriting.hide();
-  }
-
-  hideBoard = () => {
-    this.boardComponent.showModal();
-  }
-
-  clearCanvasBoard = () => {
-    this.boardComponent.clearCanvas();
-  }
-
-  nextElementBoard = () => {
-    this.boardComponent.nextLetter();
-  }
 
 
-  genContainer = () => {
-    if (this.isMobile) {
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      if (w < h) {
-        return {
-          'width': '100%',
-          'height': 'calc(100vh - 56px)',
-        };
-      } else {
-        return {
-          height: '100vh'
-        };
-      }
+  closeHandwriting = (ev: MouseEvent) => {
+    if (ev.srcElement.id === 'handWriting') {
+      this.store.dispatch( new HideHandwritingDL() );
     }
   }
 
+  hideHandwriting = () => this.store.dispatch( new HideHandwritingDL() );
 
 
 }

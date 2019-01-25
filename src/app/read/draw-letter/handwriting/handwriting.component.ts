@@ -1,18 +1,11 @@
 import { Component, ViewChild, OnInit, Output, ElementRef, AfterViewInit, Input, OnDestroy, EventEmitter } from '@angular/core';
-import { SpeechSynthesisService } from '../../../services/speech-synthesis.service';
 import { Store, Select } from '@ngxs/store';
 import { AppState } from 'src/app/store/state/app.state';
 import { Observable } from 'rxjs';
 import { ReadingCourseState } from 'src/app/store/state/reading-course.state';
 import { Preferences, DrawLetterData } from 'src/app/store/models/reading-course/draw-letter/reading-course-draw-letter.model';
 import { Coordinates } from 'src/app/classes/draw-letter-data';
-
-interface HandwritingData {
-  startTime?:  string;
-  repetition?: string[];
-  nextTime?:   string;
-
-}
+import { ListenHandwritingMsgDL } from 'src/app/store/actions/reading-course/reading-course-draw-letter.actions';
 
 @Component({
   selector: 'app-handwriting',
@@ -45,8 +38,6 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
   timeOutsLine        = [];
   timeOutsGroup       = [];
 
-  userData: HandwritingData = {};
-  letterSounds: any;
   preferences: Preferences;
 
   @Select(AppState.isMobile)                   isMobile$: Observable<boolean>;
@@ -56,12 +47,7 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
   @Select(ReadingCourseState.dlCurrentData) currentData$:   Observable<DrawLetterData>;
 
 
-  constructor(
-    private speechSynthesis: SpeechSynthesisService,
-    private store: Store
-  ) {
-    this.store.selectSnapshot(state => this.letterSounds = state.readingCourse.data.letterSounds );
-  }
+  constructor(private store: Store) { }
 
   ngAfterViewInit() {
 
@@ -80,14 +66,15 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
   ngOnInit() {
 
     this.preferences$.subscribe(p => this.preferences = p);
-    window.addEventListener('resize', this.startExample);
     this.currentData$.subscribe(data => this.coordinates = data.coordinates);
     this.currentLetter$.subscribe(letter => this.letter = letter);
+
+    window.addEventListener('resize', this.startExample);
     setTimeout(() => this.startExample(), 500);
+
   }
 
   ngOnDestroy() {
-    this.speechSynthesis.cancel();
     window.removeEventListener('resize', this.startExample);
   }
 
@@ -105,19 +92,7 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
 
   }
 
-  hide = () => {
-
-    const data = JSON.stringify(this.userData);
-
-    this.evsHandWriting.emit(data);
-
-    const type  = this.letter === this.letter.toLowerCase() ? 'minúscula' : 'mayúscula';
-    const sound = this.letterSounds[this.letter.toLowerCase()];
-    const msg   = `Bien, ahora practica escribir la letra: .... ${sound} ..... ${type}`;
-
-    this.speechSynthesis.speak(msg);
-    this.limpiar();
-  }
+  // const msg   = `Bien, ahora practica escribir la letra: .... ${sound} ..... ${type}`;
 
   repeat = () => this.startExample();
 
@@ -180,11 +155,11 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
   failToDraw = () => {
 
 
-    const type  = this.letter === this.letter.toLowerCase() ? 'minúscula' : 'mayúscula';
-    const sound = this.letterSounds[this.letter.toLowerCase()];
-    const msg   = `Por ahora no puedo mostrarte como escribir la letra: ${sound} .... "${type}"`;
-
-    this.speechSynthesis.speak(msg);
+    // const type  = this.letter === this.letter.toLowerCase() ? 'minúscula' : 'mayúscula';
+    // const sound = this.letterSounds[this.letter.toLowerCase()];
+    // const msg   = `Por ahora no puedo mostrarte como escribir la letra: ${sound} .... "${type}"`;
+    console.log('Por ahora no puedo mostrarte como escribir la letra');
+    // this.speechSynthesis.speak(msg);
 
   }
 
@@ -194,12 +169,9 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
     this.limpiar();
     this.setValues();
 
-    const type   = this.letter === this.letter.toLowerCase() ? 'minúscula' : 'mayúscula';
-    const sound  = this.letterSounds[this.letter.toLowerCase()];
-    const msg    = `Mira atentamente, así se escribe la letra: ... ${sound} .... "${type}"`;
-    const speech = this.speechSynthesis.speak(msg);
-
+    this.store.dispatch(new ListenHandwritingMsgDL());
     setTimeout(e => this.draw(), 500);
+
 
   }
 
@@ -268,26 +240,5 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
 
   }
 
-  genSizes = (el: HTMLDivElement) => {
-
-    const width  = el.clientWidth;
-    const height = el.clientHeight;
-
-    if  (width < height) {
-
-      return {
-        width:  `${width * .90}px`,
-        height: `${width * .90}px`
-      };
-
-    } else {
-
-      return {
-        width:  `${height * .90}px`,
-        height: `${height * .90}px`
-      };
-
-    }
-  }
 
 }

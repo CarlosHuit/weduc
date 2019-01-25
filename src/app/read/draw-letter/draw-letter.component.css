@@ -1,25 +1,24 @@
 /*------ styles desktop version ------*/
 .container-slider {
-  min-width:     664px;
-  max-height:    816px;
-  position:      relative;
-  overflow:      hidden;
-  border:        1px solid #a5a5a5;
-  margin:         0 10px;
-  padding:       30px;
-  box-sizing:    border-box;
+  min-width: 664px;
+  max-height: 816px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #a5a5a5;
+  margin: 0 10px;
+  padding: 30px;
+  box-sizing: border-box;
 }
 
 .d-c-slider {
-  width:          100%;
-  height:         100%;
-  display:        flex;
+  width: 100%;
+  height: 100%;
+  display: flex;
   flex-direction: column;
 }
 
 .d-c-control-canvas {
-  height:     50px;
-  background: #eaecee;
+  height: 50px;
 }
 
 .d-c-box {
@@ -30,69 +29,108 @@
 
 /*------ styles Mobile  version ------*/
 .container-slider-mobile {
-  background: white;
-  height:       100%;
-  width:        100%;
-  position:     relative;
-  overflow:     hidden;
+  height: 100%;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
 }
 
 .m-c-slider {
-  width:        200%;
-  height:       100%;
-  display:      flex;
-  transition:   .5s cubic-bezier(0.39, 0.575, 0.565, 1);
-  transition:   450ms cubic-bezier(.17,.67,.33,.81);
+  width: 100%;
+  transition: 450ms cubic-bezier(.17, .67, .33, .81);
+  height: calc(100% - 50px);
 }
 
-.m-c-buttons-extra {
-  width:            calc(100% - 140px);
-  height:           100%;
-  display:          flex;
-  align-items:      center;
-  justify-content:  flex-end;
-}
 
-.m-c-buttons-extra button {
-  border:         2px solid white;
-  padding:        0 15px;
-  border-radius:  2px;
-  line-height:    unset;
-  margin-right:   10px;
-}
-.m-c-buttons-extra button mat-icon {
-  color:      white;
-  font-size:    30px;
-  height:       32px;
-  width:        36px;
-  line-height:  32px;
-}
 
-.show-board {
-  transform: translateX(-50%)
-}
 
-.box {
-  width: 50%;
-  height: 100%;
-}
-
-.m-c-landscape {
-  margin: 0;
+.container-handwriting-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
   height: 100vh;
-  width:  100vw;
+  background: rgba(0, 0, 0, .8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 40;
+  animation: showContainer .7s;
+}
+
+@keyframes showContainer {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+
+.card-handwriting {
+  min-width: 300px;
+  max-width: 90vw;
+  min-height: 400px;
+  max-height: 480px;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.m-c-box-handwrinting {
+  height: calc(100% - 50px)
+}
+
+.m-c-practice {
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.m-c-practice button {
+  width: 200px;
+  height: 40px;
+  font-size: 20px;
+}
+
+@media(max-height: 500px) {
+  .card-handwriting {
+    max-height: 400px;
+    max-height: unset;
+    margin: auto;
+    margin-top: 10px;
+    height: calc(100vh - 20px);
+    margin: 10px auto;
+    min-height: unset;
+    max-width: 640px;
+  }
+
+  .container-handwriting-dialog {
+    display: block;
+    overflow: auto;
+  }
 }
 
 @media (min-width: 320px) and (orientation: landscape) {
-  
+
   .container-slider-mobile {
     min-height: 270px;
   }
 }
 
-@media (max-width: 370px) and (orientation: portrait) {
-  .m-c-buttons-extra button {
-    min-width: unset;
-    padding: 0 3px;
+@media (max-height: 342px) {
+  .card-handwriting {
+    height: 322px;
+    max-height: unset;
+    min-height: unset;
+  }
+}
+
+@media(max-width: 660px) {
+  .card-handwriting {
+    max-width: 95vw;
   }
 }
