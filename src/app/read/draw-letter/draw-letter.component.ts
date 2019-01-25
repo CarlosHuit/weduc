@@ -36,6 +36,7 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
   @Select(ReadingCourseState.currentLetter)       currentLetter$: Observable<string>;
   @Select(ReadingCourseState.dlIsSettingData)     isSettingData$: Observable<boolean>;
   @Select(ReadingCourseState.dlShowHandwriting) showHandwriting$: Observable<boolean>;
+  @Select(ReadingCourseState.dlShowSuccessScreen) showSuccessScreen$: Observable<boolean>;
 
   isMobile: boolean;
 

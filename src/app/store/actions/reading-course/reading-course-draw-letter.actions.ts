@@ -11,6 +11,11 @@ export enum ReadingCourseDrawLetterActionsType {
   HIDE_HANDWRITING   = '[Reading Course Draw Letter] Hide Handwriting',
 
   LISTEN_HANDWRITING_MSG = '[Reading Course Draw Letter] Listen Handwriting Message',
+
+  SHOW_SUCCESS_SCREEN = '[Reading Course Draw Letter] Show Success Screen',
+  HIDE_SUCCESS_SCREEN = '[Reading Course Draw Letter] Hide Success Screen',
+  ON_DONE = '[Reading Course Draw Letter] On Done',
+  RESET_DATA = '[Reading Course Draw Letter] Reset Data'
 }
 
 export class IsSettingDataDL {
@@ -54,4 +59,20 @@ export class HideHandwritingDL {
 
 export class ListenHandwritingMsgDL {
   static readonly type = ReadingCourseDrawLetterActionsType.LISTEN_HANDWRITING_MSG;
+}
+
+export class ShowSuccessScreenDL {
+  static readonly type = ReadingCourseDrawLetterActionsType.SHOW_SUCCESS_SCREEN;
+}
+
+export class HideSuccessScreenDL {
+  static readonly type = ReadingCourseDrawLetterActionsType.HIDE_SUCCESS_SCREEN;
+}
+
+export class OnDoneDL {
+  static readonly type = ReadingCourseDrawLetterActionsType.ON_DONE;
+}
+
+export class ResetDataDL {
+  static readonly type = ReadingCourseDrawLetterActionsType.RESET_DATA;
 }

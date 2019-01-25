@@ -5,7 +5,7 @@ import { ListenHandwritingMsgDL } from 'src/app/store/actions/reading-course/rea
 import { SpeechSynthesisService } from 'src/app/services/speech-synthesis.service';
 import { Store, Select      } from '@ngxs/store';
 import { AppState           } from 'src/app/store/state/app.state';
-import { Observable         } from 'rxjs';
+import { Observable, Subscription         } from 'rxjs';
 import { ReadingCourseState } from 'src/app/store/state/reading-course.state';
 
 @Component({
@@ -24,13 +24,16 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
   info:          Coordinates[][];
   coordinates:   Coordinates[][];
   preferences:   Preferences;
-  timeOutsLine:  NodeJS.Timer[] = [];
-  timeOutsGroup: NodeJS.Timer[] = [];
+  timeOutsLine:  any[] = [];
+  timeOutsGroup: any[] = [];
   totalTimes:    number[] = [];
   tiempos:       any[]    = [];
   cw:            number;
   ch:            number;
   velocity:      number;
+
+  sub1: Subscription;
+  sub2: Subscription;
 
   @Select(AppState.isMobile)                   isMobile$: Observable<boolean>;
   @Select(AppState.queryMobileMatch)   queryMobileMatch$: Observable<boolean>;
@@ -53,8 +56,8 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
 
   ngOnInit() {
 
-    this.preferences$.subscribe(p => this.preferences = p);
-    this.currentData$.subscribe(data => this.coordinates = data.coordinates);
+    this.sub1 = this.preferences$.subscribe(p => this.preferences = p);
+    this.sub2 = this.currentData$.subscribe(data => this.coordinates = data.coordinates);
 
     window.addEventListener('resize', this.startExample);
     setTimeout(() => this.startExample(), 500);
@@ -62,6 +65,9 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   ngOnDestroy() {
+
+    this.sub1.unsubscribe();
+    this.sub2.unsubscribe();
 
     this._speech.cancel();
     this.limpiar();

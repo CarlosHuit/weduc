@@ -47,9 +47,6 @@
   top: 50px;
 }
 
-
-
-
 .container-handwriting-dialog {
   position: fixed;
   top: 0;
@@ -61,7 +58,7 @@
   justify-content: center;
   align-items: center;
   z-index: 40;
-  animation: showContainer .7s;
+  /* animation: showContainer .7s; */
 }
 
 @keyframes showContainer {

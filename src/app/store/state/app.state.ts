@@ -1,4 +1,4 @@
-import { State, Selector, StateContext, Action, NgxsOnInit, Store } from '@ngxs/store';
+import { State, Selector, StateContext, Action, NgxsOnInit } from '@ngxs/store';
 import { AppStateModel             } from '../models/app-state.model';
 import { ChangeTitle, DetectMobile, ChangeStateMobileQuery } from '../actions/app.actions';
 import { DetectMobileService       } from '../../services/detect-mobile.service';
@@ -65,10 +65,11 @@ export class AppState implements NgxsOnInit {
 
   @Action(ChangeStateMobileQuery)
   changeStateMobileQuery( { patchState }: StateContext<AppStateModel>, { payload }: ChangeStateMobileQuery ) {
-    console.log('Mobile Query State: ', payload.state);
+
     patchState({
       queryMobileMatch: payload.state
     });
+
   }
 
 

@@ -69,7 +69,11 @@ import {
   ToggleGuideLinesDL,
   ShowHandwritingDL,
   HideHandwritingDL,
-  ListenHandwritingMsgDL
+  ListenHandwritingMsgDL,
+  ShowSuccessScreenDL,
+  HideSuccessScreenDL,
+  OnDoneDL,
+  ResetDataDL
 } from '../actions/reading-course/reading-course-draw-letter.actions';
 import { Coordinates } from 'src/app/classes/coordinates';
 import { DrawLetterData, ConfigData, Preferences } from '../models/reading-course/draw-letter/reading-course-draw-letter.model';
@@ -234,6 +238,9 @@ export class ReadingCourseState {
 
   @Selector()
   static dlShowHandwriting({ drawLetter }: ReadingCourseModel) { return drawLetter.showHandwriting; }
+
+  @Selector()
+  static dlShowSuccessScreen({ drawLetter }: ReadingCourseModel) { return drawLetter.showSuccessScreen; }
 
   constructor(
     private _readingCourse: GetInitialDataService,
@@ -1370,6 +1377,76 @@ export class ReadingCourseState {
     const msg = `Mira atentamente, así se escribe la letra: ... ${letterSound} .... "${type}"`;
     dispatch(new ListenMessage({msg}));
 
+  }
+
+  @Action( ShowSuccessScreenDL )
+  showSuccessScreenDL({ patchState, getState }: StateContext<ReadingCourseModel>, action: ShowSuccessScreenDL) {
+    patchState({
+      drawLetter: {
+        ...getState().drawLetter,
+        showSuccessScreen: true
+      }
+    });
+  }
+
+  @Action( HideSuccessScreenDL )
+  hideSuccessScreenDL({ patchState, getState }: StateContext<ReadingCourseModel>, action: HideSuccessScreenDL) {
+    patchState({
+      drawLetter: {
+        ...getState().drawLetter,
+        showSuccessScreen: false
+      }
+    });
+  }
+
+  @Action( OnDoneDL )
+  onDoneDL({ dispatch, getState }: StateContext<ReadingCourseModel>, action: OnDoneDL) {
+
+    dispatch( [
+      new ShowSuccessScreenDL(),
+      new HideHandwritingDL()
+    ] );
+
+    const letter = getState().data.currentLetter.toLowerCase();
+    const state = getState().drawLetter;
+    const index = state.currentIndex === null ? -1 : state.currentIndex;
+    const nextIndex = index + 1;
+
+    const sound = getState().data.letterSounds[letter];
+    const type  = state.currentData.type;
+    const msg = `Bien, ahora ya sabes escribir la letra: ${sound} .... "${type}"`;
+
+    const speech = this._speech.speak(msg, 1);
+
+    /* Redirection */
+    if (nextIndex >= state.data.length) {
+
+      speech.addEventListener('end', function a() {
+        dispatch([
+          new Navigate([``]),
+          new ResetDataDL()
+        ]);
+        speech.removeEventListener('end', a);
+      });
+
+    }
+
+    /* Set Current Data */
+    if (nextIndex < state.data.length) {
+
+      speech.addEventListener('end', function a() {
+        dispatch( new SetCurrentDataDL() );
+        dispatch( new HideSuccessScreenDL() );
+        dispatch( new ShowHandwritingDL() );
+        speech.removeEventListener('end', a);
+      });
+
+    }
+  }
+
+  @Action( ResetDataDL )
+  ResetDataDL({ patchState }: StateContext<ReadingCourseModel>, action: ResetDataDL) {
+    patchState({drawLetter: null});
   }
 
 }

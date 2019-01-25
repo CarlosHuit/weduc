@@ -1,7 +1,6 @@
 import { Component, OnDestroy, ViewChild, ElementRef, AfterViewInit, OnInit } from '@angular/core';
-import { SpeechSynthesisService } from '../../../services/speech-synthesis.service';
 import { ReadingCourseState     } from 'src/app/store/state/reading-course.state';
-import { ShowHandwritingDL      } from 'src/app/store/actions/reading-course/reading-course-draw-letter.actions';
+import { ShowHandwritingDL, OnDoneDL      } from 'src/app/store/actions/reading-course/reading-course-draw-letter.actions';
 import { Store, Select  } from '@ngxs/store';
 import { AppState       } from 'src/app/store/state/app.state';
 import { Observable     } from 'rxjs';
@@ -26,16 +25,15 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
   contCanvas: HTMLDivElement;
 
-  smoothing:        number;
   cw:               number;
   ch:               number;
-  dibujar:          boolean;
-  styleLine:        string;
   traces:           any[];
   points:           any[];
+  dibujar:          boolean;
   isMobile:         boolean;
-  queryMobileMatch: boolean;
+  smoothing:        number;
   preferences:      Preferences;
+  queryMobileMatch: boolean;
 
 
   @Select(AppState.isMobile)                   isMobile$: Observable<boolean>;
@@ -46,7 +44,7 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
   ngAfterViewInit() {
 
-    this.canvas = this.canvasEl.nativeElement as HTMLCanvasElement;
+    this.canvas = this.canvasEl.nativeElement;
     this.ctx    = this.canvas.getContext('2d');
 
     if (this.isMobile || this.queryMobileMatch) {
@@ -70,13 +68,10 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
     this.traces    = [];
     this.points    = [];
     this.smoothing = 5;
-    this.styleLine = 'round';
-
-
     this.startup(this.canvas);
 
+    window.addEventListener('resize', () => setTimeout(() => this.resetCanvasSize, 0) );
 
-    // window.addEventListener('resize', () => setTimeout(() => this.resetCanvasSize, 0) );
   }
 
   ngOnInit() {
@@ -95,14 +90,22 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
   }
 
-  deleteStokes = () => this.limpiar();
-  showHandwriting = () => this.store.dispatch( new ShowHandwritingDL() );
+  done = () => {
+    this.store.dispatch( new OnDoneDL() );
+    this.limpiar();
+  }
+
+  deleteStokes = () => {
+    this.limpiar();
+  }
+
+  showHandwriting = () => {
+    this.store.dispatch( new ShowHandwritingDL() );
+  }
 
   resetCanvasSize = () => {
 
-    console.log(this.queryMobileMatch);
     if (this.isMobile || this.queryMobileMatch) {
-      console.log('mobile');
       this.contCanvas = this.containerCanvas.nativeElement;
       this.cw         = this.canvas.width   = this.contCanvas.clientWidth;
       this.ch         = this.canvas.height  = this.contCanvas.clientHeight;
@@ -123,22 +126,27 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
     const mobile = this.isMobile;
 
     if (mobile === true) {
+
       el.addEventListener('touchstart', this.handleStart, false);
       el.addEventListener('touchend',   this.handleEnd,   false);
       el.addEventListener('touchleave', this.handleEnd,   false);
       el.addEventListener('touchmove',  this.handleMove,  false);
+
     }
 
     if (mobile !== true) {
+
       el.addEventListener('mousedown', this.handleStart, false);
       el.addEventListener('mouseup',   this.handleEnd,   false);
       el.addEventListener('mouseout',  this.handleEnd,   false);
       el.addEventListener('mousemove', this.handleMove,  false);
+
     }
 
   }
 
   removeListeners = (el) => {
+
     const mobile = this.isMobile;
 
     if (mobile === true) {
@@ -200,7 +208,7 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
       this.ctx.lineWidth   = this.preferences.lineWidth;
       this.ctx.strokeStyle = this.preferences.lineColor;
-      this.ctx.lineCap     = this.styleLine as any;
+      this.ctx.lineCap     = this.preferences.styleLine;
 
       this.ctx.stroke();
     }
@@ -286,6 +294,13 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
 
 }
+
+
+
+
+
+
+
 
 
 /*   save = (): void => {

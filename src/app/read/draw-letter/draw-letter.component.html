@@ -68,7 +68,7 @@
 
 
   
-  <app-success-animation *ngIf="success" class="hideSuccess">
+  <app-success-animation *ngIf="showSuccessScreen$ | async">
   </app-success-animation>
   
   <div style="height: 40px; width: 40px; position: absolute; top: 15px;" *ngIf="isSettingData$ | async" >
