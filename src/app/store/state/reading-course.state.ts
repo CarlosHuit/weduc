@@ -1376,8 +1376,7 @@ export class ReadingCourseState {
     const type = getState().drawLetter.currentData.type;
     const letterSound = getState().data.letterSounds[letter];
     const isMobile = this.store.selectSnapshot(state => state.app.isMobile);
-    const queryMobileMatch = this.store.selectSnapshot(state => state.app.isMobile);
-
+    const queryMobileMatch = this.store.selectSnapshot(state => state.app.queryMobileMatch);
 
     if ( !isMobile && !queryMobileMatch ) {
       const msg = `Mira atentamente ... y practica escribir la letra: ... ${letterSound} .... "${type}"`;
