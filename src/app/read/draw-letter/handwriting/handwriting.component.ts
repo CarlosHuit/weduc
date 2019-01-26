@@ -1,11 +1,11 @@
 import { Component, ViewChild, OnInit, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
 import { Preferences, DrawLetterData } from 'src/app/store/models/reading-course/draw-letter/reading-course-draw-letter.model';
-import { Coordinates            } from 'src/app/classes/draw-letter-data';
+import { Observable, Subscription } from 'rxjs';
 import { ListenHandwritingMsgDL } from 'src/app/store/actions/reading-course/reading-course-draw-letter.actions';
-import { Store, Select      } from '@ngxs/store';
-import { AppState           } from 'src/app/store/state/app.state';
-import { Observable, Subscription         } from 'rxjs';
 import { ReadingCourseState } from 'src/app/store/state/reading-course.state';
+import { Store, Select } from '@ngxs/store';
+import { Coordinates } from 'src/app/classes/draw-letter-data';
+import { AppState } from 'src/app/store/state/app.state';
 
 @Component({
   selector: 'app-handwriting',
@@ -18,18 +18,18 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
 
   @ViewChild('canvasDraw') canvasEl: ElementRef;
 
-  ctx:           CanvasRenderingContext2D;
-  canvas:        HTMLCanvasElement;
-  info:          Coordinates[][];
-  coordinates:   Coordinates[][];
-  preferences:   Preferences;
-  timeOutsLine:  any[] = [];
-  timeOutsGroup: any[] = [];
-  totalTimes:    number[] = [];
-  tiempos:       any[]    = [];
-  cw:            number;
-  ch:            number;
-  velocity:      number;
+  ctx:               CanvasRenderingContext2D;
+  canvas:            HTMLCanvasElement;
+  coordinatesLetter: Coordinates[][];
+  coordinates:       Coordinates[][];
+  preferences:       Preferences;
+  timeOutsLine:      any[] = [];
+  timeOutsGroup:     any[] = [];
+  totalTimes:        number[] = [];
+  tiempos:           any[]    = [];
+  cw:                number;
+  ch:                number;
+  velocity:           number;
 
   sub1: Subscription;
   sub2: Subscription;
@@ -37,7 +37,7 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
   @Select(AppState.isMobile)                   isMobile$: Observable<boolean>;
   @Select(AppState.queryMobileMatch)   queryMobileMatch$: Observable<boolean>;
   @Select(ReadingCourseState.dlPreferences) preferences$: Observable<Preferences>;
-  @Select(ReadingCourseState.dlCurrentData) currentData$:   Observable<DrawLetterData>;
+  @Select(ReadingCourseState.dlCurrentData) currentData$: Observable<DrawLetterData>;
 
 
   constructor(private store: Store ) { }
@@ -75,13 +75,12 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
 
   setValues = () => {
 
-    this.tiempos       = [];
-    this.totalTimes    = [];
-    this.timeOutsGroup = [];
-    this.timeOutsLine  = [];
-    this.info          = [];
-
-    this.coordinates.forEach((e, i) => this.info[i] = [...e, e[e.length - 1]]);
+    this.tiempos           = [];
+    this.totalTimes        = [];
+    this.timeOutsGroup     = [];
+    this.timeOutsLine      = [];
+    this.coordinatesLetter = [];
+    this.coordinates.forEach((e, i) => this.coordinatesLetter[i] = [...e, e[e.length - 1]]);
 
   }
 
@@ -90,7 +89,7 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
 
     let time = 0;
 
-    if (this.info.length > 0) {
+    if (this.coordinatesLetter.length > 0) {
 
       this.limpiar();
       this.generateTimes();
@@ -100,9 +99,9 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
       this.ctx.lineCap     = this.preferences.styleLine;
 
 
-      for (let n = 0; n < this.info.length; n++) {
+      for (let n = 0; n < this.coordinatesLetter.length; n++) {
 
-        const element     = this.info[n];
+        const element     = this.coordinatesLetter[n];
         const currentTime = this.getTotalTime(n);
         time             += this.getTotalTime(n + 1);
         const tiempos     = this.tiempos[n];
@@ -145,9 +144,7 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
 
   }
 
-  failToDraw = () => {
-    console.log('Por ahora no puedo mostrarte como escribir esta letra la letra');
-  }
+  failToDraw = () => console.log('Ha ocurrido un error');
 
 
   startExample = () => {
@@ -183,7 +180,7 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
     this.tiempos.length = 0;
     this.totalTimes.push(10);
 
-    this.info.forEach(e => {
+    this.coordinatesLetter.forEach(e => {
 
       const times = this.individualStrokeTimes(e);
       this.tiempos.push(times);

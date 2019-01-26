@@ -83,10 +83,10 @@ import { DrawLetterData, ConfigData, Preferences } from '../models/reading-cours
   name: 'readingCourse',
   defaults: {
     data: null,
-    letterDetail: null,
     menu: null,
     game: null,
-    drawLetter: null
+    drawLetter:   null,
+    letterDetail: null,
   }
 })
 
@@ -300,7 +300,7 @@ export class ReadingCourseState {
 
         const t = {
           'letter': w.l,
-          'word': w.w[0],
+          'word':   w.w[0],
           'imgUrl': `/assets/img100X100/${w.w[0]}-min.png`,
         };
 

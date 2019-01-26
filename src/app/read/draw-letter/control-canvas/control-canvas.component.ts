@@ -27,15 +27,8 @@ export class ControlCanvasComponent {
 
   constructor( private store: Store ) { }
 
-
-
   changeColor = (color: string) => this.store.dispatch( new ChangeLineColorDL({color}) );
   changeWidth = (value: number) =>  this.store.dispatch( new ChangeLineWidthDL({lineWidth: value}));
   toggleGuideLines = () => this.store.dispatch( new ToggleGuideLinesDL() );
-
-
-  nextLetter = () => {
-    // this.eventsNext.emit(true);
-  }
 
 }

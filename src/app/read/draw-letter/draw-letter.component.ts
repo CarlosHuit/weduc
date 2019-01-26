@@ -1,19 +1,13 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { HandwritingComponent } from './handwriting/handwriting.component';
-import { ReadingCourseState } from 'src/app/store/state/reading-course.state';
-import { BoardComponent  } from './board/board.component';
-import { Store, Select } from '@ngxs/store';
-import { Coordinates } from '../../classes/coordinates';
-import { Preferences } from 'src/app/store/models/reading-course/draw-letter/reading-course-draw-letter.model';
-import { Observable } from 'rxjs';
-import { AppState  } from 'src/app/store/state/app.state';
-import {
-  IsSettingDataDL,
-  SetInitialDataDL,
-  HideHandwritingDL,
-  ListenMsgBoardDL
-} from 'src/app/store/actions/reading-course/reading-course-draw-letter.actions';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SpeechSynthesisService } from 'src/app/services/speech-synthesis.service';
+import { ReadingCourseState     } from 'src/app/store/state/reading-course.state';
+import { Observable     } from 'rxjs';
+import { Store, Select  } from '@ngxs/store';
+import { AppState       } from 'src/app/store/state/app.state';
+import {
+  IsSettingDataDL,   SetInitialDataDL,
+  HideHandwritingDL, ListenMsgBoardDL
+} from 'src/app/store/actions/reading-course/reading-course-draw-letter.actions';
 
 @Component({
   selector: 'app-draw-letter',
@@ -23,48 +17,18 @@ import { SpeechSynthesisService } from 'src/app/services/speech-synthesis.servic
 
 export class DrawLetterComponent implements OnInit, OnDestroy {
 
-  @ViewChild(HandwritingComponent) handWriting: HandwritingComponent;
-  @ViewChild(BoardComponent) boardComponent: BoardComponent;
-
-  currentLetter:  string;
-
-
-  @Select(AppState.isMobile)                           isMobile$: Observable<boolean>;
-  @Select(AppState.queryMobileMatch)           queryMobileMatch$: Observable<boolean>;
-  @Select(ReadingCourseState.dlCurrentData)                data$: Observable<Coordinates>;
-  @Select(ReadingCourseState.dlPreferences)         preferences$: Observable<Preferences>;
-  @Select(ReadingCourseState.currentLetter)       currentLetter$: Observable<string>;
-  @Select(ReadingCourseState.dlIsSettingData)     isSettingData$: Observable<boolean>;
-  @Select(ReadingCourseState.dlShowHandwriting) showHandwriting$: Observable<boolean>;
+  @Select(AppState.isMobile)                               isMobile$: Observable<boolean>;
+  @Select(ReadingCourseState.dlIsSettingData)         isSettingData$: Observable<boolean>;
+  @Select(ReadingCourseState.dlShowHandwriting)     showHandwriting$: Observable<boolean>;
+  @Select(AppState.queryMobileMatch)               queryMobileMatch$: Observable<boolean>;
   @Select(ReadingCourseState.dlShowSuccessScreen) showSuccessScreen$: Observable<boolean>;
-
-  isMobile: boolean;
 
   constructor( private store: Store, private _speech: SpeechSynthesisService ) {
     this.store.dispatch( new IsSettingDataDL({state: true}) );
   }
 
-  ngOnInit() {
-    this.store.dispatch(new SetInitialDataDL());
-    this.isMobile$.subscribe(state => this.isMobile = state);
-    this.currentLetter$.subscribe(l => this.currentLetter = l);
-  }
-
-  ngOnDestroy() {
-    this._speech.cancel();
-  }
-
-
-
-
-  showHandWritingAndAnimate = () => {
-
-    this.handWriting.limpiar();
-    this.handWriting.startExample();
-
-  }
-
-
+  ngOnInit()    { this.store.dispatch(new SetInitialDataDL()); }
+  ngOnDestroy() { this._speech.cancel(); }
 
 
   closeHandwriting = (ev: MouseEvent) => {
