@@ -11,17 +11,14 @@
   z-index:       2;
   overflow:      hidden;
   position:      relative;
-  border:        1px solid #cccccc;
   border-radius: 0px;
-  background:    #ebedee;
   position:      relative;
-  padding-top:   30px;
 }
 
 .icon-replay {
   position:      absolute;
-  top:           10px;
-  left:          10px;
+  bottom:        7px;
+  left:          7px;
 }
 
 

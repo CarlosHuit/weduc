@@ -1,6 +1,6 @@
 .d-c-container-canvas {
   width:    100%;
-  height:   300px;
+  height:   calc(100% - 30px);
   z-index:  -1;
   position: relative;
   position: absolute;

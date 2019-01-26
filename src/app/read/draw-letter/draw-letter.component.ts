@@ -10,7 +10,8 @@ import { AppState  } from 'src/app/store/state/app.state';
 import {
   IsSettingDataDL,
   SetInitialDataDL,
-  HideHandwritingDL
+  HideHandwritingDL,
+  ListenMsgBoardDL
 } from 'src/app/store/actions/reading-course/reading-course-draw-letter.actions';
 import { SpeechSynthesisService } from 'src/app/services/speech-synthesis.service';
 
@@ -64,17 +65,21 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
   }
 
 
-  // const msg       = `Bien, ahora ya sabes escribir la letra: ${sound} .... "${type}"`;
-
 
 
   closeHandwriting = (ev: MouseEvent) => {
     if (ev.srcElement.id === 'handWriting') {
+      this._speech.cancel();
+      this.store.dispatch( new ListenMsgBoardDL() );
       this.store.dispatch( new HideHandwritingDL() );
     }
   }
 
-  hideHandwriting = () => this.store.dispatch( new HideHandwritingDL() );
+  hideHandwriting = () => {
+    this._speech.cancel();
+    this.store.dispatch( new ListenMsgBoardDL() );
+    this.store.dispatch( new HideHandwritingDL() );
+  }
 
 
 }

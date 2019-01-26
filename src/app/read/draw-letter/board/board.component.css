@@ -11,16 +11,13 @@
   height:           300px;
   z-index:          2;
   position:         relative;
-  border:           1px solid #cccccc;
   border-radius:    0px;
-  background-color: #ebedee;
-  padding-top:      30px;
 }
 
 .icon-gesture {
-  position:           absolute;
-  top:                10px;
-  left:               10px;
+  position: absolute;
+  bottom:   7px;
+  left:     7px;
 }
 
 .d-c-canvas {
@@ -69,6 +66,13 @@
   position: absolute;
   bottom: 15px;
   right: 15px;
+  z-index: 20;
+  background: #239B56
+}
+.d-c-btn-done {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
   z-index: 20;
   background: #239B56
 }

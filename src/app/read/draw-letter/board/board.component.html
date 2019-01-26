@@ -8,6 +8,9 @@
       >
     </app-guide-lines>
 
+    <canvas class="d-c-canvas" #canvasEl></canvas>
+
+
     <button
       mat-mini-fab
       class="icon-gesture"
@@ -17,9 +20,13 @@
       <mat-icon class="center" >delete_forever</mat-icon>
 
     </button>
-    <canvas class="d-c-canvas" #canvasEl></canvas>
-  </div>
 
+    <button mat-fab color="warn" (click)="done()" class="d-c-btn-done">
+      <mat-icon style="font-weight: bold">done</mat-icon>
+    </button>
+    
+
+  </div>
 
 </div>
 

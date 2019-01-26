@@ -2,7 +2,6 @@ import { Component, ViewChild, OnInit, ElementRef, AfterViewInit, OnDestroy } fr
 import { Preferences, DrawLetterData } from 'src/app/store/models/reading-course/draw-letter/reading-course-draw-letter.model';
 import { Coordinates            } from 'src/app/classes/draw-letter-data';
 import { ListenHandwritingMsgDL } from 'src/app/store/actions/reading-course/reading-course-draw-letter.actions';
-import { SpeechSynthesisService } from 'src/app/services/speech-synthesis.service';
 import { Store, Select      } from '@ngxs/store';
 import { AppState           } from 'src/app/store/state/app.state';
 import { Observable, Subscription         } from 'rxjs';
@@ -41,7 +40,7 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
   @Select(ReadingCourseState.dlCurrentData) currentData$:   Observable<DrawLetterData>;
 
 
-  constructor(private store: Store, private _speech: SpeechSynthesisService) { }
+  constructor(private store: Store ) { }
 
   ngAfterViewInit() {
 
@@ -69,7 +68,6 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
     this.sub1.unsubscribe();
     this.sub2.unsubscribe();
 
-    this._speech.cancel();
     this.limpiar();
     window.removeEventListener('resize', this.startExample);
 
@@ -87,7 +85,6 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
 
   }
 
-  // const msg   = `Bien, ahora practica escribir la letra: .... ${sound} ..... ${type}`;
 
   draw = () => {
 

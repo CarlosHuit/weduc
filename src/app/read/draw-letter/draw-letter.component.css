@@ -1,4 +1,15 @@
 /*------ styles desktop version ------*/
+.container {
+  background-image: url('/assets/background/space.svg'),linear-gradient(180deg,#0b3e71,#0d64b0);
+}
+
+.d-c-container {
+  height: 720px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .container-slider {
   min-width: 664px;
   max-height: 816px;
@@ -18,14 +29,10 @@
 }
 
 .d-c-control-canvas {
-  height: 50px;
   width: 100%;
   z-index: 20;
-}
-
-.d-c-box {
-  width: 100%;
-  padding-top: 20px
+  box-sizing: border-box;
+  padding: 0;
 }
 
 

@@ -1,8 +1,89 @@
-<div class="m-c-mini-toolbar" [style.background]="(preferences$ | async).lineColor">
+<div class="m-c-mini-toolbar" *ngIf="!(isMobile$ | async) && !(queryMobileMatch$ | async)">
 
-  <div>
+  <!-- Slider line Width -->
+  <button mat-icon-button [matMenuTriggerFor]="menuFontSize">
+    <mat-icon class="fz-30 red">create</mat-icon>
+  </button>
 
-  </div>
+  <mat-menu #menuFontSize="matMenu">
+
+    <div class="m-c-menu-content">
+
+      <div class="line-width-example">
+        <hr
+          [style.borderBottomWidth.px]="(preferences$ | async).lineWidth"
+          [style.borderBottomColor]="(preferences$ | async).lineColor"
+          >
+      </div>
+
+      <div class="m-c-slider-control">
+        <mat-slider
+          #slid
+          class="m-c-slider"
+          [max]="(configData$ | async).lineWidth.max"
+          [min]="(configData$ | async).lineWidth.min"
+          [step]="(configData$ | async).lineWidth.step"
+          [value]="(configData$ | async).lineWidth.width"
+          (input)="changeWidth(slid.value)"
+          >
+        </mat-slider>
+      </div>
+
+    </div>
+
+  </mat-menu>
+
+
+
+  <!-- select line color -->
+  <button mat-icon-button [matMenuTriggerFor]="menuColor">
+    <mat-icon class="fz-30 red">format_color_fill</mat-icon>
+  </button>
+
+  <mat-menu #menuColor="matMenu">
+
+    <div class="m-c-color-buttons">
+      <button
+        *ngFor="let color of (configData$ | async).colors"
+        [style.background]="color"
+        (click)="changeColor(color)"
+        class="btn-color"
+        mat-icon-button
+        >
+        <mat-icon style="padding: 0" *ngIf="color === (preferences$ | async).lineColor" >check_circle</mat-icon>
+      </button>
+    </div>
+
+  </mat-menu>
+
+
+
+  <!-- toggle guide line button -->
+  <button mat-icon-button>
+
+    <mat-icon
+      class="fz-30 red"
+      *ngIf="(preferences$ | async).showGuideLines"
+      (click)="toggleGuideLines()"
+      >
+      visibility
+    </mat-icon>
+
+    <mat-icon
+      class="fz-30 red"
+      *ngIf="!(preferences$ | async).showGuideLines"
+      (click)="toggleGuideLines()"
+      >
+      visibility_off
+    </mat-icon>
+
+  </button>
+
+</div>
+
+<div class="m-c-mini-toolbar" [style.background]="(preferences$ | async).lineColor"
+  *ngIf="(isMobile$ | async) || (queryMobileMatch$ | async)"
+>
 
   <!-- Slider line Width -->
   <button mat-icon-button [matMenuTriggerFor]="menuFontSize">

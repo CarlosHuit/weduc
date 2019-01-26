@@ -3,30 +3,27 @@
 
 
   <!-- desktop Version -->
-  <mat-card
-    class="container-slider"
+  <div
+    class="d-c-container"
     *ngIf="!(isSettingData$ | async) && !(isMobile$ | async) && !(queryMobileMatch$ | async) "
     >
 
-    <div class="d-c-slider">
 
-
-      <div class="d-c-control-canvas">
+      <mat-card class="d-c-control-canvas">
         <app-control-canvas></app-control-canvas>
-      </div>
+      </mat-card>
 
 
-      <div class="d-c-box one">
+      <mat-card *ngIf="showHandwriting$ | async" >
         <app-handwriting></app-handwriting>
-      </div>
+      </mat-card>
 
-      <div class="d-c-box two">
+      <mat-card>
         <app-board></app-board>
-      </div>
+      </mat-card>
 
 
     </div>
-  </mat-card>
 
 
 

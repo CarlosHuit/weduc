@@ -73,7 +73,8 @@ import {
   ShowSuccessScreenDL,
   HideSuccessScreenDL,
   OnDoneDL,
-  ResetDataDL
+  ResetDataDL,
+  ListenMsgBoardDL,
 } from '../actions/reading-course/reading-course-draw-letter.actions';
 import { Coordinates } from 'src/app/classes/coordinates';
 import { DrawLetterData, ConfigData, Preferences } from '../models/reading-course/draw-letter/reading-course-draw-letter.model';
@@ -1370,12 +1371,25 @@ export class ReadingCourseState {
 
   @Action( ListenHandwritingMsgDL )
   listenHandwritingMsgDL({ getState, dispatch }: StateContext<ReadingCourseModel>, action: ListenHandwritingMsgDL) {
-    // const t = getState().data.letterSounds
+
     const letter = getState().drawLetter.currentData.letter.toLowerCase();
     const type = getState().drawLetter.currentData.type;
     const letterSound = getState().data.letterSounds[letter];
-    const msg = `Mira atentamente, así se escribe la letra: ... ${letterSound} .... "${type}"`;
-    dispatch(new ListenMessage({msg}));
+    const isMobile = this.store.selectSnapshot(state => state.app.isMobile);
+    const queryMobileMatch = this.store.selectSnapshot(state => state.app.isMobile);
+
+
+    if ( !isMobile && !queryMobileMatch ) {
+      const msg = `Mira atentamente ... y practica escribir la letra: ... ${letterSound} .... "${type}"`;
+      dispatch(new ListenMessage({msg}));
+    }
+
+    if ( isMobile || queryMobileMatch ) {
+      const msg = `Mira atentamente, así se escribe la letra: ... ${letterSound} .... "${type}"`;
+      dispatch(new ListenMessage({msg}));
+    }
+
+
 
   }
 
@@ -1447,6 +1461,18 @@ export class ReadingCourseState {
   @Action( ResetDataDL )
   ResetDataDL({ patchState }: StateContext<ReadingCourseModel>, action: ResetDataDL) {
     patchState({drawLetter: null});
+  }
+
+  @Action( ListenMsgBoardDL )
+  ListenMsgBoardDL({ getState, dispatch }: StateContext<ReadingCourseModel>, action: ListenMsgBoardDL) {
+
+    const letter = getState().drawLetter.currentData.letter.toLowerCase();
+    const type = getState().drawLetter.currentData.type;
+    const letterSound = getState().data.letterSounds[letter];
+
+    const msg = `Bien, ahora practica escribir la letra: .... ${letterSound} ..... ${type}`;
+    dispatch( new ListenMessage({msg}) );
+
   }
 
 }
