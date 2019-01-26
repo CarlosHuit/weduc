@@ -9,10 +9,10 @@
     </app-guide-lines>
 
     <button
-      mat-icon-button
+      mat-mini-fab
       class="icon-gesture"
-      [style.background]="(preferences$ | async).lineColor"
       (click)="clearCanvas()"
+      color="warn"
       >
       <mat-icon class="center" >delete_forever</mat-icon>
 
@@ -22,6 +22,8 @@
 
 
 </div>
+
+
 
 <!-- version mobile -->
 <div class="container-board center" *ngIf="(isMobile$ | async) || (queryMobileMatch$ | async)" >
@@ -48,7 +50,7 @@
       <mat-icon>replay</mat-icon>
     </button>
 
-    <button mat-icon-button color="warn" (click)="deleteStokes()" >
+    <button mat-icon-button color="warn" (click)="clearCanvas()" >
       <mat-icon>clear</mat-icon>
     </button>
 

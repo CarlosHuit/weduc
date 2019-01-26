@@ -3,9 +3,12 @@
 
 
   <!-- desktop Version -->
-  <mat-card class="container-slider" *ngIf="!(isSettingData$ | async) && !(isMobile$ | async) && !(queryMobileMatch$ | async) ">
+  <mat-card
+    class="container-slider"
+    *ngIf="!(isSettingData$ | async) && !(isMobile$ | async) && !(queryMobileMatch$ | async) "
+    >
 
-    <div class="d-c-slider" [class.show-board]="showBoard === true">
+    <div class="d-c-slider">
 
 
       <div class="d-c-control-canvas">
@@ -36,7 +39,7 @@
     >
 
 
-    <div class="d-c-control-canvas">
+    <div class="m-c-control-canvas">
       <app-control-canvas> </app-control-canvas>
     </div>
 

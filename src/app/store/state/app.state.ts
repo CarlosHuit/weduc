@@ -37,7 +37,7 @@ export class AppState implements NgxsOnInit {
 
   ngxsOnInit({ dispatch }: StateContext<AppStateModel>) {
 
-    this.mobileQuery = this.media.matchMedia('(max-width: 640px)');
+    this.mobileQuery = this.media.matchMedia('(max-width: 768px)');
     this.mobileQuery.addEventListener('change', (ev: MediaQueryListEvent) => {
       dispatch( new ChangeStateMobileQuery({state: ev.matches}) );
     });

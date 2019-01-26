@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { HandwritingComponent } from './handwriting/handwriting.component';
 import { ReadingCourseState } from 'src/app/store/state/reading-course.state';
 import { BoardComponent  } from './board/board.component';
-import { ControlCanvas } from '../../classes/control-canvas';
 import { Store, Select } from '@ngxs/store';
 import { Coordinates } from '../../classes/coordinates';
 import { Preferences } from 'src/app/store/models/reading-course/draw-letter/reading-course-draw-letter.model';
@@ -55,7 +54,6 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
   }
 
 
-  eventsControlCanvas = (ev: ControlCanvas) => this.boardComponent.limpiar();
 
 
   showHandWritingAndAnimate = () => {

@@ -21,16 +21,6 @@
   position:           absolute;
   top:                10px;
   left:               10px;
-  height:             48px;
-  width:              48px;
-  border-radius:      50%;
-  z-index:            3;
-  color:            white;
-}
-
-.icon-gesture mat-icon {
-  font-size: 36px;
-  margin:    0 auto;
 }
 
 .d-c-canvas {
