@@ -1,16 +1,22 @@
-<div #container class="container" [class.mobile]="isMobile()">
+<div #container class="container">
 
 
   <!-- Desktop Version -->
-  <mat-card *ngIf="!loading && !isMobile()" class="d-container" >
+  <mat-card *ngIf="!(isSettingData$ | async) && !(isMobile$ | async) && !(queryMobileMatch$ | async)" class="d-container" >
 
     <div #contDesk class="container-img">
-      <img [ngStyle]="genSizeDesk(contDesk)" [src]="urlImage" (click)="speak()">
+      <img [ngStyle]="genSizeDesk(contDesk)" [src]="(data$ | async).imgUrl" (click)="listenWord()">
     </div>
 
     <div class="container-letters">
-      <button *ngFor="let letter of arrayIDs" class="option press" [class.select]="selection[letter] === letter"
-        [disabled]="selection[letter] === letter" [id]="letter" (click)="onSelect(letter)">
+      <button
+        *ngFor="let letter of (data$ | async).letterIds"
+        class="option press"
+        [disabled]="(data$ | async).selections[letter] === letter"
+        [class.select]="(data$ | async).selections[letter] === letter"
+        [id]="letter"
+        (click)="onSelect(letter)"
+        >
         {{letter[0]}}
       </button>
     </div>
@@ -23,18 +29,16 @@
 
   <!-- Mobile Version -->
   <mat-card
-    [class.show]="showC === true"
-    *ngIf="!loading && isMobile()"
-    class="m-c-card-identify-letter hide"
+    *ngIf="!(isSettingData$ | async) && ((isMobile$ | async) || (queryMobileMatch$ | async))"
+    class="m-c-card-identify-letter"
     >
 
-    <div #mcImage class="m-c-image center" [style.width.px]="mcImage.clientHeight" >
+    <div #mcImage class="m-c-image center press" [style.width.px]="mcImage.clientHeight" >
       <img
         [style.width.px]="mcImage.clientHeight * 0.65"
         [style.height.px]="mcImage.clientHeight * 0.65"
-        class="press"
-        [src]="urlImage"
-        (click)="speak()"
+        [src]="(data$ | async).imgUrl"
+        (click)="listenWord()"
         >
         <div class="shadow"></div>
     </div>
@@ -44,11 +48,11 @@
         <button
           [id]="letter"
           class="option"
-          *ngFor="let letter of arrayIDs"
+          *ngFor="let letter of (data$ | async).letterIds"
           (click)="onSelect(letter)"
           [ngStyle]="genStyles(mcWord, container)"
-          [disabled]="selection[letter] === letter"
-          [class.select]="selection[letter] === letter"
+          [disabled]="(data$ | async).selections[letter] === letter"
+          [class.select]="(data$ | async).selections[letter] === letter"
           >
           <!-- [style.fontSize.px]="mcWord.clientWidth * 0.133" -->
           {{letter[0]}}
@@ -61,14 +65,21 @@
   </mat-card>
 
   <mat-progress-bar
-    *ngIf="!loading && isMobile()"    style="position: absolute; top: 0px; left: 0;"
-    color="warn" [mode]="determinate" [value]="advance()" >
+    color="warn"
+    [value]="advance$ | async "
+    [mode]="determinate"
+    style="position: absolute; top: 0px; left: 0;"
+    *ngIf="!(isSettingData$ | async) && ((isMobile$ | async) || (queryMobileMatch$ | async)) " 
+    >
   </mat-progress-bar>
 
 
   <!-- Animation Spinner -->
-  <app-spinner-loading *ngIf="loading"></app-spinner-loading>
+  <div style="height: 40px; width: 40px; position: absolute; top: 15px;" *ngIf="isSettingData$ | async" >
+    <app-spinner-loading></app-spinner-loading>
+
+  </div>
   <!-- Success Animation -->
-  <app-success-animation *ngIf="success"></app-success-animation>
+  <app-success-animation *ngIf="showSuccessScreen$ | async"></app-success-animation>
 
 </div>

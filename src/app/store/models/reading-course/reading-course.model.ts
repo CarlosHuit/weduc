@@ -3,6 +3,7 @@ import { ReadingCourseDataModel } from './data/reading-course-data.model';
 import { ReadingCourseLetterDetail } from './letter-detail/reading-course-letter-detail.model';
 import { ReadingCourseGameStateModel } from './game/reading-course-game.model';
 import { ReadingCourseDrawLetterModel } from './draw-letter/reading-course-draw-letter.model';
+import { ReadingCourseFindLetterModel } from './find-letter/reading-course-find-letter.model';
 
 export class ReadingCourseModel {
   constructor(
@@ -10,7 +11,8 @@ export class ReadingCourseModel {
     public menu:         ReadingCourseMenu,
     public letterDetail: ReadingCourseLetterDetail,
     public game:         ReadingCourseGameStateModel,
-    public drawLetter:   ReadingCourseDrawLetterModel
+    public drawLetter:   ReadingCourseDrawLetterModel,
+    public findLetter:   ReadingCourseFindLetterModel
   ) {}
 }
 

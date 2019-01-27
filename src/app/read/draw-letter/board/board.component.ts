@@ -115,7 +115,6 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
     this.removeListeners(this.canvas);
 
     if (this.isMobile || this.queryMobileMatch) {
-      console.log(this.containerCanvas);
       this.contCanvas = this.containerCanvas.nativeElement;
       this.cw         = this.canvas.width   = this.contCanvas.clientWidth;
       this.ch         = this.canvas.height  = this.contCanvas.clientHeight;

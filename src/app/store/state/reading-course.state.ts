@@ -76,8 +76,21 @@ import {
   ResetDataDL,
   ListenMsgBoardDL,
 } from '../actions/reading-course/reading-course-draw-letter.actions';
-import { Coordinates } from 'src/app/classes/coordinates';
 import { DrawLetterData, ConfigData, Preferences } from '../models/reading-course/draw-letter/reading-course-draw-letter.model';
+import {
+  SetInitialDataFL,
+  IsSettingDataFL,
+  SetCurrentDataFL,
+  SelectLetterIdFL,
+  CorrectSelectionFL,
+  ShowSuccessScreenFL,
+  HideSuccessScreenFL,
+  ChangeCurrentDataFL,
+  ResetDataFL,
+  ListenInstructionsFL,
+  ListenWordFL
+} from '../actions/reading-course/reading-course-find-letter.actions';
+import { FLData } from '../models/reading-course/find-letter/reading-course-find-letter.model';
 
 @State<ReadingCourseModel>({
   name: 'readingCourse',
@@ -87,6 +100,7 @@ import { DrawLetterData, ConfigData, Preferences } from '../models/reading-cours
     game: null,
     drawLetter:   null,
     letterDetail: null,
+    findLetter: null
   }
 })
 
@@ -224,7 +238,7 @@ export class ReadingCourseState {
 
 
 
-  /* ---------- Selectore Draw Letter ---------- */
+  /* ---------- Selectors Draw Letter ---------- */
   @Selector()
   static dlCurrentData( {drawLetter}: ReadingCourseModel ) { return drawLetter.currentData; }
 
@@ -242,6 +256,28 @@ export class ReadingCourseState {
 
   @Selector()
   static dlShowSuccessScreen({ drawLetter }: ReadingCourseModel) { return drawLetter.showSuccessScreen; }
+
+
+
+  /* ---------- Selectors FindLetter ---------- */
+  @Selector()
+  static flIsSettingData({ findLetter }: ReadingCourseModel) { return findLetter.isSettingData; }
+
+  @Selector()
+  static flCurrentData({ findLetter }: ReadingCourseModel) { return findLetter.currentData; }
+
+  @Selector()
+  static flLettersQuantity({ findLetter }: ReadingCourseModel) { return findLetter.currentData.word.length; }
+
+  @Selector()
+  static flShowSuccessScreen({ findLetter }: ReadingCourseModel) { return findLetter.showSuccessScreen; }
+  @Selector()
+  static flAdvance({ findLetter }: ReadingCourseModel) {
+    const totalWords = findLetter.data.length;
+    const currentIndex = findLetter.currentIndex;
+    const result = 100 - (((totalWords -  currentIndex) * 100) / totalWords);
+    return result;
+  }
 
   constructor(
     private _readingCourse: GetInitialDataService,
@@ -293,6 +329,7 @@ export class ReadingCourseState {
     const combinations = payload.data.letters.combinations;
     const alphabetList = [];
     const coordinates = payload.data.coordinates;
+    const words = payload.data.words;
 
     payload.data.words.forEach(w => {
 
@@ -317,7 +354,8 @@ export class ReadingCourseState {
       learnedLetters: lLetters,
       letterSounds:   payload.data.letters.sound_letters,
       similarLetters: payload.data.similarLetters,
-      coordinates
+      coordinates,
+      words
     };
 
     patchState({
@@ -1436,7 +1474,7 @@ export class ReadingCourseState {
 
       speech.addEventListener('end', function a() {
         dispatch([
-          new Navigate([``]),
+          new Navigate([`/lectura/encontrar-letras/${letter}`]),
           new ResetDataDL()
         ]);
         speech.removeEventListener('end', a);
@@ -1472,6 +1510,214 @@ export class ReadingCourseState {
     const msg = `Bien, ahora practica escribir la letra: .... ${letterSound} ..... ${type}`;
     dispatch( new ListenMessage({msg}) );
 
+  }
+
+  @Action( SetInitialDataFL )
+  setInitialDataFL({ getState, patchState, dispatch }: StateContext<ReadingCourseModel>, action: SetInitialDataFL) {
+
+    const letter =  getState().data.currentLetter;
+    const words = getState().data.words.find(w => w.l === letter).w;
+    const data = this.genDataFL(words, letter);
+
+    console.log(data);
+
+    patchState({
+      findLetter: {
+        ...getState().findLetter,
+        currentIndex: -1,
+        data,
+        showCoincidences: false,
+        showSuccessScreen: false,
+      }
+    });
+    dispatch( new SetCurrentDataFL() );
+    dispatch( new IsSettingDataFL({state: false}) );
+    dispatch( new ListenInstructionsFL() );
+
+  }
+
+  genDataFL (words: string[], letter: string): FLData[] {
+
+    const data = [];
+
+    words.forEach( w => {
+
+      const word      = w.toLowerCase();
+      const letters   = word.split('');
+      const urlImg    = `/assets/img-min/${word}-min.png`;
+      const letterIds = this._ids.generateIDs(word.split(''));
+      let corrects    = 0;
+
+      letters.forEach(l => l === letter ? corrects++ : null);
+
+      data.push(new FLData(word, urlImg, letter, 'minúscula', corrects, letterIds, {} ));
+
+    });
+
+    return data;
+
+  }
+
+  @Action( IsSettingDataFL )
+  isSettingDataFL({ patchState, getState }: StateContext<ReadingCourseModel>, { payload }: IsSettingDataFL) {
+    patchState({
+      findLetter: {
+        ...getState().findLetter,
+        isSettingData: payload.state
+      }
+    });
+  }
+
+  @Action( SetCurrentDataFL )
+  setCurrentDataFL({ patchState, getState }: StateContext<ReadingCourseModel>, action: SetCurrentDataFL ) {
+
+    const state = getState().findLetter;
+    const index = state.currentIndex === null ? -1 : state.currentIndex;
+    const nextIndex = index + 1;
+
+    if (nextIndex < state.data.length) {
+
+      patchState({
+        findLetter: {
+          ...getState().findLetter,
+          currentIndex: nextIndex,
+          currentData: state.data[nextIndex],
+        }
+      });
+
+    }
+  }
+
+  @Action( SelectLetterIdFL )
+  selectLetterIdFL({ getState, dispatch }: StateContext<ReadingCourseModel>, { payload }: SelectLetterIdFL) {
+
+    const letter = getState().findLetter.currentData.letter;
+
+    if ( payload.letterId[0] === letter ) {
+
+      dispatch( new CorrectSelectionFL({letterId: payload.letterId }) );
+
+      const speech = this._speech.speak('correcto');
+      speech.addEventListener('end', function a () {
+
+        const pendings = getState().findLetter.currentData.corrects;
+
+        if (pendings === 0) {
+          dispatch( new ChangeCurrentDataFL() );
+        }
+
+        speech.removeEventListener('end', a);
+      });
+
+    }
+
+    if ( payload.letterId[0] !== letter ) {
+      this._audio.playAudio();
+    }
+
+  }
+
+  @Action( CorrectSelectionFL )
+  CorrectSelectionFL({patchState, getState}: StateContext<ReadingCourseModel>, { payload }: CorrectSelectionFL) {
+
+    const state = getState().findLetter;
+    const pendings = state.currentData.corrects - 1;
+    const selections = {...state.currentData.selections};
+    selections[payload.letterId] = payload.letterId;
+
+    patchState({
+      findLetter: {
+        ...state,
+        currentData: {
+          ...state.currentData,
+          selections,
+          corrects: pendings
+        }
+      }
+    });
+
+  }
+
+  @Action(ShowSuccessScreenFL)
+  showSuccessScreenFL({patchState, getState}: StateContext<ReadingCourseModel>, action: ShowSuccessScreenFL) {
+    patchState({
+      findLetter: {
+        ...getState().findLetter,
+        showSuccessScreen: true
+      }
+    });
+  }
+
+  @Action(HideSuccessScreenFL)
+  hideSuccessScreenFL({patchState, getState}: StateContext<ReadingCourseModel>, action: HideSuccessScreenFL) {
+    patchState({
+      findLetter: {
+        ...getState().findLetter,
+        showSuccessScreen: false
+      }
+    });
+  }
+
+  @Action( ChangeCurrentDataFL )
+  changeCurrentaDataFL({patchState, getState, dispatch }: StateContext<ReadingCourseModel>, action: ChangeCurrentDataFL) {
+
+    dispatch( new ShowSuccessScreenFL() );
+
+    const letter = getState().data.currentLetter.toLowerCase();
+    const state = getState().findLetter;
+    const index = state.currentIndex === null ? -1 : state.currentIndex;
+    const nextIndex = index + 1;
+
+    const speech = this._speech.speak('Bien Hecho', 0.9);
+
+    /* Redirection */
+    if (nextIndex >= state.data.length) {
+
+      speech.addEventListener('end', function a() {
+        dispatch([
+          new Navigate([`/lectura/seleccionar-palabras/${letter}`]),
+          new ResetDataFL()
+        ]);
+        speech.removeEventListener('end', a);
+      });
+
+    }
+
+    /* Set Current Data */
+    if (nextIndex < state.data.length) {
+
+      dispatch( new SetCurrentDataFL() );
+      speech.addEventListener('end', function a() {
+        dispatch( new HideSuccessScreenFL() );
+        dispatch( new ListenInstructionsFL() );
+        speech.removeEventListener('end', a);
+      });
+
+    }
+  }
+
+  @Action( ListenInstructionsFL )
+  listenInstructionsFL( { getState }: StateContext< ReadingCourseModel >, action: ListenInstructionsFL ) {
+
+    const state = getState().findLetter;
+    const letter = state.currentData.letter.toLowerCase();
+    const sound = getState().data.letterSounds[letter];
+    const type = state.currentData.type;
+    const word = state.currentData.word;
+
+    const msg = `Selecciona todas las letras ... ${sound} ... ${type}  ... de la palabra ... ${word}`;
+    this._speech.speak(msg);
+  }
+
+  @Action( ResetDataFL )
+  resetDataFL({patchState}: StateContext<ReadingCourseModel>, action: ResetDataFL) {
+    patchState({findLetter: null});
+  }
+
+  @Action( ListenWordFL )
+  listenWordFL({ getState }: StateContext<ReadingCourseModel>, action: ListenWordFL) {
+    const word = getState().findLetter.currentData.word;
+    this._speech.speak(word);
   }
 
 }

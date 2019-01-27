@@ -14,7 +14,7 @@
       </mat-card>
 
 
-      <mat-card *ngIf="showHandwriting$ | async" >
+      <mat-card *ngIf="(showHandwriting$ | async) || (!(isMobile$ | async) && !(queryMobileMatch$ | async))" >
         <app-handwriting></app-handwriting>
       </mat-card>
 

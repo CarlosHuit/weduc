@@ -102,7 +102,7 @@ export class LearnedLettersComponent implements OnInit {
 
 
   repractice = (letter: string) => {
-    const url = `lectura/detalle-letra/${letter.toLowerCase()}`;
+    const url = `lectura/encontrar-letras/${letter.toLowerCase()}`;
     this.store.dispatch(new Navigate([url]));
   }
 
