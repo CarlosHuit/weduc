@@ -1,19 +1,26 @@
-<div #container class="container">
+<div #container class="container"
+  [class.desktop]="!(isMobile$ | async) && !(queryMobileMatch$ | async)"
+>
 
 
   <!-- Desktop Version -->
   <mat-card *ngIf="!(isSettingData$ | async) && !(isMobile$ | async) && !(queryMobileMatch$ | async)" class="d-container" >
 
-    <div #contDesk class="container-img">
+    <div
+      matRipple
+      (click)="listenWord()"
+      [matRippleRadius]="120"
+      class="d-c-container-img center"
+      [matRippleColor]="'rgba(255,255,255, 0.035)'"
+      >
       <img
-        (click)="listenWord()"
+        class="d-c-image"
         [src]="(data$ | async).imgUrl"
-        [ngStyle]="genSizeDesk(contDesk)"
         >
-        <div class="shadow"></div>
+      <div class="shadow"></div>
     </div>
 
-    <div class="container-letters">
+    <div class="container-letters center">
       <button
         [id]="letter"
         class="option center press"
@@ -21,17 +28,14 @@
         *ngFor="let letter of (data$ | async).letterIds"
         [disabled]="(data$ | async).selections[letter] === letter || (disableAll$ | async)"
         [class.select]="(data$ | async).selections[letter] === letter"
+        matRipple 
+        
         >
         {{letter[0]}}
       </button>
     </div>
 
-    <mat-icon
-      class="d-icon-help"
-      (click)="instructions()"
-      >
-      contact_support
-    </mat-icon>
+    <mat-icon matRipple [matRippleCentered]="true" [matRippleRadius]="16" class="d-icon-help" (click)="instructions()">help</mat-icon>
 
 
   </mat-card>
