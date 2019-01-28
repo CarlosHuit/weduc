@@ -340,7 +340,9 @@
   }
 }
 
+@media( max-width: 360px ) and ( orientation: portrait ) {
 
+}
 
 
 .option:disabled {
