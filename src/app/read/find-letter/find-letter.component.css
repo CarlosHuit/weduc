@@ -77,13 +77,19 @@
   cursor: pointer;
 }
 
-.container-letters .select {
+.container-letters .correct {
   transition: 200ms;
   background: #23af5d;
   color: white;
   font-weight: bold;
-  background-color: #43A047;
-  box-shadow: 0px 8px 0px 0px #388E3C;
+  background-color: #4CAF50;
+    box-shadow: 0px 8px 0px 0px #388E3C;
+}
+
+.container-letters .incorrect {
+  transition: 200ms;
+  background-color: #F44336;
+  box-shadow: 0px 8px 0px 0px #D32F2F;
 }
 
 @media ( max-height: 820px ) {

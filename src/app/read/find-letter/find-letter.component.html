@@ -26,8 +26,9 @@
         class="option center press"
         (click)="onSelect(letter)"
         *ngFor="let letter of (data$ | async).letterIds"
-        [disabled]="(data$ | async).selections[letter] === letter || (disableAll$ | async)"
-        [class.select]="(data$ | async).selections[letter] === letter"
+        [disabled]="(selections$ | async)[letter] === letter || (disableAll$ | async)"
+        [class.correct]="(correctsSels$ | async)[letter] === letter"
+        [class.incorrect]="(wrongSels$ | async)[letter] === letter"
         matRipple 
         
         >
@@ -69,8 +70,9 @@
           (click)="onSelect(letter)"
           [ngStyle]="genStyles(mcWord, container)"
           *ngFor="let letter of (data$ | async).letterIds"
-          [disabled]="(data$ | async).selections[letter] === letter || (disableAll$ | async)"
-          [class.select]="(data$ | async).selections[letter] === letter"
+          [disabled]="(selections$ | async)[letter] === letter || (disableAll$ | async)"
+          [class.select]="(correctsSels$ | async)[letter] === letter"
+          [class.incorrect]="(wrongSels$ | async)[letter] === letter"
           >
           <!-- [style.fontSize.px]="mcWord.clientWidth * 0.133" -->
           {{letter[0]}}

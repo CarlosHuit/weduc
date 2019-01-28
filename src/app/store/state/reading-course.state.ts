@@ -89,7 +89,11 @@ import {
   ResetDataFL,
   ListenInstructionsFL,
   ListenWordFL,
-  DisableAllFL
+  DisableAllFL,
+  AddCorrectSelectionFL,
+  RemoveCorrectSelectionFL,
+  AddWrongSelectionFL,
+  RegisterSelectionFL
 } from '../actions/reading-course/reading-course-find-letter.actions';
 import { FLData } from '../models/reading-course/find-letter/reading-course-find-letter.model';
 
@@ -287,6 +291,15 @@ export class ReadingCourseState {
 
   @Selector()
   static flDisableAll({ findLetter }: ReadingCourseModel) { return findLetter.disableAll; }
+  @Selector()
+
+  static flSelections({ findLetter }: ReadingCourseModel) { return findLetter.currentData.selections; }
+
+  @Selector()
+  static flCorrectSelections({ findLetter }: ReadingCourseModel) { return findLetter.currentData.correctSelections; }
+
+  @Selector()
+  static flWrongSelections({ findLetter }: ReadingCourseModel) { return findLetter.currentData.wrongSelections; }
 
   constructor(
     private _readingCourse: GetInitialDataService,
@@ -1568,7 +1581,7 @@ export class ReadingCourseState {
 
       letters.forEach(l => l === letter ? corrects++ : null);
 
-      data.push(new FLData(word, urlImg, letter, 'minúscula', corrects, letterIds, {}));
+      data.push(new FLData(word, urlImg, letter, 'minúscula', corrects, letterIds, {}, {}, {}));
 
     });
 
@@ -1610,10 +1623,12 @@ export class ReadingCourseState {
   async selectLetterIdFL({ getState, dispatch }: StateContext<ReadingCourseModel>, { payload }: SelectLetterIdFL) {
 
     const letter = getState().findLetter.currentData.letter;
+    const letterId = payload.letterId;
+    dispatch(new RegisterSelectionFL({ letterId }));
 
-    if (payload.letterId[0] === letter) {
+    if ( letterId[0] === letter ) {
 
-      await dispatch(new CorrectSelectionFL({ letterId: payload.letterId }));
+      await dispatch( new AddCorrectSelectionFL({ letterId }) );
 
       const speech = this._speech.speak('correcto');
       const pendings = getState().findLetter.currentData.corrects;
@@ -1630,34 +1645,13 @@ export class ReadingCourseState {
       }
     }
 
-    if (payload.letterId[0] !== letter) {
+    if (letterId[0] !== letter) {
       this._audio.playAudio();
+      dispatch( new AddWrongSelectionFL({ letterId }) );
     }
 
   }
 
-  @Action(CorrectSelectionFL)
-  CorrectSelectionFL({ patchState, getState }: StateContext<ReadingCourseModel>, { payload }: CorrectSelectionFL) {
-
-    const state = getState().findLetter;
-    const totalOfPendings = state.totalOfPendings - 1;
-    const pendings = state.currentData.corrects - 1;
-    const selections = { ...state.currentData.selections };
-    selections[payload.letterId] = payload.letterId;
-
-    patchState({
-      findLetter: {
-        ...state,
-        currentData: {
-          ...state.currentData,
-          selections,
-          corrects: pendings
-        },
-        totalOfPendings
-      }
-    });
-
-  }
 
   @Action(ShowSuccessScreenFL)
   showSuccessScreenFL({ patchState, getState }: StateContext<ReadingCourseModel>, action: ShowSuccessScreenFL) {
@@ -1757,6 +1751,74 @@ export class ReadingCourseState {
         disableAll: payload.state
       }
     });
+  }
+
+  @Action( AddCorrectSelectionFL )
+  addCorrectSelectionFL({ getState, patchState }: StateContext<ReadingCourseModel>, { payload }: AddCorrectSelectionFL) {
+
+    const state = getState().findLetter;
+
+    const totalOfPendings = state.totalOfPendings - 1;
+    const pendings = state.currentData.corrects - 1;
+
+    const correctSelections = {...state.currentData.correctSelections};
+    correctSelections[payload.letterId] = payload.letterId;
+
+    patchState({
+      findLetter: {
+        ...state,
+        currentData: {
+          ...state.currentData,
+          correctSelections,
+          corrects: pendings
+        },
+        totalOfPendings
+      }
+    });
+
+  }
+
+  @Action( AddWrongSelectionFL )
+  addWrongSelectionFL({ getState, patchState }: StateContext<ReadingCourseModel>, { payload }: AddWrongSelectionFL) {
+
+    const state = getState().findLetter;
+    const wrongSelections = {...state.currentData.wrongSelections};
+    wrongSelections[payload.letterId] = payload.letterId;
+
+    patchState({
+      findLetter: {
+        ...state,
+        currentData: {
+          ...state.currentData,
+          wrongSelections
+        }
+      }
+    });
+
+  }
+
+  @Action( AddCorrectSelectionFL )
+  AddCorrectSelectionFL({ getState, patchState }: StateContext<ReadingCourseModel>, { payload }: AddCorrectSelectionFL) {
+
+  }
+
+  @Action( RegisterSelectionFL )
+  registerSelectionFL({ getState, patchState }: StateContext<ReadingCourseModel>, { payload }: RegisterSelectionFL) {
+
+    const state = getState().findLetter;
+    const selections = { ...state.currentData.selections };
+    selections[payload.letterId] = payload.letterId;
+
+    patchState({
+      findLetter: {
+        ...state,
+        currentData: {
+          ...state.currentData,
+          selections
+        }
+      }
+    });
+
   }
 
 }

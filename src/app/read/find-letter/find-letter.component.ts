@@ -33,6 +33,9 @@ export class FindLetterComponent implements OnDestroy, OnInit {
   @Select(AppState.isMobile)                               isMobile$: Observable<boolean>;
   @Select(ReadingCourseState.flAdvance)                     advance$: Observable<number>;
   @Select(ReadingCourseState.flCurrentData)                    data$: Observable<FLData>;
+  @Select(ReadingCourseState.flSelections)               selections$: Observable<{}>;
+  @Select(ReadingCourseState.flCorrectSelections)      correctsSels$: Observable<{}>;
+  @Select(ReadingCourseState.flWrongSelections)           wrongSels$: Observable<{}>;
 
   isMobile:        boolean;
   word:            string;
