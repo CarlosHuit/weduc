@@ -28,6 +28,20 @@
   border-radius: 50%
 }
 
+.d-container-circle {
+  position: relative;
+}
+.d-container-circle::before {
+  content: '';
+  position:           absolute;
+  width:              100px;
+  height:             20px;
+  top:                104%;
+  background-color: rgba(0, 0, 0, 0.35);
+  border-radius:      50%;
+  left:  calc(50% - 50px);
+}
+
 .d-c-container-img {
   background:   #222222;
   border-radius:  50%;
@@ -42,15 +56,6 @@
 .d-c-container-img .d-c-image {
   width: 65%;
   height: 65%;  
-}
-
-.d-c-container-img .shadow {
-  position:           absolute;
-  width:              100px;
-  height:             20px;
-  top:                104%;
-  background-color: rgba(0, 0, 0, 0.35);
-  border-radius:      50%;
 }
 
 .container-letters {
@@ -99,8 +104,8 @@
   }
 
   .d-c-container-img {
-    width: 300px;
-    height: 300px;
+    width: 280px;
+    height: 280px;
   }
 
 }
