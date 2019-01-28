@@ -12,7 +12,6 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
-  /* position: relative; */
   box-sizing: border-box;
 }
 
@@ -132,6 +131,12 @@
 }
 
 
+
+
+
+
+
+
 /* --  Styles Mobile version  -- */
 
 .m-c-card-identify-letter {
@@ -157,8 +162,12 @@
   background: #222222;
   border-radius: 50%;
   position: relative;
-  border: 5px solid #fc793c;
-  /* box-sizing:       border-box; */
+  border: 5px solid #FF7043;
+}
+
+.m-c-image .m-image {
+  height: 65%;
+  width: 65%;
 }
 
 .m-c-image .shadow {
@@ -179,11 +188,7 @@
   overflow: hidden;
   padding: 4px 0;
   border-bottom: 3px solid rgb(49, 185, 243);
-  /* #01ABAA */
-  /* #43C0F6 */
   border-top: 3px solid rgb(49, 185, 243);
-  /* #01ABAA */
-  /* #43C0F6 */
 }
 
 .m-c-word> :first-child {
@@ -267,7 +272,7 @@
 
 }
 
-@media (min-height: 320px) and (orientation: landscape) {
+@media (min-height: 320px )  and (orientation: landscape) {
 
   .m-c-card-identify-letter {
     min-height: unset;
@@ -301,6 +306,41 @@
   }
 
 }
+
+@media( max-width: 320px ) and ( orientation: portrait ) {
+  .m-c-image {
+    width: 230px;
+    height: 230px;
+  }
+}
+
+@media( min-width: 321px ) and ( max-width: 380px ) and ( orientation: portrait ) {
+  .m-c-image {
+    width: 270px;
+    height: 270px;
+  }
+}
+
+@media( min-width: 381px ) and ( max-width: 520px ) and ( orientation: portrait ) {
+  .m-c-image {
+    width: 300px;
+    height: 300px;
+  }
+}
+
+@media( min-width: 521px ) and ( max-width: 768px ) and ( orientation: portrait ) {
+  .m-c-image {
+    width: 330px;
+    height: 330px;
+  }
+
+  .m-c-card-identify-letter {
+    max-height: 720px;
+    max-width: 640px;
+  }
+}
+
+
 
 
 .option:disabled {

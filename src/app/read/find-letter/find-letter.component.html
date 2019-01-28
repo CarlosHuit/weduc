@@ -68,22 +68,24 @@
   </div>
 
 
+
   <!-- Mobile Version -->
   <mat-card
-    *ngIf="!(isSettingData$ | async) && ((isMobile$ | async) || (queryMobileMatch$ | async))"
     class="m-c-card-identify-letter"
+    *ngIf="!(isSettingData$ | async) && ((isMobile$ | async) || (queryMobileMatch$ | async))"
     >
 
     <div
       #mcImage
-      class="m-c-image center press"
-      [style.width.px]="mcImage.clientHeight"
+      class="m-c-image center"
       >
+      <!-- [style.width.px]="mcImage.clientHeight" -->
       <img
         (click)="listenWord()"
         [src]="(data$ | async).imgUrl"
         [style.width.px]="mcImage.clientHeight * 0.65"
         [style.height.px]="mcImage.clientHeight * 0.65"
+        class="m-image"
         >
         <div class="shadow"></div>
     </div>
@@ -110,6 +112,11 @@
 
   </mat-card>
 
+  
+  
+  
+  
+  <!-- Progress Bar -->  
   <mat-progress-bar
     color="warn"
     [mode]="determinate"
@@ -118,8 +125,7 @@
     *ngIf="!(isSettingData$ | async) && ((isMobile$ | async) || (queryMobileMatch$ | async)) " 
     >
   </mat-progress-bar>
-
-
+ 
   <!-- Animation Spinner -->
   <div
     *ngIf="isSettingData$ | async"
