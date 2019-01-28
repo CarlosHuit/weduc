@@ -4,42 +4,68 @@
 
 
   <!-- Desktop Version -->
-  <mat-card *ngIf="!(isSettingData$ | async) && !(isMobile$ | async) && !(queryMobileMatch$ | async)" class="d-container" >
+  <div #cont class="d-container"
+    *ngIf="!(isSettingData$ | async) && !(isMobile$ | async) && !(queryMobileMatch$ | async)"
+    >
+    <mat-card
+    style="width: 100%; height: 100%;    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    position: relative;
+    box-sizing: border-box;"
+    >
+  
+      <div
+        matRipple
+        (click)="listenWord()"
+        [matRippleRadius]="120"
+        class="d-c-container-img center"
+        [matRippleColor]="'rgba(255,255,255, 0.035)'"
+        >
+        <img
+          class="d-c-image"
+          [src]="(data$ | async).imgUrl"
+          >
+        <div class="shadow"></div>
+      </div>
+  
+      <div class="container-letters center">
+        <button
+          [id]="letter"
+          class="option center press"
+          (click)="onSelect(letter)"
+          *ngFor="let letter of (data$ | async).letterIds"
+          [disabled]="(selections$ | async)[letter] === letter || (disableAll$ | async)"
+          [class.correct]="(correctsSels$ | async)[letter] === letter"
+          [class.incorrect]="(wrongSels$ | async)[letter] === letter"
+          matRipple 
+          
+          >
+          {{letter[0]}}
+        </button>
+      </div>
+  
+      <mat-icon matRipple [matRippleCentered]="true" [matRippleRadius]="16" class="d-icon-help" (click)="instructions()">help</mat-icon>
+  
+  
+    </mat-card>
+
 
     <div
-      matRipple
-      (click)="listenWord()"
-      [matRippleRadius]="120"
-      class="d-c-container-img center"
-      [matRippleColor]="'rgba(255,255,255, 0.035)'"
-      >
-      <img
-        class="d-c-image"
-        [src]="(data$ | async).imgUrl"
+    class="d-container-progress-bar"
+    [style.top.px]="((container.clientHeight - cont.clientHeight) / 4) - 4"
+    >
+      <mat-progress-bar
+        color="warn"
+        [mode]="determinate"
+        [value]="advance$ | async "
+        style="height: 100%; border-radius: 50px"
         >
-      <div class="shadow"></div>
+      </mat-progress-bar>
     </div>
 
-    <div class="container-letters center">
-      <button
-        [id]="letter"
-        class="option center press"
-        (click)="onSelect(letter)"
-        *ngFor="let letter of (data$ | async).letterIds"
-        [disabled]="(selections$ | async)[letter] === letter || (disableAll$ | async)"
-        [class.correct]="(correctsSels$ | async)[letter] === letter"
-        [class.incorrect]="(wrongSels$ | async)[letter] === letter"
-        matRipple 
-        
-        >
-        {{letter[0]}}
-      </button>
-    </div>
-
-    <mat-icon matRipple [matRippleCentered]="true" [matRippleRadius]="16" class="d-icon-help" (click)="instructions()">help</mat-icon>
-
-
-  </mat-card>
+  </div>
 
 
   <!-- Mobile Version -->

@@ -64,7 +64,6 @@ export class FindLetterComponent implements OnDestroy, OnInit {
   }
 
 
-
   instructions = () => this.store.dispatch( new ListenInstructionsFL() );
 
   onSelect = (letterId: string) => this.store.dispatch(new SelectLetterIdFL({letterId}));
