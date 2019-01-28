@@ -25,16 +25,17 @@ export class FindLetterComponent implements OnDestroy, OnInit {
 
   sub1: Subscription;
 
-  @Select(AppState.isMobile)                               isMobile$: Observable<boolean>;
-  @Select(AppState.queryMobileMatch)               queryMobileMatch$: Observable<boolean>;
-  @Select(ReadingCourseState.flIsSettingData)         isSettingData$: Observable<boolean>;
-  @Select(ReadingCourseState.flCurrentData)                    data$: Observable<FLData>;
-  @Select(ReadingCourseState.flLettersQuantity)     lettersQuantity$: Observable<number>;
   @Select(ReadingCourseState.flShowSuccessScreen) showSuccessScreen$: Observable<boolean>;
-  @Select(ReadingCourseState.flAdvance) advance$: Observable<number>;
+  @Select(AppState.queryMobileMatch)               queryMobileMatch$: Observable<boolean>;
+  @Select(ReadingCourseState.flLettersQuantity)     lettersQuantity$: Observable<number>;
+  @Select(ReadingCourseState.flIsSettingData)         isSettingData$: Observable<boolean>;
+  @Select(ReadingCourseState.flDisableAll)               disableAll$: Observable<boolean>;
+  @Select(AppState.isMobile)                               isMobile$: Observable<boolean>;
+  @Select(ReadingCourseState.flAdvance)                     advance$: Observable<number>;
+  @Select(ReadingCourseState.flCurrentData)                    data$: Observable<FLData>;
 
-  isMobile: boolean;
-  word: string;
+  isMobile:        boolean;
+  word:            string;
   lettersQuantity: number;
 
   sub2: Subscription;
@@ -58,6 +59,7 @@ export class FindLetterComponent implements OnDestroy, OnInit {
   ngOnDestroy() {
     this._speech.cancel();
   }
+
 
 
   instructions = () => this.store.dispatch( new ListenInstructionsFL() );

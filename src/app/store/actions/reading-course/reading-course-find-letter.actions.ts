@@ -15,6 +15,7 @@ export enum ReadingCourseFindLetterActionsType {
   RESET_DATA          = '[Reading Course Find Letter] Reset Data',
   LISTEN_INSTRUCTIONS = '[Reading Course Find Letter] Listen Instructions',
   LISTEN_WORD = '[Reading Course Find Letter] Listen word',
+  DISABLE_ALL = '[Reading Course Find Letter] Disable All Options'
 }
 
 export class IsSettingDataFL {
@@ -70,5 +71,10 @@ export class ListenInstructionsFL {
 
 export class ListenWordFL {
   static readonly type = ReadingCourseFindLetterActionsType.LISTEN_WORD;
+}
+
+export class DisableAllFL {
+  static readonly type = ReadingCourseFindLetterActionsType.DISABLE_ALL;
+  constructor( public readonly payload: { state: boolean } ) {}
 }
 

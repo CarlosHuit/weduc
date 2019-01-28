@@ -7,6 +7,9 @@ export class ReadingCourseFindLetterModel {
     public isSettingData:     boolean,
     public showSuccessScreen: boolean,
     public showCoincidences:  boolean,
+    public disableAll:        boolean,
+    public totalOfCorrects:   number,
+    public totalOfPendings:   number,
   ) {}
 
 }

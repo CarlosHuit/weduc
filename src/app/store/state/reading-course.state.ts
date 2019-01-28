@@ -88,7 +88,8 @@ import {
   ChangeCurrentDataFL,
   ResetDataFL,
   ListenInstructionsFL,
-  ListenWordFL
+  ListenWordFL,
+  DisableAllFL
 } from '../actions/reading-course/reading-course-find-letter.actions';
 import { FLData } from '../models/reading-course/find-letter/reading-course-find-letter.model';
 
@@ -98,7 +99,7 @@ import { FLData } from '../models/reading-course/find-letter/reading-course-find
     data: null,
     menu: null,
     game: null,
-    drawLetter:   null,
+    drawLetter: null,
     letterDetail: null,
     findLetter: null
   }
@@ -207,16 +208,16 @@ export class ReadingCourseState {
 
   /*---------- selectors reading course game ----------*/
   @Selector()
-  static gIsSettingData({game }: ReadingCourseModel ) { return game.isSettingData; }
+  static gIsSettingData({ game }: ReadingCourseModel) { return game.isSettingData; }
 
   @Selector()
-  static gCurrentData({ game }: ReadingCourseModel ) { return game.currentData; }
+  static gCurrentData({ game }: ReadingCourseModel) { return game.currentData; }
 
   @Selector()
-  static gCurrentLetter({ game }: ReadingCourseModel ) { return game.currentData.letter; }
+  static gCurrentLetter({ game }: ReadingCourseModel) { return game.currentData.letter; }
 
   @Selector()
-  static gData({ game }: ReadingCourseModel ) { return game.currentData.data; }
+  static gData({ game }: ReadingCourseModel) { return game.currentData.data; }
 
   @Selector()
   static gSelections({ game }: ReadingCourseModel) { return game.selections; }
@@ -226,7 +227,7 @@ export class ReadingCourseState {
 
     const t = game.currentData.totalCorrects;
     const p = game.currentData.correctsValidation;
-    const x = 100 - (( p * 100 ) / t);
+    const x = 100 - ((p * 100) / t);
     return x;
   }
 
@@ -240,13 +241,13 @@ export class ReadingCourseState {
 
   /* ---------- Selectors Draw Letter ---------- */
   @Selector()
-  static dlCurrentData( {drawLetter}: ReadingCourseModel ) { return drawLetter.currentData; }
+  static dlCurrentData({ drawLetter }: ReadingCourseModel) { return drawLetter.currentData; }
 
   @Selector()
-  static dlConfigData({ drawLetter }: ReadingCourseModel ) { return drawLetter.configData; }
+  static dlConfigData({ drawLetter }: ReadingCourseModel) { return drawLetter.configData; }
 
   @Selector()
-  static dlPreferences({ drawLetter }: ReadingCourseModel ) { return drawLetter.preferences; }
+  static dlPreferences({ drawLetter }: ReadingCourseModel) { return drawLetter.preferences; }
 
   @Selector()
   static dlIsSettingData({ drawLetter }: ReadingCourseModel) { return drawLetter.isSettingData; }
@@ -271,13 +272,21 @@ export class ReadingCourseState {
 
   @Selector()
   static flShowSuccessScreen({ findLetter }: ReadingCourseModel) { return findLetter.showSuccessScreen; }
+
   @Selector()
   static flAdvance({ findLetter }: ReadingCourseModel) {
-    const totalWords = findLetter.data.length;
-    const currentIndex = findLetter.currentIndex;
-    const result = 100 - (((totalWords -  currentIndex) * 100) / totalWords);
+
+    const total = 100;
+    const totalOfCorrects = findLetter.totalOfCorrects;
+    const totalOfPendings = findLetter.totalOfPendings;
+    const result = total - ((totalOfPendings  * total) / totalOfCorrects);
+
     return result;
+
   }
+
+  @Selector()
+  static flDisableAll({ findLetter }: ReadingCourseModel) { return findLetter.disableAll; }
 
   constructor(
     private _readingCourse: GetInitialDataService,
@@ -285,7 +294,7 @@ export class ReadingCourseState {
     private _speech:        SpeechSynthesisService,
     private _audio:         PreloadAudioService,
     private _ids:           GenerateIdsService,
-    private store: Store
+    private store:          Store
   ) {
     this._audio.loadAudio();
   }
@@ -337,7 +346,7 @@ export class ReadingCourseState {
 
         const t = {
           'letter': w.l,
-          'word':   w.w[0],
+          'word': w.w[0],
           'imgUrl': `/assets/img100X100/${w.w[0]}-min.png`,
         };
 
@@ -349,10 +358,10 @@ export class ReadingCourseState {
     lLetters.forEach(l => l['combinations'] = combinations[l.letter]);
 
     const data: ReadingCourseDataModel = {
-      currentLetter:  '',
-      lettersMenu:    alphabetList,
+      currentLetter: '',
+      lettersMenu: alphabetList,
       learnedLetters: lLetters,
-      letterSounds:   payload.data.letters.sound_letters,
+      letterSounds: payload.data.letters.sound_letters,
       similarLetters: payload.data.similarLetters,
       coordinates,
       words
@@ -906,7 +915,7 @@ export class ReadingCourseState {
 
   /* ---------- Game handler actions ---------- */
   @Action(SetInitialDataG)
-  setInitialDataG( { patchState, getState, dispatch }: StateContext<ReadingCourseModel>, { payload }: SetInitialDataG ) {
+  setInitialDataG({ patchState, getState, dispatch }: StateContext<ReadingCourseModel>, { payload }: SetInitialDataG) {
 
     dispatch(new IsSettingDataG({ state: true }));
 
@@ -924,16 +933,16 @@ export class ReadingCourseState {
     patchState({
       game: {
         ...state.game,
-        data:               [ tLC, tUC ],
-        currentIndex:       -1,
-        selections:         {},
+        data: [tLC, tUC],
+        currentIndex: -1,
+        selections: {},
         showCorrectLetters: true
       }
     });
 
-    dispatch( new SetCurrentDataG() );
-    setTimeout(() => dispatch( [
-      new IsSettingDataG({state: false}),
+    dispatch(new SetCurrentDataG());
+    setTimeout(() => dispatch([
+      new IsSettingDataG({ state: false }),
       new ListenInitialMsgG()
     ]), 0);
 
@@ -961,7 +970,7 @@ export class ReadingCourseState {
   }
 
   @Action(ListenInitialMsgG)
-  listenInitialMsgG( { getState, dispatch }: StateContext<ReadingCourseModel>, action: ListenInitialMsgG ) {
+  listenInitialMsgG({ getState, dispatch }: StateContext<ReadingCourseModel>, action: ListenInitialMsgG) {
 
     const state = getState();
     const letter = state.game.currentData.letter;
@@ -971,14 +980,14 @@ export class ReadingCourseState {
 
     const speech = this._speech.speak(msg, .9);
     speech.addEventListener('end', function a() {
-      dispatch(new ShowCorrectLettersG({state: false}));
+      dispatch(new ShowCorrectLettersG({ state: false }));
       speech.removeEventListener('end', a);
     });
 
   }
 
   @Action(IsSettingDataG)
-  IsSettingDataG({ patchState, getState }: StateContext<ReadingCourseModel>, { payload }: IsSettingDataG ) {
+  IsSettingDataG({ patchState, getState }: StateContext<ReadingCourseModel>, { payload }: IsSettingDataG) {
     patchState({
       game: {
         ...getState().game,
@@ -1014,17 +1023,17 @@ export class ReadingCourseState {
       }
     });
 
-    setTimeout(() => dispatch( new IsSettingDataG({state: false}) ) , 0);
+    setTimeout(() => dispatch(new IsSettingDataG({ state: false })), 0);
 
 
   }
 
   @Action(SelectLetterG)
-  async selectLetterG( { getState, dispatch }: StateContext<ReadingCourseModel>, { payload }: SelectLetterG ) {
+  async selectLetterG({ getState, dispatch }: StateContext<ReadingCourseModel>, { payload }: SelectLetterG) {
 
     const state = getState().game;
     const correctLetter = state.currentData.letter;
-    const caseLetter    = state.currentData.type;
+    const caseLetter = state.currentData.type;
     const letterSelected = payload.letterId[0];
     const msg = `${correctLetter} ... ${caseLetter}`;
 
@@ -1032,17 +1041,17 @@ export class ReadingCourseState {
 
       await dispatch([
         new IncreaseCorrectsG(),
-        new RegisterLetterIdG({letterId: payload.letterId})
+        new RegisterLetterIdG({ letterId: payload.letterId })
       ]);
 
       const speech = this._speech.speak(msg);
-      const count  = getState().game.currentData.correctsValidation;
+      const count = getState().game.currentData.correctsValidation;
 
       if (count === 0) {
 
         speech.addEventListener('end', function a() {
 
-          dispatch( new ChangeCurrentDataG() );
+          dispatch(new ChangeCurrentDataG());
           speech.removeEventListener('end', a);
 
         });
@@ -1051,9 +1060,9 @@ export class ReadingCourseState {
 
     }
 
-    if ( letterSelected !== correctLetter ) {
+    if (letterSelected !== correctLetter) {
       this._audio.playAudio();
-      dispatch( new IncreaseIncorrectsG() );
+      dispatch(new IncreaseIncorrectsG());
     }
 
 
@@ -1098,7 +1107,7 @@ export class ReadingCourseState {
   }
 
   @Action(IncreaseIncorrectsG)
-  increaseIncorrectsG({ patchState, getState }: StateContext<ReadingCourseModel>, action: IncreaseIncorrectsG ) {
+  increaseIncorrectsG({ patchState, getState }: StateContext<ReadingCourseModel>, action: IncreaseIncorrectsG) {
 
     const incorrects = getState().game.currentData.countIncorrects + 1;
 
@@ -1120,7 +1129,7 @@ export class ReadingCourseState {
     const currentOpportunities = getState().game.currentData.opportunities;
     const newCount = currentOpportunities - 1;
 
-    if ( payload.state ) {
+    if (payload.state) {
       patchState({
         game: {
           ...getState().game,
@@ -1133,7 +1142,7 @@ export class ReadingCourseState {
       });
     }
 
-    if ( !payload.state ) {
+    if (!payload.state) {
       patchState({
         game: {
           ...getState().game,
@@ -1169,7 +1178,7 @@ export class ReadingCourseState {
   @Action(ChangeCurrentDataG)
   changeCurrentDataG({ getState, dispatch }: StateContext<ReadingCourseModel>, action: ChangeCurrentDataG) {
 
-    dispatch( new ShowSuccessScreenG() );
+    dispatch(new ShowSuccessScreenG());
 
     const letter = getState().data.currentLetter;
     const state = getState().game;
@@ -1194,10 +1203,10 @@ export class ReadingCourseState {
     if (nextIndex < state.data.length) {
 
       speech.addEventListener('end', function a() {
-        dispatch( new SetCurrentDataG());
-        dispatch( new HideSuccessScreenG());
-        dispatch( new ShowCorrectLettersG({state: true}) );
-        dispatch( new ListenInitialMsgG() );
+        dispatch(new SetCurrentDataG());
+        dispatch(new HideSuccessScreenG());
+        dispatch(new ShowCorrectLettersG({ state: true }));
+        dispatch(new ListenInitialMsgG());
       });
 
     }
@@ -1213,15 +1222,15 @@ export class ReadingCourseState {
   @Action(UseHelpG)
   useHelpG({ dispatch }: StateContext<ReadingCourseModel>, action: UseHelpG) {
 
-    dispatch(new ShowCorrectLettersG({state: true}));
-    setTimeout(() =>  dispatch(new ShowCorrectLettersG({state: false})), 1000);
+    dispatch(new ShowCorrectLettersG({ state: true }));
+    setTimeout(() => dispatch(new ShowCorrectLettersG({ state: false })), 1000);
   }
 
   genDataG = (sl: string[], letter: string, type: string, contWidth: number) => {
 
     let isMobile: boolean;
     const w = window.innerWidth;
-    this.store.selectSnapshot(state => isMobile =  state.app.isMobile);
+    this.store.selectSnapshot(state => isMobile = state.app.isMobile);
 
     const width = isMobile ? 80 : w < 640 ? 80 : 100;
     // const width   = isMobile ? 80 : 100; // ancho del cubo
@@ -1245,7 +1254,7 @@ export class ReadingCourseState {
     this._shuffle.mess(x);
     this._ids.generateIDs(x);
 
-    const max    = x.length / columns;
+    const max = x.length / columns;
     for (let i = 0; i < columns; i++) {
 
       const el = x.splice(0, max);
@@ -1253,7 +1262,7 @@ export class ReadingCourseState {
 
     }
 
-    return new GData( letter, result, type, corrects, corrects, 0, 0, 3);
+    return new GData(letter, result, type, corrects, corrects, 0, 0, 3);
 
   }
 
@@ -1261,11 +1270,11 @@ export class ReadingCourseState {
 
 
 
-  /* ---------- Drawe Letter Actions ---------- */
-  @Action( SetInitialDataDL )
+  /* ---------- Draw Letter Actions ---------- */
+  @Action(SetInitialDataDL)
   async setInitialDataDL({ patchState, getState, dispatch }: StateContext<ReadingCourseModel>, action: SetInitialDataDL) {
 
-    const letter   = getState().data.currentLetter;
+    const letter = getState().data.currentLetter;
     const letterUC = letter.toUpperCase();
     const letterLC = letter.toLowerCase();
 
@@ -1277,11 +1286,11 @@ export class ReadingCourseState {
 
     const colors = ['#1976d2', '#f44336', '#009494', '#fc793c'];
     const configLineWidth = { min: 1, max: 24, width: 14, step: 1 };
-    const configData  = new ConfigData(colors, configLineWidth);
+    const configData = new ConfigData(colors, configLineWidth);
     const preferences = new Preferences(14, colors[0], true, 'round');
 
 
-    const data = [ dataLowerCase, dataUpperCase ];
+    const data = [dataLowerCase, dataUpperCase];
 
     patchState({
       drawLetter: {
@@ -1299,11 +1308,11 @@ export class ReadingCourseState {
       new ShowHandwritingDL()
     ]);
 
-    dispatch( new IsSettingDataDL({state: false}) );
+    dispatch(new IsSettingDataDL({ state: false }));
 
   }
 
-  @Action( IsSettingDataDL )
+  @Action(IsSettingDataDL)
   isSettingDataDL({ patchState, getState }: StateContext<ReadingCourseModel>, { payload }: IsSettingDataDL) {
     patchState({
       drawLetter: {
@@ -1313,8 +1322,8 @@ export class ReadingCourseState {
     });
   }
 
-  @Action( SetCurrentDataDL )
-  setCurrentDataDL( { patchState, getState }: StateContext<ReadingCourseModel>, action: SetCurrentDataDL ) {
+  @Action(SetCurrentDataDL)
+  setCurrentDataDL({ patchState, getState }: StateContext<ReadingCourseModel>, action: SetCurrentDataDL) {
 
     const state = getState().drawLetter;
     const index = state.currentIndex === null ? -1 : state.currentIndex;
@@ -1334,7 +1343,7 @@ export class ReadingCourseState {
 
   }
 
-  @Action( ChangeLineWidthDL )
+  @Action(ChangeLineWidthDL)
   changeLineWidthDL({ patchState, getState }: StateContext<ReadingCourseModel>, { payload }: ChangeLineWidthDL) {
     const state = getState();
     patchState({
@@ -1355,8 +1364,8 @@ export class ReadingCourseState {
     });
   }
 
-  @Action( ChangeLineColorDL )
-  changeLineColorDL( { patchState, getState }: StateContext<ReadingCourseModel>, { payload }: ChangeLineColorDL) {
+  @Action(ChangeLineColorDL)
+  changeLineColorDL({ patchState, getState }: StateContext<ReadingCourseModel>, { payload }: ChangeLineColorDL) {
     const state = getState().drawLetter;
     patchState({
       drawLetter: {
@@ -1369,7 +1378,7 @@ export class ReadingCourseState {
     });
   }
 
-  @Action( ToggleGuideLinesDL )
+  @Action(ToggleGuideLinesDL)
   toggleGuideLinesDL({ patchState, getState }: StateContext<ReadingCourseModel>, action: ToggleGuideLinesDL) {
     const state = getState();
     const stateGuideLines = state.drawLetter.preferences.showGuideLines;
@@ -1385,7 +1394,7 @@ export class ReadingCourseState {
     });
   }
 
-  @Action( ShowHandwritingDL )
+  @Action(ShowHandwritingDL)
   showHandwritingDL({ patchState, getState }: StateContext<ReadingCourseModel>, action: ShowHandwritingDL) {
     const state = getState().drawLetter;
     patchState({
@@ -1396,7 +1405,7 @@ export class ReadingCourseState {
     });
   }
 
-  @Action( HideHandwritingDL )
+  @Action(HideHandwritingDL)
   hideHandwritingDL({ patchState, getState }: StateContext<ReadingCourseModel>, action: HideHandwritingDL) {
     const state = getState().drawLetter;
     patchState({
@@ -1407,7 +1416,7 @@ export class ReadingCourseState {
     });
   }
 
-  @Action( ListenHandwritingMsgDL )
+  @Action(ListenHandwritingMsgDL)
   listenHandwritingMsgDL({ getState, dispatch }: StateContext<ReadingCourseModel>, action: ListenHandwritingMsgDL) {
 
     const letter = getState().drawLetter.currentData.letter.toLowerCase();
@@ -1416,21 +1425,21 @@ export class ReadingCourseState {
     const isMobile = this.store.selectSnapshot(state => state.app.isMobile);
     const queryMobileMatch = this.store.selectSnapshot(state => state.app.queryMobileMatch);
 
-    if ( !isMobile && !queryMobileMatch ) {
+    if (!isMobile && !queryMobileMatch) {
       const msg = `Mira atentamente ... y practica escribir la letra: ... ${letterSound} .... "${type}"`;
-      dispatch(new ListenMessage({msg}));
+      dispatch(new ListenMessage({ msg }));
     }
 
-    if ( isMobile || queryMobileMatch ) {
+    if (isMobile || queryMobileMatch) {
       const msg = `Mira atentamente, así se escribe la letra: ... ${letterSound} .... "${type}"`;
-      dispatch(new ListenMessage({msg}));
+      dispatch(new ListenMessage({ msg }));
     }
 
 
 
   }
 
-  @Action( ShowSuccessScreenDL )
+  @Action(ShowSuccessScreenDL)
   showSuccessScreenDL({ patchState, getState }: StateContext<ReadingCourseModel>, action: ShowSuccessScreenDL) {
     patchState({
       drawLetter: {
@@ -1440,7 +1449,7 @@ export class ReadingCourseState {
     });
   }
 
-  @Action( HideSuccessScreenDL )
+  @Action(HideSuccessScreenDL)
   hideSuccessScreenDL({ patchState, getState }: StateContext<ReadingCourseModel>, action: HideSuccessScreenDL) {
     patchState({
       drawLetter: {
@@ -1450,13 +1459,13 @@ export class ReadingCourseState {
     });
   }
 
-  @Action( OnDoneDL )
+  @Action(OnDoneDL)
   onDoneDL({ dispatch, getState }: StateContext<ReadingCourseModel>, action: OnDoneDL) {
 
-    dispatch( [
+    dispatch([
       new ShowSuccessScreenDL(),
       new HideHandwritingDL()
-    ] );
+    ]);
 
     const letter = getState().data.currentLetter.toLowerCase();
     const state = getState().drawLetter;
@@ -1464,7 +1473,7 @@ export class ReadingCourseState {
     const nextIndex = index + 1;
 
     const sound = getState().data.letterSounds[letter];
-    const type  = state.currentData.type;
+    const type = state.currentData.type;
     const msg = `Bien, ahora ya sabes escribir la letra: ${sound} .... "${type}"`;
 
     const speech = this._speech.speak(msg, 1);
@@ -1486,21 +1495,21 @@ export class ReadingCourseState {
     if (nextIndex < state.data.length) {
 
       speech.addEventListener('end', function a() {
-        dispatch( new SetCurrentDataDL() );
-        dispatch( new HideSuccessScreenDL() );
-        dispatch( new ShowHandwritingDL() );
+        dispatch(new SetCurrentDataDL());
+        dispatch(new HideSuccessScreenDL());
+        dispatch(new ShowHandwritingDL());
         speech.removeEventListener('end', a);
       });
 
     }
   }
 
-  @Action( ResetDataDL )
+  @Action(ResetDataDL)
   ResetDataDL({ patchState }: StateContext<ReadingCourseModel>, action: ResetDataDL) {
-    patchState({drawLetter: null});
+    patchState({ drawLetter: null });
   }
 
-  @Action( ListenMsgBoardDL )
+  @Action(ListenMsgBoardDL)
   ListenMsgBoardDL({ getState, dispatch }: StateContext<ReadingCourseModel>, action: ListenMsgBoardDL) {
 
     const letter = getState().drawLetter.currentData.letter.toLowerCase();
@@ -1508,49 +1517,58 @@ export class ReadingCourseState {
     const letterSound = getState().data.letterSounds[letter];
 
     const msg = `Bien, ahora practica escribir la letra: .... ${letterSound} ..... ${type}`;
-    dispatch( new ListenMessage({msg}) );
+    dispatch(new ListenMessage({ msg }));
 
   }
 
-  @Action( SetInitialDataFL )
+
+
+
+
+  /* ---------- Find Letter Actions ---------- */
+  @Action(SetInitialDataFL)
   setInitialDataFL({ getState, patchState, dispatch }: StateContext<ReadingCourseModel>, action: SetInitialDataFL) {
 
-    const letter =  getState().data.currentLetter;
+    const letter = getState().data.currentLetter;
     const words = getState().data.words.find(w => w.l === letter).w;
     const data = this.genDataFL(words, letter);
 
-    console.log(data);
+    let totalOfCorrects = 0;
+    data.forEach( cd => totalOfCorrects += cd.corrects );
 
     patchState({
       findLetter: {
         ...getState().findLetter,
         currentIndex: -1,
         data,
-        showCoincidences: false,
+        showCoincidences:  false,
         showSuccessScreen: false,
+        totalOfCorrects,
+        totalOfPendings:   totalOfCorrects
       }
     });
-    dispatch( new SetCurrentDataFL() );
-    dispatch( new IsSettingDataFL({state: false}) );
-    dispatch( new ListenInstructionsFL() );
+
+    dispatch(new SetCurrentDataFL());
+    dispatch(new IsSettingDataFL({ state: false }));
+    dispatch(new ListenInstructionsFL());
 
   }
 
-  genDataFL (words: string[], letter: string): FLData[] {
+  genDataFL(words: string[], letter: string): FLData[] {
 
     const data = [];
 
-    words.forEach( w => {
+    words.forEach(w => {
 
-      const word      = w.toLowerCase();
-      const letters   = word.split('');
-      const urlImg    = `/assets/img-min/${word}-min.png`;
+      const word = w.toLowerCase();
+      const letters = word.split('');
+      const urlImg = `/assets/img-min/${word}-min.png`;
       const letterIds = this._ids.generateIDs(word.split(''));
-      let corrects    = 0;
+      let corrects = 0;
 
       letters.forEach(l => l === letter ? corrects++ : null);
 
-      data.push(new FLData(word, urlImg, letter, 'minúscula', corrects, letterIds, {} ));
+      data.push(new FLData(word, urlImg, letter, 'minúscula', corrects, letterIds, {}));
 
     });
 
@@ -1558,7 +1576,7 @@ export class ReadingCourseState {
 
   }
 
-  @Action( IsSettingDataFL )
+  @Action(IsSettingDataFL)
   isSettingDataFL({ patchState, getState }: StateContext<ReadingCourseModel>, { payload }: IsSettingDataFL) {
     patchState({
       findLetter: {
@@ -1568,8 +1586,8 @@ export class ReadingCourseState {
     });
   }
 
-  @Action( SetCurrentDataFL )
-  setCurrentDataFL({ patchState, getState }: StateContext<ReadingCourseModel>, action: SetCurrentDataFL ) {
+  @Action(SetCurrentDataFL)
+  setCurrentDataFL({ patchState, getState }: StateContext<ReadingCourseModel>, action: SetCurrentDataFL) {
 
     const state = getState().findLetter;
     const index = state.currentIndex === null ? -1 : state.currentIndex;
@@ -1588,41 +1606,43 @@ export class ReadingCourseState {
     }
   }
 
-  @Action( SelectLetterIdFL )
-  selectLetterIdFL({ getState, dispatch }: StateContext<ReadingCourseModel>, { payload }: SelectLetterIdFL) {
+  @Action(SelectLetterIdFL)
+  async selectLetterIdFL({ getState, dispatch }: StateContext<ReadingCourseModel>, { payload }: SelectLetterIdFL) {
 
     const letter = getState().findLetter.currentData.letter;
 
-    if ( payload.letterId[0] === letter ) {
+    if (payload.letterId[0] === letter) {
 
-      dispatch( new CorrectSelectionFL({letterId: payload.letterId }) );
+      await dispatch(new CorrectSelectionFL({ letterId: payload.letterId }));
 
       const speech = this._speech.speak('correcto');
-      speech.addEventListener('end', function a () {
+      const pendings = getState().findLetter.currentData.corrects;
 
-        const pendings = getState().findLetter.currentData.corrects;
+      if (pendings === 0) {
+        dispatch( new DisableAllFL({state: true}) );
+        speech.addEventListener('end', function a() {
 
-        if (pendings === 0) {
-          dispatch( new ChangeCurrentDataFL() );
-        }
+          dispatch(new ChangeCurrentDataFL());
+          speech.removeEventListener('end', a);
 
-        speech.removeEventListener('end', a);
-      });
+        });
 
+      }
     }
 
-    if ( payload.letterId[0] !== letter ) {
+    if (payload.letterId[0] !== letter) {
       this._audio.playAudio();
     }
 
   }
 
-  @Action( CorrectSelectionFL )
-  CorrectSelectionFL({patchState, getState}: StateContext<ReadingCourseModel>, { payload }: CorrectSelectionFL) {
+  @Action(CorrectSelectionFL)
+  CorrectSelectionFL({ patchState, getState }: StateContext<ReadingCourseModel>, { payload }: CorrectSelectionFL) {
 
     const state = getState().findLetter;
+    const totalOfPendings = state.totalOfPendings - 1;
     const pendings = state.currentData.corrects - 1;
-    const selections = {...state.currentData.selections};
+    const selections = { ...state.currentData.selections };
     selections[payload.letterId] = payload.letterId;
 
     patchState({
@@ -1632,14 +1652,15 @@ export class ReadingCourseState {
           ...state.currentData,
           selections,
           corrects: pendings
-        }
+        },
+        totalOfPendings
       }
     });
 
   }
 
   @Action(ShowSuccessScreenFL)
-  showSuccessScreenFL({patchState, getState}: StateContext<ReadingCourseModel>, action: ShowSuccessScreenFL) {
+  showSuccessScreenFL({ patchState, getState }: StateContext<ReadingCourseModel>, action: ShowSuccessScreenFL) {
     patchState({
       findLetter: {
         ...getState().findLetter,
@@ -1649,7 +1670,7 @@ export class ReadingCourseState {
   }
 
   @Action(HideSuccessScreenFL)
-  hideSuccessScreenFL({patchState, getState}: StateContext<ReadingCourseModel>, action: HideSuccessScreenFL) {
+  hideSuccessScreenFL({ patchState, getState }: StateContext<ReadingCourseModel>, action: HideSuccessScreenFL) {
     patchState({
       findLetter: {
         ...getState().findLetter,
@@ -1658,20 +1679,20 @@ export class ReadingCourseState {
     });
   }
 
-  @Action( ChangeCurrentDataFL )
-  changeCurrentaDataFL({patchState, getState, dispatch }: StateContext<ReadingCourseModel>, action: ChangeCurrentDataFL) {
+  @Action(ChangeCurrentDataFL)
+  changeCurrentaDataFL({ patchState, getState, dispatch }: StateContext<ReadingCourseModel>, action: ChangeCurrentDataFL) {
 
-    dispatch( new ShowSuccessScreenFL() );
+    dispatch(new ShowSuccessScreenFL());
 
-    const letter = getState().data.currentLetter.toLowerCase();
-    const state = getState().findLetter;
-    const index = state.currentIndex === null ? -1 : state.currentIndex;
+    const state = getState();
+    const letter = state.data.currentLetter.toLowerCase();
+    const index = state.findLetter.currentIndex === null ? -1 : state.findLetter.currentIndex;
     const nextIndex = index + 1;
 
     const speech = this._speech.speak('Bien Hecho', 0.9);
 
     /* Redirection */
-    if (nextIndex >= state.data.length) {
+    if (nextIndex >= state.findLetter.data.length) {
 
       speech.addEventListener('end', function a() {
         dispatch([
@@ -1684,40 +1705,58 @@ export class ReadingCourseState {
     }
 
     /* Set Current Data */
-    if (nextIndex < state.data.length) {
+    if (nextIndex < state.findLetter.data.length) {
 
-      dispatch( new SetCurrentDataFL() );
+      dispatch(new SetCurrentDataFL());
       speech.addEventListener('end', function a() {
-        dispatch( new HideSuccessScreenFL() );
-        dispatch( new ListenInstructionsFL() );
+
+        dispatch([
+          new DisableAllFL({state: false}),
+          new HideSuccessScreenFL(),
+          new ListenInstructionsFL()
+        ]);
         speech.removeEventListener('end', a);
+
       });
 
     }
   }
 
-  @Action( ListenInstructionsFL )
-  listenInstructionsFL( { getState }: StateContext< ReadingCourseModel >, action: ListenInstructionsFL ) {
+  @Action(ListenInstructionsFL)
+  listenInstructionsFL({ getState }: StateContext<ReadingCourseModel>, action: ListenInstructionsFL) {
 
-    const state = getState().findLetter;
-    const letter = state.currentData.letter.toLowerCase();
-    const sound = getState().data.letterSounds[letter];
-    const type = state.currentData.type;
-    const word = state.currentData.word;
+    const state = getState();
+    const letter = state.findLetter.currentData.letter.toLowerCase();
+    const sound = state.data.letterSounds[letter];
+    const type = state.findLetter.currentData.type;
+    const word = state.findLetter.currentData.word;
 
     const msg = `Selecciona todas las letras ... ${sound} ... ${type}  ... de la palabra ... ${word}`;
     this._speech.speak(msg);
+
   }
 
-  @Action( ResetDataFL )
-  resetDataFL({patchState}: StateContext<ReadingCourseModel>, action: ResetDataFL) {
-    patchState({findLetter: null});
+  @Action(ResetDataFL)
+  resetDataFL({ patchState }: StateContext<ReadingCourseModel>, action: ResetDataFL) {
+    patchState({ findLetter: null });
   }
 
-  @Action( ListenWordFL )
+  @Action(ListenWordFL)
   listenWordFL({ getState }: StateContext<ReadingCourseModel>, action: ListenWordFL) {
+
     const word = getState().findLetter.currentData.word;
     this._speech.speak(word);
+
+  }
+
+  @Action(DisableAllFL)
+  disableAll({ getState, patchState }: StateContext<ReadingCourseModel>, { payload }: DisableAllFL) {
+    patchState({
+      findLetter: {
+        ...getState().findLetter,
+        disableAll: payload.state
+      }
+    });
   }
 
 }

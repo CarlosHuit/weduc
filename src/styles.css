@@ -20,8 +20,6 @@ body {
   align-items:      center;
   margin-top:       0;
   position:         relative;
-  animation:        showContainer 1s;
-  /* animation:        translateContainer .25s; */
 }
 
 @keyframes showContainer {
