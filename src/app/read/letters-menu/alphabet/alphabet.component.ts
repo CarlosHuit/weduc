@@ -98,9 +98,9 @@ export class AlphabetComponent implements OnDestroy, OnInit {
 
   redirect = (letter: string) => {
     if ( this.canSpeech ) {
-      const msg    = `Bien, Seleccionaste la letra: ... ${this.letterSounds[letter]}`;
-      const url    = `lectura/seleccionar-palabras/${letter}`;
-      this.store.dispatch( new ActiveRedirection({letter, msg, url}) );
+
+      this.store.dispatch( new ActiveRedirection({letter}) );
+
     }
   }
 

@@ -11,6 +11,7 @@ import {
   SortLearnedLettersByRating,
   SortLearnedLettersByAlphabet
 } from 'src/app/store/actions/reading-course/reading-course-data.actions';
+import { ActiveRedirection } from 'src/app/store/actions/reading-course/reading-course-menu.actions';
 
 @Component({
   selector: 'app-learned-letters',
@@ -102,8 +103,9 @@ export class LearnedLettersComponent implements OnInit {
 
 
   repractice = (letter: string) => {
-    const url = `lectura/seleccionar-palabras/${letter.toLowerCase()}`;
-    this.store.dispatch(new Navigate([url]));
+
+    this.store.dispatch( new ActiveRedirection({letter}) );
+
   }
 
   listenLetter = (letter: string, type: string) => {

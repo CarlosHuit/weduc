@@ -13,6 +13,9 @@ import {
   HighlightLetter,
   ActiveRedirection,
   ListenMessage,
+  RedirectMenu,
+  ResetDataMenu,
+  SetInitialDataMenu,
 } from '../actions/reading-course/reading-course-menu.actions';
 import { State, Action, StateContext, Selector, createSelector, Store } from '@ngxs/store';
 import { GetInitialDataService } from 'src/app/services/get-data/get-initial-data.service';
@@ -506,6 +509,21 @@ export class ReadingCourseState {
 
 
   /* ---------- menu handler actions ---------- */
+
+  @Action(SetInitialDataMenu)
+  setInitialDataMenu({getState, patchState}: StateContext<ReadingCourseModel>, action: SetInitialDataSW) {
+    patchState({
+      menu: {
+        ...getState().menu,
+        activeRedirection:  false,
+        activeTab:          'alphabet',
+        highlight:          { letter: '', type: '' },
+        selectedLetter:     '',
+        sortedBy:           'alphabet'
+      }
+    });
+  }
+
   @Action(ListenMessage)
   listenMessage(ctx: StateContext<ReadingCourseModel>, { payload }: ListenMessage) {
 
@@ -571,7 +589,7 @@ export class ReadingCourseState {
     patchState({
       menu: {
         ...getState().menu,
-        selectedLetter: payload.letter,
+        // selectedLetter: payload.letter,
         highlight: {
           letter: payload.letter,
           type: payload.type,
@@ -585,41 +603,50 @@ export class ReadingCourseState {
   activeRedirection({ patchState, getState, dispatch }: StateContext<ReadingCourseModel>, { payload }: ActiveRedirection) {
 
     dispatch(new SelectLetter({ letter: payload.letter }));
+
     patchState({
       menu: {
         ...getState().menu,
-        activeRedirection: true,
+        activeRedirection: true
+      },
+      data: {
+        ...getState().data,
+        currentLetter: payload.letter
       }
     });
 
+    const letter = payload.letter.toLowerCase();
+    const sound  = getState().data.letterSounds[letter];
+    const msg    = `Bien, Seleccionaste la letra: ... ${sound}`;
+    const speech = this._speech.speak(msg);
 
-    const redirectionsucces = () => {
-      dispatch([
-        new Navigate([payload.url]),
-        new SelectLetter({ letter: '' })
-      ]);
-      patchState({
-        menu: {
-          ...getState().menu,
-          activeRedirection: false
-        },
-        data: {
-          ...getState().data,
-          currentLetter: payload.letter
-        }
-      });
+    speech.addEventListener('end', function a() {
 
-    };
+      dispatch( new RedirectMenu({ letter: payload.letter }) );
+      speech.removeEventListener('end', a);
 
-    const speech = this._speech.speak(payload.msg);
-    speech.addEventListener('end', () => {
-      redirectionsucces();
-      speech.removeEventListener('end', redirectionsucces);
     });
 
   }
 
+  @Action( RedirectMenu )
+  redirectMenu({ dispatch }: StateContext<ReadingCourseModel>, { payload }: RedirectMenu) {
 
+    const letter = payload.letter.toLowerCase();
+    const url = `lectura/seleccionar-palabras/${letter}`;
+    dispatch([
+      new Navigate([url]),
+      new ResetDataMenu()
+    ]);
+
+  }
+
+  @Action( ResetDataMenu )
+  resetDataMenu({ patchState, getState }: StateContext<ReadingCourseModel>, action: ResetDataMenu) {
+    patchState({
+      menu: null
+    });
+  }
 
 
 

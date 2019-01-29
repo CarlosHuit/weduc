@@ -4,7 +4,8 @@ import {
   ChangeActiveTab,
   SelectLetter,
   HighlightLetter,
-  ActiveRedirection
+  ActiveRedirection,
+  SetInitialDataMenu
 } from 'src/app/store/actions/reading-course/reading-course-menu.actions';
 import { Observable, Subscription } from 'rxjs';
 import { SpeechSynthesisService } from '../../services/speech-synthesis.service';
@@ -57,7 +58,7 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
     this.mobileQuery = media.matchMedia('(max-width: 720px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
-
+    this.store.dispatch( new SetInitialDataMenu() );
   }
 
   ngOnInit() {
@@ -158,12 +159,7 @@ export class LettersMenuComponent implements OnInit, OnDestroy {
 
   redirect = (letter: string) => {
     if ( this.canSpeech ) {
-
-      console.log('redicrection desktop');
-      const msg    = `Bien, Seleccionaste la letra: ... ${this.letterSounds[letter]}`;
-      const url    = `lectura/seleccionar-palabras/${letter}`;
-      this.store.dispatch( new ActiveRedirection({letter, msg, url}) );
-
+      this.store.dispatch( new ActiveRedirection({ letter }) );
     }
   }
 

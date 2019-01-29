@@ -5,6 +5,9 @@ export enum ReadingCourseActionsType {
   SELECT_LETTER              = '[Reading Course Menu] Select Letter',
   HIGHLIGHT_LETTER           = '[Reading Course Menu] Highlight Letter',
   ACTIVE_REDIRECTION         = '[Reading Course Menu] Active Redirection',
+  REDIRECT                   = '[Reading Course Menu] Redirect Menu',
+  RESET_DATA                 = '[Reading Course Menu] Reset Menu',
+  SET_INITIAL_DATA           = '[Reading Course Menu] Set Initial data'
 }
 
 
@@ -35,6 +38,18 @@ export class HighlightLetter {
 
 export class ActiveRedirection {
   static readonly type = ReadingCourseActionsType.ACTIVE_REDIRECTION;
-  constructor( public payload: { url: string, msg: string, letter: string } ) {}
+  constructor( public payload: { letter: string } ) {}
 }
 
+export class RedirectMenu {
+  static readonly type = ReadingCourseActionsType.REDIRECT;
+  constructor( public payload: { letter: string } ) {}
+}
+
+export class ResetDataMenu {
+  static readonly type = ReadingCourseActionsType.RESET_DATA;
+}
+
+export class SetInitialDataMenu {
+  static readonly type = ReadingCourseActionsType.SET_INITIAL_DATA;
+}
