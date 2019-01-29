@@ -7,27 +7,23 @@
   <div #cont class="d-container"
     *ngIf="!(isSettingData$ | async) && !(isMobile$ | async) && !(queryMobileMatch$ | async)"
     >
-    <mat-card
-    style="width: 100%; height: 100%;    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
-    position: relative;
-    box-sizing: border-box;"
-    >
-  
-      <div
-        matRipple
-        (click)="listenWord()"
-        [matRippleRadius]="120"
-        class="d-c-container-img center"
-        [matRippleColor]="'rgba(255,255,255, 0.035)'"
-        >
-        <img
-          class="d-c-image"
-          [src]="(data$ | async).imgUrl"
+
+    <mat-card class="d-card-identify">
+
+      <div class="d-container-circle" >
+        <div
+          matRipple
+          (click)="listenWord()"
+          [matRippleRadius]="120"
+          class="d-c-container-img center"
+          [matRippleColor]="'rgba(255,255,255, 0.035)'"
           >
-        <div class="shadow"></div>
+          <img
+            class="d-c-image"
+            [src]="(data$ | async).imgUrl"
+            >
+          <div class="shadow"></div>
+        </div>
       </div>
   
       <div class="container-letters center">
@@ -75,37 +71,40 @@
     *ngIf="!(isSettingData$ | async) && ((isMobile$ | async) || (queryMobileMatch$ | async))"
     >
 
-    <div
-      #mcImage
-      class="m-c-image center"
-      >
-      <!-- [style.width.px]="mcImage.clientHeight" -->
-      <img
-        (click)="listenWord()"
-        [src]="(data$ | async).imgUrl"
-        [style.width.px]="mcImage.clientHeight * 0.65"
-        [style.height.px]="mcImage.clientHeight * 0.65"
-        class="m-image"
+    <div class="container-circle" >
+      <div
+        #mcImage
+        matRipple
+        [matRippleColor]="'rgba(255,255,255, 0.05)'"
+        [matRippleRadius]="80"
+        class="m-c-image center"
         >
-        <div class="shadow"></div>
+        <!-- [style.width.px]="mcImage.clientHeight" -->
+        <img
+          (click)="listenWord()"
+          [src]="(data$ | async).imgUrl"
+          [style.width.px]="mcImage.clientHeight * 0.65"
+          [style.height.px]="mcImage.clientHeight * 0.65"
+          class="m-image"
+          >
+          <div class="shadow"></div>
+      </div>
     </div>
 
     <div #mcWord class="m-c-container-word center">
-      <div class="m-c-word">
-        <button
-          [id]="letter"
-          class="option"
-          (click)="onSelect(letter)"
-          [ngStyle]="genStyles(mcWord, container)"
-          *ngFor="let letter of (data$ | async).letterIds"
-          [disabled]="(selections$ | async)[letter] === letter || (disableAll$ | async)"
-          [class.select]="(correctsSels$ | async)[letter] === letter"
-          [class.incorrect]="(wrongSels$ | async)[letter] === letter"
-          >
-          <!-- [style.fontSize.px]="mcWord.clientWidth * 0.133" -->
-          {{letter[0]}}
-        </button>
-      </div>
+      <button
+        matRipple
+        [id]="letter"
+        class="option"
+        (click)="onSelect(letter)"
+        [ngStyle]="genStyles(mcWord)"
+        *ngFor="let letter of (data$ | async).letterIds"
+        [class.incorrect]="(wrongSels$ | async)[letter] === letter"
+        [class.correct]="(correctsSels$ | async)[letter] === letter"
+        [disabled]="(selections$ | async)[letter] === letter || (disableAll$ | async)"
+        >
+        {{letter[0]}}
+      </button>
     </div>
 
     <mat-icon class="i-help" (click)="instructions()" >help</mat-icon>

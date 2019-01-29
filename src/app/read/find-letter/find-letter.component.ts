@@ -70,29 +70,54 @@ export class FindLetterComponent implements OnDestroy, OnInit {
 
   listenWord = () => this.store.dispatch( new ListenWordFL() );
 
-  genStyles = (el: HTMLDivElement, container: HTMLDivElement) => {
+  genStyles = (el: HTMLDivElement) => {
 
-    const lenght  = this.lettersQuantity;
-    const cWidth  = container.clientWidth;
-    const cHeight = container.clientHeight;
+    const maxLetters  = this.lettersQuantity;
+
+    const cWidth  = window.innerWidth;
+    const cHeight = window.innerHeight;
+    const margin = maxLetters * 2.5;
+
     const w       = el.clientWidth;
+    const portrait = cHeight > cWidth ? true : false;
 
-    if (cHeight > cWidth) {
-      if (lenght <= 4) {
+    if ( portrait && cWidth < 540 ) {
 
-        return { 'min-width': `55px`, 'font-size': `${w * 0.16}px` };
+      if (maxLetters <= 4) {
 
-      } else if ( lenght > 4 && lenght <= 6 ) {
+        return {
+          'min-width': '55px',
+          'font-size': '55px'
+        };
 
-        return { 'min-width': `45px`, 'font-size': `${w * 0.16}px` };
+      } else if ( maxLetters > 4 && maxLetters <= 6 ) {
 
-      } else if (lenght === 7 ) {
+        const minWidth = ((w * 0.8 ) - margin) / maxLetters;
 
-        return { 'min-width': `35px`, 'font-size': `${w * 0.16}px` };
+        return {
+          'min-width': `${minWidth}px`,
+          'font-size': '50px'
+        };
 
-      } else if (lenght > 7 ) {
+      } else if (maxLetters === 7 ) {
 
-        return { 'min-width': `30px`, 'font-size': `${w * 0.135}px` };
+        const minWidth = ( w / 8 );
+
+        return {
+          'min-width': `${minWidth}px`,
+          'font-size': '45px'
+        };
+
+      } else if (maxLetters > 7 ) {
+
+
+        const minWidth = (w - margin) / maxLetters;
+
+        return {
+          'min-width': `${minWidth}px`,
+          'font-size': '35px'
+        };
+
 
       }
 
@@ -100,7 +125,7 @@ export class FindLetterComponent implements OnDestroy, OnInit {
 
     if (cHeight < cWidth) {
 
-      if (lenght <= 6) {
+      if (maxLetters <= 6) {
 
         return { 'min-width': `45px`, 'font-size': `${w * 0.135}px` };
 
@@ -113,14 +138,6 @@ export class FindLetterComponent implements OnDestroy, OnInit {
     }
 
   }
-
-  genSizeDesk = (el: HTMLDivElement) => {
-    return {
-      'width': `${el.clientHeight}px`,
-      'heght': `${el.clientHeight}px`
-    };
-  }
-
 
 
 }
