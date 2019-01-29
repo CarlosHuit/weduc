@@ -70,6 +70,21 @@ export class FindLetterComponent implements OnDestroy, OnInit {
 
   listenWord = () => this.store.dispatch( new ListenWordFL() );
 
+  calcPositionProgressBar(container: HTMLDivElement, mcCardIdentify: HTMLDivElement) {
+
+    const hCard = mcCardIdentify.clientHeight;
+    const hCont = container.clientHeight;
+    const mHeight = 3;
+
+    if (hCont > hCard) {
+      const position = ((hCont - hCard) / 4) - mHeight;
+      return {
+        top: `${position}px`
+      };
+    }
+
+  }
+
   genStyles = (el: HTMLDivElement) => {
 
     const maxLetters  = this.lettersQuantity;
