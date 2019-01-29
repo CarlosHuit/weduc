@@ -47,4 +47,20 @@ export class SelectWordsComponent implements OnInit, OnDestroy {
   selectWord = (word: string) => this.store.dispatch( new SelectWordSW({ word }) );
   repeatInstructions = () => this.store.dispatch( new ListenInstructionsSW() );
 
+  genPostion(cont: HTMLDivElement, contCard: HTMLDivElement, contPB: HTMLDivElement) {
+
+    const hCont = cont.clientHeight;
+    const hcontCard = contCard.clientHeight;
+    const hcontPB = contPB.clientHeight;
+
+    if ( hCont > hcontCard ) {
+      const p = ((hCont - hcontCard) / 4) - (hcontPB / 2);
+      return {
+        top: `${p}px`
+      };
+    } else {
+      return { top: '0px' };
+    }
+
+  }
 }

@@ -2,67 +2,107 @@
 
 
 
+  
+  
+  <!-- desktop version -->
+  <div
+    #dcont
+    class=" d-container center"
+    *ngIf="!(isSettingData$ | async) && (!(isMobile$ | async) && !(queryMobileMatch$ | async))"
+    >
 
+    <div #dContCard class="d-c-card" >
+      <mat-card class="center" style="
+        height: 100%;
+        width: 100%;
+        position: relative;
+        box-sizing: border-box;
+        padding: 0;
+        "  >
+    
+        <div class="d-c-container-words" #dcCWords>
+          <button 
+            matRipple
+            *ngFor="let word of words$ | async"
+            class="d-c-word correct"
+            (click)="selectWord(word)"
+            [class.correct]="(correctSels$ | async)[word] === word"
+            [class.incorrect]="(wongSels$ | async)[word] === word"
+            [disabled]="(selections$ | async)[word] === word"
+            >
+            {{word}}
+          </button>
+        </div>
+    
+        <button matRipple class="d-icon-help" (click)="repeatInstructions()">Ayuda</button>
+    
+      </mat-card>
+    </div>
 
-  
-  
-  <div *ngIf="!(isSettingData$ | async) && (!(isMobile$ | async) && !(queryMobileMatch$ | async))" style="height: 100%; width: 100%">
-    <!-- desktop version -->
-    <mat-card class="d-c-card center">
-  
-      <div class="d-c-container-words" #dcCWords>
-        <button 
-          class="d-c-word correct"
-          (click)="validation(x)"
-          *ngFor="let x of messyWords"
-          [disabled]="selections[x] === x"
-          [class.correct]="corrects[x] === x"
-          [class.incorrect]="incorrects[x] === x"
-          >
-          {{x}}
-        </button>
-      </div>
-  
-      <button class="icon-help" style="top: 20px; left: 20px" (click)="repeatInstructions()">?</button>
-  
-    </mat-card>
-
-    <div class="d-c-container-progress" >
-
+    <div
+      #dContPB
+      class="d-c-container-progress-bar"
+      [ngStyle]="genPostion(dcont, dContCard, dContPB)"
+      >
+      <mat-progress-bar
+        style="height: 100%; border-radius: 50px"
+        color="warn"
+        [mode]="determinate"
+        [value]="advance$ | async"
+        >
+      </mat-progress-bar>
     </div>
 
   </div>
 
 
   <!-- mobile version -->
-  <mat-card class="m-c-select-words center" *ngIf="!(isSettingData$ | async) && ((isMobile$ | async) || (queryMobileMatch$ | async))">
 
-    <div class="m-c-container-words center">
-      <button
-        matRipple
-        *ngFor="let word of words$ | async"
-        class="word"
-        [class.correct]="(correctSels$ | async)[word] === word"
-        [class.incorrect]="(wongSels$ | async)[word] === word"
-        [disabled]="(selections$ | async)[word] === word"
-        (click)="selectWord(word)"
-        >
-        {{word}}
-      </button>
+  <div
+    #cont
+    style="height: 100%; width: 100%"
+    class="center"
+    *ngIf="!(isSettingData$ | async) && ((isMobile$ | async) || (queryMobileMatch$ | async))"
+    >
+    
+    <div #contCard class="m-c-select-words center">
+      
+      <mat-card  class="m-card-select-words center">
+        <div class="m-c-container-words center">
+          <button
+            matRipple
+            *ngFor="let word of words$ | async"
+            class="word"
+            [class.correct]="(correctSels$ | async)[word] === word"
+            [class.incorrect]="(wongSels$ | async)[word] === word"
+            [disabled]="(selections$ | async)[word] === word"
+            (click)="selectWord(word)"
+            >
+            {{word}}
+          </button>
+        </div>
+    
+        <button matRipple class="m-icon-help" (click)="repeatInstructions()">Ayuda</button>
+      </mat-card>
+    
     </div>
 
-    <button matRipple class="m-icon-help" (click)="repeatInstructions()">Ayuda</button>
+    <div
+      #contPB class="m-c-container-progress-bar"
+      [ngStyle]="genPostion(cont, contCard, contPB)"
+      >
+      <mat-progress-bar
+        color="warn"
+        [mode]="determinate"
+        [value]="advance$ | async"
+        style="height: 100%; border-radius: 50px;"
+        >
+      </mat-progress-bar>
+    </div>
 
-  </mat-card>
+  </div>
 
-  <mat-progress-bar
-    *ngIf="!(isSettingData$ | async) && (isMobile$ | async)"
-    style="position: absolute; top: 0px"
-    color="warn"
-    [mode]="determinate"
-    [value]="advance$ | async"
-    >
-  </mat-progress-bar>
+
 
   <div style="height: 40px; width: 40px; margin: 10px auto; position: absolute; top: 0" *ngIf="isSettingData$ | async">
     <app-spinner-loading></app-spinner-loading>
