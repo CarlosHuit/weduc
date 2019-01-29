@@ -82,7 +82,6 @@ import {
   IsSettingDataFL,
   SetCurrentDataFL,
   SelectLetterIdFL,
-  CorrectSelectionFL,
   ShowSuccessScreenFL,
   HideSuccessScreenFL,
   ChangeCurrentDataFL,
@@ -91,11 +90,25 @@ import {
   ListenWordFL,
   DisableAllFL,
   AddCorrectSelectionFL,
-  RemoveCorrectSelectionFL,
   AddWrongSelectionFL,
   RegisterSelectionFL
 } from '../actions/reading-course/reading-course-find-letter.actions';
 import { FLData } from '../models/reading-course/find-letter/reading-course-find-letter.model';
+import {
+  IsSettingDataSW,
+  SetInitialDataSW,
+  SetCurrentDataSW,
+  RegisterSelectionSW,
+  SelectWordSW,
+  RegisterCorrectSelectionSW,
+  RegisterWrongSelectionSW,
+  ChangeCurrentDataSW,
+  ShowSuccessScreenSW,
+  HideSuccessScreenSW,
+  ResetDataSW,
+  ListenInstructionsSW
+} from '../actions/reading-course/reading-course-select-words.actions';
+import { SWData } from '../models/reading-course/select-words/reading-course-select-words.model';
 
 @State<ReadingCourseModel>({
   name: 'readingCourse',
@@ -103,9 +116,10 @@ import { FLData } from '../models/reading-course/find-letter/reading-course-find
     data: null,
     menu: null,
     game: null,
-    drawLetter: null,
+    drawLetter:   null,
     letterDetail: null,
-    findLetter: null
+    findLetter:   null,
+    selectWords:  null
   }
 })
 
@@ -300,6 +314,41 @@ export class ReadingCourseState {
 
   @Selector()
   static flWrongSelections({ findLetter }: ReadingCourseModel) { return findLetter.currentData.wrongSelections; }
+
+
+
+
+  /* ---------- Selectors SelectWords Component ---------- */
+  @Selector()
+  static swIsSettingData({ selectWords }: ReadingCourseModel ) { return selectWords.isSettingData; }
+
+  @Selector()
+  static swWords({ selectWords }: ReadingCourseModel ) { return selectWords.currentData.words; }
+
+  @Selector()
+  static swSelections({ selectWords }: ReadingCourseModel ) { return selectWords.currentData.selections; }
+
+  @Selector()
+  static swCorrectSels({ selectWords }: ReadingCourseModel ) { return selectWords.currentData.correctSelections; }
+
+  @Selector()
+  static swWrongSels({ selectWords }: ReadingCourseModel ) { return selectWords.currentData.wrongSelections; }
+
+  @Selector()
+  static swShowSuccessScreen({ selectWords }: ReadingCourseModel ) { return selectWords.showSuccessScreen; }
+
+  @Selector()
+  static swAdvance({ selectWords }: ReadingCourseModel ) {
+
+    const t = selectWords.currentData.totalOfCorrect;
+    const p = selectWords.currentData.totalOfPending;
+    const r = 100 - ((p * 100) / t);
+    return r;
+  }
+
+
+
+
 
   constructor(
     private _readingCourse: GetInitialDataService,
@@ -1797,11 +1846,6 @@ export class ReadingCourseState {
 
   }
 
-  @Action( AddCorrectSelectionFL )
-  AddCorrectSelectionFL({ getState, patchState }: StateContext<ReadingCourseModel>, { payload }: AddCorrectSelectionFL) {
-
-  }
-
   @Action( RegisterSelectionFL )
   registerSelectionFL({ getState, patchState }: StateContext<ReadingCourseModel>, { payload }: RegisterSelectionFL) {
 
@@ -1819,6 +1863,326 @@ export class ReadingCourseState {
       }
     });
 
+  }
+
+
+
+
+  /* ---------- Select Words Actions ---------- */
+  @Action( IsSettingDataSW )
+  isSettingDataSW({ getState, patchState }: StateContext<ReadingCourseModel>, { payload }: IsSettingDataSW) {
+    patchState({
+      selectWords: {
+        ...getState().selectWords,
+        isSettingData: payload.state
+      }
+    });
+  }
+
+  @Action( SetInitialDataSW )
+  async setInitialDataSW({ getState, patchState, dispatch }: StateContext<ReadingCourseModel>, action: SetInitialDataSW) {
+
+    const state  = getState().data;
+    const letter = state.currentLetter.toLowerCase();
+    const words  = [];
+    state.words.forEach(e => e.w.forEach(w => words.push(w)));
+
+    const incorrectWords = words.filter( w => !w.includes(letter) );
+    const correctWords   = words.filter( w =>  w.includes(letter) );
+
+    const data = this.genDataSW(correctWords, incorrectWords, letter);
+
+    patchState({
+      selectWords: {
+        ...getState().selectWords,
+        data,
+        currentIndex: -1
+      }
+    });
+
+    await dispatch( new SetCurrentDataSW() );
+    dispatch( new IsSettingDataSW({ state: false }) );
+    dispatch( new ListenInstructionsSW() );
+  }
+
+  genDataSW = (corrects: string[], incorrects: string[], letter: string): SWData[] => {
+
+    const data: SWData[] = [];
+    const opts = [
+      { letter: letter.toLowerCase(), type: 'minúscula' },
+      { letter: letter.toUpperCase(), type: 'mayúscula' }
+    ];
+
+
+    opts.forEach( opt => {
+
+      const maxOpts = 10;
+      const totalCorrects   = this.intRandomSW(2, 6, corrects.length);
+      const totalIncorrects = maxOpts - totalCorrects;
+
+      let correctWords   = this.generateRandomWordsSW(totalCorrects, corrects);
+      let incorrectWords = this.generateRandomWordsSW(totalIncorrects, incorrects);
+
+      const words = [...correctWords, ...incorrectWords];
+      let shuffleWords = this._shuffle.mess(words);
+
+      if (opt.type === 'mayúscula' ) {
+
+        shuffleWords   = shuffleWords.map( w => w.toUpperCase() );
+        correctWords   = correctWords.map( w => w.toUpperCase() );
+        incorrectWords = incorrectWords.map( w => w.toUpperCase() );
+
+      }
+
+      const el = new SWData(
+        shuffleWords,
+        correctWords,
+        incorrectWords,
+        opt.letter,
+        opt.type,
+        totalCorrects,
+        totalCorrects,
+        {},
+        {},
+        {}
+      );
+
+      data.push( el );
+
+    });
+
+    return data;
+
+  }
+
+  generateRandomWordsSW = (max: number, words: string[]): string[] => {
+
+    const usedIndexes = [];
+    const f = [];
+    let count = 0;
+
+    while (count < max) {
+
+      const numberRandom = this.intRandomSW(0, words.length - 1);
+      const verifyIndex  = usedIndexes.indexOf(numberRandom);
+
+      if (verifyIndex === -1) {
+
+        usedIndexes.push(numberRandom);
+        f.push(words[numberRandom]);
+        count++;
+
+      }
+
+    }
+
+    return f;
+
+  }
+
+  intRandomSW = (min: number, maxi: number, length?: number): number => {
+
+    const max = maxi > length ? length + 1 : maxi + 1;
+    return Math.floor(Math.random() * (max - min)) + min;
+
+  }
+
+  @Action( SetCurrentDataSW )
+  setCurrentDataSW({ getState, patchState }: StateContext<ReadingCourseModel>, action: SetCurrentDataSW  ) {
+
+    const state = getState().selectWords;
+    const index = state.currentIndex === null ? -1 : state.currentIndex;
+    const nextIndex = index + 1;
+
+    if (nextIndex < state.data.length) {
+
+      patchState({
+        selectWords: {
+          ...getState().selectWords,
+          currentIndex: nextIndex,
+          currentData: state.data[nextIndex],
+        }
+      });
+
+    }
+  }
+
+  @Action( SelectWordSW )
+  async selectWordSW({ getState, dispatch }: StateContext<ReadingCourseModel>, { payload }: SelectWordSW) {
+
+    const word = payload.word;
+    const letter = getState().selectWords.currentData.letter;
+    const isCorrectSelection = word.includes(letter);
+
+    dispatch( new RegisterSelectionSW( { word } ) );
+
+    if ( isCorrectSelection ) {
+
+      await dispatch( new RegisterCorrectSelectionSW({ word }) );
+
+      const speech = this._speech.speak( word );
+      const pending = getState().selectWords.currentData.totalOfPending;
+
+      if ( pending === 0 ) {
+        speech.addEventListener('end', function a() {
+
+          dispatch( new ChangeCurrentDataSW() );
+
+          speech.removeEventListener('end', a);
+        });
+      }
+
+
+    }
+
+    if ( !isCorrectSelection ) {
+
+      dispatch( new RegisterWrongSelectionSW({ word }) );
+      this._audio.playAudio();
+
+    }
+
+  }
+
+  @Action( RegisterSelectionSW )
+  registerSelectionSW({ getState, patchState }: StateContext<ReadingCourseModel>, { payload }: RegisterSelectionSW) {
+
+    const word = payload.word;
+    const selections = { ...getState().selectWords.currentData.selections };
+
+    selections[word] = word;
+
+    patchState({
+      selectWords: {
+        ...getState().selectWords,
+        currentData: {
+          ...getState().selectWords.currentData,
+          selections
+        }
+      }
+    });
+
+
+  }
+
+  @Action( RegisterCorrectSelectionSW )
+  registerCorrectSelectionSW({ getState, patchState }: StateContext<ReadingCourseModel>, { payload }: RegisterCorrectSelectionSW) {
+
+    const word = payload.word;
+    const pending = getState().selectWords.currentData.totalOfPending - 1;
+    const correctSelections = {...getState().selectWords.currentData.correctSelections};
+    correctSelections[word] = word;
+
+    patchState({
+      selectWords: {
+        ...getState().selectWords,
+        currentData: {
+          ...getState().selectWords.currentData,
+          correctSelections,
+          totalOfPending: pending
+        }
+      }
+    });
+
+  }
+
+  @Action( RegisterWrongSelectionSW )
+  registerWrongSelectionSW({ getState, patchState }: StateContext<ReadingCourseModel>, { payload }: RegisterWrongSelectionSW) {
+
+    const word    = payload.word;
+    const wrongSelections = { ...getState().selectWords.currentData.wrongSelections };
+    wrongSelections[word] = word;
+
+    patchState({
+      selectWords: {
+        ...getState().selectWords,
+        currentData: {
+          ...getState().selectWords.currentData,
+          wrongSelections,
+        }
+      }
+    });
+
+  }
+
+  @Action( ChangeCurrentDataSW )
+  changeCurrentDataSW({ getState, dispatch }: StateContext<ReadingCourseModel>, action: ChangeCurrentDataSW) {
+
+    dispatch(new ShowSuccessScreenSW());
+
+    const state = getState();
+    const letter = state.data.currentLetter.toLowerCase();
+    const index = state.selectWords.currentIndex === null ? -1 : state.selectWords.currentIndex;
+    const nextIndex = index + 1;
+
+    const speech = this._speech.speak('Bien Hecho', 0.9);
+
+    /* Redirection */
+    if (nextIndex >= state.selectWords.data.length) {
+
+      speech.addEventListener('end', function a() {
+        dispatch([
+          new Navigate([`/lectura/pronunciar-letra/${letter}`]),
+          new ResetDataSW()
+        ]);
+        speech.removeEventListener('end', a);
+      });
+
+    }
+
+    /* Set Current Data */
+    if (nextIndex < state.selectWords.data.length) {
+
+      dispatch(new SetCurrentDataSW());
+      speech.addEventListener('end', function a() {
+
+        dispatch([
+          new HideSuccessScreenSW(),
+          new ListenInstructionsSW()
+        ]);
+        speech.removeEventListener('end', a);
+
+      });
+
+    }
+  }
+
+  @Action( ShowSuccessScreenSW )
+  showSuccessScreenSW({ getState, patchState }: StateContext<ReadingCourseModel>, action: ShowSuccessScreenSW) {
+    patchState({
+      selectWords: {
+        ...getState().selectWords,
+        showSuccessScreen: true
+      }
+    });
+  }
+
+  @Action( HideSuccessScreenSW )
+  hideSuccessScreenSW({ getState, patchState }: StateContext<ReadingCourseModel>, action: HideSuccessScreenSW) {
+    patchState({
+      selectWords: {
+        ...getState().selectWords,
+        showSuccessScreen: false
+      }
+    });
+  }
+
+  @Action( ResetDataSW )
+  resetDataSW({ patchState }: StateContext<ReadingCourseModel>, action: ResetDataSW) {
+
+    patchState({ selectWords: null });
+
+  }
+
+  @Action( ListenInstructionsSW )
+  listenInstructionsSW({ getState }: StateContext<ReadingCourseModel>, action: ListenInstructionsSW) {
+    const state = getState().selectWords.currentData;
+    const letter = state.letter;
+    const type = state.type;
+    const sound = getState().data.letterSounds[letter.toLowerCase()];
+
+    const msg = `Selecciona todas las palabras que al menos tengan: ... una letra ${sound} ${type}`;
+    this._speech.speak( msg );
   }
 
 }

@@ -4,59 +4,69 @@
 
 
 
-  <!-- desktop version -->
-  <mat-card class="d-c-card center" *ngIf="!loading && (!(isMobile$ | async) && !(queryMobileMatch$ | async))">
+  
+  
+  <div *ngIf="!(isSettingData$ | async) && (!(isMobile$ | async) && !(queryMobileMatch$ | async))" style="height: 100%; width: 100%">
+    <!-- desktop version -->
+    <mat-card class="d-c-card center">
+  
+      <div class="d-c-container-words" #dcCWords>
+        <button 
+          class="d-c-word correct"
+          (click)="validation(x)"
+          *ngFor="let x of messyWords"
+          [disabled]="selections[x] === x"
+          [class.correct]="corrects[x] === x"
+          [class.incorrect]="incorrects[x] === x"
+          >
+          {{x}}
+        </button>
+      </div>
+  
+      <button class="icon-help" style="top: 20px; left: 20px" (click)="repeatInstructions()">?</button>
+  
+    </mat-card>
 
-    <div class="d-c-container-words" #dcCWords>
-      <button 
-        class="d-c-word correct"
-        (click)="validation(x)"
-        *ngFor="let x of messyWords"
-        [disabled]="selections[x] === x"
-        [class.correct]="corrects[x] === x"
-        [class.incorrect]="incorrects[x] === x"
-        >
-        {{x}}
-      </button>
+    <div class="d-c-container-progress" >
+
     </div>
 
-    <button class="icon-help" style="top: 20px; left: 20px" (click)="repeatInstructions()">?</button>
-
-  </mat-card>
-
-
-
+  </div>
 
 
   <!-- mobile version -->
-  <mat-card class="m-c-select-words center" *ngIf="!loading && ((isMobile$ | async) || (queryMobileMatch$ | async))">
+  <mat-card class="m-c-select-words center" *ngIf="!(isSettingData$ | async) && ((isMobile$ | async) || (queryMobileMatch$ | async))">
 
     <div class="m-c-container-words center">
       <button
-        *ngFor="let word of messyWords"
+        matRipple
+        *ngFor="let word of words$ | async"
         class="word"
-        [class.correct]="corrects[word] === word"
-        [class.incorrect]="incorrects[word] === word"
-        [disabled]="selections[word] === word"
-        (click)="validation(word)"
+        [class.correct]="(correctSels$ | async)[word] === word"
+        [class.incorrect]="(wongSels$ | async)[word] === word"
+        [disabled]="(selections$ | async)[word] === word"
+        (click)="selectWord(word)"
         >
         {{word}}
       </button>
     </div>
 
-    <button class="icon-help" (click)="repeatInstructions()">?</button>
+    <button matRipple class="m-icon-help" (click)="repeatInstructions()">Ayuda</button>
 
   </mat-card>
 
   <mat-progress-bar
-    *ngIf="!loading && (isMobile$ | async)"
+    *ngIf="!(isSettingData$ | async) && (isMobile$ | async)"
     style="position: absolute; top: 0px"
     color="warn"
     [mode]="determinate"
-    [value]="100 - ((correctWords.length * 100) / totalCorrects)"
+    [value]="advance$ | async"
     >
   </mat-progress-bar>
 
-  <app-spinner-loading *ngIf="loading"></app-spinner-loading>
-  <app-success-animation *ngIf="success"></app-success-animation>
+  <div style="height: 40px; width: 40px; margin: 10px auto; position: absolute; top: 0" *ngIf="isSettingData$ | async">
+    <app-spinner-loading></app-spinner-loading>
+  </div>
+
+  <app-success-animation *ngIf="showSuccessScreen$ | async"></app-success-animation>
 </div>

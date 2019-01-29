@@ -253,9 +253,11 @@ export class GetWordsService {
 
   }
 
-  randomInt = (min, maxi, length?) => {
+  randomInt = (min: number, maxi: number, length?: number) => {
+
     const max = maxi > length ? length + 1 : maxi + 1;
     return Math.floor(Math.random() * (max - min)) + min;
+
   }
 
 
