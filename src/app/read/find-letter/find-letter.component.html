@@ -1,6 +1,7 @@
-<div #container class="container"
+<div
+  #container class="container"
   [class.desktop]="!(isMobile$ | async) && !(queryMobileMatch$ | async)"
->
+  >
 
 
   <!-- Desktop Version -->
@@ -49,9 +50,9 @@
 
 
     <div
-    class="d-container-progress-bar"
-    [style.top.px]="((container.clientHeight - cont.clientHeight) / 4) - 4"
-    >
+      class="d-container-progress-bar"
+      [style.top.px]="((container.clientHeight - cont.clientHeight) / 4) - 4"
+      >
       <mat-progress-bar
         color="warn"
         [mode]="determinate"
@@ -79,13 +80,10 @@
         [matRippleRadius]="80"
         class="m-c-image center"
         >
-        <!-- [style.width.px]="mcImage.clientHeight" -->
         <img
+          class="m-image"
           (click)="listenWord()"
           [src]="(data$ | async).imgUrl"
-          [style.width.px]="mcImage.clientHeight * 0.65"
-          [style.height.px]="mcImage.clientHeight * 0.65"
-          class="m-image"
           >
           <div class="shadow"></div>
       </div>

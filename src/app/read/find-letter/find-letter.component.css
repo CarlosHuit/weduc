@@ -376,6 +376,17 @@
 
 }
 
+@media(min-width: 320px) and ( orientation: landscape ) {
+  .m-c-image {
+    height: 120px;
+    width: 120px;
+  }
+
+  .container-circle::before {
+    content: none
+  }
+}
+
 .option:disabled {
   color: unset;
 }
