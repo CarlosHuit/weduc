@@ -1,11 +1,11 @@
-<div class="container" [class.mobile]="isMobile()" >
+<div class="container" [class.mobile]="(isMobile$ | async)" >
 
 
 
 
 
   <!-- desktop version -->
-  <mat-card class="d-c-card center" *ngIf="!loading && !isMobile()">
+  <mat-card class="d-c-card center" *ngIf="!loading && (!(isMobile$ | async) && !(queryMobileMatch$ | async))">
 
     <div class="d-c-container-words" #dcCWords>
       <button 
@@ -29,7 +29,7 @@
 
 
   <!-- mobile version -->
-  <mat-card class="m-c-select-words center" *ngIf="!loading && isMobile()">
+  <mat-card class="m-c-select-words center" *ngIf="!loading && ((isMobile$ | async) || (queryMobileMatch$ | async))">
 
     <div class="m-c-container-words center">
       <button
@@ -49,7 +49,7 @@
   </mat-card>
 
   <mat-progress-bar
-    *ngIf="!loading && isMobile()"
+    *ngIf="!loading && (isMobile$ | async)"
     style="position: absolute; top: 0px"
     color="warn"
     [mode]="determinate"

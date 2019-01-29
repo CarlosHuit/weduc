@@ -1,6 +1,5 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router       } from '@angular/router';
-import { HttpResponse                 } from '@angular/common/http';
 import { SpeechSynthesisService       } from '../../services/speech-synthesis.service';
 import { GenerateDatesService         } from '../../services/generate-dates.service';
 import { DetectMobileService          } from '../../services/detect-mobile.service';
@@ -9,7 +8,9 @@ import { RandomWords                  } from '../../classes/random-words';
 import { SelectWordsData, Historial   } from '../../classes/select-words-data';
 import { SdSelectWordsService         } from '../../services/send-user-data/sd-select-words.service';
 import { GetWordsService              } from '../../services/get-data/get-words.service';
-import { Store } from '@ngxs/store';
+import { Store, Select } from '@ngxs/store';
+import { AppState } from 'src/app/store/state/app.state';
+import { Observable } from 'rxjs';
 
 
 
@@ -41,6 +42,8 @@ export class SelectWordsComponent implements OnInit, OnDestroy {
   totalCorrects: number;
   letterSounds: any;
 
+  @Select( AppState.queryMobileMatch ) queryMobileMatch$: Observable<boolean>;
+  @Select( AppState.isMobile ) isMobile$: Observable<boolean>;
 
   constructor(
     private _route:    ActivatedRoute,
