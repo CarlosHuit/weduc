@@ -63,7 +63,7 @@
   
 }
 
-@media (max-width: 864px) {
+@media (max-width: 768px) {
 
   .c-desktop { grid-template-columns: 100%; }
   

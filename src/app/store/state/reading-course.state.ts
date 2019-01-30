@@ -1180,7 +1180,7 @@ export class ReadingCourseState {
 
   @Action(SelectLetterG)
   async selectLetterG({ getState, dispatch }: StateContext<ReadingCourseModel>, { payload }: SelectLetterG) {
-    console.log(payload.letterId);
+
     const state = getState().game;
     const correctLetter = state.currentData.letter;
     const caseLetter = state.currentData.type;

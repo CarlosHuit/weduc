@@ -36,8 +36,8 @@
 
       <div class="c-d-description">
 
-        <app-card-details *ngIf="!mobileQuery.matches"></app-card-details>
-        <app-details-and-comments *ngIf="mobileQuery.matches"></app-details-and-comments>
+        <app-card-details *ngIf="!(queryMobileMatch$ | async)"></app-card-details>
+        <app-details-and-comments *ngIf="(queryMobileMatch$ | async)"></app-details-and-comments>
 
 
       </div>
@@ -47,7 +47,7 @@
     <div class="c-d-comments">
 
       <div
-        *ngIf="!mobileQuery.matches"
+        *ngIf="!(queryMobileMatch$ | async)"
         class="d-c-progress-title center"
         >
         <h2>Comentarios</h2>
