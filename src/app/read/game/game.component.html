@@ -2,7 +2,7 @@
 
 
   <!-- desktop version -->
-  <div #mcGame class="d-c-game" *ngIf="!(isMobile$ | async) && !mobileQuery.matches">
+  <div #mcGame class="d-c-game" *ngIf="!(isMobile$ | async) && !(queryMobileMatch$ | async)">
 
 
     <div class="d-c-toolbar">
@@ -76,7 +76,7 @@
 
 
   <!-- mobile version -->
-  <div #mcGame class="m-c-game" *ngIf="(isMobile$ | async) || mobileQuery.matches">
+  <div #mcGame class="m-c-game" *ngIf="(isMobile$ | async) || (queryMobileMatch$ | async)">
 
 
     <div class="m-c-toolbar" style="position: relative;">

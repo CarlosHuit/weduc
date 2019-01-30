@@ -41,7 +41,6 @@ export class LettersDetailComponent implements OnInit, OnDestroy {
     this.store.dispatch( new SetInitialDataLD() );
     this.sub1 = this.canPlayGame$.subscribe(state => this.canPlayGame = state);
     (window).addEventListener('resize', e => this.style(this.card.nativeElement));
-
   }
 
   ngOnDestroy () {
@@ -54,9 +53,11 @@ export class LettersDetailComponent implements OnInit, OnDestroy {
 
 
   continue = () => this.store.dispatch( new HideLetterCardLD({ listenMsg: true }));
-  onSelect = (letterId: string) => this.canPlayGame
-                                ? this.store.dispatch( new SelectLetterLD({letterId}) )
-                                : null
+  onSelect = (letterId: string) => {
+    return this.canPlayGame
+            ? this.store.dispatch( new SelectLetterLD({letterId}) )
+            : null;
+  }
 
 
 

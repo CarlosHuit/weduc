@@ -631,7 +631,7 @@ export class ReadingCourseState {
   redirectMenu({ dispatch }: StateContext<ReadingCourseModel>, { payload }: RedirectMenu) {
 
     const letter = payload.letter.toLowerCase();
-    const url = `lectura/seleccionar-palabras/${letter}`;
+    const url = `lectura/juego/${letter}`;
     dispatch([
       new Navigate([url]),
       new ResetDataMenu()
@@ -1180,7 +1180,7 @@ export class ReadingCourseState {
 
   @Action(SelectLetterG)
   async selectLetterG({ getState, dispatch }: StateContext<ReadingCourseModel>, { payload }: SelectLetterG) {
-
+    console.log(payload.letterId);
     const state = getState().game;
     const correctLetter = state.currentData.letter;
     const caseLetter = state.currentData.type;
@@ -1382,27 +1382,24 @@ export class ReadingCourseState {
     const w = window.innerWidth;
     this.store.selectSnapshot(state => isMobile = state.app.isMobile);
 
-    const width = isMobile ? 80 : w < 640 ? 80 : 100;
-    // const width   = isMobile ? 80 : 100; // ancho del cubo
-    const columns = Math.floor(contWidth / width);
-    const filas = Math.round(35 / columns);
+    const width    = isMobile ? 80 : w < 769 ? 80 : 100;
+    const columns  = Math.floor(contWidth / width);
+    const filas    = Math.round(35 / columns);
     const elements = columns * filas;
 
     const corrects = Math.floor(Math.random() * (12 - 8)) + 8;
     const elementsToInsert = elements - corrects;
 
-    const x: string[] = [];
+    let x: string[] = [];
     const t: string[] = [];
     const result = [];
 
     for (let i = 0; i < corrects; i++) { x.push(letter); }
-
     for (let i = 0; i < 8; i++) { sl.forEach(l => t.push(l)); }
-
     for (let i = 0; i < elementsToInsert; i++) { x.push(t[i]); }
 
-    this._shuffle.mess(x);
-    this._ids.generateIDs(x);
+    x = this._shuffle.mess(x);
+    x = this._ids.generateIDs(x);
 
     const max = x.length / columns;
     for (let i = 0; i < columns; i++) {
