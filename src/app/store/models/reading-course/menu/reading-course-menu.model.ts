@@ -4,6 +4,6 @@ export class ReadingCourseMenu {
     public activeTab =        'alphabet' || 'learneds',
     public selectedLetter:    string,
     public activeRedirection: boolean,
-    public highlight:         { letter: string, type: string },
+    public highlight:         string,
   ) {}
 }

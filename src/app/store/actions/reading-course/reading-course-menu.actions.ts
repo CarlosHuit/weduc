@@ -7,7 +7,10 @@ export enum ReadingCourseActionsType {
   ACTIVE_REDIRECTION         = '[Reading Course Menu] Active Redirection',
   REDIRECT                   = '[Reading Course Menu] Redirect Menu',
   RESET_DATA                 = '[Reading Course Menu] Reset Menu',
-  SET_INITIAL_DATA           = '[Reading Course Menu] Set Initial data'
+  SET_INITIAL_DATA           = '[Reading Course Menu] Set Initial data',
+  LISTEN_SPECIFIC_LETTER     = '[Reading Course Menu] Listen Specific Letter',
+  LISTEN_SOUND_LETTER        = '[Reading Course Menu] Listen Sound Letter',
+  LISTEN_WORD_AND_LETTER     = '[Reading Course Menu] Listen Word And Letter'
 }
 
 
@@ -33,7 +36,7 @@ export class SelectLetter {
 
 export class HighlightLetter {
   static readonly type = ReadingCourseActionsType.HIGHLIGHT_LETTER;
-  constructor( public payload: { letter: string, type: string } ) {}
+  constructor( public payload: { letter: string } ) {}
 }
 
 export class ActiveRedirection {
@@ -53,3 +56,19 @@ export class ResetDataMenu {
 export class SetInitialDataMenu {
   static readonly type = ReadingCourseActionsType.SET_INITIAL_DATA;
 }
+
+export class ListenSpecificLetterMenu {
+  static readonly type = ReadingCourseActionsType.LISTEN_SPECIFIC_LETTER;
+  constructor( public readonly payload: { letter: string } ) {}
+}
+
+export class ListenSoundLetterMenu {
+  static readonly type = ReadingCourseActionsType.LISTEN_SOUND_LETTER;
+  constructor( public readonly payload: { letter: string } )  {}
+}
+
+export class ListenWordAndLetter {
+  static readonly type = ReadingCourseActionsType.LISTEN_WORD_AND_LETTER;
+  constructor( public readonly payload: { word: string, letter: string } ) {}
+}
+

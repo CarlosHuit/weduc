@@ -5,13 +5,15 @@ import { Select, Store          } from '@ngxs/store';
 import { ReadingCourseState     } from 'src/app/store/state/reading-course.state';
 import { Observable             } from 'rxjs';
 import { AppState               } from 'src/app/store/state/app.state';
-import { Navigate               } from '@ngxs/router-plugin';
-import { SpeechSynthesisService } from 'src/app/services/speech-synthesis.service';
 import {
   SortLearnedLettersByRating,
   SortLearnedLettersByAlphabet
 } from 'src/app/store/actions/reading-course/reading-course-data.actions';
-import { ActiveRedirection } from 'src/app/store/actions/reading-course/reading-course-menu.actions';
+import {
+  ActiveRedirection,
+  ListenMessage,
+  ListenSpecificLetterMenu
+} from 'src/app/store/actions/reading-course/reading-course-menu.actions';
 
 @Component({
   selector: 'app-learned-letters',
@@ -30,7 +32,7 @@ export class LearnedLettersComponent implements OnInit {
   @Select(ReadingCourseState.sortedBy) sortedBy$:   Observable<string>;
   @Select(AppState.isMobile)        isMobile$:    Observable<boolean>;
 
-  constructor(private store: Store, private speechSynthesis: SpeechSynthesisService) { }
+  constructor(private store: Store) { }
 
   ngOnInit( ) {
     this.letterSounds = this.store.selectSnapshot(state => state.readingCourse.data.letterSounds);
@@ -109,21 +111,11 @@ export class LearnedLettersComponent implements OnInit {
   }
 
   listenLetter = (letter: string, type: string) => {
-
-    const lSound = this.letterSounds[letter];
-    const lType  = type === 'l' ? 'minúscula' : 'mayúscula';
-    const msg    = `${lSound} ... ${lType}`;
-    const speech = this.speechSynthesis.speak(msg, 0.8);
-
-
+    this.store.dispatch( new ListenSpecificLetterMenu({letter}) );
   }
 
-
-
-
-
   listenCombination = (syllableP: string, syllableW: string, letter: string) => {
-    const speech = this.speechSynthesis.speak(syllableP, .8);
+    this.store.dispatch( new ListenMessage({ msg: syllableP }) );
   }
 
 

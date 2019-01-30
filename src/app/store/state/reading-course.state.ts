@@ -16,6 +16,9 @@ import {
   RedirectMenu,
   ResetDataMenu,
   SetInitialDataMenu,
+  ListenSpecificLetterMenu,
+  ListenSoundLetterMenu,
+  ListenWordAndLetter,
 } from '../actions/reading-course/reading-course-menu.actions';
 import { State, Action, StateContext, Selector, createSelector, Store } from '@ngxs/store';
 import { GetInitialDataService } from 'src/app/services/get-data/get-initial-data.service';
@@ -179,14 +182,14 @@ export class ReadingCourseState {
 
   @Selector()
   static highlightLetter({ menu }: ReadingCourseModel) {
-    return menu.sortedBy;
+    return menu.highlight;
   }
 
   @Selector()
   static canSpeech({ menu }: ReadingCourseModel) {
     const v1 = menu.highlight;
     const v2 = menu.selectedLetter;
-    const val = ((v1.letter === '' && v1.type === '') || (!v1.letter && !v1.type))
+    const val = (v1 === '' || !v1)
       && (v2 === '' || !v2)
       && !menu.activeRedirection;
     return val ? true : false;
@@ -410,7 +413,9 @@ export class ReadingCourseState {
       if (lLetters.findIndex(s => s.letter === w.l) < 0) {
 
         const t = {
-          'letter': w.l,
+          'letterLowerCase': w.l.toLowerCase(),
+          'letterUpperCase': w.l.toUpperCase(),
+          'letter': w.l.toLowerCase(),
           'word': w.w[0],
           'imgUrl': `/assets/img100X100/${w.w[0]}-min.png`,
         };
@@ -436,10 +441,7 @@ export class ReadingCourseState {
       data,
       menu: {
         ...getState().menu,
-        highlight: {
-          letter: '',
-          type: ''
-        },
+        highlight: null,
         activeRedirection: false,
         selectedLetter: '',
         activeTab: 'alphabet',
@@ -517,7 +519,7 @@ export class ReadingCourseState {
         ...getState().menu,
         activeRedirection:  false,
         activeTab:          'alphabet',
-        highlight:          { letter: '', type: '' },
+        highlight:          null,
         selectedLetter:     '',
         sortedBy:           'alphabet'
       }
@@ -589,11 +591,7 @@ export class ReadingCourseState {
     patchState({
       menu: {
         ...getState().menu,
-        // selectedLetter: payload.letter,
-        highlight: {
-          letter: payload.letter,
-          type: payload.type,
-        },
+        highlight: payload.letter
       }
     });
 
@@ -642,12 +640,75 @@ export class ReadingCourseState {
   }
 
   @Action( ResetDataMenu )
-  resetDataMenu({ patchState, getState }: StateContext<ReadingCourseModel>, action: ResetDataMenu) {
+  resetDataMenu({ patchState }: StateContext<ReadingCourseModel>, action: ResetDataMenu) {
     patchState({
       menu: null
     });
   }
 
+  @Action( ListenSpecificLetterMenu )
+  listenSpecificLetterMenu({ getState, dispatch }: StateContext<ReadingCourseModel>, { payload }: ListenSpecificLetterMenu) {
+
+    dispatch( new HighlightLetter({letter: payload.letter }) );
+
+    const letter = payload.letter.toLocaleLowerCase();
+    const type = payload.letter === letter ? 'minúscula' : 'mayúscula';
+    const sound  = getState().data.letterSounds[letter];
+
+    const msg = `${sound} ... ${type}`;
+    const speech = this._speech.speak(msg);
+    speech.addEventListener('end', function a() {
+
+      dispatch( new HighlightLetter( {letter: null} ) );
+      speech.removeEventListener('end', a);
+    });
+
+  }
+
+  @Action( ListenSoundLetterMenu )
+  listenSoundLetterMenu({ getState, dispatch }: StateContext<ReadingCourseModel>, { payload }: ListenSoundLetterMenu) {
+
+    dispatch(new SelectLetter({letter: payload.letter}));
+
+    const letter = payload.letter.toLowerCase();
+    const sound = getState().data.letterSounds[letter];
+    const speech = this._speech.speak(sound, .8);
+
+    speech.addEventListener('end', function a() {
+
+      dispatch( new SelectLetter({letter: null}) );
+      speech.removeEventListener('end', a);
+    });
+
+  }
+
+  @Action( ListenWordAndLetter )
+  listenWordAndLetter({ getState, dispatch }: StateContext<ReadingCourseModel>, { payload }: ListenWordAndLetter) {
+
+    dispatch( new SelectLetter({letter: payload.letter}) );
+
+    const letter = payload.letter;
+    const word   = payload.word;
+    const lSound = getState().data.letterSounds[letter];
+
+    if (word[0] === letter.toLowerCase() || word[0] === letter.toUpperCase()) {
+
+      const msg    = `${word} ... comienza con la letra ... ${lSound}`;
+      const speech = this._speech.speak(msg, .95);
+      speech.addEventListener('end', () => dispatch(new SelectLetter({letter: ''})));
+
+    }
+
+    const lower = new RegExp(letter.toLowerCase().trim());
+
+    if (word[0] !== letter.toLowerCase() && lower.test(word)) {
+
+      const msg    = `${word} contiene la letra ... ${lSound}`;
+      const speech = this._speech.speak(msg, .95);
+      speech.addEventListener('end', () => dispatch(new SelectLetter({letter: ''})) );
+
+    }
+  }
 
 
   /*--------- Letter Detail Actions ---------*/

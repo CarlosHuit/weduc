@@ -2,12 +2,11 @@
 
 
   <!------ Desktop Version ------>
-  <div class="d-c-menu-letters" *ngIf="!(loading$ | async) && !(isMobile$ | async) && !mobileQuery.matches">
+  <div class="d-c-menu-letters" *ngIf="!(loading$ | async) && !(isMobile$ | async) && !(queryMobileMatch$ | async)">
 
 
     <mat-card class="d-c-cards">
 
-      <!-- <div class="d-c-title center" (click)="instructions()"> -->
       <div class="d-c-title center">
         <h1> El Abecedario </h1>
       </div>
@@ -28,25 +27,23 @@
 
             <div class="d-c-upper">
               <button
-                (click)="listenLetter(item.letter, 'u')"
+                (click)="listenLetter(item.letterUpperCase, 'u')"
                 [disabled]="speaking === true"
                 [class.highlight]="( selectedLetter$ | async ) === item.letter"
-                [class.highlight]=" ( highlightLetter$ | async )['letter'] === item.letter &&
-                                    ( highlightLetter$ | async )['type'] === 'u'"
+                [class.highlight]=" ( highlightLetter$ | async ) === item.letterUpperCase"
                 >
-                {{item.letter | uppercase}}
+                {{item.letterUpperCase}}
               </button>
             </div>
 
             <div class="d-c-lower">
               <button
-                (click)="listenLetter(item.letter, 'l')"
                 [disabled]="speaking === true"
+                (click)="listenLetter(item.letterLowerCase, 'l')"
                 [class.highlight]=" ( selectedLetter$ | async ) === item.letter"
-                [class.highlight]=" ( highlightLetter$ | async ).letter === item.letter &&
-                                    ( highlightLetter$ | async ).type === 'l'"
+                [class.highlight]=" ( highlightLetter$ | async ) === item.letterLowerCase"
                 >
-                {{item.letter | lowercase}}
+                {{item.letterLowerCase}}
               </button>
             </div>
 
@@ -90,7 +87,7 @@
     *ngIf="
       ( !(loading$ | async) && (isMobile$ | async) )
       ||
-      ( !(loading$ | async) && !(isMobile$ | async) && mobileQuery.matches )
+      ( !(loading$ | async) && !(isMobile$ | async) && (queryMobileMatch$ | async) )
       "
     >
 

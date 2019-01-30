@@ -24,14 +24,14 @@
   
       <div class="upper center">
         <button [class.highlight]="( selectedLetter$ | async ) === item.letter">
-          {{item.letter | uppercase}}
+          {{item.letterUpperCase }}
         </button>
       </div>
   
   
       <div class="lower center">
         <button [class.highlight]="( selectedLetter$ | async ) === item.letter">
-          {{item.letter | lowercase}}
+          {{item.letterLowerCase}}
         </button>
       </div>
   

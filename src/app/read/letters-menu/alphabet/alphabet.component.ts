@@ -1,7 +1,6 @@
 import { Component, Input, OnDestroy, OnInit   } from '@angular/core';
-import { ActiveRedirection, SelectLetter } from 'src/app/store/actions/reading-course/reading-course-menu.actions';
+import { ActiveRedirection, ListenSoundLetterMenu } from 'src/app/store/actions/reading-course/reading-course-menu.actions';
 import { Observable, Subscription } from 'rxjs';
-import { SpeechSynthesisService } from 'src/app/services/speech-synthesis.service';
 import { ReadingCourseState } from 'src/app/store/state/reading-course.state';
 import { Select, Store } from '@ngxs/store';
 import { AppState } from 'src/app/store/state/app.state';
@@ -19,7 +18,6 @@ export class AlphabetComponent implements OnDestroy, OnInit {
   canSpeech:     boolean;
   subsIsMobile:  Subscription;
   subsCanSpeech: Subscription;
-  letterSounds: {};
 
 
   @Select(ReadingCourseState.selectedLetter) selectedLetter$: Observable<string>;
@@ -28,11 +26,10 @@ export class AlphabetComponent implements OnDestroy, OnInit {
   @Select(AppState.isMobile) isMobile$: Observable<boolean>;
 
 
-  constructor( private store: Store, private speech: SpeechSynthesisService ) { }
+  constructor( private store: Store) { }
 
 
   ngOnInit() {
-    this.letterSounds  = this.store.selectSnapshot( state => state.readingCourse.data.letterSounds);
     this.subsIsMobile  = this.isMobile$.subscribe( status => this.isMobile = status);
     this.subsCanSpeech = this.canSpeech$.subscribe(x => this.canSpeech = x);
   }
@@ -44,16 +41,8 @@ export class AlphabetComponent implements OnDestroy, OnInit {
 
 
 
-  listenLetter = (letter: string) => {
-
-    if (this.canSpeech) {
-      this.store.dispatch(new SelectLetter({letter}));
-      const speech = this.speech.speak(this.letterSounds[letter]);
-      speech.addEventListener('end', () => this.store.dispatch(new SelectLetter({letter: ''})));
-    }
-
-  }
-
+  listenLetter = (letter: string) => this.canSpeech ? this.store.dispatch(new ListenSoundLetterMenu({letter})) : null;
+  redirect = (letter: string) => this.canSpeech ? this.store.dispatch( new ActiveRedirection({letter}) ) : null;
 
   genCols = (el: HTMLDivElement) => {
 
@@ -96,13 +85,7 @@ export class AlphabetComponent implements OnDestroy, OnInit {
 
   }
 
-  redirect = (letter: string) => {
-    if ( this.canSpeech ) {
 
-      this.store.dispatch( new ActiveRedirection({letter}) );
-
-    }
-  }
 
 
 }
