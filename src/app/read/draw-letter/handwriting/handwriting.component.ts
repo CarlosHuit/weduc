@@ -56,10 +56,12 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
   ngOnInit() {
 
     this.sub1 = this.preferences$.subscribe(p => this.preferences = p);
-    this.sub2 = this.currentData$.subscribe(data => this.coordinates = data.coordinates);
+    this.sub2 = this.currentData$.subscribe(data => {
+      this.coordinates = data.coordinates,
+      setTimeout(() => this.startExample(), 50);
+    });
 
     window.addEventListener('resize', this.startExample);
-    setTimeout(() => this.startExample(), 500);
 
   }
 
