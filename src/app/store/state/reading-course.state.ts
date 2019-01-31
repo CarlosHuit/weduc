@@ -2547,7 +2547,6 @@ export class ReadingCourseState {
 
   @Action( HandleRecognitionCompletePL )
   handleRecognitionCompletePL({ dispatch }: StateContext<ReadingCourseModel>, action: HandleRecognitionCompletePL) {
-    console.log('recognition complete');
     dispatch( new ChangeStateRecordingPL({state: false}) );
   }
 
