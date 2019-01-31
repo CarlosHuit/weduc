@@ -1,24 +1,24 @@
 <div class="m-c-recognition">
 
 
-  <mat-card class="resize-recognition" *ngIf="!loading">
+  <mat-card class="resize-recognition" *ngIf="!(isSettingData$ | async)">
 
     <div class="container-letter">
       <div #mcLetter class="m-c-letter">
 
-        <hr style="top: 24px" class="divider">
+<!--         <hr style="top: 24px" class="divider">
         <hr style="top: 47px" class="divider">
         <hr style="top: 141px" class="divider">
-        <hr style="top: 175px" class="divider">
+        <hr style="top: 175px" class="divider"> -->
 
-        <button class="letter"> {{letter}} </button>
+        <button class="letter"> {{currentLetter$ | async}} </button>
 
       </div>
     </div>
 
     <div class="m-c-microphone center">
 
-      <div class="box press animate" [class.animate]="activeRecord">
+      <div class="box press animate" [class.animate]="(isRecording$ | async)">
 
         <div class="outline"> </div>
         <div class="outline delayed"></div>
@@ -28,7 +28,7 @@
           id="circlein"
           (click)="speak()"
           class="button press center"
-          [disabled]="activeRecord"
+          [disabled]="(isRecording$ | async)"
           >
           <svg
             version="1.1"
@@ -51,13 +51,25 @@
 
     </div>
 
-    <button [class.show-btn]="showButtonHelp" class="icon-help" (click)="help()">?</button>
+    <button
+      class="icon-help"
+      *ngIf="(showBtnHelp$ | async) === true"
+      (click)="help()"
+      >
+      ?
+    </button>
 
   </mat-card>
 
 
 
-  <app-spinner *ngIf="loading"></app-spinner>
-  <app-success-animation *ngIf="success"></app-success-animation>
+  <div
+    class="container-loading"
+    *ngIf="isSettingData$ | async"
+    >
+    <app-spinner-loading></app-spinner-loading>
+  </div>
+
+  <app-success-animation *ngIf="showSuccessScreen$ | async"></app-success-animation>
 
 </div>

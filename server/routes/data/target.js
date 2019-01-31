@@ -1,10 +1,10 @@
-import express from 'express'
+import { Router } from 'express'
 import Debug from 'debug'
 import { Target, User } from '../../models';
 import { nameProject } from '../../config'
 import { required } from '../../middleware'
 
-const app   = express.Router()
+const app   = Router()
 const debug = new Debug(`${nameProject}: target-data`)
 
 

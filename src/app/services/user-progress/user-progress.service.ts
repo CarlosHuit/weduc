@@ -1,7 +1,6 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable          } from '@angular/core';
 import { environment         } from '../../../environments/environment';
-import { GetTokenService     } from '../get-token.service';
 import { catchError          } from 'rxjs/operators';
 import { Observable, of      } from 'rxjs';
 import { LearnedLetters      } from '../../classes/learned-letters';

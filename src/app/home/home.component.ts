@@ -9,6 +9,7 @@ import { Course        } from '../store/models/courses-state.model';
 import { Observable    } from 'rxjs';
 import { AppState } from '../store/state/app.state';
 
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -28,14 +29,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   @Select(AppState.isMobile)      isMobile$:    Observable<boolean>;
   @Select(AppState.queryMobileMatch) queryMobileMatch$:    Observable<boolean>;
 
-  constructor(
-    public snackBar:      MatSnackBar,
-    private store:        Store,
-  ) { }
+  constructor( public snackBar: MatSnackBar, private store: Store) { }
 
   ngOnInit() {
-    this.store.dispatch(new GetCourses());
-    this.courses$.subscribe(courses => this.subjects = courses );
+    this.store.dispatch( new GetCourses() );
+    this.courses$.subscribe( courses => this.subjects = courses );
     this.isMobile$.subscribe( result => this.isMobile = result );
   }
 

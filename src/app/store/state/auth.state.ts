@@ -11,6 +11,7 @@ import { HttpErrorResponse  } from '@angular/common/http';
 import { ResponseAuth       } from '../../auth/models/response-auth.model';
 import { GetCoursesSuccess, ResetCoursesData } from '../actions/courses.actions';
 import { ResetDiscussionSystem } from '../actions/discussion-system.actions';
+import { ResetReadingCourseData } from '../actions/reading-course/reading-course-data.actions';
 
 @State<AuthStateModel>({
   name: 'auth',
@@ -49,16 +50,15 @@ export class AuthState {
   logout({ setState, dispatch }: StateContext<AuthStateModel>, action: Logout) {
 
     localStorage.clear();
-    dispatch( new CloseDrawer() );
-    dispatch( new ResetCoursesData() );
-    dispatch( new ResetDiscussionSystem() );
-    dispatch( new Navigate(['/signin'])   );
-    setState({
-      isLoading:  false,
-      isLoggedIn: false,
-      token:      null,
-      user:       null,
-    });
+    dispatch([
+      new CloseDrawer(),
+      new ResetCoursesData(),
+      new ResetDiscussionSystem(),
+      new ResetReadingCourseData(),
+      new Navigate(['/signin'])
+    ]);
+
+    setState({ isLoading: false, isLoggedIn: false, token: null, user: null });
 
   }
 

@@ -1,11 +1,11 @@
 import { Coordinates } from './coordinates';
-import { LearnedLetters } from './learned-letters';
+import { LearnedLetter } from '../store/models/reading-course/data/reading-course-data.model';
 
 export class InitialData {
   constructor(
     public words:            Words[],
     public letters:          Letters,
-    public learnedLetters:   LearnedLetters[],
+    public learnedLetters:   LearnedLetter[],
     public similarLetters?:  SimilarLetters[],
     public coordinates?:     Coordinates[],
   ) {}

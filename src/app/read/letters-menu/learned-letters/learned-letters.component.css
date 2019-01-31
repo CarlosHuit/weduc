@@ -23,6 +23,7 @@
   padding:            15px 10px;
   border:             1px solid #d4d4d4;
   border-radius:      2px;
+  max-width: 560px;
 }
 
 .m-c-header-title {
@@ -80,13 +81,14 @@
 }
 
 .m-c-letter {
-  font-family:        'Noto sans';
-  font-size:          40px;
-  font-weight:        bolder;
-  padding:            10px 35px;
-  margin:             10px 5px;
-  background:         #239B56;
-  padding-bottom:     13px;
+  font-family: 'Roboto';
+  font-size: 36px;
+  font-weight: bolder;
+  padding: 5px 30px;
+  margin: 10px 5px;
+  background-color: #2196f3;
+  box-shadow: 0 7px 0 0 #1976d2;
+  margin-bottom: 17px;
 }
 
 .m-c-detail-combinations {
@@ -102,13 +104,17 @@
 }
 
 .m-c-btn-syllable {
-  font-size:          26px;
-  outline:            none;
-  font-family:        'Noto sans', sans-serif;
-  font-weight:        bold;
-  margin:             3px 1.5px;
-  padding:            4px 20px 7px;
-  min-width:          0;
+  font-size: 26px;
+  outline: none;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  margin: 3px 1.5px;
+  padding: 4px 17px 7px;
+  min-width: 0;
+  background-color: #f44336;
+  box-shadow: 0 5px 0 0 #d32f2f;
+  margin-bottom: 10px;
+  padding: 3px 15px;
 }
 
 .m-c-detail-button {
@@ -118,12 +124,11 @@
 
 .m-c-detail-button .btn-practice {
   font-size:          20px;
-  font-family:        sans-serif;
+  font-family:        'Roboto', sans-serif;
   padding:            3px 20px;
   margin:             5px 0;
-  letter-spacing:     0.5px;
-  background:         #fa7e29;
-  background:         linear-gradient(180deg, #fa7e29 0%, #F6682F 80%, #F6682F 100%);
+  background-color: #4caf50;
+  box-shadow: 0 8px 0 0 #388e3c;
 }
 
 .m-c-ad-learneds {

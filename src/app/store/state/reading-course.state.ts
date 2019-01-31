@@ -5,6 +5,9 @@ import {
   IsLoadingDataOfReadingCourse,
   SortLearnedLettersByAlphabet,
   SortLearnedLettersByRating,
+  ResetReadingCourseData,
+  UpdateLearnedLetters,
+  UpdateLearnedLettersInStorage,
 } from '../actions/reading-course/reading-course-data.actions';
 import {
   ChangerSorter,
@@ -22,10 +25,10 @@ import {
 } from '../actions/reading-course/reading-course-menu.actions';
 import { State, Action, StateContext, Selector, createSelector, Store } from '@ngxs/store';
 import { GetInitialDataService } from 'src/app/services/get-data/get-initial-data.service';
-import { tap } from 'rxjs/operators';
+import { tap, catchError } from 'rxjs/operators';
 import { Navigate } from '@ngxs/router-plugin';
 import { SpeechSynthesisService } from 'src/app/services/speech-synthesis.service';
-import { ReadingCourseDataModel } from '../models/reading-course/data/reading-course-data.model';
+import { ReadingCourseDataModel, LearnedLetter, ItemLetterMenu } from '../models/reading-course/data/reading-course-data.model';
 import {
   SetInitialDataLD,
   IsSettingDataLD,
@@ -115,17 +118,41 @@ import {
   ListenInstructionsSW
 } from '../actions/reading-course/reading-course-select-words.actions';
 import { SWData } from '../models/reading-course/select-words/reading-course-select-words.model';
+import { UserProgressService } from 'src/app/services/user-progress/user-progress.service';
+import {
+  IsSettingDataPL,
+  SetInitialDataPL,
+  SetCurrentDataPL,
+  ListenInstructionsPL,
+  ListenHelpPL,
+  ListenMsgWrongPL,
+  StartRecordingPL,
+  HandleRecognitionResultPL,
+  HandleRecognitionErrorPL,
+  HandleRecognitionCompletePL,
+  ChangeStateRecordingPL,
+  ListenMsgNoSpeechPL,
+  IncreaseAttemptsPL,
+  CorrectPronunciationPL,
+  ShowSuccessScreenPL,
+  HideSuccessScreenPL,
+  ResetDataPL
+} from '../actions/reading-course/reading-course-pronounce-letter';
+import { PLData } from '../models/reading-course/pronounce-letter/reading-course-pronounce-letter.model';
+import { SpeechRecognitionService } from 'src/app/services/speech-recognition.service';
+import { throwError } from 'rxjs';
 
 @State<ReadingCourseModel>({
   name: 'readingCourse',
   defaults: {
-    data: null,
-    menu: null,
-    game: null,
-    drawLetter:   null,
-    letterDetail: null,
-    findLetter:   null,
-    selectWords:  null
+    data:            null,
+    menu:            null,
+    game:            null,
+    drawLetter:      null,
+    letterDetail:    null,
+    findLetter:      null,
+    selectWords:     null,
+    pronounceLetter: null
   }
 })
 
@@ -355,6 +382,25 @@ export class ReadingCourseState {
 
 
 
+  /* ---------- Selectors Pronounce Letter Component ---------- */
+  @Selector()
+  static plIsSettingData({ pronounceLetter }: ReadingCourseModel ) { return pronounceLetter.isSettingData; }
+
+  @Selector()
+  static plCurrentLetter({ pronounceLetter }: ReadingCourseModel ) { return pronounceLetter.currentData.letter; }
+
+  @Selector()
+  static plShowSuccessScreen({ pronounceLetter }: ReadingCourseModel ) { return pronounceLetter.showSuccessScreen; }
+
+  @Selector()
+  static plIsRecording({ pronounceLetter }: ReadingCourseModel ) { return pronounceLetter.isRecording; }
+
+  @Selector()
+  static plShowBtnHelp({ pronounceLetter }: ReadingCourseModel ) {
+    return pronounceLetter.currentData.attempts > 0 ? true : false;
+  }
+
+
 
   constructor(
     private _readingCourse: GetInitialDataService,
@@ -362,7 +408,9 @@ export class ReadingCourseState {
     private _speech:        SpeechSynthesisService,
     private _audio:         PreloadAudioService,
     private _ids:           GenerateIdsService,
-    private store:          Store
+    private _progress:      UserProgressService,
+    private store:          Store,
+    private _recognition:   SpeechRecognitionService
   ) {
     this._audio.loadAudio();
   }
@@ -402,40 +450,30 @@ export class ReadingCourseState {
   @Action(GetInitialDataSuccess)
   getInitialDataSuccess({ patchState, dispatch, getState }: StateContext<ReadingCourseModel>, { payload }: GetInitialDataSuccess) {
 
-    const lLetters = payload.data.learnedLetters;
-    const combinations = payload.data.letters.combinations;
-    const alphabetList = [];
-    const coordinates = payload.data.coordinates;
-    const words = payload.data.words;
+    const state          = payload.data;
+    const learnedLetters = state.learnedLetters;
+    const combinations   = state.letters.combinations;
+    const lettersMenu    = [];
+    const coordinates    = state.coordinates;
+    const words          = state.words;
+    const letterSounds   = state.letters.sound_letters;
+    const similarLetters = state.similarLetters;
+    const currentLetter  = null;
 
-    payload.data.words.forEach(w => {
+    words.forEach(w => {
 
-      if (lLetters.findIndex(s => s.letter === w.l) < 0) {
+      const letterNoLearned = learnedLetters.findIndex(s => s.letter === w.l) < 0;
 
-        const t = {
-          'letterLowerCase': w.l.toLowerCase(),
-          'letterUpperCase': w.l.toUpperCase(),
-          'letter': w.l.toLowerCase(),
-          'word': w.w[0],
-          'imgUrl': `/assets/img100X100/${w.w[0]}-min.png`,
-        };
-
-        alphabetList.push(t);
+      if (letterNoLearned) {
+        const e = new ItemLetterMenu( w.l, w.l.toUpperCase(), w.l, w.w[0], `/assets/img100X100/${w.w[0]}-min.png` );
+        lettersMenu.push(e);
       }
 
     });
 
-    lLetters.forEach(l => l['combinations'] = combinations[l.letter]);
+    learnedLetters.forEach(l => l['combinations'] = combinations[l.letter]);
+    const data = { currentLetter, lettersMenu, learnedLetters, letterSounds, similarLetters, coordinates, words, combinations };
 
-    const data: ReadingCourseDataModel = {
-      currentLetter: '',
-      lettersMenu: alphabetList,
-      learnedLetters: lLetters,
-      letterSounds: payload.data.letters.sound_letters,
-      similarLetters: payload.data.similarLetters,
-      coordinates,
-      words
-    };
 
     patchState({
       data,
@@ -448,10 +486,13 @@ export class ReadingCourseState {
         sortedBy: 'alphabet'
       }
     });
-    dispatch(new SortLearnedLettersByAlphabet);
-    dispatch(new ChangeActiveTab({ tab: 'alphabet' }));
-    dispatch(new IsLoadingDataOfReadingCourse({ state: false }));
-    dispatch(new ListenMessage({ msg: 'Este es el abecedario. Selecciona una letra para continuar.' }));
+
+    dispatch([
+      new SortLearnedLettersByAlphabet(),
+      new ChangeActiveTab({ tab: 'alphabet' }),
+      new IsLoadingDataOfReadingCourse({ state: false }),
+      new ListenMessage({ msg: 'Este es el abecedario. Selecciona una letra para continuar.' })
+    ]);
 
   }
 
@@ -506,8 +547,84 @@ export class ReadingCourseState {
     ctx.dispatch(new ChangerSorter({ sorter: 'rating' }));
   }
 
+  @Action(ResetReadingCourseData)
+  resetReadingCourseData( { patchState, getState }: StateContext<ReadingCourseModel>, action: ResetReadingCourseData ) {
+    patchState({
+      data: null,
+      drawLetter: null,
+      findLetter: null,
+      game: null,
+      letterDetail: null,
+      menu: null,
+      selectWords: null
+    });
+  }
+
+  @Action( UpdateLearnedLetters )
+  updateLearnedLetters({ patchState, getState, dispatch }: StateContext<ReadingCourseModel>, { payload }: UpdateLearnedLetters) {
+
+    const letter      = payload.letter;
+    const rating      = payload.rating;
+    const data        = getState().data;
+    const index       = data.learnedLetters.findIndex(e => e.letter === letter );
+    const existLetter = index > -1 ? true : false;
+
+    if ( existLetter ) {
+
+      const newRatingIsGreater = rating > data.learnedLetters[index].rating;
+
+      if (newRatingIsGreater) {
+
+        const learnedLetters = data.learnedLetters.map(e => {
+
+          if ( e.letter === letter ) {
+            const n = Object.assign({}, e, { rating });
+            return n;
+          }
+
+          return e;
+
+        });
 
 
+        patchState({
+          data: { ...data, learnedLetters }
+        });
+
+        dispatch( new UpdateLearnedLettersInStorage() );
+
+      }
+
+    }
+
+    if ( !existLetter ) {
+
+      const combinations = data.combinations[letter];
+      const t = new LearnedLetter(letter, rating, combinations);
+      const learnedLetters = [...data.learnedLetters, t];
+      const lettersMenu = [ ...data.lettersMenu.filter( x => x.letter !== letter ) ];
+
+      patchState({
+        data: { ...getState().data, learnedLetters, lettersMenu }
+      });
+
+      dispatch( new UpdateLearnedLettersInStorage() );
+
+    }
+
+    return this._progress.sendUserProgress( new LearnedLetter(letter, 3) )
+      .pipe( tap(res => console.log(res)) );
+
+  }
+
+  @Action( UpdateLearnedLettersInStorage )
+  updateLearnedLettersInStorage({ getState, patchState }: StateContext<ReadingCourseModel>, action: UpdateLearnedLettersInStorage) {
+
+    const d = JSON.parse(localStorage.getItem('initialData'));
+    const learnedLetters = getState().data.learnedLetters;
+    d.learnedLetters = learnedLetters;
+    localStorage.setItem('initialData', JSON.stringify(d));
+  }
 
 
   /* ---------- menu handler actions ---------- */
@@ -631,7 +748,9 @@ export class ReadingCourseState {
   redirectMenu({ dispatch }: StateContext<ReadingCourseModel>, { payload }: RedirectMenu) {
 
     const letter = payload.letter.toLowerCase();
-    const url = `lectura/detalle-letra/${letter}`;
+    // const url = `lectura/detalle-letra/${letter}`;
+    const url = `lectura/pronunciar-letra/${letter}`;
+
     dispatch([
       new Navigate([url]),
       new ResetDataMenu()
@@ -2268,6 +2387,278 @@ export class ReadingCourseState {
 
     const msg = `Selecciona todas las palabras que al menos tengan: ... una letra ${sound} ${type}`;
     this._speech.speak( msg );
+  }
+
+
+
+
+
+
+
+  /* ---------- Pronounce Letter Actions ---------- */
+  @Action( IsSettingDataPL )
+  isSettingDataPL({ getState, patchState }: StateContext<ReadingCourseModel>, { payload }: IsSettingDataPL) {
+    patchState({
+
+      pronounceLetter: {
+        ...getState().pronounceLetter,
+        isSettingData: payload.state
+      }
+
+    });
+  }
+
+  @Action( SetInitialDataPL )
+  setInitialDataPL({ patchState, getState, dispatch }: StateContext<ReadingCourseModel>, action: SetInitialDataPL) {
+
+    const state = getState();
+    const letter = state.data.currentLetter;
+    const letterUpperCase = letter.toUpperCase();
+    const letterLowerCase = letter.toLowerCase();
+
+    const dataUpperCase =  new PLData(letterUpperCase, 'mayúscula', 0);
+    const dataLowerCase =  new PLData(letterLowerCase, 'minúscula', 0);
+
+    const data = [ dataLowerCase, dataUpperCase ];
+
+    patchState({
+      pronounceLetter: {
+        ...state.pronounceLetter,
+        data,
+        currentIndex: -1,
+        isRecording: false,
+        showSuccessScreen: false,
+      }
+    });
+
+    dispatch( new SetCurrentDataPL() );
+    dispatch( new IsSettingDataPL({state: false}) );
+    dispatch( new ListenInstructionsPL() );
+
+  }
+
+  @Action( SetCurrentDataPL )
+  setCurrentDataPL({ getState, patchState }: StateContext<ReadingCourseModel>, action: SetCurrentDataPL) {
+
+    const state = getState().pronounceLetter;
+    const index = state.currentIndex === null ? -1 : state.currentIndex;
+    const nextIndex = index + 1;
+
+    if (nextIndex < state.data.length) {
+
+      patchState({
+        pronounceLetter: {
+          ...getState().pronounceLetter,
+          currentIndex: nextIndex,
+          currentData: state.data[nextIndex],
+        }
+      });
+
+    }
+  }
+
+  @Action( ListenInstructionsPL )
+  listenInstructionsPL(ctx: StateContext<ReadingCourseModel>, action: ListenInstructionsPL) {
+
+    const msg   = 'Presiona el micrófono y dí Cuál es esta letra';
+    const speak = this._speech.speak(msg, .96);
+
+  }
+
+  @Action( ListenHelpPL )
+  listenHelpPL({ getState }: StateContext<ReadingCourseModel>, action: ListenHelpPL) {
+
+    const letter = getState().pronounceLetter.currentData.letter.toLowerCase();
+    const sound  = getState().data.letterSounds[letter];
+    const type   = getState().pronounceLetter.currentData.type;
+    const msg    = `Esta es la letra: ${sound} ... ${type}`;
+
+    this._speech.speak(msg, .9);
+
+  }
+
+  @Action( ListenMsgWrongPL )
+  listenMsgWrongPL(ctx: StateContext<ReadingCourseModel>, action: ListenMsgWrongPL) {
+
+    const msg = 'intenta otra vez... Presiona el botón azul para obtener ayuda';
+    this._speech.speak(msg, .95);
+
+  }
+
+  @Action( StartRecordingPL )
+  startRecordingPL( { dispatch  }: StateContext<ReadingCourseModel>, action: StartRecordingPL ) {
+
+    dispatch( new ChangeStateRecordingPL({state: true}) );
+
+    return this._recognition.record()
+      .subscribe(
+        res => dispatch( new HandleRecognitionResultPL({ res }) ),
+        err => dispatch( new HandleRecognitionErrorPL({ err }) ),
+        () =>  dispatch( new HandleRecognitionCompletePL() )
+      );
+  }
+
+  @Action( HandleRecognitionResultPL )
+  handleRecognitionResultPL({ dispatch, getState }: StateContext<ReadingCourseModel>, { payload }: HandleRecognitionResultPL) {
+
+    console.log(payload.res);
+
+    dispatch( new ChangeStateRecordingPL({state: false}) );
+    dispatch( new IncreaseAttemptsPL() );
+
+    const letter = getState().pronounceLetter.currentData.letter.toLowerCase();
+    const type   = getState().pronounceLetter.currentData.type;
+
+    const msgVal    = `${letter} ${type}`;
+
+    if (payload.res === 'no-match') {
+
+      dispatch( new ListenMsgNoSpeechPL() );
+
+    }
+
+
+    if (payload.res !== 'no-match' && payload.res.toLowerCase() !== msgVal.toLowerCase() ) {
+
+      dispatch(new ListenMsgWrongPL());
+
+    }
+
+
+    if (payload.res.toLowerCase() === msgVal.toLowerCase()) {
+
+      dispatch( new CorrectPronunciationPL() );
+
+    }
+
+
+  }
+
+  @Action( HandleRecognitionErrorPL )
+  handleRecognitionErrorPL({ dispatch }: StateContext<ReadingCourseModel>, { payload }: HandleRecognitionErrorPL) {
+
+    console.log(payload.err);
+    const noSpeech = payload.err.error === 'no-speech'
+      ? dispatch( new ListenMsgNoSpeechPL() )
+      : false;
+    dispatch( new ChangeStateRecordingPL({state: false}) );
+
+  }
+
+  @Action( HandleRecognitionCompletePL )
+  handleRecognitionCompletePL({ dispatch }: StateContext<ReadingCourseModel>, action: HandleRecognitionCompletePL) {
+    console.log('recognition complete');
+    dispatch( new ChangeStateRecordingPL({state: false}) );
+  }
+
+  @Action( ChangeStateRecordingPL )
+  changeStateRecordingPL({ getState, patchState }: StateContext<ReadingCourseModel>, { payload }: ChangeStateRecordingPL) {
+    patchState({
+      pronounceLetter: {
+        ...getState().pronounceLetter,
+        isRecording: payload.state
+      }
+    });
+  }
+
+  @Action( ListenMsgNoSpeechPL )
+  listenMsgNoSpeechPL(ctx: StateContext<ReadingCourseModel>, action: ListenMsgNoSpeechPL) {
+    this._speech.speak('Si dijiste algo no se escuchó!');
+  }
+
+  @Action( IncreaseAttemptsPL )
+  increaseAttemptsPL( { getState, patchState }: StateContext<ReadingCourseModel>, action: IncreaseAttemptsPL ) {
+
+    const attempts = getState().pronounceLetter.currentData.attempts + 1;
+
+    patchState({
+      pronounceLetter: {
+        ...getState().pronounceLetter,
+        currentData: {
+          ...getState().pronounceLetter.currentData,
+          attempts
+        }
+      }
+    });
+
+  }
+
+  @Action( CorrectPronunciationPL )
+  correctPronunciationPL({ getState, dispatch }: StateContext<ReadingCourseModel>, action: CorrectPronunciationPL) {
+
+    dispatch( new ShowSuccessScreenPL() );
+
+    const state = getState().pronounceLetter;
+    const index = state.currentIndex === null ? -1 : state.currentIndex;
+    const nextIndex = index + 1;
+
+    const speech = this._speech.speak('Bien Hecho', 0.9);
+
+    /* Redirection */
+    if (nextIndex >= state.data.length) {
+
+
+      speech.addEventListener('end', function a() {
+
+        const letter = getState().data.currentLetter;
+        dispatch( new UpdateLearnedLetters({ letter, rating: 4 }) );
+
+        dispatch([
+          new Navigate([`/lectura/abecedario`]),
+          new ResetDataPL()
+        ]);
+        speech.removeEventListener('end', a);
+      });
+
+
+    }
+
+    /* Set Current Data */
+    if (nextIndex < state.data.length) {
+
+
+      dispatch(new SetCurrentDataPL());
+      speech.addEventListener('end', function a() {
+
+        dispatch([
+          new HideSuccessScreenPL(),
+          new ListenInstructionsPL()
+        ]);
+        speech.removeEventListener('end', a);
+
+      });
+
+
+    }
+
+
+  }
+
+  @Action( ShowSuccessScreenPL )
+  showSuccessScreenPL({ patchState, getState }: StateContext<ReadingCourseModel>, action: ShowSuccessScreenPL) {
+    patchState({
+      pronounceLetter: {
+        ...getState().pronounceLetter,
+        showSuccessScreen: true
+      }
+    });
+  }
+
+  @Action( HideSuccessScreenPL )
+  hideSuccessScreenPL({ patchState, getState }: StateContext<ReadingCourseModel>, action: HideSuccessScreenPL) {
+    patchState({
+      pronounceLetter: {
+        ...getState().pronounceLetter,
+        showSuccessScreen: false
+      }
+    });
+  }
+
+  @Action( ResetDataPL )
+  resetDataPL({ patchState }: StateContext<ReadingCourseModel>, action: ResetDataPL) {
+
+    patchState({ pronounceLetter: null });
+
   }
 
 }

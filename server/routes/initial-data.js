@@ -34,7 +34,9 @@ app.get('/', verifyToken, validateUser, async (req, res) => {
         coordinates:    coordinates
     })
 
-    debug('Mostrando todos los registros de Words y Letters')
+    debug(l)
+
+    debug('Initial data and User progress')
 
   } catch (error) {
     
