@@ -6,7 +6,8 @@ import { Observable } from 'rxjs';
 import {
   IsSettingDataPL,
   SetInitialDataPL,
-  ListenHelpPL
+  ListenHelpPL,
+  StartRecordingPL
 } from 'src/app/store/actions/reading-course/reading-course-pronounce-letter';
 
 
@@ -32,7 +33,7 @@ export class PronounceLetterComponent implements OnInit, OnDestroy {
   ngOnInit() { this.store.dispatch( new SetInitialDataPL() ); }
   ngOnDestroy() { this._synthesis.cancel(); }
   help = () => this.store.dispatch( new ListenHelpPL() );
-
+  speak = () => this.store.dispatch( new StartRecordingPL() );
 
 }
 

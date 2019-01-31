@@ -4,7 +4,7 @@
 body {
   margin: 0;
   user-select: none !important;
-  font-family: 'Noto Sans' !important;
+  font-family: 'Roboto', sans-serif !important;
   outline: none !important;
   overscroll-behavior: contain
 }
@@ -85,7 +85,7 @@ body {
 }
 
 .mat-card {
-  font-family: 'Noto Sans', Roboto, "Helvetica Neue", sans-serif;
+  font-family: 'Roboto', sans-serif !important;
 }
 
 .icon-help {
@@ -161,7 +161,7 @@ body {
 }
 
 .mat-tab-group {
-  font-family: 'Noto Sans';
+  font-family: 'Roboto';
   min-height:  100%
 }
 
@@ -177,7 +177,7 @@ body {
 .mat-tab-label .mat-tab-label-content {
   font-weight: bold;
   font-size: 18px;
-  font-family: sans-serif, 'Noto Sans';
+  font-family: 'Roboto', sans-serif;
 }
 
 .mat-tab-group.mat-background-warn .mat-tab-header, .mat-tab-group.mat-background-warn .mat-tab-links, .mat-tab-nav-bar.mat-background-warn .mat-tab-header, .mat-tab-nav-bar.mat-background-warn .mat-tab-links {

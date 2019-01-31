@@ -2488,6 +2488,7 @@ export class ReadingCourseState {
   @Action( StartRecordingPL )
   startRecordingPL( { dispatch  }: StateContext<ReadingCourseModel>, action: StartRecordingPL ) {
 
+    this._speech.cancel();
     dispatch( new ChangeStateRecordingPL({state: true}) );
 
     return this._recognition.record()
@@ -2537,7 +2538,6 @@ export class ReadingCourseState {
   @Action( HandleRecognitionErrorPL )
   handleRecognitionErrorPL({ dispatch }: StateContext<ReadingCourseModel>, { payload }: HandleRecognitionErrorPL) {
 
-    console.log(payload.err);
     const noSpeech = payload.err.error === 'no-speech'
       ? dispatch( new ListenMsgNoSpeechPL() )
       : false;

@@ -25,7 +25,7 @@
 .signup-title {
   text-align:   center;
   font-weight:  normal;
-  font-family:  sans-serif, 'Noto Sans', sans-serif;
+  font-family:  'Roboto', sans-serif;
   font-size:    32px;
   margin: 5px 0;
 }
@@ -48,7 +48,7 @@
 
 .redirect-signup {
   font-size:        18px;
-  font-family:      sans-serif;
+  font-family:      'Roboto', sans-serif;
   text-align:       center;
   margin:           0 auto;
   text-decoration:  underline;

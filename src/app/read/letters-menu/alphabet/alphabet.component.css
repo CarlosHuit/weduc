@@ -72,7 +72,7 @@
   font-size:              70px;
   font-weight:            bold;
   outline:                none;
-  font-family:            'Noto Sans';
+  font-family:            'Roboto', sans-serif;
 }
 
 .star.resize {

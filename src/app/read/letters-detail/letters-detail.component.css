@@ -128,7 +128,7 @@
   transform-style: preserve-3d;
   color: white;
   font-weight: bold;
-  font-family: 'Noto Sans';
+  font-family: 'Roboto', sans-serif;
   transition: 1s cubic-bezier(0.25, 0.46, 0.45, 2)
 }
 
