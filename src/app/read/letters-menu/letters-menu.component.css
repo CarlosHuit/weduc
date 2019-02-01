@@ -164,6 +164,7 @@
   padding:                3px 10px;
   margin-right:           2%;
   border-radius:          4px;
+  overflow: auto;
 }
 
 .d-c-progress::-webkit-scrollbar {

@@ -111,7 +111,15 @@ export class LearnedLettersComponent implements OnInit {
   }
 
   listenLetter = (letter: string, type: string) => {
-    this.store.dispatch( new ListenSpecificLetterMenu({letter}) );
+
+    if (type === 'u') {
+      this.store.dispatch( new ListenSpecificLetterMenu({letter: letter.toUpperCase()}) );
+    }
+
+    if (type === 'l') {
+      this.store.dispatch( new ListenSpecificLetterMenu({letter: letter.toLowerCase()}) );
+    }
+
   }
 
   listenCombination = (syllableP: string, syllableW: string, letter: string) => {
