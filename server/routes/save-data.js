@@ -350,7 +350,7 @@ const letters = {
     v: '"uve"',
     w: '"doble ve"',
     x: '".. equis"',
-    y: 'ihe"',
+    y: 'ye ..',
     z: 'seta'
   }
 }

@@ -13,6 +13,8 @@ import { lettersMenu, lettersDetail, game, drawLetters, findLetters, selectWords
 const app = express()
 const compress = compression()
 
+
+app.disable('x-powered-by');
 app.use(compress)
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
