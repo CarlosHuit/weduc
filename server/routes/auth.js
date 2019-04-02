@@ -55,7 +55,7 @@ app.post( '/signin', async (req,res, next) => {
 })
 
 
-const createToken = (user) => jwt.sign({ user }, secret, { expiresIn: 86400 }) //86400
+const createToken = (user) => jwt.sign({ user }, secret, { expiresIn: 2592000 }) //86400
 
 
 
