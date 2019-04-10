@@ -12,7 +12,7 @@
     "start:client-prod":   "ng serve --prod",
     "start:client-mobile": "ng serve --host 192.168.43.77",
     "build":               "concurrently -r \"npm run build:client \" \"npm run build:server\"",
-    "build:client":        "ng build --prod --base-href 'https://carloshuit.github.io/weduc/' ",
+    "build:client":        "ng build --prod ",
     "build:server":        "babel server --out-dir dist/server",
     "postinstall":         "concurrently -r \"ng build --prod\" \"npm run build:server\"",
     "test":  "ng test",
