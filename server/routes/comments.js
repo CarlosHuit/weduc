@@ -88,12 +88,7 @@ app.get('/:course_id', verifyToken, validateUser, async (req, res) => {
     const course_id = req.params.course_id
     const data      = await CommentsModel.findOne({course_id}, {__v: 0})
       .populate('comments.user_id',    { __v: 0, password: 0, email: 0 })
-      .populate({
-        path: 'comments.answers_id',
-        populate: {
-          path: 'answers.user'
-        }
-      })
+      .populate({ path: 'comments.answers_id', populate: { path: 'answers.user', select: '-password' } })
 
 
 
