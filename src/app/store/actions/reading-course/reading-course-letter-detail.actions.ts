@@ -1,4 +1,5 @@
 export enum ReadingCourseLetterDetailActionsType {
+
   SET_INITIAL_DATA = '[Reading Course Letter Detail] Set Initial Data',
   SET_CURRENT_DATA = '[Reading Course Letter Detail] Set Current Data',
   IS_SETTING_DATA  = '[Reading Course Letter Detail] Is Setting Data',
@@ -17,73 +18,121 @@ export enum ReadingCourseLetterDetailActionsType {
   RESET_DATA             = '[Reading Course Letter Detail] Reset Letter Detail Data'
 }
 
+
 export class SetInitialDataLD {
+
   static readonly type = ReadingCourseLetterDetailActionsType.SET_INITIAL_DATA;
+
 }
+
 
 export class SetCurrentData {
+
   static readonly type = ReadingCourseLetterDetailActionsType.SET_CURRENT_DATA;
+
 }
+
 
 export class IsSettingDataLD {
+
   static readonly type = ReadingCourseLetterDetailActionsType.IS_SETTING_DATA;
   constructor( public payload: { state: boolean } ) {}
+
 }
+
 
 export class ShowLetterCardLD {
+
   static readonly type = ReadingCourseLetterDetailActionsType.SHOW_LETTER_CARD;
+
 }
+
 
 export class HideLetterCardLD {
+
   static readonly type = ReadingCourseLetterDetailActionsType.HIDE_LETTER_CARD;
   constructor(public payload: {listenMsg: boolean}) {}
+
 }
+
 
 export class ShowAllCardsLD {
+
   static readonly type = ReadingCourseLetterDetailActionsType.SHOW_ALL_CARDS;
+
 }
+
 
 export class HideAllCardsLD {
+
   static readonly type = ReadingCourseLetterDetailActionsType.HIDE_ALL_CARDS;
+
 }
+
 
 export class SelectLetterLD {
+
   static readonly type = ReadingCourseLetterDetailActionsType.SELECT_LETTER;
   constructor(public payload: { letterId: string }) {}
+
 }
+
 
 export class AddFirstSelectionLD {
+
   static readonly type = ReadingCourseLetterDetailActionsType.ADD_FIRST_SELECTION;
   constructor(public payload: { letterId: string, isCorrect: boolean }) {}
+
 }
+
 
 export class AddSecondSelectionLD {
+
   static readonly type = ReadingCourseLetterDetailActionsType.ADD_SECOND_SELECTION;
   constructor(public payload: { letterId: string, isCorrect: boolean }) {}
+
 }
+
 
 export class ValidateSelectionsLD {
+
   static readonly type = ReadingCourseLetterDetailActionsType.VALIDATE_SELECTIONS;
+
 }
+
 
 export class LettersAreSameLD {
+
   static readonly type = ReadingCourseLetterDetailActionsType.LETTERS_ARE_SAME;
+
 }
+
 
 export class LettersAreNotSameLD {
+
   static readonly type = ReadingCourseLetterDetailActionsType.LETTERS_ARE_NOT_SAME;
+
 }
+
 
 export class ShowSuccessScreenLD {
+
   static readonly type = ReadingCourseLetterDetailActionsType.SHOW_SUCCESS_SCREEN;
+
 }
+
 
 export class HideSuccessScreenLD {
+
   static readonly type = ReadingCourseLetterDetailActionsType.HIDE_SUCCESS_SCREEN;
+
 }
 
+
 export class ResetLetterDetailData {
+
   static readonly type = ReadingCourseLetterDetailActionsType.RESET_DATA;
+
 }
 
 
