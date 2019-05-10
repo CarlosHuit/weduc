@@ -5,7 +5,7 @@ import { Select, Store } from '@ngxs/store';
 import { ChangeTitle } from '../../store/actions/app.actions';
 import { AuthService } from '../service/auth.service';
 import { Observable } from 'rxjs';
-import { SigninForm } from '../models/signin-form.model';
+import { SigninForm } from '../../models/forms/signin-form.model';
 import { AuthState } from '../../store/state/auth.state';
 import { Login } from '../../store/actions/auth.actions';
 

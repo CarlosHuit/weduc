@@ -11,7 +11,7 @@ import { Signup              } from '../../store/actions/auth.actions';
 import { ChangeTitle         } from '../../store/actions/app.actions';
 import { AppState            } from '../../store/state/app.state';
 import { AuthState } from 'src/app/store/state/auth.state';
-import { SignupForm } from '../models/signup-form.model';
+import { SignupForm } from '../../models/forms/signup-form.model';
 
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {

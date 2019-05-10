@@ -6,10 +6,9 @@ import { JwtHelperService     } from '@auth0/angular-jwt';
 import { LocalStorageService  } from '../../services/local-storage.service';
 import { throwError, Observable           } from 'rxjs';
 import urljoin from 'url-join';
-import { SigninForm } from '../models/signin-form.model';
+import { SigninForm } from '../../models/forms/signin-form.model';
 import { AuthResponse } from '../models/auth-response.model';
-import { UserResponse } from '../models/user.model';
-import { SignupForm } from '../models/signup-form.model';
+import { SignupForm } from '../../models/forms/signup-form.model';
 import { User } from '../../auth/models/user.model';
 
 @Injectable({ providedIn: 'root' })
@@ -49,9 +48,9 @@ export class AuthService {
   }
 
 
-  greetToUser = (response: UserResponse) => {
+  greetToUser = (response: User) => {
 
-    const name = response.firstName;
+    const name   = response.firstName;
     const gender = response.avatar;
 
     if (gender === 'man')   { this.showError(`Bienvenido ${name}`); }
