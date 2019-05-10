@@ -7,15 +7,14 @@ export class CoursesStateModel {
 }
 
 export class Course {
+
   constructor(
-    public _id:         string,
+    public id:          string,
     public title:       string,
     public subtitle:    string,
     public imageUrl:    string,
     public urlVideo:    string,
     public description: string,
-  ) {}
+  ) { }
+
 }
-
-
-

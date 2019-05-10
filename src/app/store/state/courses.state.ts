@@ -1,4 +1,4 @@
-import { CoursesStateModel } from '../models/courses-state.model';
+import { CoursesStateModel, Course } from '../models/courses-state.model';
 import { GetCoursesService } from '../../services/get-data/get-courses.service';
 import {
   GetCourses,
@@ -9,7 +9,6 @@ import {
   ResetCoursesData
 } from '../actions/courses.actions';
 import { tap               } from 'rxjs/operators';
-import { Subjects          } from 'src/app/classes/subjects';
 import { State, Action, StateContext, Selector } from '@ngxs/store';
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -43,7 +42,7 @@ export class CoursesState {
 
   @Selector()
   static courseId({ selectedCourse }: CoursesStateModel) {
-    return selectedCourse._id;
+    return selectedCourse.id;
   }
 
   @Selector()
@@ -61,7 +60,7 @@ export class CoursesState {
       dispatch(new IsLoadingCourses({state: true}));
       return this._getCourses.getCourses()
         .pipe(
-          tap( (courses: Subjects[]) => dispatch( new GetCoursesSuccess(courses) )),
+          tap( (courses: Course[]) => dispatch( new GetCoursesSuccess(courses) )),
         );
 
     }

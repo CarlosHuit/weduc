@@ -3,7 +3,6 @@ import { Injectable              } from '@angular/core';
 import { environment             } from '../../../environments/environment';
 import { Observable              } from 'rxjs';
 import { catchError              } from 'rxjs/operators';
-import { Subjects                } from '../../classes/subjects';
 import { HandleErrorService      } from '../../shared/handle-error.service';
 import { Course } from '../../store/models/courses-state.model';
 import urljoin from 'url-join';
@@ -28,10 +27,10 @@ export class GetCoursesService {
   }
 
 
-  getCourses = (): Observable<any | Subjects[]> => {
+  getCourses = (): Observable<Course[]> => {
 
     const url     = this.apiUrl;
-    return this.http.get(url)
+    return this.http.get<Course[]>(url)
     .pipe(
       catchError(this._err.handleError)
     );

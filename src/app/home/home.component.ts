@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { MatSnackBar   } from '@angular/material';
-import { Subjects      } from '../classes/subjects';
 import { Store, Select } from '@ngxs/store';
 import { Navigate      } from '@ngxs/router-plugin';
 import { GetCourses    } from '../store/actions/courses.actions';
@@ -20,7 +19,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   @ViewChild('contGrid') contGrid: ElementRef;
 
-  subjects: Subjects[];
+  subjects: Course[];
   search:   RegExp;
   isMobile: boolean;
 
