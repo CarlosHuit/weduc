@@ -15,7 +15,12 @@ import { PronounceLetterComponent } from './read/pronounce-letter/pronounce-lett
 import { CourseDetailComponent    } from './course-detail/course-detail.component';
 import { CheckDataReadingCourseGuard } from './check-data-reading-course.guard';
 
-const vAuthDataRC = [AuthGuard, CheckDataReadingCourseGuard];
+
+const vAuthDataRC = [
+  AuthGuard,
+  CheckDataReadingCourseGuard,
+];
+
 
 const routes: Routes = [
 
@@ -33,9 +38,11 @@ const routes: Routes = [
 
 ];
 
+
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
+
 
 export class AppRoutingModule { }
