@@ -19,17 +19,17 @@ const vAuthDataRC = [AuthGuard, CheckDataReadingCourseGuard];
 
 const routes: Routes = [
 
-  { path: '',                                         component: HomeComponent,                   canActivate: [AuthGuard]        },
-  { path: 'signin',                                   component: SigninComponent,                 canActivate: [IsLoggedInGuard]  },
-  { path: 'signup',                                   component: SignupComponent,                 canActivate: [IsLoggedInGuard]  },
-  { path: ':course',                                  component: CourseDetailComponent,           canActivate: [AuthGuard]        },
-  { path: 'lectura/abecedario',                       component: LettersMenuComponent,            canActivate: [AuthGuard]        },
-  { path: 'lectura/detalle-letra/:letter',            component: LettersDetailComponent,          canActivate: vAuthDataRC        },
-  { path: 'lectura/juego/:letter',                    component: GameComponent,                   canActivate: vAuthDataRC        },
-  { path: 'lectura/dibujar-letra/:letter',            component: DrawLetterComponent,             canActivate: vAuthDataRC        },
-  { path: 'lectura/encontrar-letras/:letter',         component: FindLetterComponent,             canActivate: vAuthDataRC        },
-  { path: 'lectura/seleccionar-palabras/:letter',     component: SelectWordsComponent,            canActivate: vAuthDataRC        },
-  { path: 'lectura/pronunciar-letra/:letter',         component: PronounceLetterComponent,        canActivate: vAuthDataRC        }
+  { path: '',                                     component: HomeComponent,            canActivate: [AuthGuard]        },
+  { path: 'signin',                               component: SigninComponent,          canActivate: [IsLoggedInGuard]  },
+  { path: 'signup',                               component: SignupComponent,          canActivate: [IsLoggedInGuard]  },
+  { path: ':course',                              component: CourseDetailComponent,    canActivate: [AuthGuard]        },
+  { path: 'lectura/abecedario',                   component: LettersMenuComponent,     canActivate: [AuthGuard]        },
+  { path: 'lectura/detalle-letra/:letter',        component: LettersDetailComponent,   canActivate: vAuthDataRC        },
+  { path: 'lectura/juego/:letter',                component: GameComponent,            canActivate: vAuthDataRC        },
+  { path: 'lectura/dibujar-letra/:letter',        component: DrawLetterComponent,      canActivate: vAuthDataRC        },
+  { path: 'lectura/encontrar-letras/:letter',     component: FindLetterComponent,      canActivate: vAuthDataRC        },
+  { path: 'lectura/seleccionar-palabras/:letter', component: SelectWordsComponent,     canActivate: vAuthDataRC        },
+  { path: 'lectura/pronunciar-letra/:letter',     component: PronounceLetterComponent, canActivate: vAuthDataRC        }
 
 ];
 
