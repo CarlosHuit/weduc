@@ -12,6 +12,7 @@ import { Signup              } from '../../store/actions/auth.actions';
 import { ChangeTitle         } from '../../store/actions/app.actions';
 import { AppState            } from '../../store/state/app.state';
 import { AuthState } from 'src/app/store/state/auth.state';
+import { SignupForm } from '../models/signup-form.model';
 
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -106,10 +107,15 @@ export class SignupComponent implements OnInit, OnDestroy {
 
     if (this.signupForm.valid) {
 
-      const { firstName, lastName, email, password, password2} = this.signupForm.value;
-      const user = new User(email, password, password2, firstName, lastName, this.avatar);
+      const email     = this.signupForm.value.email.trim();
+      const lastName  = this.signupForm.value.lastName.trim();
+      const password  = this.signupForm.value.password.trim();
+      const firstName = this.signupForm.value.firstName.trim();
+      const password2 = this.signupForm.value.password2.trim();
 
-      this.store.dispatch( new Signup(user) );
+      const signupData = new SignupForm(email, password, password2, firstName, lastName, this.avatar);
+
+      this.store.dispatch( new Signup(signupData) );
 
     }
   }

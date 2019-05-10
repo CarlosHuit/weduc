@@ -11,6 +11,7 @@ import urljoin from 'url-join';
 import { SigninForm } from '../models/signin-form.model';
 import { AuthResponse } from '../models/auth-response.model';
 import { UserResponse } from '../models/user-response.model';
+import { SignupForm } from '../models/signup-form.model';
 
 
 @Injectable({ providedIn: 'root' })
@@ -32,7 +33,7 @@ export class AuthService {
 
 
 
-  signup(user: User): Observable<AuthResponse> {
+  signup(user: SignupForm): Observable<AuthResponse> {
 
     const body = JSON.stringify(user);
     const url  = urljoin(this.url, 'signup');

@@ -1,7 +1,7 @@
-import { User } from '../../classes/user';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SigninForm } from 'src/app/auth/models/signin-form.model';
 import { AuthResponse } from '../../auth/models/auth-response.model';
+import { SignupForm } from '../../auth/models/signup-form.model';
 
 export enum AuthActionsTypes {
   LOGIN         = '[Auth] login',
@@ -40,5 +40,5 @@ export class HasError {
 
 export class Signup {
   static readonly type = AuthActionsTypes.SIGNUP;
-  constructor(public payload: User) {}
+  constructor(public payload: SignupForm) {}
 }
