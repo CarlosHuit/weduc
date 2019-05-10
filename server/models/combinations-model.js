@@ -34,11 +34,3 @@ const combinationSchema = new Schema(
 
 
 export default mongoose.model('Combinations', combinationSchema)
-
-/* {
-  combination: 'pe',
-  word:        'perro',
-  syllables:   ['pe', 'rro'],
-  syllable:    {w: 'pe', p: '.. pe'},
-  color:       '#224468',
-} */
