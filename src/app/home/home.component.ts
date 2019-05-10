@@ -1,12 +1,12 @@
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
-import { MatSnackBar   } from '@angular/material';
-import { Store, Select } from '@ngxs/store';
-import { Navigate      } from '@ngxs/router-plugin';
-import { GetCourses    } from '../store/actions/courses.actions';
-import { CoursesState  } from '../store/state/courses.state';
-import { Course        } from '../store/models/courses-state.model';
-import { Observable    } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material';
+import { Navigate } from '@ngxs/router-plugin';
+import { Select, Store } from '@ngxs/store';
+import { Observable } from 'rxjs';
+import { GetCourses } from '../store/actions/courses.actions';
+import { Course } from '../store/models/courses-state.model';
 import { AppState } from '../store/state/app.state';
+import { CoursesState } from '../store/state/courses.state';
 
 
 @Component({
@@ -15,9 +15,8 @@ import { AppState } from '../store/state/app.state';
   styleUrls: ['./home.component.css']
 })
 
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent implements OnInit {
 
-  @ViewChild('contGrid') contGrid: ElementRef;
 
   subjects: Course[];
   search:   RegExp;
@@ -28,7 +27,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   @Select(AppState.isMobile)      isMobile$:    Observable<boolean>;
   @Select(AppState.queryMobileMatch) queryMobileMatch$:    Observable<boolean>;
 
-  constructor( public snackBar: MatSnackBar, private store: Store) { }
+  constructor(
+    private store:   Store,
+    public snackBar: MatSnackBar,
+  ) { }
+
 
   ngOnInit() {
     this.store.dispatch( new GetCourses() );
@@ -36,9 +39,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.isMobile$.subscribe( result => this.isMobile = result );
   }
 
-  ngOnDestroy() {
-    window.removeEventListener('resize', () => this.genCols(this.contGrid.nativeElement));
-  }
 
   redirect = (course: string) => {
 
@@ -47,32 +47,20 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   }
 
-  showError(message) {
+
+  showError(message: string) {
+
     this.snackBar.open(message, 'Cerrar', { duration: 5000 });
-  }
-
-  geoFindMe = () => {
-
-    const x = document.getElementById('demo');
-
-    if (navigator.geolocation) {
-
-      navigator.geolocation.getCurrentPosition(this.showPosition, this.handleErrorGeo);
-
-    } else {
-      console.log('Geolocation is not supported by this browser.');
-    }
-
 
   }
 
-  showPosition = (position) => {
-    console.log(position.coords.latitude, position.coords.longitude);
-  }
 
   genUrl = (words: string) => {
+
     return `/assets/img100X100/${words.toLowerCase()}-min.png`;
+
   }
+
 
   handleErrorGeo = (error) => {
 
@@ -93,51 +81,26 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
-  genCols = (el: HTMLDivElement) => {
-
-    if (this.isMobile) {
-      const t = el.clientWidth % 320;
-      const margin = 5 * 4;
-      const minWidth = 300;
-
-      if (t === 0) {
-
-        return { 'grid-template-columns': `repeat(auto-fill, ${minWidth}px)` };
-
-      } else {
-
-        const ts = Math.floor(el.clientWidth / 300);
-        const ttt = ts * margin;
-        const twidth = (el.clientWidth - ttt) / ts;
-
-        return ({ 'grid-template-columns': `repeat(auto-fill, ${twidth}px)` });
-
-      }
-
-    }
-
-    if (!this.isMobile) {
-
-    }
-
-  }
 
   searchCourses = (str: string) => {
+
     this.search = new RegExp(str.trim().toLowerCase());
     this.filterCourses();
+
   }
+
 
   filterCourses = () => {
 
     if (!this.search) {
       return this.subjects;
-    } else {
-
-      const result = this.subjects.filter(c => this.search.exec(c.title.toLowerCase()));
-      return result;
-
     }
+
+    const result = this.subjects.filter(c => this.search.exec(c.title.toLowerCase()));
+    return result;
+
   }
+
 
   grids = (el: HTMLDivElement) => {
 
