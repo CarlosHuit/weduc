@@ -4,7 +4,7 @@ import { Navigate } from '@ngxs/router-plugin';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { GetCourses } from '../store/actions/courses.actions';
-import { Course } from '../store/models/courses-state.model';
+import { Course } from '../models/course.model';
 import { AppState } from '../store/state/app.state';
 import { CoursesState } from '../store/state/courses.state';
 import { ChangeTitle } from '../store/actions/app.actions';

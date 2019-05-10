@@ -1,4 +1,4 @@
-import { Course } from '../models/courses-state.model';
+import { Course } from '../../models/course.model';
 
 export enum CoursesActionsType {
   GET_COURSES         = '[Courses] get courses',

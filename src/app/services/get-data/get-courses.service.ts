@@ -4,7 +4,7 @@ import { environment             } from '../../../environments/environment';
 import { Observable              } from 'rxjs';
 import { catchError              } from 'rxjs/operators';
 import { HandleErrorService      } from '../../shared/handle-error.service';
-import { Course } from '../../store/models/courses-state.model';
+import { Course } from '../../models/course.model';
 import urljoin from 'url-join';
 
 

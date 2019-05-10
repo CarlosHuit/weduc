@@ -5,7 +5,7 @@ import { Store, Select  } from '@ngxs/store';
 import { SelectCourse   } from '../store/actions/courses.actions';
 import { CoursesState   } from '../store/state/courses.state';
 import { Observable     } from 'rxjs';
-import { Course         } from '../store/models/courses-state.model';
+import { Course         } from '../models/course.model';
 import { AppState } from '../store/state/app.state';
 import { Navigate } from '@ngxs/router-plugin';
 

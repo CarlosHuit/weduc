@@ -1,7 +1,7 @@
 import { Component    } from '@angular/core';
 import { CoursesState } from 'src/app/store/state/courses.state';
 import { Observable   } from 'rxjs';
-import { Course    } from '../../store/models/courses-state.model';
+import { Course    } from '../../models/course.model';
 import { Select    } from '@ngxs/store';
 
 @Component({

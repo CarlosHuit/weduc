@@ -1,4 +1,5 @@
-import { CoursesStateModel, Course } from '../models/courses-state.model';
+import { CoursesStateModel } from '../models/courses-state.model';
+import { Course } from '../../models/course.model';
 import { GetCoursesService } from '../../services/get-data/get-courses.service';
 import {
   GetCourses,
@@ -12,11 +13,13 @@ import { tap               } from 'rxjs/operators';
 import { State, Action, StateContext, Selector } from '@ngxs/store';
 import { DomSanitizer } from '@angular/platform-browser';
 
+
 const initialData: CoursesStateModel = {
   courses: [],
   selectedCourse: null,
   isLoadingCourses: false,
 };
+
 
 @State<CoursesStateModel>({
   name: 'courses',

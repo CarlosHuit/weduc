@@ -3,7 +3,7 @@ import { MatSnackBar    } from '@angular/material';
 import { Select, Store  } from '@ngxs/store';
 import { CoursesState   } from 'src/app/store/state/courses.state';
 import { Observable  } from 'rxjs';
-import { Course   } from '../../store/models/courses-state.model';
+import { Course   } from '../../models/course.model';
 import { Navigate } from '@ngxs/router-plugin';
 
 @Component({
