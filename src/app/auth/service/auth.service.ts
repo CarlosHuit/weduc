@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment          } from '../../../environments/environment';
-import { User                 } from '../../classes/user';
 import { MatSnackBar          } from '@angular/material';
 import { JwtHelperService     } from '@auth0/angular-jwt';
 import { LocalStorageService  } from '../../services/local-storage.service';
