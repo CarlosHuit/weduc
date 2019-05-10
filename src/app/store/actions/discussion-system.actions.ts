@@ -41,7 +41,8 @@ export enum DiscussionSystemActionsType {
 }
 
 
-/* -- actions get Comments -- */
+
+/// actions get Comments
 export class GetComments {
   static readonly type = DiscussionSystemActionsType.GET_COMMENTS;
 }
@@ -57,7 +58,8 @@ export class IsLoadingComments {
 }
 
 
-/* -- Actions add comment -- */
+
+/// Actions add comment
 export class AddCommentToDelete {
   static readonly type = DiscussionSystemActionsType.ADD_COMMENT_TO_DELETE;
   constructor( public payload: { commentId: string } ) {}
@@ -78,7 +80,8 @@ export class AddCommentError {
 }
 
 
-/* -- Actions delete comment -- */
+
+/// Actions delete comment
 export class DeleteComment {
   static readonly type = DiscussionSystemActionsType.DELETE_COMMENT;
   constructor(public payload: { course_id: string, comment_id: string }) {}
@@ -94,7 +97,8 @@ export class DeleteCommentError {
 }
 
 
-/* -- Actions edit comment -- */
+
+/// Actions edit comment
 export class EditComment {
   static readonly type = DiscussionSystemActionsType.EDIT_COMMENT;
 }
@@ -109,7 +113,7 @@ export class EditCommentError {
 
 
 
-/* -- Actions Add answer -- */
+/// Actions Add answer
 export class AddAnswer {
   static readonly type = DiscussionSystemActionsType.ADD_ANSWER;
   constructor( public payload: { text: string, comment_id: string }) {}
@@ -130,7 +134,8 @@ export class AddAnswerToDelete {
 }
 
 
-/* -- Actions Delete answer -- */
+
+/// Actions Delete answer
 export class DeleteAnswer {
   static readonly type = DiscussionSystemActionsType.DELETE_ANSWER;
   constructor(public payload: { commentId: string, answerId: string, index: number }) {}
@@ -146,7 +151,8 @@ export class DeleteAnswerError {
 }
 
 
-/* -- Actions Edit answer -- */
+
+/// Actions Edit answer
 export class EditAnswer {
   static readonly type = DiscussionSystemActionsType.EDIT_ANSWER;
 }
