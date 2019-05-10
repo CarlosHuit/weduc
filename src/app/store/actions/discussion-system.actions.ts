@@ -44,148 +44,223 @@ export enum DiscussionSystemActionsType {
 
 /// actions get Comments
 export class GetComments {
+
   static readonly type = DiscussionSystemActionsType.GET_COMMENTS;
+
 }
+
 
 export class GetCommentsSuccess {
+
   static readonly type = DiscussionSystemActionsType.GET_COMMENTS_SUCCESS;
   constructor(public payload: Comments[]) {}
+
 }
 
+
 export class IsLoadingComments {
+
   static readonly type = DiscussionSystemActionsType.IS_LOADING_COMMENTS;
   constructor(public payload: { state: boolean }) {}
+
 }
 
 
 
 /// Actions add comment
 export class AddCommentToDelete {
+
   static readonly type = DiscussionSystemActionsType.ADD_COMMENT_TO_DELETE;
   constructor( public payload: { commentId: string } ) {}
+
 }
+
 
 export class AddComment {
+
   static readonly type = DiscussionSystemActionsType.ADD_COMMENT;
   constructor( public payload: { text: string } ) {}
+
 }
+
 
 export class AddCommentSuccess {
+
   static readonly type = DiscussionSystemActionsType.ADD_COMMENT_SUCCESS;
   constructor(public payload: Comments) {}
+
 }
 
+
 export class AddCommentError {
+
   static readonly type = DiscussionSystemActionsType.ADD_COMMENT_ERROR;
+
 }
 
 
 
 /// Actions delete comment
 export class DeleteComment {
+
   static readonly type = DiscussionSystemActionsType.DELETE_COMMENT;
   constructor(public payload: { course_id: string, comment_id: string }) {}
+
 }
 
+
 export class DeleteCommentSuccess {
+
   static readonly type = DiscussionSystemActionsType.DELETE_COMMENT_SUCCESS;
   constructor(public payload: {comment_id: string}) {}
 
+
 }
+
 export class DeleteCommentError {
+
   static readonly type = DiscussionSystemActionsType.DELETE_COMMENT_ERROR;
+
 }
 
 
 
 /// Actions edit comment
 export class EditComment {
+
   static readonly type = DiscussionSystemActionsType.EDIT_COMMENT;
+
 }
+
 
 export class EditCommentSuccess {
+
   static readonly type = DiscussionSystemActionsType.EDIT_COMMENT_SUCCESS;
+
 }
 
+
 export class EditCommentError {
+
   static readonly type = DiscussionSystemActionsType.EDIT_COMMENT_ERROR;
+
 }
 
 
 
 /// Actions Add answer
 export class AddAnswer {
+
   static readonly type = DiscussionSystemActionsType.ADD_ANSWER;
   constructor( public payload: { text: string, comment_id: string }) {}
+
 }
+
 
 export class AddAnswerSuccess {
+
   static readonly type = DiscussionSystemActionsType.ADD_ANSWER_SUCCESS;
   constructor( public payload: {answer: Answer} ) {}
+
 }
 
+
 export class AddAnswerError {
+
   static readonly type = DiscussionSystemActionsType.ADD_ANSWER_ERROR;
+
 }
 
 export class AddAnswerToDelete {
+
   static readonly type = DiscussionSystemActionsType.ADD_ANSWER_TO_DELETE;
   constructor( public payload: {answerId: string} ) {}
+
 }
 
 
 
 /// Actions Delete answer
 export class DeleteAnswer {
+
   static readonly type = DiscussionSystemActionsType.DELETE_ANSWER;
   constructor(public payload: { commentId: string, answerId: string, index: number }) {}
+
 }
+
 
 export class DeleteAnswerSuccess {
+
   static readonly type = DiscussionSystemActionsType.DELETE_ANSWER_SUCCESS;
   constructor(public payload: { commentId: string, answersUpdated: Answers[] }) {}
+
 }
 
+
 export class DeleteAnswerError {
+
   static readonly type = DiscussionSystemActionsType.DELETE_ANSWER_ERROR;
+
 }
 
 
 
 /// Actions Edit answer
 export class EditAnswer {
+
   static readonly type = DiscussionSystemActionsType.EDIT_ANSWER;
+
 }
+
 
 export class EditAnswerSuccess {
+
   static readonly type = DiscussionSystemActionsType.EDIT_ANSWER_SUCCESS;
+
 }
 
+
 export class EditAnswerError {
+
   static readonly type = DiscussionSystemActionsType.EDIT_ANSWER_ERROR;
+
 }
 
 
 
 export class IsLoadingAnswer {
+
   static readonly type = DiscussionSystemActionsType.IS_LOADING_ANSWERS;
+
 }
+
 
 export class ShowAnswersOf {
+
   static readonly type = DiscussionSystemActionsType.SHOW_ANSWERS;
   constructor(public payload: { commentId: string }) {}
+
 }
+
 
 export class HideAnswersOf {
+
   static readonly type = DiscussionSystemActionsType.HIDE_ANSWERS;
   constructor(public payload: { commentId: string }) {}
+
 }
+
 
 export class WriteAnswerFor {
+
   static readonly type = DiscussionSystemActionsType.WRITE_ANSWER_FOR;
   constructor(public payload: { commentId: string }) {}
+
 }
 
+
 export class ResetDiscussionSystem {
+
   static readonly type = DiscussionSystemActionsType.RESET_DATA;
+
 }

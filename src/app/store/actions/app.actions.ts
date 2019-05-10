@@ -12,6 +12,7 @@ export class ChangeTitle {
 
 }
 
+
 export class DetectMobile {
 
   static readonly type = AppActionsType.DETECT_MOBILE;
@@ -20,7 +21,9 @@ export class DetectMobile {
 
 
 export class ChangeStateMobileQuery {
+
   static readonly type = AppActionsType.CHANGE_STATE_QUERY_MOBILE;
   constructor(public readonly payload: { state: boolean }) {}
+
 }
 
