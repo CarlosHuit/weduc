@@ -9,28 +9,38 @@ import { rootState } from './app.state';
 import { CustomRouterStateSerializer } from './state/router.state';
 
 @NgModule({
+
   imports: [
+
     CommonModule,
+
     NgxsModule.forRoot(
       rootState,
       { developmentMode: !env.production }
     ),
+
     NgxsRouterPluginModule.forRoot(),
+
     NgxsReduxDevtoolsPluginModule.forRoot({
       name:     'weduc',
       maxAge:   25,
       disabled: env.production
     })
+
   ],
+
   providers: [
     {
       provide: RouterStateSerializer,
       useClass: CustomRouterStateSerializer
     }
   ],
+
   exports: [
     NgxsReduxDevtoolsPluginModule,
     NgxsModule
   ]
+
 })
+
 export class NgxsStoreModule {}
