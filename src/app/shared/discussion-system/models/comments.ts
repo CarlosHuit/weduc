@@ -1,5 +1,5 @@
 import { Answers } from './answers';
-import { User } from '../../../auth/models/user.model';
+import { User } from '../../../models/user.model';
 
 export class Comments {
 
