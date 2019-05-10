@@ -7,6 +7,7 @@ import { GetCourses } from '../store/actions/courses.actions';
 import { Course } from '../store/models/courses-state.model';
 import { AppState } from '../store/state/app.state';
 import { CoursesState } from '../store/state/courses.state';
+import { ChangeTitle } from '../store/actions/app.actions';
 
 
 @Component({
@@ -27,6 +28,7 @@ export class HomeComponent implements OnInit {
   @Select(AppState.isMobile)      isMobile$:    Observable<boolean>;
   @Select(AppState.queryMobileMatch) queryMobileMatch$:    Observable<boolean>;
 
+
   constructor(
     private store:   Store,
     public snackBar: MatSnackBar,
@@ -34,9 +36,13 @@ export class HomeComponent implements OnInit {
 
 
   ngOnInit() {
+
+    this.store.dispatch( new ChangeTitle({ title: 'Weduc - Cursos' }) );
     this.store.dispatch( new GetCourses() );
+
     this.courses$.subscribe( courses => this.subjects = courses );
     this.isMobile$.subscribe( result => this.isMobile = result );
+
   }
 
 
@@ -48,41 +54,21 @@ export class HomeComponent implements OnInit {
   }
 
 
-  showError(message: string) {
+  showError(message: string): void {
 
     this.snackBar.open(message, 'Cerrar', { duration: 5000 });
 
   }
 
 
-  genUrl = (words: string) => {
+  genUrl(words: string): string {
 
     return `/assets/img100X100/${words.toLowerCase()}-min.png`;
 
   }
 
 
-  handleErrorGeo = (error) => {
-
-
-    switch (error.code) {
-      case error.PERMISSION_DENIED:
-        console.log('User denied the request for Geolocation.');
-        break;
-      case error.POSITION_UNAVAILABLE:
-        console.log('Location information is unavailable.');
-        break;
-      case error.TIMEOUT:
-        console.log('The request to get user location timed out.');
-        break;
-      case error.UNKNOWN_ERROR:
-        console.log('An unknown error occurred.');
-        break;
-    }
-  }
-
-
-  searchCourses = (str: string) => {
+  searchCourses(str: string): void {
 
     this.search = new RegExp(str.trim().toLowerCase());
     this.filterCourses();
@@ -90,7 +76,7 @@ export class HomeComponent implements OnInit {
   }
 
 
-  filterCourses = () => {
+  filterCourses(): Course[] {
 
     if (!this.search) {
       return this.subjects;
