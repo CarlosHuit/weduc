@@ -8,7 +8,9 @@ import { LocalStorageService  } from '../../services/local-storage.service';
 import { throwError, Observable           } from 'rxjs';
 import { UserDataModel        } from '../../store/models/user-data.model';
 import urljoin from 'url-join';
-import { ResponseAuth } from '../models/response-auth.model';
+import { SigninForm } from '../models/signin-form.model';
+import { AuthResponse } from '../models/auth-response.model';
+import { UserResponse } from '../models/user-response.model';
 
 
 @Injectable({ providedIn: 'root' })
@@ -30,25 +32,25 @@ export class AuthService {
 
 
 
-  signup(user: User): Observable<ResponseAuth> {
+  signup(user: User): Observable<AuthResponse> {
 
     const body = JSON.stringify(user);
     const url  = urljoin(this.url, 'signup');
-    return this.http.post<ResponseAuth>(url, body);
+    return this.http.post<AuthResponse>(url, body);
 
   }
 
 
-  signin(user: User): Observable<ResponseAuth> {
+  signin(user: SigninForm): Observable<AuthResponse> {
 
     const body = JSON.stringify(user);
     const url  = urljoin(this.url, 'signin');
-    return this.http.post<ResponseAuth>(url, body);
+    return this.http.post<AuthResponse>(url, body);
 
   }
 
 
-  greetToUser = (response: any) => {
+  greetToUser = (response: UserResponse) => {
 
     const name = response.firstName;
     const gender = response.avatar;
@@ -60,12 +62,20 @@ export class AuthService {
 
 
 
-  saveData = (response: any) => {
+  saveData = (response: AuthResponse) => {
 
-    const { token, userId, firstName, lastName, email, avatar } = response;
+    const { token, user } = response;
 
     localStorage.setItem('token', token);
-    this.currentUser = new UserDataModel(email, firstName, lastName, avatar, userId);
+
+    this.currentUser = new UserDataModel(
+      user.email,
+      user.firstName,
+      user.lastName,
+      user.avatar,
+      user.id,
+    );
+
     this._storage.saveElement('user', this.currentUser);
 
   }
@@ -98,10 +108,9 @@ export class AuthService {
 
       return false;
 
-    } else {
-
-      return !helper.isTokenExpired(token);
     }
+
+    return !helper.isTokenExpired(token);
 
   }
 
