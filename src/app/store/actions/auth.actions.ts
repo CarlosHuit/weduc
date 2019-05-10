@@ -1,6 +1,7 @@
 import { User } from '../../classes/user';
-import { ResponseAuth } from '../../auth/models/response-auth.model';
 import { HttpErrorResponse } from '@angular/common/http';
+import { SigninForm } from 'src/app/auth/models/signin-form.model';
+import { AuthResponse } from '../../auth/models/auth-response.model';
 
 export enum AuthActionsTypes {
   LOGIN         = '[Auth] login',
@@ -12,13 +13,15 @@ export enum AuthActionsTypes {
 }
 
 export class Login {
+
   static readonly type = AuthActionsTypes.LOGIN;
-  constructor(public payload: User) {}
+  constructor(public payload: SigninForm) {}
+
 }
 
 export class LoginSuccess {
   static readonly type = AuthActionsTypes.LOGIN_SUCCESS;
-  constructor(public payload: ResponseAuth) {}
+  constructor(public payload: AuthResponse) {}
 }
 
 export class Logout {

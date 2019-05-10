@@ -1,4 +1,5 @@
 import { Course } from '../models/courses-state.model';
+import { CourseResponse } from '../../auth/models/course-response';
 
 export enum CoursesActionsType {
   GET_COURSES         = '[Courses] get courses',
@@ -16,7 +17,7 @@ export class GetCourses {
 
 export class GetCoursesSuccess {
   static readonly type = CoursesActionsType.GET_COURSES_SUCCESS;
-  constructor(public payload: Course[]) {}
+  constructor(public payload: CourseResponse[]) {}
 }
 
 export class GetCourseSuccess {

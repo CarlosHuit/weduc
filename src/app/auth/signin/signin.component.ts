@@ -1,13 +1,13 @@
+import { FormControl, FormGroup, FormGroupDirective, NgForm, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormGroupDirective, NgForm } from '@angular/forms';
-import { User                } from '../../classes/user';
-import { AuthService         } from '../service/auth.service';
-import { ErrorStateMatcher   } from '@angular/material/core';
-import { Store, Select       } from '@ngxs/store';
-import { Login               } from '../../store/actions/auth.actions';
-import { AuthState           } from '../../store/state/auth.state';
-import { Observable          } from 'rxjs';
-import { ChangeTitle         } from '../../store/actions/app.actions';
+import { ErrorStateMatcher } from '@angular/material/core';
+import { Select, Store } from '@ngxs/store';
+import { ChangeTitle } from '../../store/actions/app.actions';
+import { AuthService } from '../service/auth.service';
+import { Observable } from 'rxjs';
+import { SigninForm } from '../models/signin-form.model';
+import { AuthState } from '../../store/state/auth.state';
+import { Login } from '../../store/actions/auth.actions';
 
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -21,52 +21,80 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 
 }
 
+
 @Component({
   selector: 'app-signin',
   templateUrl: './signin.component.html',
   styleUrls: ['./signin.component.css']
 })
 
+
 export class SigninComponent implements OnInit {
 
-  signinForm:     FormGroup;
-  matcher =   new MyErrorStateMatcher();
+
+  matcher:    MyErrorStateMatcher;
+  signinForm: FormGroup;
+
+
   @Select(AuthState.isLoading) isLoading$: Observable<boolean>;
 
-  constructor( private authService: AuthService, private store: Store ) { }
 
-  ngOnInit() {
+  constructor(
+    private store: Store,
+    private authService: AuthService,
+  ) { }
 
-    this.store.dispatch( new ChangeTitle({title: 'Weduc - Iniciar sesión'}) );
+
+  ngOnInit(): void {
+
+
+    this.matcher = new MyErrorStateMatcher();
+    this.store.dispatch( new ChangeTitle({ title: 'Weduc - Iniciar sesión' }) );
+
+
+    const emailValidations = [
+      Validators.required,
+      Validators.email,
+    ];
+
+    const passValidations = [
+      Validators.required,
+      Validators.minLength(8),
+      Validators.pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/)
+    ];
+
     this.signinForm = new FormGroup({
-      'email': new    FormControl(null, [Validators.required, Validators.email]),
-      'password': new FormControl(
-        null,
-        [
-          Validators.required,
-          Validators.minLength(8),
-          Validators.pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/)
-        ]
-      ),
+      email:    new FormControl( null, emailValidations ),
+      password: new FormControl( null, passValidations ),
     });
 
 
   }
 
 
-  onSubmit() {
+  onSubmit(): void {
 
     if (!this.signinForm.valid) {
-      this.authService.showError('Los datos ingresados no son válidos. Verifica y vuelve a intentarlo.');
+      this.showErrorMsg();
+      return;
     }
 
-    if (this.signinForm.valid) {
+    const email = this.signinForm.value.email.trim();
+    const password = this.signinForm.value.password.trim();
 
-      const user = new User(this.signinForm.value.email, this.signinForm.value.password);
-      this.store.dispatch( new Login(user));
-
-    }
+    const auth = new SigninForm(email, password);
+    this.store.dispatch( new Login(auth));
 
   }
+
+
+  showErrorMsg(): void {
+
+    this.authService.showError(
+      'Los datos ingresados no son válidos. Verifica y vuelve a intentarlo.'
+    );
+
+  }
+
 
 }
