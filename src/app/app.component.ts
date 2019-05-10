@@ -8,6 +8,7 @@ import { AuthService    } from './auth/service/auth.service';
 import { AppState       } from './store/state/app.state';
 import { DrawerState    } from './store/state/drawer.state';
 import { AuthState      } from './store/state/auth.state';
+import { Logout } from './store/actions/auth.actions';
 
 @Component({
   selector: 'app-root',
@@ -36,26 +37,37 @@ export class AppComponent implements OnInit, OnDestroy {
     private store:         Store,
   ) { }
 
+
   ngOnInit() {
     this.sub1 = this.title$.subscribe(title => this._titleService.setTitle(title));
     this.sub2 = this.opened$.subscribe((status: boolean) => this.statusDrawer = status );
   }
+
 
   ngOnDestroy() {
     this.sub1.unsubscribe();
     this.sub2.unsubscribe();
   }
 
+
   @HostListener('window :resize') onResize() {
     this.store.dispatch(new DetectMobile());
   }
 
+
   isLoggedIn = () =>  this._auth.isLoggedIn();
+
+
   closeDrawer = () => this.store.dispatch( new CloseDrawer() );
+
 
   toogleDrawer = ($event: boolean) => {
     this.store.dispatch( new ChangeStateDrawer({status: !this.statusDrawer}) );
   }
 
+  logoutAndClose = () => this.store.dispatch( [
+    this.closeDrawer(),
+    new Logout(),
+  ])
 
 }

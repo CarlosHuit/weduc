@@ -7,7 +7,7 @@ import { LocalStorageService  } from '../../services/local-storage.service';
 import { throwError, Observable           } from 'rxjs';
 import urljoin from 'url-join';
 import { SigninForm } from '../../models/forms/signin-form.model';
-import { AuthResponse } from '../models/auth-response.model';
+import { AuthResponse } from '../../models/auth-response.model';
 import { SignupForm } from '../../models/forms/signup-form.model';
 import { User } from '../../models/user.model';
 

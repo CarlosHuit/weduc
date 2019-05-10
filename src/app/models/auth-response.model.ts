@@ -1,5 +1,5 @@
-import { Course } from '../../store/models/courses-state.model';
-import { User } from '../../models/user.model';
+import { Course } from '../store/models/courses-state.model';
+import { User } from './user.model';
 
 export class AuthResponse {
 

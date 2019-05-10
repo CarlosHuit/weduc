@@ -9,7 +9,7 @@ import { HttpErrorResponse  } from '@angular/common/http';
 import { GetCoursesSuccess, ResetCoursesData } from '../actions/courses.actions';
 import { ResetDiscussionSystem } from '../actions/discussion-system.actions';
 import { ResetReadingCourseData } from '../actions/reading-course/reading-course-data.actions';
-import { AuthResponse } from '../../auth/models/auth-response.model';
+import { AuthResponse } from '../../models/auth-response.model';
 import { User } from '../../models/user.model';
 
 @State<AuthStateModel>({

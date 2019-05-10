@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { SigninForm } from 'src/app/models/forms/signin-form.model';
-import { AuthResponse } from '../../auth/models/auth-response.model';
+import { AuthResponse } from '../../models/auth-response.model';
 import { SignupForm } from '../../models/forms/signup-form.model';
 
 export enum AuthActionsTypes {
