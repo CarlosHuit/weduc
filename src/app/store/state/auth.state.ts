@@ -4,7 +4,6 @@ import { Navigate           } from '@ngxs/router-plugin';
 import { tap, catchError    } from 'rxjs/operators';
 import { AuthService        } from '../../auth/service/auth.service';
 import { AuthStateModel     } from '../models/auth-state.model';
-import { UserDataModel      } from '../models/user-data.model';
 import { CloseDrawer        } from '../actions/drawer.actions';
 import { HttpErrorResponse  } from '@angular/common/http';
 import { GetCoursesSuccess, ResetCoursesData } from '../actions/courses.actions';
@@ -72,7 +71,7 @@ export class AuthState {
   @Selector()
   static userId({ user }: AuthStateModel) {
 
-    return user._id;
+    return user.id;
 
   }
 
@@ -181,7 +180,13 @@ function initialAuth() {
       true,
       false,
       token,
-      new UserDataModel(user.email, user.firstName, user.lastName, user.avatar, user.id)
+      new User(
+        user.id,
+        user.firstName,
+        user.lastName,
+        user.email,
+        user.avatar,
+      )
     );
 
   } else {

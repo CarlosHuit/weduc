@@ -1,4 +1,4 @@
-import { UserDataModel } from './user-data.model';
+import { User } from '../../auth/models/user.model';
 
 export class AuthStateModel {
 
@@ -6,7 +6,7 @@ export class AuthStateModel {
     public isLoggedIn: boolean,
     public isLoading:  boolean,
     public token:      string,
-    public user:       UserDataModel,
+    public user:       User,
   ) { }
 
 }

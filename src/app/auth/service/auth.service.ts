@@ -5,13 +5,12 @@ import { MatSnackBar          } from '@angular/material';
 import { JwtHelperService     } from '@auth0/angular-jwt';
 import { LocalStorageService  } from '../../services/local-storage.service';
 import { throwError, Observable           } from 'rxjs';
-import { UserDataModel        } from '../../store/models/user-data.model';
 import urljoin from 'url-join';
 import { SigninForm } from '../models/signin-form.model';
 import { AuthResponse } from '../models/auth-response.model';
 import { UserResponse } from '../models/user.model';
 import { SignupForm } from '../models/signup-form.model';
-
+import { User } from '../../auth/models/user.model';
 
 @Injectable({ providedIn: 'root' })
 
@@ -19,7 +18,7 @@ export class AuthService {
 
 
   url:          string;
-  currentUser?: UserDataModel;
+  currentUser?: User;
 
 
   constructor(
@@ -68,12 +67,12 @@ export class AuthService {
 
     localStorage.setItem('token', token);
 
-    this.currentUser = new UserDataModel(
-      user.email,
+    this.currentUser = new User(
+      user.id,
       user.firstName,
       user.lastName,
+      user.email,
       user.avatar,
-      user.id,
     );
 
     this._storage.saveElement('user', this.currentUser);

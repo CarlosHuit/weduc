@@ -1,4 +1,4 @@
-import { UserDataModel } from 'src/app/store/models/user-data.model';
+import { User } from '../../../auth/models/user.model';
 
 export class Answers {
   constructor(
@@ -11,7 +11,7 @@ export class Answers {
 
 export class Answer {
   constructor (
-    public user:     UserDataModel,
+    public user:        User,
     public text:        string,
     public date:        Date,
     public comment_id?: string,

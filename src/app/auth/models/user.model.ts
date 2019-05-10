@@ -12,4 +12,8 @@ export class User {
     return `${this.lastName} ${this.firstName}`;
   }
 
+  urlAvatar(): string {
+    return `/assets/icon-user-min/${this.avatar}-min.png`;
+  }
+
 }
