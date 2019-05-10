@@ -113,10 +113,7 @@ export class AuthState {
     return this._authService.signin(action.payload)
       .pipe(
 
-        tap((res: AuthResponse) => {
-          console.log(res);
-          dispatch(new LoginSuccess(res));
-        }),
+        tap(  res => dispatch( new LoginSuccess(res) )  ),
         catchError((err: HttpErrorResponse) => dispatch(new HasError(err)))
 
       );
