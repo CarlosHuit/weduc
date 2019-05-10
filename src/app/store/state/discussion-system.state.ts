@@ -129,10 +129,10 @@ export class DiscussionSystemState {
     const courseId = this.store.selectSnapshot(CoursesState.courseId);
     const date = new Date();
 
-    const tmp_id = this.generateTemporaryId([...getState().commentsTemporaryIds], user._id);
+    const tmp_id = this.generateTemporaryId([...getState().commentsTemporaryIds], user.id);
     const newAnswers = new Answers(tmp_id, []);
 
-    const commentToSend = new Comments(null, user._id, text, date, courseId, tmp_id);
+    const commentToSend = new Comments(null, user.id, text, date, courseId, tmp_id);
     const localComment = new Comments(null, user, text, date, courseId, tmp_id, newAnswers);
 
 
@@ -193,7 +193,7 @@ export class DiscussionSystemState {
     const comments = [...getState().comments];
     const user = this.store.selectSnapshot(AuthState.getUser);
     const courseId = this.store.selectSnapshot(CoursesState.courseId);
-    const index = comments.findIndex(comment => comment.user_id['_id'] === user._id);
+    const index = comments.findIndex(comment => comment.user_id['id'] === user.id);
     const isUserOwner = index > -1 ? true : false;
 
     if (isUserOwner) {
@@ -244,7 +244,7 @@ export class DiscussionSystemState {
   addAnswer({ patchState, getState, dispatch }: StateContext<DiscussionSystemStateModel>, { payload }: AddAnswer) {
 
     const user = this.store.selectSnapshot(AuthState.getUser);
-    const temp_id = this.generateTemporaryId([...getState().answersTemporaryIds], user._id);
+    const temp_id = this.generateTemporaryId([...getState().answersTemporaryIds], user.id);
     const comment_id = payload.comment_id;
     const text = payload.text;
     const date = new Date();
@@ -253,7 +253,7 @@ export class DiscussionSystemState {
     t[comment_id] = comment_id;
 
     const localAnswer = new Answer(user, text, date, comment_id, null, temp_id);
-    const answerToSend = new Answer(null, text, date, comment_id, null, temp_id, user._id);
+    const answerToSend = new Answer(null, text, date, comment_id, null, temp_id, user.id);
 
     patchState({
 
