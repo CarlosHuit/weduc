@@ -2,7 +2,6 @@ import { State, Selector, StateContext, Action      } from '@ngxs/store';
 import { Login, Logout, IsLoading, HasError, Signup, LoginSuccess } from '../actions/auth.actions';
 import { Navigate           } from '@ngxs/router-plugin';
 import { tap, catchError    } from 'rxjs/operators';
-import { User               } from '../../classes/user';
 import { AuthService        } from '../../auth/service/auth.service';
 import { AuthStateModel     } from '../models/auth-state.model';
 import { UserDataModel      } from '../models/user-data.model';
@@ -12,6 +11,7 @@ import { GetCoursesSuccess, ResetCoursesData } from '../actions/courses.actions'
 import { ResetDiscussionSystem } from '../actions/discussion-system.actions';
 import { ResetReadingCourseData } from '../actions/reading-course/reading-course-data.actions';
 import { AuthResponse } from '../../auth/models/auth-response.model';
+import { User } from '../../auth/models/user.model';
 
 @State<AuthStateModel>({
   name: 'auth',
@@ -181,7 +181,7 @@ function initialAuth() {
       true,
       false,
       token,
-      new UserDataModel(user.email, user.firstName, user.lastName, user.avatar, user._id)
+      new UserDataModel(user.email, user.firstName, user.lastName, user.avatar, user.id)
     );
 
   } else {

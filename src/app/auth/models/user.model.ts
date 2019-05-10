@@ -1,4 +1,4 @@
-export class UserResponse {
+export class User {
 
   constructor(
     public id: string,

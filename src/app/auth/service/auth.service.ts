@@ -9,7 +9,7 @@ import { UserDataModel        } from '../../store/models/user-data.model';
 import urljoin from 'url-join';
 import { SigninForm } from '../models/signin-form.model';
 import { AuthResponse } from '../models/auth-response.model';
-import { UserResponse } from '../models/user-response.model';
+import { UserResponse } from '../models/user.model';
 import { SignupForm } from '../models/signup-form.model';
 
 
