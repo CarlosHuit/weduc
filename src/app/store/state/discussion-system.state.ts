@@ -2,7 +2,6 @@ import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { tap } from 'rxjs/operators';
 import { Comment } from 'src/app/models/discussion-system/comment.model';
 import { CommentForm } from 'src/app/models/discussion-system/forms/comment-form.model';
-import { Answer, Answers } from 'src/app/shared/discussion-system/models/answers';
 import { DiscussionSystemService } from '../../shared/discussion-system/services/discussion-system.service';
 import {
   AddAnswer,
@@ -77,7 +76,7 @@ export class DiscussionSystemState {
   constructor(private _discussionSystem: DiscussionSystemService, private store: Store) { }
 
 
-  /* ------ Comments Actions ------ */
+  /// ------ Comments Actions ------
   @Action(GetComments)
   getComments({ dispatch, getState }: StateContext<DiscussionSystemStateModel>, action: GetComments) {
 
@@ -104,6 +103,7 @@ export class DiscussionSystemState {
 
   }
 
+
   @Action(GetCommentsSuccess)
   getCommentsSuccess({ setState, dispatch, getState }: StateContext<DiscussionSystemStateModel>, { payload }: GetCommentsSuccess) {
 
@@ -122,6 +122,7 @@ export class DiscussionSystemState {
 
   }
 
+
   @Action(AddComment)
   addComment({ setState, getState, dispatch }: StateContext<DiscussionSystemStateModel>, { payload }: AddComment) {
 
@@ -131,7 +132,6 @@ export class DiscussionSystemState {
     const date = new Date();
 
     const tmp_id = this.generateTemporaryId([...getState().commentsTemporaryIds], user.id);
-    const newAnswers = new Answers(tmp_id, []);
 
     // const commentToSend = new Comments(null, user.id, text, date, courseId, tmp_id);
     const commentToSend = new CommentForm(date, text, user.id, tmp_id, courseId);
@@ -154,6 +154,7 @@ export class DiscussionSystemState {
     );
 
   }
+
 
   @Action(AddCommentSuccess)
   addCommentSuccess({ patchState, getState }: StateContext<DiscussionSystemStateModel>, { payload }: AddCommentSuccess) {
@@ -186,6 +187,7 @@ export class DiscussionSystemState {
 
   }
 
+
   @Action(DeleteComment)
   deleteComment({ getState, dispatch }: StateContext<DiscussionSystemStateModel>, { payload }: DeleteComment) {
 
@@ -207,6 +209,7 @@ export class DiscussionSystemState {
 
   }
 
+
   @Action(DeleteCommentSuccess)
   deleteCommentSuccess({ getState, patchState }: StateContext<DiscussionSystemStateModel>, { payload }: DeleteCommentSuccess) {
 
@@ -215,6 +218,7 @@ export class DiscussionSystemState {
     });
 
   }
+
 
   @Action(AddCommentToDelete)
   addCommentToDelete({ getState, patchState }: StateContext<DiscussionSystemStateModel>, { payload }: AddCommentToDelete) {
@@ -227,6 +231,7 @@ export class DiscussionSystemState {
     });
 
   }
+
 
   @Action(IsLoadingComments)
   isLoadingComments({ patchState }: StateContext<DiscussionSystemStateModel>, { payload }: IsLoadingComments) {
@@ -292,6 +297,7 @@ export class DiscussionSystemState {
 
   }
 
+
   @Action(AddAnswerSuccess)
   addAnswerSuccess({ patchState, getState }: StateContext<DiscussionSystemStateModel>, { payload }: AddAnswerSuccess) {
 
@@ -340,6 +346,7 @@ export class DiscussionSystemState {
 
   }
 
+
   @Action(ShowAnswersOf)
   showAnswersOf({ patchState, getState }: StateContext<DiscussionSystemStateModel>, { payload }: ShowAnswersOf) {
 
@@ -350,6 +357,7 @@ export class DiscussionSystemState {
       showAnswersOf: t
     });
   }
+
 
   @Action(HideAnswersOf)
   hideAnswersOf({ getState, patchState }: StateContext<DiscussionSystemStateModel>, { payload }: HideAnswersOf) {
@@ -363,12 +371,14 @@ export class DiscussionSystemState {
 
   }
 
+
   @Action(WriteAnswerFor)
   writeAnswerFor({ patchState }: StateContext<DiscussionSystemStateModel>, { payload }: WriteAnswerFor) {
     patchState({
       writeAnswerFor: payload.commentId
     });
   }
+
 
   @Action(DeleteAnswer)
   deleteAnswer({ getState, dispatch }: StateContext<DiscussionSystemStateModel>, { payload }: DeleteAnswer) {
@@ -388,6 +398,7 @@ export class DiscussionSystemState {
     );
 
   }
+
 
   @Action(DeleteAnswerSuccess)
   deleteAnswerSuccess({ patchState, getState }: StateContext<DiscussionSystemStateModel>, { payload }: DeleteAnswerSuccess) {
@@ -411,6 +422,7 @@ export class DiscussionSystemState {
 
   }
 
+
   @Action(AddAnswerToDelete)
   addAnswerToDelete({ patchState, getState }: StateContext<DiscussionSystemStateModel>, { payload }: AddAnswerToDelete) {
 
@@ -423,10 +435,12 @@ export class DiscussionSystemState {
 
   }
 
+
   @Action( ResetDiscussionSystem )
   resetDiscussionSystem({ setState }: StateContext<DiscussionSystemStateModel>, action: ResetDiscussionSystem ) {
     setState(initialData);
   }
+
 
   generateTemporaryId = (arrTmpIds: string[], comment_id: string) => {
 
@@ -453,5 +467,6 @@ export class DiscussionSystemState {
     return temporary_id;
 
   }
+
 
 }
