@@ -14,10 +14,13 @@ import { User } from '../../models/user.model';
 
 @State<AuthStateModel>({
   name: 'auth',
-  defaults: initialAuth()
+  defaults: AuthState.initialState(),
 })
 
 export class AuthState {
+
+
+  constructor(private _authService: AuthService) { }
 
 
   @Selector()
@@ -84,7 +87,21 @@ export class AuthState {
   }
 
 
-  constructor(private _authService: AuthService) { }
+  static initialState() {
+
+    const token = localStorage.getItem('token');
+    const user: User = JSON.parse(localStorage.getItem('user'));
+
+    if (token && user) {
+
+      const u = new User( user.id, user.firstName, user.lastName, user.email, user.avatar );
+      return new AuthStateModel( true, false, token, u );
+
+    }
+
+    return new AuthStateModel(false, false, null, null);
+
+  }
 
 
   @Action(Logout)
@@ -163,7 +180,6 @@ export class AuthState {
     );
 
   }
-
 
 }
 
