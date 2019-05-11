@@ -12,7 +12,8 @@
   box-sizing: border-box;
   position: fixed;
   /* background:       #1a5e7e; */
-  background: #1976d2;
+  /* background: #1976d2; */
+  background: #2196f3;
 }
 
 .toolbar.center-title {
