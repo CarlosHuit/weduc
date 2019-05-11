@@ -241,3 +241,11 @@ body {
 }
 
 @media (min-width: 320px) and (orientation: landscape) {}
+
+@media (max-width: 768px) and (orientation: portrait) {
+
+  .mat-tab-body-wrapper {
+    min-height: calc( 100vh - ( 56px + 8vh + 48px + ( 100vw * 0.5625 ) ) )
+  }
+
+}
