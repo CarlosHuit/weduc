@@ -2,84 +2,19 @@
   width:      100%;
   padding:    10px 3%;
   box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 
-.m-c-container-comment {
+.comment-thread-box {
   padding-bottom: 10px;
   margin-bottom: 20px;
-  border-bottom: 1px solid #1c88b3
+  border-bottom: 1px solid #2196F3;
 }
 
-.m-c-container-comment:last-child {
+.comment-thread-box:last-child {
   border-bottom: none;
   margin-bottom: 0;
-}
-
-.m-c-container-answers {
-  position:      relative;
-  margin-bottom: 10px;
-  margin-left:   10px;
-}
-
-.m-c-answers {
-  margin: 10px 10px 10px 25px;
-}
-
-.m-c-msg-show-answers {
-  color:          #1c88b3;
-  font-weight:      bolder;
-  text-align:       center;
-  text-decoration:  underline;
-  letter-spacing:   0.2px;
-  margin:           0;
-  cursor:           pointer;
-}
-
-.m-c-msg-hide-answers {
-  color:          #1c88b3;
-  font-weight:      bolder;
-  text-align:       center;
-  text-decoration:  underline;
-  letter-spacing:   0.2px;
-  margin:           10px 0; 
-  cursor:           pointer;
-}
-
-.m-c-answers mat-card {
-  margin: 5px 0;
-}
-
-
-.m-c-comment-guide {
-  position:       absolute;
-  border-left:    2px solid #1c88b3;
-  border-bottom:  2px solid #1c88b3;
-  border-radius:  0 0 0 5px;
-  height:         calc(100% - 20px);
-  width:          20px;
-  top:            0;
-}
-
-
-.m-c-container-buttons-answer {
-  position: relative;
-  width:    max-content;
-  bottom:   0;
-  left:     25px;
-  color:  #1c88b3;
-}
-
-.m-c-btn-write-answer  {
-  color:  #1c88b3;
-}
-
-.m-c-btn-hide-write-answer {
-  color:          #1c88b3;
-  font-size:        18px;
-  font-weight:      bold;
-  text-decoration:  underline;
-  letter-spacing:   0.5px;
 }
 
 .m-c-spinner {
