@@ -7,7 +7,8 @@ import { CommentForm } from 'src/app/models/discussion-system/forms/comment-form
 import urljoin from 'url-join';
 import { environment } from '../../../../environments/environment';
 import { HandleErrorService } from '../../handle-error.service';
-import { Answer } from '../models/answers';
+import { Answer } from 'src/app/models/discussion-system/answer.model';
+import { AnswerForm } from 'src/app/models/discussion-system/forms/answer-form.model';
 
 @Injectable({
   providedIn: 'root'
@@ -84,7 +85,7 @@ export class DiscussionSystemService {
   }
 
 
-  addAnswer(answer: Answer): Observable<Answer> {
+  addAnswer(answer: AnswerForm): Observable<Answer> {
 
     const url = urljoin(this.baseApiUrl, 'answers');
     const data = JSON.stringify(answer);

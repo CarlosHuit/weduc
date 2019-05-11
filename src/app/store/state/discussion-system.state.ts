@@ -25,6 +25,8 @@ import {
 import { DiscussionSystemStateModel } from '../models/discussion-system.model';
 import { AuthState } from './auth.state';
 import { CoursesState } from './courses.state';
+import { Answer } from 'src/app/models/discussion-system/answer.model';
+import { AnswerForm } from 'src/app/models/discussion-system/forms/answer-form.model';
 
 const initialData: DiscussionSystemStateModel = {
   comments:             [],
@@ -258,25 +260,22 @@ export class DiscussionSystemState {
     const t = Object.assign({}, getState().showAnswersOf);
     t[comment_id] = comment_id;
 
-    const localAnswer = new Answer(user, text, date, comment_id, null, temp_id);
-    const answerToSend = new Answer(null, text, date, comment_id, null, temp_id, user.id);
+
+    const localAnswer = new Answer(null, date, temp_id, text, user);
+    const answerToSend = new AnswerForm(text, date, temp_id, user.id, comment_id);
 
     patchState({
 
       comments: getState().comments.map(comment => {
 
 
-        if (comment.id === localAnswer.comment_id) {
+        if (comment.id === comment_id) {
 
           return Object.assign({}, comment, {
-            // answers_id: {
-            //   '_id': comment.answers_id._id,
-            //   comment_id: comment.answers_id.comment_id,
-            //   answers: [
-            //     ...comment.answers_id.answers,
-            //     localAnswer
-            //   ]
-            // }
+            answers: [
+              ...comment.answers,
+              localAnswer
+            ]
           });
 
         }
@@ -292,7 +291,7 @@ export class DiscussionSystemState {
     });
 
     return this._discussionSystem.addAnswer(answerToSend).pipe(
-      tap(answer => dispatch(new AddAnswerSuccess({ answer })))
+      tap(answer => dispatch(new AddAnswerSuccess({ answer, commentId: comment_id })))
     );
 
   }
@@ -303,15 +302,15 @@ export class DiscussionSystemState {
 
     let answerUpdated: Answer[];
     const state = getState();
-    const iComment = state.comments.findIndex(comment => comment.id === payload.answer.comment_id);
+    const iComment = state.comments.findIndex(comment => comment.id === payload.commentId);
 
     if (iComment > -1) {
       answerUpdated = state.comments[iComment].answers.map(answer => {
 
 
-        if (answer.tempId === payload.answer.temp_id) {
+        if (answer.tempId === payload.answer.tempId) {
 
-          const newAnswer = Object.assign({}, answer, { _id: payload.answer._id });
+          const newAnswer = Object.assign({}, answer, { _id: payload.answer.id });
           delete newAnswer.tempId;
           return newAnswer;
 
@@ -328,11 +327,11 @@ export class DiscussionSystemState {
     patchState({
       comments: getState().comments.map(comment => {
 
-        if (comment.id === payload.answer.comment_id) {
+        if (comment.id === payload.commentId) {
 
           return Object.assign({}, comment, {
             answers_id: {
-              comment_id: payload.answer.comment_id,
+              comment_id: payload.commentId,
               answers: answerUpdated
             }
 

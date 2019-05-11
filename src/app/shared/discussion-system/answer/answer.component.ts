@@ -5,8 +5,8 @@ import { Select, Store } from '@ngxs/store';
 import { AuthState } from 'src/app/store/state/auth.state';
 import { Observable } from 'rxjs';
 import { DeleteAnswer } from 'src/app/store/actions/discussion-system.actions';
-import { Answer } from '../models/answers';
 import { DiscussionSystemState } from 'src/app/store/state/discussion-system.state';
+import { Answer } from 'src/app/models/discussion-system/answer.model';
 
 @Component({
   selector: 'app-answer',
@@ -36,7 +36,7 @@ export class AnswerComponent {
 
   // deleteAnswer = (answerId: string, commentId: string) => {
     deleteAnswer = () => {
-    this.store.dispatch(new DeleteAnswer({answerId: this.data._id, commentId: this.comment_id, index: this.indexAnswer}));
+    this.store.dispatch(new DeleteAnswer({answerId: this.data.id, commentId: this.comment_id, index: this.indexAnswer}));
 
   }
 
