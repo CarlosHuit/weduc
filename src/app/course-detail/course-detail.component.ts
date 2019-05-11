@@ -17,17 +17,13 @@ import { Navigate } from '@ngxs/router-plugin';
 
 export class CourseDetailComponent implements OnInit {
 
-  showComments: boolean;
-  course:       string;
-  course_id:    string;
+  course: string;
 
-
-
-  @Select(CoursesState.isLoading)    isLoading$:   Observable<boolean>;
-  @Select(CoursesState.course)       course$:      Observable<Course>;
-  @Select(CoursesState.urlVideo)     urlVideo$:    Observable<Course>;
-  @Select(AppState.isMobile)         isMobile$:    Observable<boolean>;
-  @Select(AppState.queryMobileMatch) queryMobileMatch$:    Observable<boolean>;
+  @Select(AppState.isMobile) isMobile$:  Observable<boolean>;
+  @Select(CoursesState.course) course$:  Observable<Course>;
+  @Select(CoursesState.urlVideo) urlVideo$:   Observable<Course>;
+  @Select(CoursesState.isLoading) isLoading$: Observable<boolean>;
+  @Select(AppState.queryMobileMatch) queryMobileMatch$:  Observable<boolean>;
 
   constructor(
     private store:    Store,
@@ -35,8 +31,7 @@ export class CourseDetailComponent implements OnInit {
     private snackBar: MatSnackBar,
   ) {
 
-    this.course       = this._route.snapshot.paramMap.get('course');
-    this.showComments = false;
+    this.course = this._route.snapshot.paramMap.get('course');
 
   }
 
