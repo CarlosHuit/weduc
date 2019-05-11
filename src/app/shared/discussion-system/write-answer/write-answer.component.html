@@ -1,33 +1,58 @@
 <mat-card
-class="m-c-addComent"
+class="container-write-comment"
 [class.commented]="commented || commentText.value.length > 0"
 >
 
-<mat-form-field color="primary" class="fieldComment">
+  <div class="two-columns" >
 
-  <mat-label>Escribe tu respuesta:</mat-label>
-  <textarea
-    matInput
-    #commentText
-    cdkTextareaAutosize
-    cdkAutosizeMinRows="1"
-    cdkAutosizeMaxRows="5"
-    (focus)="commented = true"
-    (focusout)="commented = false"
-    #autosize="cdkTextareaAutosize"
-    ></textarea>
 
-</mat-form-field>
+    <mat-form-field color="primary" class="field-comment">
+  
+      <mat-label>Escribe tu respuesta:</mat-label>
+      <textarea
+        matInput
+        #commentText
+        cdkTextareaAutosize
+        cdkAutosizeMinRows="1"
+        cdkAutosizeMaxRows="5"
+        (focus)="commented = true"
+        (focusout)="commented = false"
+        #autosize="cdkTextareaAutosize"
+        ></textarea>
+  
+    </mat-form-field>
+  
+    <div class="container-button-send">
 
-<div style="display: flex; justify-content: flex-end" >
-  <button
-    mat-raised-button
-    color="warn"
-    (click)="reqAddComment(commentText)"
-    [disabled]="commentText.value === ''"
-    >
-    Agregar Comentario
-  </button>
-</div>
+      <button
+        class="button-send"
+        (click)="reqAddComment(commentText)"
+        [disabled]="commentText.value === ''"
+        >
+        <mat-icon style="
+          width: 100%;
+          height: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          color: #2196F3;"
+          >
+          send
+        </mat-icon>
+      </button>
+
+    </div>
+    <!-- <div style="display: flex; justify-content: flex-end" >
+      <button
+        mat-raised-button
+        color="warn"
+        (click)="reqAddComment(commentText)"
+        >
+        Agregar Comentario
+      </button>
+    </div> -->
+
+  </div>
+
 
 </mat-card>
