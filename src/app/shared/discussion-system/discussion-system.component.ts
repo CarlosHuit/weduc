@@ -10,6 +10,7 @@ import {
   WriteAnswerFor,
   ResetDiscussionSystem
 } from '../../store/actions/discussion-system.actions';
+import { Comment } from 'src/app/models/discussion-system/comment.model';
 
 
 @Component({
@@ -24,7 +25,7 @@ export class DiscussionSystemComponent implements OnInit, OnDestroy {
   @Select(DiscussionSystemState.isLoadingComments)  loadingComments$:     Observable<boolean>;
   @Select(DiscussionSystemState.writeAnswerFor)   writeAnswerFor$:    Observable<string>;
   @Select(DiscussionSystemState.showAnswers)  showAnswers$:        Observable<{}>;
-  @Select(DiscussionSystemState.comments)   comments$:        Observable<Comments[]>;
+  @Select(DiscussionSystemState.comments)   comments$:        Observable<Comment[]>;
 
   constructor(private store: Store) { }
 

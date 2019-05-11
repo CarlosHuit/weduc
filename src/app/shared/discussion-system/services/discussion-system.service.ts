@@ -1,12 +1,13 @@
-import { HttpClient, HttpParams  } from '@angular/common/http';
-import { Injectable         } from '@angular/core';
-import { Observable         } from 'rxjs';
-import { catchError        } from 'rxjs/operators';
-import { Answer             } from '../models/answers';
-import { HandleErrorService } from '../../handle-error.service';
-import { environment        } from '../../../../environments/environment';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { Comment } from 'src/app/models/discussion-system/comment.model';
+import { CommentForm } from 'src/app/models/discussion-system/forms/comment-form.model';
 import urljoin from 'url-join';
-import { Comments } from 'src/app/shared/discussion-system/models/comments';
+import { environment } from '../../../../environments/environment';
+import { HandleErrorService } from '../../handle-error.service';
+import { Answer } from '../models/answers';
 
 @Injectable({
   providedIn: 'root'
@@ -26,22 +27,22 @@ export class DiscussionSystemService {
   }
 
 
-  addComment(comment: Comments): Observable<Comments> {
+  addComment(comment: CommentForm): Observable<Comment> {
 
     const data = JSON.stringify(comment);
 
-    return this.http.post<Comments>(this.baseApiUrl, data)
+    return this.http.post<Comment>(this.baseApiUrl, data)
       .pipe(
         catchError( this._error.handleError )
       );
   }
 
 
-  getCommentsCourse(courseName: string): Observable<Comments[]> {
+  getCommentsCourse(courseName: string): Observable<Comment[]> {
 
     const url = urljoin(this.baseApiUrl, courseName, 'comments');
 
-    return this.http.get<Comments[]>(url)
+    return this.http.get<Comment[]>(url)
       .pipe(
         catchError( this._error.handleError )
       );

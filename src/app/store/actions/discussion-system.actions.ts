@@ -1,5 +1,6 @@
 import { Comments } from 'src/app/shared/discussion-system/models/comments';
 import { Answer, Answers } from 'src/app/shared/discussion-system/models/answers';
+import { Comment } from 'src/app/models/discussion-system/comment.model';
 
 export enum DiscussionSystemActionsType {
   GET_COMMENTS           = '[Discussion System] get comments',
@@ -53,7 +54,7 @@ export class GetComments {
 export class GetCommentsSuccess {
 
   static readonly type = DiscussionSystemActionsType.GET_COMMENTS_SUCCESS;
-  constructor(public payload: Comments[]) {}
+  constructor(public payload: Comment[]) {}
 
 }
 
@@ -87,7 +88,7 @@ export class AddComment {
 export class AddCommentSuccess {
 
   static readonly type = DiscussionSystemActionsType.ADD_COMMENT_SUCCESS;
-  constructor(public payload: Comments) {}
+  constructor(public payload: Comment) {}
 
 }
 

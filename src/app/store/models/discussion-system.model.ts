@@ -1,8 +1,8 @@
-import { Comments } from '../../shared/discussion-system/models/comments';
+import { Comment } from 'src/app/models/discussion-system/comment.model';
 
 export class DiscussionSystemStateModel {
   constructor(
-    public comments:             Comments[],
+    public comments:             Comment[],
     public isLoadingComments:    boolean,
     public answersTemporaryIds:  string[],
     public commentsTemporaryIds: string[],
