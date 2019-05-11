@@ -7,6 +7,7 @@ import { DeleteComment                } from '../../../store/actions/discussion-
 import { CoursesState                 } from '../../../store/state/courses.state';
 import { DeleteCommentDialogComponent } from '../delete-comment-dialog/delete-comment-dialog.component';
 import { AuthState } from 'src/app/store/state/auth.state';
+import { Comment } from '../../../models/discussion-system/comment.model';
 
 @Component({
   selector: 'app-comment',
@@ -15,7 +16,7 @@ import { AuthState } from 'src/app/store/state/auth.state';
 })
 export class CommentComponent implements OnInit, OnDestroy {
 
-  @Input() data:          any;
+  @Input() data:          Comment;
   @Input() answers:       number;
 
   @Select(DiscussionSystemState.commentsToDelete)  commentsToDelete$: Observable<{}>;

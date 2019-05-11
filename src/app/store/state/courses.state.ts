@@ -49,6 +49,11 @@ export class CoursesState {
   }
 
   @Selector()
+  static courseSubtitle({ selectedCourse }: CoursesStateModel) {
+    return selectedCourse.subtitle;
+  }
+
+  @Selector()
   static urlVideo({ selectedCourse }: CoursesStateModel) {
     return selectedCourse.urlVideo;
   }

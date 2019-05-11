@@ -1,7 +1,7 @@
 import { User } from '../user.model';
 import { Answer } from './answer.model';
 
-export class CommentResponse {
+export class Comment {
 
   constructor(
     public      id: string,

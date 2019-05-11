@@ -93,10 +93,16 @@ export class DiscussionSystemState {
     if (isLoggedIn && !getState().isLoadingComments) {
 
       dispatch(new IsLoadingComments({ state: true }));
-      const courseId   = this.store.selectSnapshot(CoursesState.courseId);
+      const courseName = this.store.selectSnapshot(CoursesState.courseSubtitle);
 
-      return this._discussionSystem.getAllCommments(courseId)
-        .pipe( tap((comments: Comments[]) => dispatch(new GetCommentsSuccess(comments))) );
+      return this._discussionSystem.getCommentsCourse(courseName)
+        .pipe(
+          tap((comments: Comments[]) => {
+            console.log(comments);
+            dispatch(new GetCommentsSuccess(comments));
+
+          })
+        );
 
     }
 

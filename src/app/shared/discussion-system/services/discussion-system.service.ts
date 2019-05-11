@@ -14,31 +14,32 @@ import { Comments } from 'src/app/shared/discussion-system/models/comments';
 
 export class DiscussionSystemService {
 
-  apiUrl:   string;
+  baseApiUrl:   string;
 
   constructor(
     private http:      HttpClient,
     private _error:    HandleErrorService,
-    ) {
+  ) {
 
-      this.apiUrl   = urljoin(environment.apiUrl, 'comments');
+    this.baseApiUrl   = urljoin(environment.apiUrl, 'courses');
 
-    }
+  }
 
 
-  addComment = (comment: Comments): Observable<Comments> => {
+  addComment(comment: Comments): Observable<Comments> {
 
     const data = JSON.stringify(comment);
 
-    return this.http.post<Comments>(this.apiUrl, data)
+    return this.http.post<Comments>(this.baseApiUrl, data)
       .pipe(
         catchError( this._error.handleError )
       );
   }
 
-  getAllCommments = (course_id: string): Observable<Comments[]> => {
 
-    const url     = urljoin(this.apiUrl, `${course_id}`);
+  getCommentsCourse(courseName: string): Observable<Comments[]> {
+
+    const url = urljoin(this.baseApiUrl, courseName, 'comments');
 
     return this.http.get<Comments[]>(url)
       .pipe(
@@ -46,9 +47,10 @@ export class DiscussionSystemService {
       );
   }
 
-  deleteComment = (course_id: string, comment_id: string) => {
 
-    const url = urljoin(this.apiUrl, course_id);
+  deleteComment(course_id: string, comment_id: string) {
+
+    const url = urljoin(this.baseApiUrl, course_id);
     const httpOpts = {
       params: new HttpParams()
         .set('course_id',  course_id )
@@ -63,9 +65,10 @@ export class DiscussionSystemService {
   }
 
 
-  deleteAnswer = (comment_id: string, answer_id: string) => {
 
-    const url = urljoin(this.apiUrl, `answers/${comment_id}`);
+  deleteAnswer(comment_id: string, answer_id: string) {
+
+    const url = urljoin(this.baseApiUrl, `answers/${comment_id}`);
     const httpOpts = {
       params: new HttpParams()
         .set('comment_id',  comment_id )
@@ -79,9 +82,10 @@ export class DiscussionSystemService {
 
   }
 
-  addAnswer = (answer: Answer): Observable<Answer> => {
 
-    const url = urljoin(this.apiUrl, 'answers');
+  addAnswer(answer: Answer): Observable<Answer> {
+
+    const url = urljoin(this.baseApiUrl, 'answers');
     const data = JSON.stringify(answer);
 
     return this.http.post<Answer>(url, data)
@@ -90,6 +94,7 @@ export class DiscussionSystemService {
       );
 
   }
+
 
 }
 

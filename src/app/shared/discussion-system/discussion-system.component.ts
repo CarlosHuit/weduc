@@ -28,12 +28,38 @@ export class DiscussionSystemComponent implements OnInit, OnDestroy {
 
   constructor(private store: Store) { }
 
-  ngOnInit() { this.store.dispatch(new GetComments()); }
-  ngOnDestroy() { this.store.dispatch(new ResetDiscussionSystem()); }
+  ngOnInit() {
+
+    this.store.dispatch(new GetComments());
+
+  }
 
 
-  showAnswersOf  = (commentId: string) => this.store.dispatch( new ShowAnswersOf( { commentId }));
-  hideAnswersOf  = (commentId: string) => this.store.dispatch( new HideAnswersOf( { commentId }));
-  writeAnswerFor = (commentId: string) => this.store.dispatch( new WriteAnswerFor({ commentId }));
+  ngOnDestroy() {
+
+    this.store.dispatch(new ResetDiscussionSystem());
+
+  }
+
+
+  showAnswersOf(commentId: string) {
+
+    this.store.dispatch( new ShowAnswersOf( { commentId }));
+
+  }
+
+
+  hideAnswersOf(commentId: string) {
+
+    this.store.dispatch( new HideAnswersOf( { commentId }));
+
+  }
+
+
+  writeAnswerFor(commentId: string) {
+
+    this.store.dispatch( new WriteAnswerFor({ commentId }));
+
+  }
 
 }

@@ -4,7 +4,7 @@
 
 
     <div class="m-c-avatar">
-      <img mat-card-avatar class="author-avatar" [src]="genUrl(data.user_id.avatar)">
+      <img mat-card-avatar class="author-avatar" [src]="genUrl(data.user.avatar)">
     </div>
 
 
@@ -14,7 +14,7 @@
       <div class="m-c-name-date">
 
         <p class="author-name">
-          {{ data.user_id.firstName }} {{ data.user_id.lastName }}
+          {{ data.user.firstName }} {{ data.user.lastName }}
         </p>
 
         <small class="m-c-date" >
@@ -28,11 +28,11 @@
 
         <button
           mat-icon-button
-          (click)="evOpenDialog(data._id)"
+          (click)="evOpenDialog(data.id)"
           *ngIf="
-          (userId$ | async) === data.user_id._id
+          (userId$ | async) === data.user.id
           && !data.temp_id && answers === 0
-          && !(commentsToDelete$ | async)[data._id]
+          && !(commentsToDelete$ | async)[data.id]
           "
           >
           <mat-icon color="warn">
@@ -40,7 +40,7 @@
           </mat-icon>
         </button>
 
-        <div style="width: 30px; height: 30px;" *ngIf="(commentsToDelete$ | async)[data._id]" >
+        <div style="width: 30px; height: 30px;" *ngIf="(commentsToDelete$ | async)[data.id]" >
           <app-spinner-loading></app-spinner-loading>
         </div>
 

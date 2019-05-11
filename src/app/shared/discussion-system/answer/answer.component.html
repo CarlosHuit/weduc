@@ -28,11 +28,11 @@
 
         <button
           mat-icon-button
-          (click)="evOpenDialog(data._id)"
+          (click)="evOpenDialog(data.id)"
           *ngIf="
-          (userId$ | async) === data.user._id
+          (userId$ | async) === data.user.id
           && !data.temp_id
-          && !(answersToDelete$ | async)[data._id]
+          && !(answersToDelete$ | async)[data.id]
           "
         >
           <mat-icon color="warn">
@@ -40,7 +40,7 @@
           </mat-icon>
         </button>
 
-        <div style="width: 30px; height: 30px;" *ngIf="(answersToDelete$ | async)[data._id]" >
+        <div style="width: 30px; height: 30px;" *ngIf="(answersToDelete$ | async)[data.id]" >
           <app-spinner-loading></app-spinner-loading>
         </div>
 
