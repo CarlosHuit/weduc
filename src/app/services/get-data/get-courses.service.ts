@@ -36,9 +36,9 @@ export class GetCoursesService {
     );
   }
 
-  getCourseData = (course: string): Observable<Course> => {
+  getCourseDetail = (courseName: string): Observable<Course> => {
 
-    const url = urljoin(this.apiUrl, course);
+    const url = urljoin(this.apiUrl, courseName);
 
     return this.http.get<Course>(url)
       .pipe(

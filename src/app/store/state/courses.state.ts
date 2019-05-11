@@ -115,18 +115,19 @@ export class CoursesState {
     dispatch(new IsLoadingCourses({state: true}));
 
     const state = getState();
-    const index = state.courses.findIndex(course => course.subtitle === payload.course);
+    const course = state.courses.find(c => c.subtitle === payload.course);
 
-    if (index > -1) {
-      return dispatch(new GetCourseSuccess(state.courses[index]));
-
-    } else {
-      return this._getCourses.getCourseData(payload.course)
-        .pipe(
-          tap(course => dispatch(new GetCourseSuccess(course)))
-        );
-
+    if (course) {
+      return dispatch(new GetCourseSuccess(course));
     }
+
+
+    return this._getCourses.getCourseDetail(payload.course).pipe(
+
+      tap(c => dispatch(new GetCourseSuccess(c)))
+
+    );
+
 
   }
 

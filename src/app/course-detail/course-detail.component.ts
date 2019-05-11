@@ -29,14 +29,16 @@ export class CourseDetailComponent implements OnInit {
     private store:    Store,
     private _route:   ActivatedRoute,
     private snackBar: MatSnackBar,
-  ) {
+  ) { }
 
-    this.course = this._route.snapshot.paramMap.get('course');
-
-  }
 
   ngOnInit() {
-    this.store.dispatch(new SelectCourse({course: this.course}));
+
+    this.course = this._route.snapshot.paramMap.get('course');
+    this.store.dispatch(
+      new SelectCourse({ course: this.course })
+    );
+
   }
 
 
