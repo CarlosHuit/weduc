@@ -4,7 +4,25 @@ import { Comment } from 'src/app/models/discussion-system/comment.model';
 import { CommentForm } from 'src/app/models/discussion-system/forms/comment-form.model';
 import { Answer, Answers } from 'src/app/shared/discussion-system/models/answers';
 import { DiscussionSystemService } from '../../shared/discussion-system/services/discussion-system.service';
-import { AddAnswer, AddAnswerSuccess, AddAnswerToDelete, AddComment, AddCommentSuccess, AddCommentToDelete, DeleteAnswer, DeleteAnswerSuccess, DeleteComment, DeleteCommentSuccess, GetComments, GetCommentsSuccess, HideAnswersOf, IsLoadingComments, ResetDiscussionSystem, ShowAnswersOf, WriteAnswerFor } from '../actions/discussion-system.actions';
+import {
+  AddAnswer,
+  AddAnswerSuccess,
+  AddAnswerToDelete,
+  AddComment,
+  AddCommentSuccess,
+  AddCommentToDelete,
+  DeleteAnswer,
+  DeleteAnswerSuccess,
+  DeleteComment,
+  DeleteCommentSuccess,
+  GetComments,
+  GetCommentsSuccess,
+  HideAnswersOf,
+  IsLoadingComments,
+  ResetDiscussionSystem,
+  ShowAnswersOf,
+  WriteAnswerFor,
+} from '../actions/discussion-system.actions';
 import { DiscussionSystemStateModel } from '../models/discussion-system.model';
 import { AuthState } from './auth.state';
 import { CoursesState } from './courses.state';

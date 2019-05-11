@@ -1,6 +1,5 @@
-import { Comments } from 'src/app/shared/discussion-system/models/comments';
-import { Answer, Answers } from 'src/app/shared/discussion-system/models/answers';
 import { Comment } from 'src/app/models/discussion-system/comment.model';
+import { Answer, Answers } from 'src/app/shared/discussion-system/models/answers';
 
 export enum DiscussionSystemActionsType {
   GET_COMMENTS           = '[Discussion System] get comments',

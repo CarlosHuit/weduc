@@ -1,16 +1,15 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { DiscussionSystemState } from '../../store/state/discussion-system.state';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
-import { Observable    } from 'rxjs';
-import { Comments      } from './models/comments';
+import { Observable } from 'rxjs';
+import { Comment } from 'src/app/models/discussion-system/comment.model';
 import {
   GetComments,
-  ShowAnswersOf,
   HideAnswersOf,
-  WriteAnswerFor,
-  ResetDiscussionSystem
+  ResetDiscussionSystem,
+  ShowAnswersOf,
+  WriteAnswerFor
 } from '../../store/actions/discussion-system.actions';
-import { Comment } from 'src/app/models/discussion-system/comment.model';
+import { DiscussionSystemState } from '../../store/state/discussion-system.state';
 
 
 @Component({
