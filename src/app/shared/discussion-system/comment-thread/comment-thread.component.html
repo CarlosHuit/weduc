@@ -1,3 +1,87 @@
-<p>
-  comment-thread works!
-</p>
+<div>
+
+
+  <!----- box comments ----->
+  <app-comment
+    [data]="comment"
+    [answers]="comment.answers.length"
+    >
+  </app-comment>
+  
+
+  <div class="m-c-container-answers" >
+  
+  
+    <!----- box answers ----->
+    <div class="m-c-answers" >
+  
+      <div *ngIf="comment.answers.length > 0 && !(showAnswers$ | async)[comment.id]" >
+  
+        <p class="m-c-msg-show-answers" (click)="showAnswersOf(comment.id)" >
+          Ver todas las respuestas
+        </p>
+  
+      </div>
+  
+      <div *ngIf="comment.answers && (showAnswers$ | async)[comment.id]">
+  
+        <app-answer
+          *ngFor="let answer of comment.answers; let i=index"
+          [data]="answer"
+          [comment_id]="comment.id"
+          [indexAnswer]="i"
+          >
+        </app-answer>
+  
+      </div>
+  
+    </div>
+  
+    <p
+      *ngIf="
+        (showAnswers$ | async)[comment.id]
+        && (writeAnswerFor$ | async) !== comment.id
+        && comment.answers.length > 0"
+      class="m-c-msg-hide-answers"
+      (click)="hideAnswersOf(comment.id)"
+      >
+      Ocultar todas las respuestas
+    </p>
+  
+    <!----- Write answer  ----->
+    <div class="m-c-answers" *ngIf="(writeAnswerFor$ | async) === comment.id ">
+      <app-write-answer 
+        [commentId]="comment.id"
+        >
+      </app-write-answer>
+    </div>
+  
+  
+    <div class="m-c-comment-guide"></div>
+    <div class="m-c-container-buttons-answer">
+  
+      <button
+        mat-raised-button
+        class="m-c-btn-write-answer"
+        *ngIf="(writeAnswerFor$ | async) !== comment.id"
+        (click)="writeAnswerFor(comment.id)"
+        >
+        Responder
+      </button>
+  
+      <button
+        mat-button
+        color="primary"
+        class="m-c-btn-hide-write-answer"
+        (click)="writeAnswerFor('')"
+        *ngIf="(writeAnswerFor$ | async) === comment.id"
+        >
+        Ocultar
+      </button>
+  
+    </div>
+  
+  </div>
+
+
+</div>
