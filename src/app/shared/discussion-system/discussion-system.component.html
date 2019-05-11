@@ -15,7 +15,10 @@
     <!------------ AllComments ------------>
     <div class="m-c-container-comments" *ngIf="!(loadingComments$ | async)">
 
-      <div class="m-c-container-comment" *ngFor="let comment of comments$ | async">
+      <div
+        class="m-c-container-comment"
+        *ngFor="let comment of comments$ | async"
+        >
 
 
         <!----- box comments ----->
@@ -39,7 +42,7 @@
 
             </div>
 
-            <div *ngIf="comment.answers_id && (showAnswers$ | async)[comment.id]">
+            <div *ngIf="comment.answers && (showAnswers$ | async)[comment.id]">
 
               <app-answer
                 *ngFor="let answer of comment.answers; let i=index"
