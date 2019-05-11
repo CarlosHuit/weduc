@@ -64,7 +64,7 @@
 
 
 
-  <!---------------- Mobile Version ---------------->
+  <!---------------- Mobile Version ----------------->
   <div
     class="hide"
     style="overflow: auto"
@@ -105,9 +105,10 @@
 
 
 
+  <!---------------- Spinner Loading ---------------->
   <div
-  id="isLoading"
-  *ngIf="isLoading$ | async"
+    id="isLoading"
+    *ngIf="isLoading$ | async"
     style="
       display:flex;
       justify-content:center;
@@ -115,5 +116,7 @@
       "
     >
   </div>
+
+
 
 </div>
