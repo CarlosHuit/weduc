@@ -5,8 +5,10 @@
   >
 
 
-  <!-------- Desktop version -------->
-<div
+
+
+  <!---------------- Desktop Version ---------------->
+  <div
     class="c-desktop hide"
     [class.show]="!(isLoading$ | async)"
     *ngIf="!(isLoading$ | async) && !(isMobile$ | async)"
@@ -61,19 +63,19 @@
 
 
 
-  <!-------- Mobile Version -------->
+
+  <!---------------- Mobile Version ---------------->
   <div
     class="hide"
+    style="overflow: auto"
     [class.show]="!(isLoading$ | async)"
     *ngIf="!(isLoading$ | async) && (isMobile$ | async)"
-    style="overflow: auto"
     >
 
 
     <div
       #cBackgroundVideo
       class="container-background-video"
-      [class.unsetHeight]="unsetHeight === true"
       >
 
       <div class="c-video">
@@ -103,5 +105,15 @@
 
 
 
-  <div *ngIf="isLoading$ | async" id="isLoading" style=" display:flex; justify-content:center; align-items:center "></div>
+  <div
+  id="isLoading"
+  *ngIf="isLoading$ | async"
+    style="
+      display:flex;
+      justify-content:center;
+      align-items:center
+      "
+    >
+  </div>
+
 </div>

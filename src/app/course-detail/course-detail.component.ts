@@ -17,7 +17,6 @@ import { Navigate } from '@ngxs/router-plugin';
 
 export class CourseDetailComponent implements OnInit {
 
-  unsetHeight:  boolean;
   showComments: boolean;
   course:       string;
   course_id:    string;
@@ -31,13 +30,13 @@ export class CourseDetailComponent implements OnInit {
   @Select(AppState.queryMobileMatch) queryMobileMatch$:    Observable<boolean>;
 
   constructor(
-    private snackBar:           MatSnackBar,
-    private _route:             ActivatedRoute,
-    private store:              Store
+    private store:    Store,
+    private _route:   ActivatedRoute,
+    private snackBar: MatSnackBar,
   ) {
-    this.course         = this._route.snapshot.paramMap.get('course');
-    this.showComments   = false;
 
+    this.course       = this._route.snapshot.paramMap.get('course');
+    this.showComments = false;
 
   }
 
@@ -59,8 +58,10 @@ export class CourseDetailComponent implements OnInit {
 
   }
 
+
   showError(message: string) {
     this.snackBar.open(message, 'Cerrar', { duration: 3000 });
   }
+
 
 }

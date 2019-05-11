@@ -86,10 +86,6 @@
   padding-top: 56.25%;
 }
 
-.unsetHeight {
-  height: max-content;
-}
-
 .m-c-detail-course {
   width: 100%;
 }
@@ -105,10 +101,6 @@
     width:        100%;
     height:       calc(100vh - 56px);
     border:       0;
-  }
-
-  .unsetHeight {
-    height: max-content;
   }
 
   .c-video {
