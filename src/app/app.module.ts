@@ -45,6 +45,7 @@ import { SuccessAnimationComponent        } from './shared/success-animation/suc
 import { DiscussionSystemComponent        } from './shared/discussion-system/discussion-system.component';
 import { DetailsAndCommentsComponent      } from './course-detail/details-and-comments/details-and-comments.component';
 import { DeleteCommentDialogComponent     } from './shared/discussion-system/delete-comment-dialog/delete-comment-dialog.component';
+import { CommentThreadComponent } from './shared/discussion-system/comment-thread/comment-thread.component';
 
 @NgModule({
   declarations: [
@@ -81,6 +82,7 @@ import { DeleteCommentDialogComponent     } from './shared/discussion-system/del
     DiscussionSystemComponent,
     DeleteCommentDialogComponent,
     DetailsAndCommentsComponent,
+    CommentThreadComponent,
   ],
   imports: [
     MaterialModule,
