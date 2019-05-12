@@ -67,6 +67,8 @@
       <div class="d-c-courses-grid" [ngStyle]="grids(cGridCourses)"  >
 
         <mat-card
+          matRipple
+          [matRippleColor]="'rgba(0,0,0,.08)'"
           class="d-c-card-course"
           *ngFor="let item of filterCourses()"
           (click)="redirect(item.subtitle)"
