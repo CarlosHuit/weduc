@@ -1,18 +1,50 @@
 .m-c-addComent {
-  margin-bottom:  10px;
   border-radius:  0;
-  height:         45px;
-  padding-top:    0;
   overflow:       hidden;
+
+  margin-bottom: 10px;
+  height:        45px;
+  padding-top:   5px;
+  padding-left:  0px;
+  padding-right: 0px;
 }
 
 .m-c-addComent.commented {
-  height:  unset;
-  padding: 30px 25px;
-  padding-bottom: 20px;
+  height:         unset;
+  padding-bottom: 0;
+  padding-top:    20px;
+  border-radius:  0px;
 }
 
-.fieldComment {
-  width:  100%;
-  margin: 0 
+.two-columns {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto 60px
+}
+
+.field-comment {
+  width: 100%;
+  margin: 0;
+  padding: 0 15px;
+  box-sizing: border-box;
+  padding-right: 0;
+}
+
+.container-button-send {
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+
+}
+
+.button-send {
+  width: 36px;
+  height: 36px;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  background: none;
+  border: none;
+  padding: 0;
 }
