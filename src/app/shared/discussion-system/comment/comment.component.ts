@@ -20,7 +20,6 @@ export class CommentComponent implements OnInit, OnDestroy {
   @Input() answers:       number;
 
   @Select(DiscussionSystemState.commentsToDelete)  commentsToDelete$: Observable<{}>;
-  @Select(DiscussionSystemState.isLoadingComments) loadingComments$:  Observable<boolean>;
   @Select(CoursesState.courseId) courseId$:   Observable<string>;
   @Select(AuthState.userId)        userId$:   Observable<string>;
 

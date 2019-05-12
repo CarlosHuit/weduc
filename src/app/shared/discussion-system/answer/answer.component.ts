@@ -24,9 +24,14 @@ export class AnswerComponent {
 
   constructor(private dialog: MatDialog, private store: Store) { }
 
-  genUrl = (avatar: String) => `/assets/icon-user100X100/icon-${avatar}.png`;
 
-  evOpenDialog = () => {
+  genUrl(avatar: String): string {
+
+    return `/assets/icon-user100X100/icon-${avatar}.png`;
+
+  }
+
+  evOpenDialog(): void {
 
     const dialog = this.dialog.open(DeleteCommentDialogComponent, { disableClose: false });
 
@@ -34,9 +39,14 @@ export class AnswerComponent {
 
   }
 
-  // deleteAnswer = (answerId: string, commentId: string) => {
-    deleteAnswer = () => {
-    this.store.dispatch(new DeleteAnswer({answerId: this.data.id, commentId: this.comment_id, index: this.indexAnswer}));
+
+  deleteAnswer(): void {
+
+      this.store.dispatch(new DeleteAnswer({
+      answerId: this.data.id,
+      commentId: this.comment_id,
+      index: this.indexAnswer
+    }));
 
   }
 
