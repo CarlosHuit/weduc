@@ -57,25 +57,35 @@ export class DiscussionSystemState {
     isLoadingComments: false,
   })
 
+
   @Selector()
   static isLoadingComments({ isLoadingComments }: DiscussionSystemStateModel) { return isLoadingComments; }
+
 
   @Selector()
   static commentsToDelete({ commentsToDelete }: DiscussionSystemStateModel) { return commentsToDelete; }
 
+
   @Selector()
   static answersToDelete({ answersToDelete }: DiscussionSystemStateModel) { return answersToDelete; }
+
 
   @Selector()
   static writeAnswerFor({ writeAnswerFor }: DiscussionSystemStateModel) { return writeAnswerFor; }
 
+
   @Selector()
   static showAnswers({ showAnswersOf }: DiscussionSystemStateModel) { return showAnswersOf; }
+
+
   @Selector()
   static comments({ comments }: DiscussionSystemStateModel) { return comments; }
 
 
-  constructor(private _discussionSystem: DiscussionSystemService, private store: Store) { }
+  constructor(
+    private store: Store,
+    private _discussionSystem: DiscussionSystemService,
+  ) { }
 
 
   /// ------ Comments Actions ------
@@ -241,7 +251,7 @@ export class DiscussionSystemState {
 
 
 
-  /* ------ Answer Actions ------ */
+  /// Answers actions
   @Action(AddAnswer)
   addAnswer({ patchState, getState, dispatch }: StateContext<DiscussionSystemStateModel>, { payload }: AddAnswer) {
 
