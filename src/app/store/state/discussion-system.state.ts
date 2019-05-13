@@ -164,7 +164,7 @@ export class DiscussionSystemState {
 
       if (comment.tempId === payload.tempId) {
 
-        return new Comment(comment.id, comment.date, comment.text, null, comment.user, comment.answers);
+        return new Comment(payload.id, comment.date, comment.text, null, comment.user, comment.answers);
 
       }
 
