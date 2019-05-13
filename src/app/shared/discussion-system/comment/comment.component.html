@@ -1,5 +1,7 @@
 <mat-card class="m-c-box-comment">
 
+
+
   <div class="comment-author">
 
 
@@ -31,7 +33,7 @@
           (click)="evOpenDialog(data.id)"
           *ngIf="
           (userId$ | async) === data.user.id
-          && !data.temp_id && answers === 0
+          && !data.tempId && answers === 0
           && !(commentsToDelete$ | async)[data.id]
           "
           >
@@ -40,8 +42,12 @@
           </mat-icon>
         </button>
 
-        <div style="width: 30px; height: 30px;" *ngIf="(commentsToDelete$ | async)[data.id]" >
-          <app-spinner-loading></app-spinner-loading>
+        <div
+          style="width: 30px; height: 30px;"
+          *ngIf="(commentsToDelete$ | async)[data.id] || data.tempId && !data.id"
+          >
+          <app-spinner-loading>
+          </app-spinner-loading>
         </div>
 
       </div>
@@ -51,8 +57,18 @@
     
   </div>
 
+
+
   <mat-card-content>
-    <p class="comment-text">{{data.text}}</p>
+
+    <p
+      class="comment-text"
+      >
+      {{data.text}}
+    </p>
+
   </mat-card-content>
+
+
 
 </mat-card>

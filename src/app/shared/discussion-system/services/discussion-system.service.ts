@@ -9,6 +9,7 @@ import { environment } from '../../../../environments/environment';
 import { HandleErrorService } from '../../handle-error.service';
 import { Answer } from 'src/app/models/discussion-system/answer.model';
 import { AnswerForm } from 'src/app/models/discussion-system/forms/answer-form.model';
+import { Course } from 'src/app/models/course.model';
 
 @Injectable({
   providedIn: 'root'
@@ -28,11 +29,12 @@ export class DiscussionSystemService {
   }
 
 
-  addComment(comment: CommentForm): Observable<Comment> {
+  addComment(comment: CommentForm, course: Course): Observable<Comment> {
 
+    const url = urljoin(this.baseApiUrl, course.subtitle, 'comments');
     const data = JSON.stringify(comment);
 
-    return this.http.post<Comment>(this.baseApiUrl, data)
+    return this.http.post<Comment>(url, data)
       .pipe(
         catchError( this._error.handleError )
       );

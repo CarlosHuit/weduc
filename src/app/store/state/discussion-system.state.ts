@@ -126,34 +126,33 @@ export class DiscussionSystemState {
 
 
   @Action(AddComment)
-  addComment({ setState, getState, dispatch }: StateContext<DiscussionSystemStateModel>, { payload }: AddComment) {
+  addComment({ getState, dispatch,  patchState }: StateContext<DiscussionSystemStateModel>, { payload }: AddComment) {
+
 
     const text = payload.text;
     const user = this.store.selectSnapshot(AuthState.getUser);
-    const courseId = this.store.selectSnapshot(CoursesState.courseId);
-    const date = new Date();
 
-    const tmp_id = this.generateTemporaryId([...getState().commentsTemporaryIds], user.id);
+    const createdAt   = new Date();
+    const course      = this.store.selectSnapshot( CoursesState.course );
+    const temporaryId = this.generateTemporaryId([...getState().commentsTemporaryIds], user.id);
 
-    // const commentToSend = new Comments(null, user.id, text, date, courseId, tmp_id);
-    const commentToSend = new CommentForm(date, text, user.id, tmp_id, courseId);
-    const localComment = new Comment(null, date, text, tmp_id, user, []);
+    const commentToSend = new CommentForm( createdAt, text, user.id, temporaryId, course.id );
+    const localComment  = new Comment( null, createdAt, text, temporaryId, user, [] );
 
-    setState({
-      ...getState(),
-      comments: [
-        localComment,
-        ...getState().comments
-      ],
-      commentsTemporaryIds: [
-        ...getState().commentsTemporaryIds,
-        tmp_id
-      ]
+    const comments = [ localComment, ...getState().comments ];
+    const commentsTemporaryIds = [ ...getState().commentsTemporaryIds, temporaryId ];
+
+    patchState({
+      comments,
+      commentsTemporaryIds,
     });
 
-    return this._discussionSystem.addComment(commentToSend).pipe(
-      tap(comment => dispatch(new AddCommentSuccess(comment)))
+    return this._discussionSystem.addComment(commentToSend, course).pipe(
+
+      tap( comment => dispatch( new AddCommentSuccess(comment) ) )
+
     );
+
 
   }
 
@@ -161,30 +160,20 @@ export class DiscussionSystemState {
   @Action(AddCommentSuccess)
   addCommentSuccess({ patchState, getState }: StateContext<DiscussionSystemStateModel>, { payload }: AddCommentSuccess) {
 
+    const comments = getState().comments.map((comment => {
 
-    patchState({
-      comments: getState().comments.map((comment => {
+      if (comment.tempId === payload.tempId) {
 
-        if (comment.tempId === payload.tempId) {
+        return new Comment(comment.id, comment.date, comment.text, null, comment.user, comment.answers);
 
-          const tt = Object.assign({}, comment, {
-            _id: payload.id,
-            answers_id: {
-              comment_id: payload.id,
-              _id: payload.answers,
-              answers: []
-            },
-          });
+      }
 
-          delete tt.tempId;
-          return tt;
+      return comment;
 
-        }
+    }));
 
-        return comment;
 
-      }))
-    });
+    patchState({ comments });
 
 
   }
