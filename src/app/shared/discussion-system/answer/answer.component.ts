@@ -43,10 +43,10 @@ export class AnswerComponent {
 
   deleteAnswer(): void {
 
-      this.store.dispatch(new DeleteAnswer({
-      answerId: this.data.id,
+    this.store.dispatch(new DeleteAnswer({
+      answerId:  this.data.id,
       commentId: this.comment_id,
-      index: this.indexAnswer
+      index:     this.indexAnswer
     }));
 
   }
