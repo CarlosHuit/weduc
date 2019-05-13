@@ -80,9 +80,9 @@ export class DiscussionSystemService {
   }
 
 
-  addAnswer(answer: AnswerForm): Observable<Answer> {
+  addAnswer( answer: AnswerForm, course: Course, commentId: string ): Observable<Answer> {
 
-    const url = urljoin(this.baseApiUrl, 'answers');
+    const url = urljoin(this.baseApiUrl, course.subtitle, 'comments', commentId, 'answers' );
     const data = JSON.stringify(answer);
 
     return this.http.post<Answer>(url, data)

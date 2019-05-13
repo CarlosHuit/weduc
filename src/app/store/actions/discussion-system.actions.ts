@@ -153,7 +153,7 @@ export class EditCommentError {
 export class AddAnswer {
 
   static readonly type = DiscussionSystemActionsType.ADD_ANSWER;
-  constructor( public payload: { text: string, comment_id: string }) {}
+  constructor( public payload: { text: string, commentId: string }) {}
 
 }
 

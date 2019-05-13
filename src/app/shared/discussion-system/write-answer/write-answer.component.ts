@@ -27,8 +27,8 @@ export class WriteAnswerComponent {
 
   }
 
-  addAnswer = (text: string, comment_id: string) => {
-    this.store.dispatch(new AddAnswer({text, comment_id}));
+  addAnswer = (text: string, commentId: string) => {
+    this.store.dispatch(new AddAnswer({text, commentId}));
   }
 
 }

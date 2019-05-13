@@ -31,7 +31,8 @@
           (click)="evOpenDialog(data.id)"
           *ngIf="
           (userId$ | async) === data.user.id
-          && !data.temp_id
+          && !data.tempId
+          && data.id
           && !(answersToDelete$ | async)[data.id]
           "
         >
@@ -40,9 +41,16 @@
           </mat-icon>
         </button>
 
-        <div style="width: 30px; height: 30px;" *ngIf="(answersToDelete$ | async)[data.id]" >
+
+        <div
+          style="width: 30px; height: 30px;"
+          *ngIf="
+            (answersToDelete$ | async)[data.id] || data.tempId && !data.id
+          "
+          >
           <app-spinner-loading></app-spinner-loading>
         </div>
+
 
       </div>
 
