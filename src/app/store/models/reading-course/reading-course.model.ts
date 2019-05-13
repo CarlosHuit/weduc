@@ -7,7 +7,7 @@ import { ReadingCourseFindLetterModel } from './find-letter/reading-course-find-
 import { ReadingCourseSelectWordsModel } from './select-words/reading-course-select-words.model';
 import { ReadingCoursePronounceLetterStateModel } from './pronounce-letter/reading-course-pronounce-letter.model';
 
-export class ReadingCourseModel {
+export class ReadingCourseStateModel {
 
   constructor(
     public data:            ReadingCourseDataModel,

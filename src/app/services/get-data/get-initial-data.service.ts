@@ -7,6 +7,8 @@ import { LocalStorageService } from '../local-storage.service';
 import { InitialData } from '../../classes/initial-data';
 import { HandleErrorService } from '../../shared/handle-error.service';
 import urljoin from 'url-join';
+import { Course } from 'src/app/models/course.model';
+import { ReadingCourseData } from 'src/app/models/reading-course/reading-course-data.model';
 
 
 
@@ -27,29 +29,38 @@ export class GetInitialDataService {
   }
 
 
-  getInitialData = (): Observable<InitialData> => {
+  getInitialData = ( course: Course, userId: string ): Observable<ReadingCourseData> => {
 
-    const data = this._storage.getElement('initialData');
+    const data = this._storage.getElement('readingCourseData');
 
-    if ( data) { return this.getInitialDataFromStorage(); }
-    if (!data) { return this.getInitialDataFromServer();  }
+    if ( data) {
+      return this.getInitialDataFromStorage();
+    }
+
+    return this.getInitialDataFromServer(course, userId);
 
   }
 
-  getInitialDataFromServer = (): Observable<InitialData> => {
-    const url = urljoin(this.apiUrl, `initial-data`);
-    return this.http.get(url)
+
+  getInitialDataFromServer = (course: Course, userId: string): Observable<ReadingCourseData> => {
+
+    const url = urljoin(this.apiUrl, 'courses', course.subtitle, 'data', userId);
+
+    return this.http.get<ReadingCourseData>(url)
       .pipe(tap(this.saveData), catchError(this._err.handleError));
+
   }
 
-  getInitialDataFromStorage = (): Observable<InitialData> => {
-    return of(this._storage.getElement('initialData'));
+
+  getInitialDataFromStorage = (): Observable<ReadingCourseData> => {
+    return of(this._storage.getElement('readingCourseData'));
   }
 
-  saveData = (x: InitialData) => {
+
+  saveData = (x: ReadingCourseData) => {
 
     /* in the future save with the app version number  */
-    this._storage.saveElement('initialData', x);
+    this._storage.saveElement('readingCourseData', x);
 
     /*     console.log(x);
         const words          = x.words;

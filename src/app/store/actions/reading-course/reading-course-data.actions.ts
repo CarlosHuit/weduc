@@ -1,4 +1,4 @@
-import { InitialData } from 'src/app/classes/initial-data';
+import { ReadingCourseData } from 'src/app/models/reading-course/reading-course-data.model';
 
 export enum ReadingCourseActionsType {
   GET_INITIAL_DATA                  = '[Reading Course Data] Get Initial Data',
@@ -23,7 +23,7 @@ export class GetInitialData {
 export class GetInitialDataSuccess {
 
   static readonly type = ReadingCourseActionsType.GET_INITIAL_DATA_SUCCESS;
-  constructor(public payload: { data: InitialData}) {}
+  constructor(public payload: { data: ReadingCourseData}) {}
 
 }
 
