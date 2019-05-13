@@ -1,5 +1,6 @@
 import { Comment } from 'src/app/models/discussion-system/comment.model';
 import { Answer } from 'src/app/models/discussion-system/answer.model';
+import { Course } from 'src/app/models/course.model';
 
 export enum DiscussionSystemActionsType {
   GET_COMMENTS           = '[Discussion System] get comments',
@@ -104,7 +105,7 @@ export class AddCommentError {
 export class DeleteComment {
 
   static readonly type = DiscussionSystemActionsType.DELETE_COMMENT;
-  constructor(public payload: { course_id: string, comment_id: string }) {}
+  constructor(public payload: { course: Course, comment_id: string }) {}
 
 }
 
@@ -112,7 +113,7 @@ export class DeleteComment {
 export class DeleteCommentSuccess {
 
   static readonly type = DiscussionSystemActionsType.DELETE_COMMENT_SUCCESS;
-  constructor(public payload: {comment_id: string}) {}
+  constructor(public payload: {commentId: string}) {}
 
 
 }

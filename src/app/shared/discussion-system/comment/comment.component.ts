@@ -1,20 +1,21 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { Select, Store  } from '@ngxs/store';
-import { MatDialog      } from '@angular/material';
-import { Observable, Subscription     } from 'rxjs';
-import { DiscussionSystemState        } from '../../../store/state/discussion-system.state';
-import { DeleteComment                } from '../../../store/actions/discussion-system.actions';
-import { CoursesState                 } from '../../../store/state/courses.state';
-import { DeleteCommentDialogComponent } from '../delete-comment-dialog/delete-comment-dialog.component';
+import { Component, Input, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material';
+import { Select, Store } from '@ngxs/store';
+import { Observable } from 'rxjs';
+import { Course } from 'src/app/models/course.model';
 import { AuthState } from 'src/app/store/state/auth.state';
 import { Comment } from '../../../models/discussion-system/comment.model';
+import { DeleteComment } from '../../../store/actions/discussion-system.actions';
+import { CoursesState } from '../../../store/state/courses.state';
+import { DiscussionSystemState } from '../../../store/state/discussion-system.state';
+import { DeleteCommentDialogComponent } from '../delete-comment-dialog/delete-comment-dialog.component';
 
 @Component({
   selector: 'app-comment',
   templateUrl: './comment.component.html',
   styleUrls: ['./comment.component.css']
 })
-export class CommentComponent implements OnInit, OnDestroy {
+export class CommentComponent implements OnInit {
 
   @Input() data:          Comment;
   @Input() answers:       number;
@@ -23,20 +24,24 @@ export class CommentComponent implements OnInit, OnDestroy {
   @Select(CoursesState.courseId) courseId$:   Observable<string>;
   @Select(AuthState.userId)        userId$:   Observable<string>;
 
-  courseIdSubscription: Subscription;
-  course_id: string;
+  course: Course;
 
-  constructor(private dialog: MatDialog, private store: Store) { }
+  constructor(
+    private dialog: MatDialog,
+    private store: Store,
+  ) { }
+
 
   ngOnInit() {
-    this.courseIdSubscription = this.courseId$.subscribe(_id => this.course_id = _id);
+    this.course = this.store.selectSnapshot(CoursesState.course);
   }
 
-  ngOnDestroy() {
-    this.courseIdSubscription.unsubscribe();
-  }
 
-  genUrl = (avatar: String) => `/assets/icon-user100X100/icon-${avatar}.png`;
+  genUrl(avatar: String) {
+
+    return `/assets/icon-user100X100/icon-${avatar}.png`;
+
+  }
 
 
   evOpenDialog = (comment_id: string) => {
@@ -46,9 +51,10 @@ export class CommentComponent implements OnInit, OnDestroy {
 
   }
 
+
   deleteComment = (comment_id: string) => {
 
-    this.store.dispatch(new DeleteComment({ comment_id, course_id: this.course_id }));
+    this.store.dispatch(new DeleteComment({ comment_id, course: this.course }));
 
   }
 

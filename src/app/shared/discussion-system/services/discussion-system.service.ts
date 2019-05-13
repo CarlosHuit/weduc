@@ -52,19 +52,12 @@ export class DiscussionSystemService {
   }
 
 
-  deleteComment(course_id: string, comment_id: string) {
+  deleteComment(course: Course, commentId: string) {
 
-    const url = urljoin(this.baseApiUrl, course_id);
-    const httpOpts = {
-      params: new HttpParams()
-        .set('course_id',  course_id )
-        .set('comment_id', comment_id)
-    };
+    const url = urljoin(this.baseApiUrl, course.subtitle, 'comments', commentId);
 
-    return this.http.delete(url, httpOpts, )
-      .pipe(
-        catchError( this._error.handleError )
-      );
+    return this.http.delete(url)
+    .pipe( catchError( this._error.handleError ) );
 
   }
 
@@ -79,7 +72,7 @@ export class DiscussionSystemService {
         .set('answer_id',   answer_id  )
     };
 
-    return this.http.delete(url, httpOpts )
+    return this.http.delete(url, httpOpts)
       .pipe(
         catchError( this._error.handleError )
       );

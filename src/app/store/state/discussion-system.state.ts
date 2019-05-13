@@ -182,21 +182,26 @@ export class DiscussionSystemState {
   @Action(DeleteComment)
   deleteComment({ getState, dispatch }: StateContext<DiscussionSystemStateModel>, { payload }: DeleteComment) {
 
-    dispatch(new AddCommentToDelete({ commentId: payload.comment_id }));
 
-    const comments = [...getState().comments];
-    const user = this.store.selectSnapshot(AuthState.getUser);
-    const courseId = this.store.selectSnapshot(CoursesState.courseId);
-    const index = comments.findIndex(comment => comment.user.id === user.id);
-    const isUserOwner = index > -1 ? true : false;
+    const course      = payload.course;
+    const commentId   = payload.comment_id;
+    const user        = this.store.selectSnapshot(AuthState.getUser);
+    const comments    = getState().comments;
+    const comment     = comments.find( c => c.id === commentId );
+    const isUserOwner = comment.user.id === user.id;
 
     if (isUserOwner) {
 
-      return this._discussionSystem.deleteComment(courseId, payload.comment_id).pipe(
-        tap(res => dispatch(new DeleteCommentSuccess({ comment_id: payload.comment_id })))
+      dispatch( new AddCommentToDelete({ commentId  }) );
+
+      return this._discussionSystem.deleteComment( course, commentId ).pipe(
+
+        tap(res => dispatch( new DeleteCommentSuccess({ commentId })) )
+
       );
 
     }
+
 
   }
 
@@ -205,7 +210,7 @@ export class DiscussionSystemState {
   deleteCommentSuccess({ getState, patchState }: StateContext<DiscussionSystemStateModel>, { payload }: DeleteCommentSuccess) {
 
     return patchState({
-      comments: getState().comments.filter(comment => comment.id !== payload.comment_id)
+      comments: getState().comments.filter(comment => comment.id !== payload.commentId)
     });
 
   }
