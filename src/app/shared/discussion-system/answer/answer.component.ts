@@ -31,6 +31,7 @@ export class AnswerComponent {
 
   }
 
+
   evOpenDialog(): void {
 
     const dialog = this.dialog.open(DeleteCommentDialogComponent, { disableClose: false });
