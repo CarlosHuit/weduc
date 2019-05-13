@@ -143,6 +143,7 @@ import { CoursesState } from './courses.state';
 import { AuthState } from './auth.state';
 import { ItemLetterMenu } from 'src/app/models/reading-course/item-letter-menu.model';
 import { LearnedLetter } from 'src/app/models/reading-course/learned-letter.model';
+import { ReadingCourseDataModel } from '../models/reading-course/data/reading-course-data.model';
 
 @State<ReadingCourseStateModel>({
   name: 'readingCourse',
@@ -428,12 +429,14 @@ export class ReadingCourseState {
     const hasData = getState().data ? true : false;
 
     if (hasData) {
+
       dispatch([
         new SortLearnedLettersByAlphabet(),
         new ChangeActiveTab({ tab: 'alphabet' }),
         new IsLoadingDataOfReadingCourse({ state: false }),
         new ListenMessage({ msg: 'Este es el abecedario. Selecciona una letra para continuar.' }),
       ]);
+
     }
 
     if (!hasData) {
@@ -443,7 +446,7 @@ export class ReadingCourseState {
       const course = this.store.selectSnapshot(CoursesState.course);
       const user = this.store.selectSnapshot(AuthState.getUser);
 
-      return this._readingCourse.getInitialData(course, user.id)
+      return this._readingCourse.getReadingCourseData(course, user.id)
       .pipe(
         tap(data => dispatch(new GetInitialDataSuccess({ data })))
       );
@@ -457,42 +460,62 @@ export class ReadingCourseState {
   @Action(GetInitialDataSuccess)
   getInitialDataSuccess({ patchState, dispatch, getState }: StateContext<ReadingCourseStateModel>, { payload }: GetInitialDataSuccess) {
 
-    const state          = payload.data;
-    const learnedLetters = state.learnedLetters;
-    const combinations   = state.letters.combinations;
-    const lettersMenu    = [];
-    const coordinates    = state.coordinates;
-    const words          = state.words;
-    const letterSounds   = state.letters.letterSounds;
-    const similarLetters = state.similarLetters;
-    const currentLetter  = null;
 
-    words.forEach(w => {
+    const data = payload.data;
+    const learnedLetters = data.learnedLetters.map((el) => {
 
-      const letterNoLearned = learnedLetters.findIndex(s => s.letter === w.letter) < 0;
+      return new LearnedLetter(
+        el.letter,
+        el.rating,
+        data.letters.combinations[el.letter],
+      );
+
+    });
+
+    const itemsLetterMenu = data.words.map( el => {
+
+      const letterNoLearned = learnedLetters.findIndex(s => s.letter === el.letter) === -1;
 
       if (letterNoLearned) {
-        const e = new ItemLetterMenu( w.letter, w.letter.toUpperCase(), w.letter, w.words[0], `/assets/img100X100/${w.words[0]}-min.png` );
-        lettersMenu.push(e);
+
+        return new ItemLetterMenu(
+          el.letter.toLowerCase(),
+          el.letter.toUpperCase(),
+          el.letter,
+          el.words[0],
+          `/assets/img100X100/${el.words[0]}-min.png`,
+        );
+
       }
 
     });
 
-    learnedLetters.forEach(l => l['combinations'] = combinations[l.letter]);
-    const data = { currentLetter, lettersMenu, learnedLetters, letterSounds, similarLetters, coordinates, words, combinations };
+    const readingCourseData = new ReadingCourseDataModel(
+      data.words,
+      learnedLetters,
+      true,
+      itemsLetterMenu,
+      data.letters.combinations,
+      data.letters.letterSounds,
+      data.similarLetters,
+      data.coordinates,
+      null,
+      data.letters.alphabet,
+      data.letters.vocals,
+      data.letters.consonants,
+    );
 
-
-    // patchState({
-    //   data,
-    //   menu: {
-    //     ...getState().menu,
-    //     highlight: null,
-    //     activeRedirection: false,
-    //     selectedLetter: '',
-    //     activeTab: 'alphabet',
-    //     sortedBy: 'alphabet'
-    //   }
-    // });
+    patchState({
+      data: readingCourseData,
+      menu: {
+        ...getState().menu,
+        highlight: null,
+        activeRedirection: false,
+        selectedLetter: '',
+        activeTab: 'alphabet',
+        sortedBy: 'alphabet'
+      }
+    });
 
     dispatch([
       new SortLearnedLettersByAlphabet(),
@@ -500,6 +523,7 @@ export class ReadingCourseState {
       new IsLoadingDataOfReadingCourse({ state: false }),
       new ListenMessage({ msg: 'Este es el abecedario. Selecciona una letra para continuar.' })
     ]);
+
 
   }
 

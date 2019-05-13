@@ -9,7 +9,6 @@ export class ReadingCourseDataModel {
 
   constructor(
     public words:          Word[],
-    public letters:        Letters,
     public learnedLetters: LearnedLetter[],
     public isLoadingData:  boolean,
     public lettersMenu:    ItemLetterMenu[],
