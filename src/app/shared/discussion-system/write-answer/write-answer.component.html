@@ -15,6 +15,7 @@ class="container-write-comment"
         cdkTextareaAutosize
         cdkAutosizeMinRows="1"
         cdkAutosizeMaxRows="5"
+        [autofocus]='true'
         (focus)="commented = true"
         (focusout)="commented = false"
         #autosize="cdkTextareaAutosize"
