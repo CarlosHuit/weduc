@@ -373,14 +373,24 @@ export class DiscussionSystemState {
 
     let answersUpdated;
     const comments = [...getState().comments];
+    const course = this.store.selectSnapshot(CoursesState.course);
     const iComment = comments.findIndex(comment => comment.id === payload.commentId);
 
     if (iComment > -1) {
       answersUpdated = comments[iComment].answers.filter(answer => answer.id !== payload.answerId);
+      console.log(answersUpdated);
     }
 
-    return this._discussionSystem.deleteAnswer(payload.commentId, payload.answerId).pipe(
-      tap(res => dispatch(new DeleteAnswerSuccess({ commentId: payload.commentId, answersUpdated })))
+    return this._discussionSystem.deleteAnswer(
+      course,
+      payload.commentId,
+      payload.answerId,
+    ).pipe(
+      tap(res => {
+
+        dispatch(new DeleteAnswerSuccess({ commentId: payload.commentId, answersUpdated }));
+
+      })
     );
 
   }
@@ -395,9 +405,14 @@ export class DiscussionSystemState {
 
         if (comment.id === payload.commentId) {
 
-          return Object.assign({}, comment, {
-            answers_id: { comment_id: comment.id, answers: payload.answersUpdated }
-          });
+          return new Comment(
+            comment.id,
+            comment.date,
+            comment.text,
+            null,
+            comment.user,
+            payload.answersUpdated,
+          );
 
         }
 

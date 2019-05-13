@@ -29,6 +29,7 @@ export class DiscussionSystemService {
   }
 
 
+
   addComment(comment: CommentForm, course: Course): Observable<Comment> {
 
     const url = urljoin(this.baseApiUrl, course.subtitle, 'comments');
@@ -62,17 +63,11 @@ export class DiscussionSystemService {
   }
 
 
+  deleteAnswer(course: Course, commentId: string, answerId: string) {
 
-  deleteAnswer(comment_id: string, answer_id: string) {
+    const url = urljoin(this.baseApiUrl, course.subtitle, 'comments', commentId, 'answers', answerId);
 
-    const url = urljoin(this.baseApiUrl, `answers/${comment_id}`);
-    const httpOpts = {
-      params: new HttpParams()
-        .set('comment_id',  comment_id )
-        .set('answer_id',   answer_id  )
-    };
-
-    return this.http.delete(url, httpOpts)
+    return this.http.delete(url)
       .pipe(
         catchError( this._error.handleError )
       );
