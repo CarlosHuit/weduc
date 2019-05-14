@@ -1,9 +1,17 @@
+.container-root {
+  width: 100vw;
+  height: 100vh;
+}
+
 .container-toolbar {
   height: 56px;
   width: 100%;
-  /* box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.36); */
   position: absolute;
   z-index: 20;
+}
+
+.container-toolbar.shadow {
+  box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.36);
 }
 
 .container-content {

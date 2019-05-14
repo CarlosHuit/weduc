@@ -96,7 +96,10 @@
 
 
   <!------ loading animation ------>
-  <div style="width: 100%; height: 50px; margin-top: 20px;" *ngIf="(isLoading$ | async)" >
-    <app-spinner-loading></app-spinner-loading>
+  <!-- style="width: 100%; height: 50px; margin-top: 20px;" -->
+  <div
+    *ngIf="(isLoading$ | async)"
+    >
+    <app-spinner-loading [width]="48" [height]="48" [marginTop]="24" ></app-spinner-loading>
   </div>
 </div>

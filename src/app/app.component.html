@@ -1,26 +1,50 @@
-<div style="width: 100vw; height: 100vh;" >
+<div class="container-root">
 
-  <div class="container-toolbar">
+
+  <div class="container-toolbar" [class.shadow]="!(isMobile$ | async) && !(queryMobileMatch$ |async)">
     <app-toolbar ></app-toolbar>
   </div>
 
+
   <div class="container-content">
-    <mat-drawer-container (backdropClick)="closeDrawer()" class="example-container">
+
+
+    <mat-drawer-container
+      class="example-container"
+      (backdropClick)="closeDrawer()"
+      >
   
       <mat-drawer
         class="menu"
-        [opened]="opened$ | async"
         [mode]="'over'"
+        [opened]="opened$ | async"
         >
 
-        <div class="m-c-sidenav" *ngIf="isLoggedIn$ | async" >
+        <div
+          class="m-c-sidenav"
+          *ngIf="isLoggedIn$ | async"
+          >
 
-          <div #backDrawer [style.height.px]="backDrawer.clientWidth * .55" class="m-c-user-profile">
 
-            <img class="background-drawer" [style.height.px]="backDrawer.clientWidth * .55" [src]="urlBackground$ | async" alt="">
+          <!-- Drawer Header User Profile -->
+          <div
+            #backDrawer
+            class="m-c-user-profile"
+            [style.height.px]="backDrawer.clientWidth * .55"
+            >
+
+            <img
+              class="background-drawer"
+              [style.height.px]="backDrawer.clientWidth * .55"
+              [src]="urlBackground$ | async"
+              >
 
             <div class="m-c-img-user">
-              <img  [src]="urlAvatat$ | async" width="100" height="100">
+              <img
+                [src]="urlAvatat$ | async"
+                width="100"
+                height="100"
+                >
             </div>
 
             <div class="m-c-user-data">
@@ -30,10 +54,17 @@
     
           </div>
     
-          <div class="m-c-list-items">
+
+          <!-- Drawer Items List -->
+          <div
+            class="m-c-list-items"
+            >
     
             <mat-nav-list *ngIf="isLoggedIn$ | async">
-              <a mat-list-item (click)="logoutAndClose()">
+              <a
+                mat-list-item
+                (click)="logoutAndClose()"
+                >
                 Cerrar Sesion
               </a>
               <mat-divider></mat-divider>
@@ -41,21 +72,23 @@
     
           </div>
     
+
         </div>
 
       </mat-drawer>
   
-  
-      <mat-drawer-content style="background: #eaecee;">
+      <mat-drawer-content style="background: #fafafa">
   
         <div  class="container-router-outlet">
             <router-outlet></router-outlet>
         </div>
   
-  
       </mat-drawer-content>
   
-  
     </mat-drawer-container>
+
+
   </div>
+
+
 </div>
