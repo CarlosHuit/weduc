@@ -165,7 +165,6 @@ export class ReadingCourseState {
   /* ---------- Selectors reading course data ---------- */
   @Selector()
   static hasData(state: ReadingCourseStateModel) {
-    console.log(state);
     return state.data ? true : false;
   }
 
@@ -2633,7 +2632,6 @@ export class ReadingCourseState {
   @Action( HandleRecognitionResultPL )
   handleRecognitionResultPL({ dispatch, getState }: StateContext<ReadingCourseStateModel>, { payload }: HandleRecognitionResultPL) {
 
-    console.log(payload.res);
 
     dispatch( new ChangeStateRecordingPL({state: false}) );
     dispatch( new IncreaseAttemptsPL() );

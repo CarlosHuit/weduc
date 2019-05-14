@@ -342,23 +342,3 @@ export class BoardComponent implements OnDestroy, AfterViewInit, OnInit {
 
 
 }
-
-
-
-
-
-
-
-
-
-/*   save = (): void => {
-
-    const letter = prompt('letra?');
-    const data = { letter: letter, coordinates: this.traces };
-
-    this.coordinateService.saveCoordinnates(data)
-      .subscribe(
-        val => console.log(`Save Ok:${val}`),
-        err => console.log(err)
-      );
-  } */

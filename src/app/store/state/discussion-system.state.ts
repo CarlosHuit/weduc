@@ -103,11 +103,7 @@ export class DiscussionSystemState {
 
       return this._discussionSystem.getCommentsCourse(courseName)
         .pipe(
-          tap((comments: Comment[]) => {
-            console.log(comments);
-            dispatch(new GetCommentsSuccess(comments));
-
-          })
+          tap((comments: Comment[]) =>  dispatch(new GetCommentsSuccess(comments)) )
         );
 
     }
@@ -388,7 +384,6 @@ export class DiscussionSystemState {
 
     if (iComment > -1) {
       answersUpdated = comments[iComment].answers.filter(answer => answer.id !== payload.answerId);
-      console.log(answersUpdated);
     }
 
     return this._discussionSystem.deleteAnswer(

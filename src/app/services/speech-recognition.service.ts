@@ -46,7 +46,6 @@ export class SpeechRecognitionService {
             if (result[0].confidence < 0.3) {
 
               const resultErr = 'Resultado no confiable, vuelva a intentarlo.';
-              console.log(resultErr);
 
             } else {
 
