@@ -1,9 +1,10 @@
 .m-c-learned-letters {
-  height:             calc(100vh - 105px);
-  display:            flex;
-  justify-content:    center;
+  /* height:             calc(100vh - 105px); */
+  /* display:            flex;
+  justify-content:    center; */
   padding-top:        10px;
   box-sizing:         border-box;
+  margin: 40px auto;
 }
 
 .m-c-learned-letters.quit-padding {

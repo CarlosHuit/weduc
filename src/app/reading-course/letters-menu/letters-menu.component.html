@@ -10,38 +10,45 @@
     >
 
 
-    <mat-card class="d-c-cards">
+    <div class="scroll-y-without-scrollbar" >
 
-      <div class="d-c-title center">
-        <h1> El Abecedario </h1>
-      </div>
+      <mat-card class="d-c-cards">
+  
+        <div class="d-c-title center">
+          <h1> El Abecedario </h1>
+        </div>
+  
+        <div class="d-c-grids">
+  
+          <app-card-letter-menu
+            [data]='item'
+            [canSpeech]="canSpeech$ | async"
+            *ngFor="let item of lettersMenu$ | async"
+            >
+          </app-card-letter-menu>
+  
+        </div>
+  
+      </mat-card>
 
+    </div>
+    
+    
+    <div class="scroll-y-without-scrollbar">
+      
+      <mat-card class="d-c-progress">
+        
+        <div class="d-c-title">
+          <h1>Progreso</h1>
+        </div>
+        
+        <app-learned-letters></app-learned-letters>
+        
+      </mat-card>
+      
+    </div>
 
-      <div class="d-c-grids">
-
-        <app-card-letter-menu
-          [data]='item'
-          [canSpeech]="canSpeech$ | async"
-          *ngFor="let item of lettersMenu$ | async"
-          >
-        </app-card-letter-menu>
-
-      </div>
-
-    </mat-card>
-
-
-    <mat-card class="d-c-progress">
-
-      <div class="d-c-title">
-        <h1>Progreso</h1>
-      </div>
-
-      <app-learned-letters></app-learned-letters>
-
-    </mat-card>
-
-
+    
   </div>
 
 

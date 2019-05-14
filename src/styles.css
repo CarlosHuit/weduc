@@ -50,6 +50,15 @@ h1, h2, h3, h4, h5 {
   display: none;
 }
 
+.scroll-y-without-scrollbar {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.scroll-y-without-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 .card {
   width: 95%;
   height: 96%;
