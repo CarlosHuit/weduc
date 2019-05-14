@@ -175,7 +175,6 @@ export class ReadingCourseState {
 
   @Selector()
   static learnedLetters({ data }: ReadingCourseStateModel) {
-    console.log(data.learnedLetters.length);
     return data.learnedLetters;
   }
 
@@ -468,7 +467,7 @@ export class ReadingCourseState {
       return new LearnedLetter(
         el.letter,
         el.rating,
-        data.letters.combinations[el.letter],
+        data.letters.combinations.find(e => e.letter === el.letter).combinations,
       );
 
     });
@@ -489,7 +488,9 @@ export class ReadingCourseState {
 
       }
 
-    });
+      return null;
+
+    }).filter(e => e !== null);
 
     const readingCourseData = new ReadingCourseDataModel(
       data.words,

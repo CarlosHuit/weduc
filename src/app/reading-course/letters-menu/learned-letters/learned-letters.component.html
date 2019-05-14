@@ -1,4 +1,9 @@
-<div class="m-c-learned-letters" [class.quit-padding]="!(isMobile$ | async)" *ngIf="(data$ | async).length > 0" >
+<div
+  class="cotainer-learned-letters"
+  [class.quit-padding]="!(isMobile$ | async)"
+  [class.set-height]="(isMobile$ | async) || (queryMobileMatch$ | async)"
+  *ngIf="(data$ | async).length > 0"
+  >
 
   <div class="m-c-accordion"  [class.desktop]="!(isMobile$ | async)" >
 
@@ -35,7 +40,7 @@
 
           <div class="m-c-header-title">
 
-            <h1 class="letter">
+            <h1 class="letter" [class.use-primary-color]="letterOpened === itemLetter.letter">
               {{itemLetter.letter | uppercase}} {{itemLetter.letter | lowercase}}
             </h1>
 

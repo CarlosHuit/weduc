@@ -25,18 +25,17 @@ export class LearnedLettersComponent implements OnInit {
 
   @ViewChild(MatAccordion) accordion: MatAccordion;
   multi: boolean;
+  letterOpened: string;
 
-  letterSounds: {};
 
-  @Select(ReadingCourseState.learnedLetters) data$:   Observable<LearnedLetters[]>;
-  @Select(ReadingCourseState.sortedBy) sortedBy$:   Observable<string>;
-  @Select(AppState.isMobile)        isMobile$:    Observable<boolean>;
+  @Select(ReadingCourseState.learnedLetters)     data$: Observable<LearnedLetters[]>;
+  @Select(ReadingCourseState.sortedBy)       sortedBy$: Observable<string>;
+  @Select(AppState.isMobile)                 isMobile$: Observable<boolean>;
+  @Select(AppState.queryMobileMatch) queryMobileMatch$: Observable<boolean>;
 
   constructor(private store: Store) { }
 
-  ngOnInit( ) {
-    this.letterSounds = this.store.selectSnapshot(state => state.readingCourse.data.letterSounds);
-  }
+  ngOnInit( ) { }
 
 
   countStars = (rating: number) => {
@@ -50,40 +49,16 @@ export class LearnedLettersComponent implements OnInit {
 
 
   itemOpened = (letter: string) => {
-    // this.speechSynthesis.cancel();
-    // const index = this.userData.tab_learned.previewLetters.findIndex(e => e.letter === letter);
-    // const time = this.genDate.generateData().fullTime;
-    // const t  = new Times(time, 'N/A');
 
-    // if (index === -1) {
-
-    //   const s = [];
-    //   this.combinations[letter].forEach(i => s.push(new Syllable(i.w, [])));
-    //   const el = new PreviewLetter(letter, [t], [], [], s, 'N/D');
-    //   this.userData.tab_learned.previewLetters.push(el);
-
-    // } else {
-
-    //   const path = this.userData.tab_learned.previewLetters;
-    //   const item = path[index].time.push(t);
-
-    // }
-
-    console.log('opened');
-
+    setTimeout(() =>  this.letterOpened = letter , 10);
 
   }
 
 
   itemClosed = (letter: string) => {
 
-    // this.speechSynthesis.cancel();
-    // const t     = this.genDate.generateData().fullTime;
-    // const path  = this.userData.tab_learned.previewLetters;
-    // const index = path.findIndex( e => e.letter === letter);
-    // const el    = path[index].time;
-    // const val   = index > -1 ? el[el.length - 1].finalTime = t : null;
-    console.log('closed');
+    this.letterOpened = '';
+
   }
 
   sortRating = () => {
