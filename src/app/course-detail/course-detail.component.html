@@ -11,7 +11,7 @@
   <div
     class="c-desktop hide"
     [class.show]="!(isLoading$ | async)"
-    *ngIf="!(isLoading$ | async) && !(isMobile$ | async)"
+    *ngIf="!(isLoading$ | async) && !(isMobile$ | async) && !(queryMobileMatch$ | async)"
     >
 
     <div
@@ -39,8 +39,7 @@
       <div class="c-d-description">
 
         <app-card-details *ngIf="!(queryMobileMatch$ | async)"></app-card-details>
-        <app-details-and-comments *ngIf="(queryMobileMatch$ | async)"></app-details-and-comments>
-
+        <!-- <app-details-and-comments *ngIf="(queryMobileMatch$ | async)"></app-details-and-comments> -->
 
       </div>
 
@@ -48,10 +47,7 @@
 
     <div class="c-d-comments">
 
-      <div
-        *ngIf="!(queryMobileMatch$ | async)"
-        class="d-c-progress-title center"
-        >
+      <div class="d-c-progress-title center" >
         <h2>Comentarios</h2>
       </div>
 
@@ -67,9 +63,9 @@
   <!---------------- Mobile Version ----------------->
   <div
     class="hide"
-    style="overflow: auto"
+    style="overflow: auto; overflow-x: hidden"
     [class.show]="!(isLoading$ | async)"
-    *ngIf="!(isLoading$ | async) && (isMobile$ | async)"
+    *ngIf="!(isLoading$ | async) && ( (isMobile$ | async) || (queryMobileMatch$ | async) )"
     >
 
 
