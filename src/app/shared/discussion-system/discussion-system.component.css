@@ -5,6 +5,9 @@
   overflow-x: hidden;
 }
 
+.m-c-box-write-comment {
+  margin-bottom: 25px;
+}
 
 .comment-thread-box {
   padding-bottom: 10px;

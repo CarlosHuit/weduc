@@ -1,14 +1,39 @@
-.c-desktop {
-  height:   100%;
-  width:    100%;
-  display:  grid;
-  grid-template-columns: 65% 35%;
+.d-c-course-detail-desktop {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  max-width: 1480px;
+  margin: 0 auto;
 }
 
-.c-d-video-desc {
-  width:    100%;
-  height:   calc(100vh - 56px);
-  overflow: auto;
+.d-c-columns-grid {
+  display: grid;
+  grid-template-columns: 55% 45%;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.d-c-column-one {
+  padding: 20px 10px 0 10px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.d-c-column-two {
+  padding: 20px 10px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  border-left: 1px solid #E0E0E0;
+}
+
+.d-c-comment-title {
+  margin-bottom: 15px;
+}
+
+.d-c-comment-title h2{
+  margin: 0;
+  text-align: center;
 }
 
 .c-d-video {
@@ -31,81 +56,24 @@
 .c-d-description {
   width:      100%;
   box-sizing: border-box;
+  margin-top: 15px;
 }
 
-.c-d-comments {
-  width:        100%;
-  overflow:     auto;
-  border-left:  1px solid #e0e0e0;
-  box-sizing:   border-box;
-}
+@media (min-width: 1024px) {
 
-.d-c-progress-title {
-  /* width:                94%;
-  height:               50px;
-  margin:               10px auto;
-  margin-bottom:        0;
-  background:         #0a7fb5;
-  color:              white;
-  -webkit-text-stroke: .5px black;
-  font-weight:          700;
-  font-size:            20px;
-  border:               0px solid white;
-  box-shadow:           0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
-  border-radius:        4px 4px 0 0;
-  background:           linear-gradient(to bottom left, #195677 0%, #186794 100%); */
-  height: 48px;
-}
-
-.d-c-progress-title h2 {
-  margin: 0;
-}
-
-@media (min-width: 769px ) {
-
-  .c-desktop {
-    max-width: 1480px;
-    margin: 0 auto;
-  }
-
-  .c-d-video-desc {
-    padding: 10px;
-    box-sizing: border-box;
-  }
-
-  .c-d-comments {
-    padding: 10px;
-    box-sizing: border-box;
-  }
-
-  .c-d-description {
-    margin-top: 15px;
+  .d-c-columns-grid {
+    grid-template-columns: 63% 37%;
   }
 
 }
 
-@media (min-width: 1080px) {
+@media(min-width: 1240px) {
 
-  .c-d-video-desc {
-    padding-top: 30px;
+  .d-c-column-one{
+    padding-left: 20px;
+    padding-right: 5%;
   }
 
-  .c-d-comments {
-    padding-top: 30px;
-  }
-
-}
-
-@media (min-width: 1440px) {
-
-  .c-desktop { grid-template-columns: 60% 40%; }
-  
-}
-
-@media (max-width: 768px) {
-
-  .c-desktop { grid-template-columns: 100%; }
-  
 }
 
 

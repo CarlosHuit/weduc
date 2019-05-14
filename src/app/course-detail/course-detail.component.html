@@ -9,61 +9,62 @@
 
   <!---------------- Desktop Version ---------------->
   <div
-    class="c-desktop hide"
-    [class.show]="!(isLoading$ | async)"
+    class="hide"
+    class="d-c-course-detail-desktop"
     *ngIf="!(isLoading$ | async) && !(isMobile$ | async) && !(queryMobileMatch$ | async)"
     >
-
-    <div
-      #cdVideo
-      class="c-d-video-desc"
-      [class.quit-scroll-bar]="!(isMobile$ | async)"
-      >
-
-      <div #videoDesktop class="c-d-video">
-
-        <iframe
-          height="569"
-          width="1012"
-          frameborder="0"
-          allowfullscreen
-          [src]="urlVideo$ | async"
-          class="iframe-youtube"
-          allow="autoplay; encrypted-media"
-          >
-        </iframe>
+    <div class="d-c-columns-grid">
 
 
+      <div
+        #cdVideo
+        class="d-c-column-one"
+        [class.quit-scroll-bar]="!(isMobile$ | async)"
+        >
+  
+        <div #videoDesktop class="c-d-video">
+  
+          <iframe
+            height="569"
+            width="1012"
+            frameborder="0"
+            allowfullscreen
+            [src]="urlVideo$ | async"
+            class="iframe-youtube"
+            allow="autoplay; encrypted-media"
+            >
+          </iframe>
+  
+  
+        </div>
+  
+        <div class="c-d-description">
+  
+          <app-card-details *ngIf="!(queryMobileMatch$ | async)"></app-card-details>
+  
+        </div>
+  
       </div>
 
-      <div class="c-d-description">
+      <div class="d-c-column-two">
 
-        <app-card-details *ngIf="!(queryMobileMatch$ | async)"></app-card-details>
-        <!-- <app-details-and-comments *ngIf="(queryMobileMatch$ | async)"></app-details-and-comments> -->
-
+        <div class="d-c-comment-title">
+          <h2>Comentarios</h2>
+        </div>
+  
+        <app-discussion-system></app-discussion-system>
+  
       </div>
 
     </div>
-
-    <div class="c-d-comments">
-
-      <div class="d-c-progress-title center" >
-        <h2>Comentarios</h2>
-      </div>
-
-      <app-discussion-system></app-discussion-system>
-
-    </div>
-
   </div>
-
-
 
 
   <!---------------- Mobile Version ----------------->
   <div
     class="hide"
     style="overflow: auto; overflow-x: hidden"
+    [class.show]="!(isLoading$ | async)"
     [class.show]="!(isLoading$ | async)"
     *ngIf="!(isLoading$ | async) && ( (isMobile$ | async) || (queryMobileMatch$ | async) )"
     >
