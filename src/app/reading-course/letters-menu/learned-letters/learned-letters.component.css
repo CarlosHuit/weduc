@@ -134,13 +134,13 @@
 .m-c-ad-learneds {
   width:              80%;
   height:             250px;
-  border:             6px dashed #a9a9a9;
+  border:             4px dashed #E0E0E0;
   padding:            0 10px;
   box-sizing:         border-box;
 }
 
 .m-c-ad-learneds h3 {
-  color:              #696969;
+  color:              #E0E0E0;
   text-align:         center;
   font-size:          24px;
 }
