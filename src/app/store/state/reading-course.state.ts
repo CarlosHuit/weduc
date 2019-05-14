@@ -175,6 +175,7 @@ export class ReadingCourseState {
 
   @Selector()
   static learnedLetters({ data }: ReadingCourseStateModel) {
+    console.log(data.learnedLetters.length);
     return data.learnedLetters;
   }
 

@@ -1,4 +1,5 @@
-<div class="m-c-learned-letters" [class.quit-padding]="!(isMobile$ | async)" *ngIf="!(data$ | async).lenght" >
+<div class="m-c-learned-letters" [class.quit-padding]="!(isMobile$ | async)" *ngIf="(data$ | async).length > 0" >
+
   <div class="m-c-accordion"  [class.desktop]="!(isMobile$ | async)" >
 
 
@@ -104,16 +105,17 @@
 
 
   </div>
+
 </div>
 
 
 
+
 <div
-  *ngIf="(data$ | async).lenght"
   style="padding-top: 0"
   class="m-c-learned-letters center"
+  *ngIf="(data$ | async).length === 0"
   >
-
   <div class="m-c-ad-learneds center">
     <h3>Aquí aparecerán las letras que vayas aprendiendo</h3>
   </div>

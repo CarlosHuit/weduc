@@ -1,8 +1,13 @@
 <div #contGrid class="container" [style.overflow]="(isMobile$ | async) ? 'hidden' : 'auto'">
 
 
+
+
   <!------ Desktop Version ------>
-  <div class="d-c-menu-letters" *ngIf="!(loading$ | async) && !(isMobile$ | async) && !(queryMobileMatch$ | async)">
+  <div
+    class="d-c-menu-letters"
+    *ngIf="!(loading$ | async) && !(isMobile$ | async) && !(queryMobileMatch$ | async)"
+    >
 
 
     <mat-card class="d-c-cards">
@@ -81,19 +86,21 @@
   </div>
 
 
+
+
   <!------ Mobile Version ------>
   <div
     class="m-c-menu-letters"
     *ngIf="
-      ( !(loading$ | async) && (isMobile$ | async) )
-      ||
+      ( !(loading$ | async) && (isMobile$ | async) ) ||
       ( !(loading$ | async) && !(isMobile$ | async) && (queryMobileMatch$ | async) )
-      "
+    "
     >
 
     
     <div class="m-c-alphabet">
       <mat-tab-group color="accent" backgroundColor="warn" mat-align-tabs="start">
+
 
 
         <!--------- tab_Alphabet ---------->
@@ -105,8 +112,12 @@
               (click)="goToAlphabet()"
               [class.lowOpacity]="(activeTab$ | async) !== 'alphabet'"
               >
-              <mat-icon class="icon-alphabet">font_download</mat-icon>
+
+              <mat-icon class="icon-alphabet">
+                font_download
+              </mat-icon>
               Abecedario
+
             </span>
           </ng-template>
 
@@ -117,16 +128,22 @@
         </mat-tab>
 
 
+
         <!------ tab_learned_letters ------>
         <mat-tab>
 
           <ng-template mat-tab-label>
             <span 
-              (click)="goToLearnedLetters()" class="center tab-title"
+              class="center tab-title"
+              (click)="goToLearnedLetters()"
               [class.lowOpacity]="(activeTab$ | async) !== 'learneds'"
               >
-              <mat-icon class="icon-star">star</mat-icon>
+
+              <mat-icon class="icon-star">
+                star
+              </mat-icon>
               Aprendidas
+
             </span>
           </ng-template>
 
