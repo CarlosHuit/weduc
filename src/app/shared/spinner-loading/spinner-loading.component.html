@@ -1,5 +1,12 @@
-<div #container class="container-spinner">
-  <div [style.width.px]="container.innerHeight" style="height: 100%;" >
+<div
+  #container
+  class="container-spinner"
+  [style.marginTop.px]="marginTop ? marginTop : 48"
+  >
+  <div
+    [style.width.px]="width ? width : 48"
+    [style.height.px]="height ? height : 48"
+    >
     <mat-spinner></mat-spinner>
   </div>
 </div>
