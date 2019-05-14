@@ -3,11 +3,11 @@ import { Injectable          } from '@angular/core';
 import { environment         } from '../../../environments/environment';
 import { catchError          } from 'rxjs/operators';
 import { Observable, of      } from 'rxjs';
-import { LearnedLetters      } from '../../classes/learned-letters';
 import { LocalStorageService } from '../local-storage.service';
 import { UserProgress        } from '../../classes/user-progress';
 import { HandleErrorService  } from '../../shared/handle-error.service';
 import urljoin from 'url-join';
+import { LearnedLetter } from 'src/app/models/reading-course/learned-letter.model';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +27,7 @@ export class UserProgressService {
 
   }
 
-  sendUserProgress = (obj: LearnedLetters) => {
+  sendUserProgress = (obj: LearnedLetter) => {
 
 
     const url   = this.apiUrl;
@@ -38,18 +38,18 @@ export class UserProgressService {
 
   }
 
-  getUserProgress = (id: string): Observable< LearnedLetters[] | any > => {
+  getUserProgress = (id: string): Observable< LearnedLetter[] | any > => {
 
     const url = urljoin(this.apiUrl, id);
 
-    return this.http.get<LearnedLetters[]>(url)
+    return this.http.get<LearnedLetter[]>(url)
       .pipe(
         catchError(this._err.handleError)
       );
 
   }
 
-  saveUserProgress = (obj: LearnedLetters) => {
+  saveUserProgress = (obj: LearnedLetter) => {
     const connection = navigator.onLine ? true : false;
 
 
@@ -60,7 +60,7 @@ export class UserProgressService {
 
 
 
-  saveUserProgressOnStorage = (obj: LearnedLetters) => {
+  saveUserProgressOnStorage = (obj: LearnedLetter) => {
 
     const id = this._storage.getElement('user')['userId'];
     const { letter, rating } = obj;
@@ -115,7 +115,7 @@ export class UserProgressService {
         if (!letterExist) {
 
 
-          const newElement  = new LearnedLetters(letter, rating);
+          const newElement  = new LearnedLetter(letter, rating);
           userProgressProfile.learnedLetters.push(newElement);
           this._storage.saveElement('user_progress', userProgressProfile);
 
@@ -132,7 +132,7 @@ export class UserProgressService {
 
       if (!userProgressProfile) {
 
-        const data = new UserProgress(id, [new LearnedLetters(letter, rating)]);
+        const data = new UserProgress(id, [new LearnedLetter(letter, rating)]);
         this._storage.saveElement('user_progress', data);
 
         const msg = 'Se crea un nuevo perfil de progreso';

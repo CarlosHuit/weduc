@@ -1,8 +1,8 @@
-import { LearnedLetters } from './learned-letters';
+import { LearnedLetter } from '../models/reading-course/learned-letter.model';
 
 export class UserProgress {
   constructor(
     public _id: string,
-    public learnedLetters: LearnedLetters[]
+    public learnedLetters: LearnedLetter[]
   ) {}
 }

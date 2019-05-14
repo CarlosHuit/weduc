@@ -1,13 +1,12 @@
-import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse  } from '@angular/common/http';
-import { Injectable           } from '@angular/core';
-import { environment          } from '../../../environments/environment';
-import { Observable, throwError, of } from 'rxjs';
-import { catchError, map        } from 'rxjs/operators';
-import { GetTokenService      } from '../get-token.service';
-import { LocalStorageService  } from '../local-storage.service';
-import { SimilarLetters       } from '../../classes/similar-letters';
-import { HandleErrorService   } from '../../shared/handle-error.service';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import urljoin from 'url-join';
+import { environment } from '../../../environments/environment';
+import { HandleErrorService } from '../../shared/handle-error.service';
+import { LocalStorageService } from '../local-storage.service';
+import { SimilarLetter } from 'src/app/models/reading-course/similar-letter.model';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +23,7 @@ export class GetSimilarLettersService {
       this.apiUrl = urljoin(environment.apiUrl);
     }
 
-  getSimilarLetters = (letter: string): Observable<any | SimilarLetters[]> => {
+  getSimilarLetters = (letter: string): Observable<any | SimilarLetter[]> => {
 
     const data = this._storage.getElement(`${letter}_sl`);
 
@@ -36,7 +35,7 @@ export class GetSimilarLettersService {
 
 
 
-  getSimilarLettersOfStorage = (letter: string): Observable<any | SimilarLetters[]> => {
+  getSimilarLettersOfStorage = (letter: string): Observable<any | SimilarLetter[]> => {
 
     const data = this._storage.getElement(`${letter}_sl`);
     return of(data);
@@ -45,11 +44,11 @@ export class GetSimilarLettersService {
 
 
 
-  getSimilarLettersOfServer (letter: string): Observable<any | SimilarLetters[]> {
+  getSimilarLettersOfServer (letter: string): Observable<any | SimilarLetter[]> {
 
     const url = urljoin(this.apiUrl, `similar-letters/${letter}`);
 
-    return this.http.get<SimilarLetters[]>(url)
+    return this.http.get<SimilarLetter[]>(url)
       .pipe(
         map(x => this.convertData(x, letter)),
         catchError(this._err.handleError)
@@ -59,7 +58,7 @@ export class GetSimilarLettersService {
 
   convertData = (data, letter: string) => {
 
-    const x = data as SimilarLetters[];
+    const x = data as SimilarLetter[];
 
     const upperIndex = x.findIndex(m => m.letter === letter.toUpperCase() );
     const lowerIndex = x.findIndex(w => w.letter === letter.toLowerCase() );

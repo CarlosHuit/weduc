@@ -3,11 +3,11 @@ import { Injectable              } from '@angular/core';
 import { environment             } from '../../../environments/environment';
 import { Observable, of          } from 'rxjs';
 import { catchError, map         } from 'rxjs/operators';
-import { Words                   } from '../../classes/words';
 import { RandomWords             } from '../../classes/random-words';
 import { LocalStorageService     } from '../local-storage.service';
 import { HandleErrorService      } from '../../shared/handle-error.service';
 import urljoin from 'url-join';
+import { Word } from 'src/app/models/reading-course/word.model';
 
 
 
@@ -29,7 +29,7 @@ export class GetWordsService {
 
   }
 
-  getWordsOfLetter = (letter: string): Observable<any | Words> => {
+  getWordsOfLetter = (letter: string): Observable<any | Word> => {
 
     const words = this._storage.getElement(`${letter}_w`);
 
@@ -43,11 +43,11 @@ export class GetWordsService {
 
   }
 
-  getWordsOfLetterFromServer = (letter: string): Observable<any | Words> => {
+  getWordsOfLetterFromServer = (letter: string): Observable<any | Word> => {
 
     const url = urljoin(this.apiUrl, letter);
 
-    return this.http.get<Words>(url)
+    return this.http.get<Word>(url)
       .pipe(
         map(x => this.saveData(x)),
         catchError(this._err.handleError)
@@ -59,7 +59,7 @@ export class GetWordsService {
 
     if (Storage) {
 
-      const d = data as Words;
+      const d = data as Word;
       const letter = d.letter;
       const words  = d.words;
       this._storage.saveElement(`${letter.toLowerCase()}_w`, words);
@@ -68,9 +68,9 @@ export class GetWordsService {
     return data;
   }
 
-  getWordsOfLetterFromStorage = (letter: string): Observable<any | Words> => {
+  getWordsOfLetterFromStorage = (letter: string): Observable<any | Word> => {
     const words = this._storage.getElement(`${letter}_w`);
-    return of (new Words(letter, words));
+    return of (new Word(letter, words));
   }
 
 

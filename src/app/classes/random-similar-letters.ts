@@ -1,11 +1,11 @@
-import { SimilarLetters } from './similar-letters';
+import { SimilarLetter } from '../models/reading-course/similar-letter.model';
 
 export class RandomSimilarLetters {
   constructor(
     public upperCase: string[],
     public lowerCase: string[],
-    public u:         SimilarLetters,
-    public l:         SimilarLetters,
+    public u:         SimilarLetter,
+    public l:         SimilarLetter,
   ) { }
 }
 
