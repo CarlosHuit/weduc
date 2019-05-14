@@ -1,16 +1,16 @@
 <div [ngStyle]="genCols(contGrid)" class="c-cont-grids" >
   <mat-card
     matRipple
-    [matRippleColor]="'rgba(0,0,0,.04)'"
-    [matRippleRadius]="120"
-    *ngFor="let item of lettersMenu$ | async"
     class="m-c-card"
+    [matRippleRadius]="120"
+    [matRippleColor]="'rgba(0,0,0,.04)'"
+    *ngFor="let item of lettersMenu$ | async"
     >
   
     <button
       color="warn"
-      class="ic-sound center"
       mat-raised-button
+      class="ic-sound center"
       (click)="listenLetter(item.letter)"
       >
   
@@ -19,25 +19,44 @@
     </button>
   
   
-    <div class="letters" (click)="redirect(item.letter)">
+    <div
+      class="letters"
+      (click)="redirect(item.letter)"
+      >
   
   
       <div class="upper center">
-        <button [class.highlight]="( selectedLetter$ | async ) === item.letter">
+
+        <button
+          [class.highlight]="( selectedLetter$ | async ) === item.letter"
+          >
           {{item.letterUpperCase }}
         </button>
+
       </div>
   
   
       <div class="lower center">
-        <button [class.highlight]="( selectedLetter$ | async ) === item.letter">
+
+        <button
+          [class.highlight]="( selectedLetter$ | async ) === item.letter"
+          >
           {{item.letterLowerCase}}
         </button>
+
       </div>
   
   
     </div>
   
-    <div class="image center" (click)="redirect(item.letter)"> <img [src]="item.imgUrl"> </div>
+
+    <div
+      class="image center"
+      (click)="redirect(item.letter)"
+      >
+      <img [src]="item.imgUrl">
+    </div>
+
+
   </mat-card>
 </div>
