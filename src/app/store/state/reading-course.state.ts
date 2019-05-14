@@ -422,7 +422,7 @@ export class ReadingCourseState {
 
 
 
-  /* ---------- data handler actions ---------- */
+  /// ---------- Reading Course Data ----------
   @Action(GetInitialData)
   getInitialData({ dispatch, getState }: StateContext<ReadingCourseStateModel>, action: GetInitialData) {
 
@@ -665,7 +665,7 @@ export class ReadingCourseState {
 
 
 
-  /* ---------- menu handler actions ---------- */
+  /// ---------- Reading Course Menu ----------
   @Action(SetInitialDataMenu)
   setInitialDataMenu({getState, patchState}: StateContext<ReadingCourseStateModel>, action: SetInitialDataSW) {
     patchState({
@@ -878,7 +878,7 @@ export class ReadingCourseState {
   }
 
 
-  /*--------- Letter Detail Actions ---------*/
+  /// --------- Reading Course Letter Detail ---------
   @Action(SetInitialDataLD)
   setInitialDataLD({ getState, dispatch, patchState }: StateContext<ReadingCourseStateModel>, action: SetInitialDataLD) {
 
@@ -1245,7 +1245,7 @@ export class ReadingCourseState {
 
 
 
-  /* ---------- Game handler actions ---------- */
+  /// ---------- Reading Course Game ----------
   @Action(SetInitialDataG)
   setInitialDataG({ patchState, getState, dispatch }: StateContext<ReadingCourseStateModel>, { payload }: SetInitialDataG) {
 
@@ -1614,7 +1614,7 @@ export class ReadingCourseState {
 
 
 
-  /* ---------- Draw Letter Actions ---------- */
+  /// ---------- Reading Course Draw Letter ----------
   @Action(SetInitialDataDL)
   async setInitialDataDL({ patchState, getState, dispatch }: StateContext<ReadingCourseStateModel>, action: SetInitialDataDL) {
 
@@ -1882,7 +1882,7 @@ export class ReadingCourseState {
 
 
 
-  /* ---------- Find Letter Actions ---------- */
+  /// ---------- Reading Course Find Letter ----------
   @Action(SetInitialDataFL)
   setInitialDataFL({ getState, patchState, dispatch }: StateContext<ReadingCourseStateModel>, action: SetInitialDataFL) {
 
@@ -2176,7 +2176,7 @@ export class ReadingCourseState {
 
 
 
-  /* ---------- Select Words Actions ---------- */
+  /// ---------- Reaading Course Select Words ----------
   @Action( IsSettingDataSW )
   isSettingDataSW({ getState, patchState }: StateContext<ReadingCourseStateModel>, { payload }: IsSettingDataSW) {
     patchState({
@@ -2513,7 +2513,7 @@ export class ReadingCourseState {
 
 
 
-  /* ---------- Pronounce Letter Actions ---------- */
+  /// ---------- Reading Course Pronounce Letter ----------
   @Action( IsSettingDataPL )
   isSettingDataPL({ getState, patchState }: StateContext<ReadingCourseStateModel>, { payload }: IsSettingDataPL) {
     patchState({
