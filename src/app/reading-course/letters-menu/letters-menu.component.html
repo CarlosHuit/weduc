@@ -19,53 +19,12 @@
 
       <div class="d-c-grids">
 
-        <!-- letter card -->
-        <mat-card class="d-c-card" *ngFor="let item of lettersMenu$ | async" >
-
-
-          <div class="d-c-image center" (click)="listenWord(item.letter, item.word)">
-            <img [src]="item.imgUrl">
-          </div>
-
-
-          <div class="d-c-letters center">
-
-            <div class="d-c-upper">
-              <button
-                (click)="listenLetter(item.letterUpperCase, 'u')"
-                [disabled]="speaking === true"
-                [class.highlight]="( selectedLetter$ | async ) === item.letter"
-                [class.highlight]=" ( highlightLetter$ | async ) === item.letterUpperCase"
-                >
-                {{item.letterUpperCase}}
-              </button>
-            </div>
-
-            <div class="d-c-lower">
-              <button
-                [disabled]="speaking === true"
-                (click)="listenLetter(item.letterLowerCase, 'l')"
-                [class.highlight]=" ( selectedLetter$ | async ) === item.letter"
-                [class.highlight]=" ( highlightLetter$ | async ) === item.letterLowerCase"
-                >
-                {{item.letterLowerCase}}
-              </button>
-            </div>
-
-          </div>
-
-          <button 
-            color="warn" mat-raised-button
-            class="d-c-button" (click)="redirect(item.letter)"
-            >
-            Empezar
-          </button>
-
-          <mat-icon class="d-ic-sound center" (click)="listenSoundLetter(item.letter)">
-            volume_up
-          </mat-icon>
-
-        </mat-card>
+        <app-card-letter-menu
+          [data]='item'
+          [canSpeech]="canSpeech$ | async"
+          *ngFor="let item of lettersMenu$ | async"
+          >
+        </app-card-letter-menu>
 
       </div>
 

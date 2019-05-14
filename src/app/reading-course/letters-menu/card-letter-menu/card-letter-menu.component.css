@@ -1,0 +1,96 @@
+.d-c-card {
+  width:                  100%;
+  height:                 100%;
+  box-sizing:             border-box;
+  display:                flex;
+  flex-direction:         column;
+  justify-content:        space-evenly;
+  align-items:            center;
+  background-color:     #fafad2;
+  position:               relative;
+  box-shadow:             0 2px 1px -1px rgba(0, 0, 0, 0.3), 0 1px 1px 0 rgba(0, 0, 0, 0), 0 1px 3px 0 rgba(0, 0, 0, 0);
+  border-left:            1px solid rgba(0, 0, 0, 0.05);
+  border-radius:          0 0 0 3px;
+  border-top:             38px solid #FAFAC2;
+  box-sizing:             border-box;
+  padding:                0;
+}
+
+.d-c-card::before {
+  content:                "";
+  position:               absolute;
+  top:                    -38px;
+  right:                  0;
+  border-width:           0 42px 39px 0;
+  border-style:           solid;
+  border-color:         #FFF176 #ffffff;
+  border-radius:          0 0 0 4px;
+}
+
+.d-c-image {
+  width:                  100%;
+  height:                 140px;
+  border-radius:          4px;
+}
+
+.d-c-image img {
+  height:                 140px;
+  width:                  140px;
+  cursor:                 pointer;
+  transition:             100ms;
+}
+
+.d-c-image img:active {
+  transform:              scale(.97)
+}
+
+.d-c-letters {
+  height:                 85px;
+}
+
+.d-c-letters .d-c-upper button,
+.d-c-letters .d-c-lower button {
+  border:                 none;
+  outline:                none;
+  background:             transparent;
+  font-weight:            bolder;
+  font-size:              85px;
+  cursor:                 pointer;
+  font-family:            'Roboto', sans-serif;
+}
+
+.d-c-letters .d-c-upper button:disabled,
+.d-c-letters .d-c-lower button:disabled {
+  color:                black;
+}
+
+.d-c-button {
+  font-size:              20px;
+  letter-spacing:         0.7px;
+  width:                  150px;
+}
+
+.d-ic-sound {
+  position:               absolute;
+  top:                    10px;
+  left:                   10px;
+  background:           #fe473e;
+  color:                white;
+  border-radius:          50%;
+  width:                  40px;
+  height:                 40px;
+  font-size:              35px;
+  z-index:                20;
+  transition:             100ms;
+  cursor:                 pointer;
+}
+
+.d-ic-sound:active {
+  transform:              scale(.95);
+}
+
+
+.highlight {
+  color:                  rgb(255, 191, 0) !important;
+  -webkit-text-stroke:    2px #202020;
+}

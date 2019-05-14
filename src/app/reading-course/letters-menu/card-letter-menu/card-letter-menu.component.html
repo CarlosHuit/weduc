@@ -1,0 +1,51 @@
+<mat-card class="d-c-card">
+
+
+  <div
+    class="d-c-image center"
+    (click)="listenWord(data.letter, data.word)"
+    >
+    <img [src]="data.imgUrl">
+  </div>
+
+
+  <div class="d-c-letters center">
+
+    <div class="d-c-upper">
+      <button
+        [disabled]="speaking === true"
+        (click)="listenLetter(data.letterUpperCase, 'u')"
+        [class.highlight]="( selectedLetter$ | async ) === data.letter"
+        [class.highlight]=" ( highlightLetter$ | async ) === data.letterUpperCase"
+        >
+        {{data.letterUpperCase}}
+      </button>
+    </div>
+
+    <div class="d-c-lower">
+      <button
+        [disabled]="speaking === true"
+        (click)="listenLetter(data.letterLowerCase, 'l')"
+        [class.highlight]=" ( selectedLetter$ | async ) === data.letter"
+        [class.highlight]=" ( highlightLetter$ | async ) === data.letterLowerCase"
+        >
+        {{data.letterLowerCase}}
+      </button>
+    </div>
+
+  </div>
+
+  <button 
+    color="warn"
+    mat-raised-button
+    class="d-c-button"
+    (click)="redirect(data.letter)"
+    >
+    Empezar
+  </button>
+
+  <mat-icon class="d-ic-sound center" (click)="listenSoundLetter(data.letter)">
+    volume_up
+  </mat-icon>
+
+</mat-card>
