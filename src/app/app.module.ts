@@ -10,7 +10,6 @@ import { HttpClientModule, HTTP_INTERCEPTORS  } from '@angular/common/http';
 
 import { environment                      } from '../environments/environment';
 import { AppComponent                     } from './app.component';
-import { CatComponent                     } from './shared/cat/cat.component';
 import { HomeComponent                    } from './home/home.component';
 import { GameComponent                    } from './reading-course/game/game.component';
 import { BoardComponent                   } from './reading-course/draw-letter/board/board.component';
@@ -51,7 +50,6 @@ import { CardLetterMenuComponent } from './reading-course/letters-menu/card-lett
 @NgModule({
   declarations: [
     AppComponent,
-    CatComponent,
     GameComponent,
     HomeComponent,
     BoardComponent,

@@ -27,13 +27,6 @@
 
       <mat-card class="d-c-card-letter">
 
-        <div
-          class="d-c-cat"
-          (click)="listenMessage()"
-          >
-          <app-cat></app-cat>
-        </div>
-
         <div class="d-c-letter" (click)="listenLetter()">
           <h1>{{(data$ | async).letter}}</h1>
         </div>
@@ -80,9 +73,6 @@
     <div *ngIf="showLetterCard$ | async" class="c-letter-presentation">
       <mat-card class="card-letter center">
 
-        <div class="c-cat" (click)="listenMessage()">
-          <app-cat></app-cat>
-        </div>
 
         <div class="c-letter" (click)="listenLetter()">
           <h1>{{(data$ | async).letter}}</h1>

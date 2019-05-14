@@ -18,7 +18,7 @@ export class CheckDataReadingCourseGuard implements CanActivate {
   }
 
   canActivate( next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-
+    console.log(this.data);
     if (!this.data) {
 
       this.store.dispatch(new Navigate(['/lectura/abecedario']));

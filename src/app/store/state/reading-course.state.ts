@@ -165,6 +165,7 @@ export class ReadingCourseState {
   /* ---------- Selectors reading course data ---------- */
   @Selector()
   static hasData(state: ReadingCourseStateModel) {
+    console.log(state);
     return state.data ? true : false;
   }
 
@@ -779,6 +780,9 @@ export class ReadingCourseState {
     const letterSound = getState().data.letterSounds.find(e => e.letter === letter);
     const msg    = `Bien, Seleccionaste la letra: ... ${letterSound.sound}`;
     const speech = this._speech.speak(msg);
+
+    // TODO select letter to navigate to first screen
+    dispatch( new RedirectMenu({ letter: payload.letter }) );
 
     speech.addEventListener('end', function a() {
 
