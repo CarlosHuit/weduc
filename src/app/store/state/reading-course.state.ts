@@ -774,8 +774,8 @@ export class ReadingCourseState {
     });
 
     const letter = payload.letter.toLowerCase();
-    const sound  = getState().data.letterSounds[letter];
-    const msg    = `Bien, Seleccionaste la letra: ... ${sound}`;
+    const letterSound = getState().data.letterSounds.find(e => e.letter === letter);
+    const msg    = `Bien, Seleccionaste la letra: ... ${letterSound.sound}`;
     const speech = this._speech.speak(msg);
 
     speech.addEventListener('end', function a() {
@@ -818,9 +818,9 @@ export class ReadingCourseState {
 
     const letter = payload.letter.toLocaleLowerCase();
     const type = payload.letter === letter ? 'minúscula' : 'mayúscula';
-    const sound  = getState().data.letterSounds[letter];
+    const letterSound = getState().data.letterSounds.find(e => e.letter === letter);
 
-    const msg = `${sound} ... ${type}`;
+    const msg = `${letterSound.sound} ... ${type}`;
     const speech = this._speech.speak(msg);
     speech.addEventListener('end', function a() {
 
@@ -837,8 +837,8 @@ export class ReadingCourseState {
     dispatch(new SelectLetter({letter: payload.letter}));
 
     const letter = payload.letter.toLowerCase();
-    const sound = getState().data.letterSounds[letter];
-    const speech = this._speech.speak(sound, .8);
+    const letterSound = getState().data.letterSounds.find(e => e.letter === letter);
+    const speech = this._speech.speak(letterSound.sound, .8);
 
     speech.addEventListener('end', function a() {
 
@@ -856,11 +856,11 @@ export class ReadingCourseState {
 
     const letter = payload.letter;
     const word   = payload.word;
-    const lSound = getState().data.letterSounds[letter];
+    const letterSound = getState().data.letterSounds.find(e => e.letter === letter);
 
     if (word[0] === letter.toLowerCase() || word[0] === letter.toUpperCase()) {
 
-      const msg    = `${word} ... comienza con la letra ... ${lSound}`;
+      const msg    = `${word} ... comienza con la letra ... ${letterSound.sound}`;
       const speech = this._speech.speak(msg, .95);
       speech.addEventListener('end', () => dispatch(new SelectLetter({letter: ''})));
 
@@ -870,7 +870,7 @@ export class ReadingCourseState {
 
     if (word[0] !== letter.toLowerCase() && lower.test(word)) {
 
-      const msg    = `${word} contiene la letra ... ${lSound}`;
+      const msg    = `${word} contiene la letra ... ${letterSound.sound}`;
       const speech = this._speech.speak(msg, .95);
       speech.addEventListener('end', () => dispatch(new SelectLetter({letter: ''})) );
 
@@ -972,9 +972,9 @@ export class ReadingCourseState {
 
     const state = getState();
     const letter = state.data.currentLetter;
-    const sound = state.data.letterSounds[letter];
+    const letterSound = state.data.letterSounds.find(e => e.letter === letter);
     const type = state.letterDetail.currentData.type;
-    const msg = `Esta letra es la ... ... ${sound} ... ${type}`;
+    const msg = `Esta letra es la ... ... ${letterSound.sound} ... ${type}`;
 
     patchState({
       letterDetail: { ...state.letterDetail, showLetterCard: true }
@@ -999,9 +999,9 @@ export class ReadingCourseState {
 
       const state = getState();
       const letter = state.letterDetail.currentData.letter.toLowerCase();
-      const sound = state.data.letterSounds[letter];
+      const letterSound = state.data.letterSounds.find(e => e.letter === letter);
       const type = state.letterDetail.currentData.type;
-      const msg = `Encuentra la pareja de letras: ${sound}.. "${type}"`;
+      const msg = `Encuentra la pareja de letras: ${letterSound.sound}.. "${type}"`;
 
       this._speech.speak(msg).addEventListener('end', () => dispatch(new HideAllCardsLD()));
 
@@ -1072,9 +1072,9 @@ export class ReadingCourseState {
 
     if (payload.isCorrect) {
 
-      const sound = state.data.letterSounds[letter];
+      const letterSound = state.data.letterSounds.find(e => e.letter === letter);
       const type = stateLD.currentData.type;
-      dispatch(new ListenMessage({ msg: `${sound} ${type}` }));
+      dispatch(new ListenMessage({ msg: `${letterSound.sound} ${type}` }));
 
     }
 
@@ -1090,9 +1090,9 @@ export class ReadingCourseState {
 
     const state = getState();
     const letter = payload.letterId[0].toLowerCase();
-    const sound = state.data.letterSounds[letter];
+    const letterSound = state.data.letterSounds.find(e => e.letter === letter);
     const type = state.letterDetail.currentData.type;
-    const msg = `${sound} ${type}`;
+    const msg = `${letterSound.sound} ${type}`;
 
 
     patchState({
@@ -1307,10 +1307,10 @@ export class ReadingCourseState {
   listenInitialMsgG({ getState, dispatch }: StateContext<ReadingCourseStateModel>, action: ListenInitialMsgG) {
 
     const state = getState();
-    const letter = state.game.currentData.letter;
+    const letter = state.game.currentData.letter.toLowerCase();
     const type = state.game.currentData.type;
-    const sound = state.data.letterSounds[letter.toLowerCase()];
-    const msg = `Presiona todas las letras ${sound} ${type}`;
+    const letterSound = state.data.letterSounds.find(e => e.letter === letter);
+    const msg = `Presiona todas las letras ${letterSound.sound} ${type}`;
 
     const speech = this._speech.speak(msg, .9);
     speech.addEventListener('end', function a() {
@@ -1827,9 +1827,9 @@ export class ReadingCourseState {
     const index = state.currentIndex === null ? -1 : state.currentIndex;
     const nextIndex = index + 1;
 
-    const sound = getState().data.letterSounds[letter];
+    const letterSound = getState().data.letterSounds.find(e => e.letter === letter);
     const type = state.currentData.type;
-    const msg = `Bien, ahora ya sabes escribir la letra: ${sound} .... "${type}"`;
+    const msg = `Bien, ahora ya sabes escribir la letra: ${letterSound.sound} .... "${type}"`;
 
     const speech = this._speech.speak(msg, 1);
 
@@ -2072,11 +2072,11 @@ export class ReadingCourseState {
 
     const state = getState();
     const letter = state.findLetter.currentData.letter.toLowerCase();
-    const sound = state.data.letterSounds[letter];
+    const letterSound = state.data.letterSounds.find(e => e.letter === letter);
     const type = state.findLetter.currentData.type;
     const word = state.findLetter.currentData.word;
 
-    const msg = `Selecciona todas las letras ... ${sound} ... ${type}  ... de la palabra ... ${word}`;
+    const msg = `Selecciona todas las letras ... ${letterSound.sound} ... ${type}  ... de la palabra ... ${word}`;
     this._speech.speak(msg);
 
   }
@@ -2499,11 +2499,11 @@ export class ReadingCourseState {
   @Action( ListenInstructionsSW )
   listenInstructionsSW({ getState }: StateContext<ReadingCourseStateModel>, action: ListenInstructionsSW) {
     const state = getState().selectWords.currentData;
-    const letter = state.letter;
+    const letter = state.letter.toLowerCase();
     const type = state.type;
-    const sound = getState().data.letterSounds[letter.toLowerCase()];
+    const letterSound = getState().data.letterSounds.find(e => e.letter === letter);
 
-    const msg = `Selecciona todas las palabras que al menos tengan: ... una letra ${sound} ${type}`;
+    const msg = `Selecciona todas las palabras que al menos tengan: ... una letra ${letterSound.sound} ${type}`;
     this._speech.speak( msg );
   }
 
@@ -2591,9 +2591,9 @@ export class ReadingCourseState {
   listenHelpPL({ getState }: StateContext<ReadingCourseStateModel>, action: ListenHelpPL) {
 
     const letter = getState().pronounceLetter.currentData.letter.toLowerCase();
-    const sound  = getState().data.letterSounds[letter];
+    const letterSound = getState().data.letterSounds.find(e => e.letter === letter);
     const type   = getState().pronounceLetter.currentData.type;
-    const msg    = `Esta es la letra: ${sound} ... ${type}`;
+    const msg    = `Esta es la letra: ${letterSound.sound} ... ${type}`;
 
     this._speech.speak(msg, .9);
 
