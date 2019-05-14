@@ -32,7 +32,7 @@
     
           <div class="m-c-list-items">
     
-            <mat-nav-list *ngIf="isLoggedIn()">
+            <mat-nav-list *ngIf="isLoggedIn$ | async">
               <a mat-list-item (click)="logoutAndClose()">
                 Cerrar Sesion
               </a>
