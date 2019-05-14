@@ -23,6 +23,9 @@
 
 }
 
+.container-discussion-system {
+  padding: 10px 3%;
+}
 
 
 @media (min-width: 320px) and (orientation: landscape) {

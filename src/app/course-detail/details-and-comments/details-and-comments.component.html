@@ -1,7 +1,7 @@
 <mat-tab-group color="accent" backgroundColor="warn" mat-align-tabs="start" >
 
 
-<!------------ Course Detail Tab ------------>
+  <!-------------- Course Detail Tab -------------->
   <mat-tab >
 
     <ng-template mat-tab-label>
@@ -25,7 +25,7 @@
   </mat-tab>
 
 
-<!------------ Comments Course Tab ------------>
+  <!------------ System Discussion Tab ------------>
   <mat-tab>
 
     <ng-template mat-tab-label>
@@ -40,7 +40,11 @@
 
     </ng-template>
 
-    <app-discussion-system></app-discussion-system>
+    <div class="container-discussion-system">
+
+      <app-discussion-system></app-discussion-system>
+
+    </div>
     
   </mat-tab>
 

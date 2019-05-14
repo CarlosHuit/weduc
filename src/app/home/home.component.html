@@ -13,9 +13,10 @@
        class="c-cards hide"
        >
   
+       <!-- [matRippleColor]="'rgba(0,0,0,.08)'" -->
       <mat-card
         matRipple
-        [matRippleColor]="'rgba(0,0,0,.08)'"
+        [matRippleColor]="'#2196f31a'"
         class="card-course"
         *ngFor="let item of filterCourses()"
         (click)="redirect(item.subtitle)"
