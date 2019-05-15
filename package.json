@@ -10,7 +10,7 @@
     "start:production":    "concurrently -r \"npm run start:server-prod\" \"npm run start:client-prod\" ",
     "start:server-prod":   "NODE_ENV=production node server.js",
     "start:client-prod":   "ng serve --prod",
-    "start:client-mobile": "ng serve --host 192.168.43.77",
+    "start:client-mobile": "ng serve --host 192.168.43.77 --port 4000",
     "build":               "concurrently -r \"npm run build:client \" \"npm run build:server\"",
     "build:client":        "ng build --prod ",
     "build:server":        "babel server --out-dir dist/server",

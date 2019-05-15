@@ -155,7 +155,7 @@
 
 .c-letter-presentation {
   position: absolute;
-  background-color: rgba(0, 0, 0, .98);
+  background-color: rgba(0, 0, 0, .85);
   width: 100%;
   height: 100%;
   top: 0;
@@ -171,15 +171,16 @@
 }
 
 .card-letter {
-  width:      95%;
-  height:     94%;
+
+  width: calc(100% - 40px);
+  height: calc(100% - 45px);
   max-height: 490px;
-  max-width:  350px;
-  padding:    0;
-  box-sizing: border-box;
-  position:   relative;
-  border:     4px solid #f44336;
-  border-radius: 0;
+  max-width: 350px;
+  padding: 0;
+  position: relative;
+  box-shadow: 0 0 15px 2px rgba(0,0,0,.60);
+  border-radius: 6px;
+
 }
 
 @keyframes rotate {
