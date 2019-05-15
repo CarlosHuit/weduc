@@ -8,7 +8,8 @@ import { SLData } from 'src/app/store/models/reading-course/letter-detail/readin
 import {
   SetInitialDataLD,
   HideLetterCardLD,
-  SelectLetterLD
+  SelectLetterLD,
+  ListenLetterPresentationLD
 } from '../../store/actions/reading-course/reading-course-letter-detail.actions';
 
 @Component({
@@ -50,7 +51,9 @@ export class LettersDetailComponent implements OnInit, OnDestroy {
 
   }
 
-
+  listenLetterPresentation = () => {
+    this.store.dispatch( new ListenLetterPresentationLD() );
+  }
 
   continue = () => this.store.dispatch( new HideLetterCardLD({ listenMsg: true }));
   onSelect = (letterId: string) => {
@@ -84,7 +87,9 @@ export class LettersDetailComponent implements OnInit, OnDestroy {
   calcOpt = (el: HTMLElement) => ({ 'width': `${el.clientWidth * .332}px`, 'height': `${el.clientWidth * .332}px` });
   calcFZ = (el: HTMLElement) => ({ 'font-size': `${el.clientWidth * .5}px` });
 
-
+  hello() {
+    console.log('hello');
+  }
 
 /*----- Collect User data -----*/
 

@@ -15,7 +15,8 @@ export enum ReadingCourseLetterDetailActionsType {
   LETTERS_ARE_NOT_SAME   = '[Reading Course Letter Detail] Letters Are Not Same',
   SHOW_SUCCESS_SCREEN    = '[Reading Course Letter Detail] Show Success Screen',
   HIDE_SUCCESS_SCREEN    = '[Reading Course Letter Detail] Hide Success Screen',
-  RESET_DATA             = '[Reading Course Letter Detail] Reset Letter Detail Data'
+  RESET_DATA             = '[Reading Course Letter Detail] Reset Letter Detail Data',
+  LISTEN_LETTER_PRESENTATION = '[Reading Course Letter Detail] Listen Letter Presentation',
 }
 
 
@@ -44,6 +45,13 @@ export class IsSettingDataLD {
 export class ShowLetterCardLD {
 
   static readonly type = ReadingCourseLetterDetailActionsType.SHOW_LETTER_CARD;
+
+}
+
+
+export class ListenLetterPresentationLD {
+
+  static readonly type = ReadingCourseLetterDetailActionsType.LISTEN_LETTER_PRESENTATION;
 
 }
 

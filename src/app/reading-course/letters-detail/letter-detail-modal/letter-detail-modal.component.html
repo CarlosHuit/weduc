@@ -1,0 +1,32 @@
+<div class="container-modal">
+  <div
+    class="background-modal hide-opacity"
+    [class.show-opacity]='useStartAnimation && !activeHideAnimation'
+    >
+
+
+    <div
+      class="card-modal center"
+      [class.show-card-without-animation]="!useStartAnimation"
+      [class.show-card-with-animation]="useStartAnimation"
+      [class.hide-card-with-animation]="activeHideAnimation"
+      >
+
+      <div class="c-letter" (click)="onStart()">
+        <h1>{{ letter }}</h1>
+      </div>
+
+      <button
+        color="warn"
+        (click)="hideCard()"
+        mat-raised-button
+        class="button-next"
+        >
+        Siguiente
+      </button>
+
+    </div>
+
+
+  </div>
+</div>

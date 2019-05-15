@@ -70,25 +70,25 @@
 
     </div>
 
-    <div *ngIf="showLetterCard$ | async" class="c-letter-presentation">
-      <mat-card class="card-letter center">
+    <div
+      *ngIf="showLetterCard$ | async"
+      style="
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      "
+    >
 
+      <app-letter-detail-modal
+        [onEnd]="continue"
+        [letter]="(data$ | async).letter"
+        [onStart]="listenLetterPresentation"
+        [useStartAnimation]="true"
+        >
+      </app-letter-detail-modal>
 
-        <div class="c-letter" (click)="listenLetter()">
-          <h1>{{(data$ | async).letter}}</h1>
-        </div>
-
-        <button
-          color="warn"
-          (click)="continue()"
-          mat-raised-button
-          class="button-next"
-          >
-          Siguiente
-        </button>
-
-      </mat-card>
     </div>
+
   </div>
 
 

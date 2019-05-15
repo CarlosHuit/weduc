@@ -44,7 +44,8 @@ import {
   ShowSuccessScreenLD,
   HideSuccessScreenLD,
   SetCurrentData,
-  ResetLetterDetailData
+  ResetLetterDetailData,
+  ListenLetterPresentationLD
 } from '../actions/reading-course/reading-course-letter-detail.actions';
 import { ShuffleService } from 'src/app/services/shuffle/shuffle.service';
 import { GenerateIdsService } from 'src/app/services/generate-ids/generate-ids.service';
@@ -911,17 +912,19 @@ export class ReadingCourseState {
       const dataLowerCase = new SLData(letterLC, idsLower, 'minúscula');
       const dataUpperCase = new SLData(letterUC, idsUpper, 'mayúscula');
 
+      const dataLD = [ dataLowerCase, dataUpperCase ];
+
       patchState({
         ...getState(),
         letterDetail: {
           ...getState().letterDetail,
-          data: [dataLowerCase, dataUpperCase],
-          selections: { selection1: null, selection2: null },
-          currentIndex: null,
-          currentData: null,
-          showLetterCard: false,
-          showAllCards: true,
-          canPlayGame: false,
+          data:           dataLD,
+          selections:     { selection1: null, selection2: null },
+          currentIndex:      null,
+          currentData:       null,
+          showLetterCard:    false,
+          showAllCards:      true,
+          canPlayGame:       false,
           showSuccessScreen: false,
         }
       });
@@ -939,7 +942,7 @@ export class ReadingCourseState {
 
 
   @Action(SetCurrentData)
-  setCurrentData({ patchState, getState, dispatch }: StateContext<ReadingCourseStateModel>, action: SetCurrentData) {
+  setCurrentData({ patchState, getState }: StateContext<ReadingCourseStateModel>, action: SetCurrentData) {
 
     const state = getState().letterDetail;
     const index = state.currentIndex === null ? -1 : state.currentIndex;
@@ -973,22 +976,30 @@ export class ReadingCourseState {
 
 
   @Action(ShowLetterCardLD) // prensent letter card
-  showLetterCardLD({ patchState, getState, dispatch }: StateContext<ReadingCourseStateModel>, action: ShowLetterCardLD) {
+  showLetterCardLD({ patchState, getState }: StateContext<ReadingCourseStateModel>, action: ShowLetterCardLD) {
 
     const state = getState();
-    const letter = state.data.currentLetter;
-    const letterSound = state.data.letterSounds.find(e => e.letter === letter);
-    const type = state.letterDetail.currentData.type;
-    const msg = `Esta letra es la ... ... ${letterSound.sound} ... ${type}`;
 
     patchState({
       letterDetail: { ...state.letterDetail, showLetterCard: true }
     });
 
-    dispatch(new ListenMessage({ msg }));
 
   }
 
+
+  @Action(ListenLetterPresentationLD)
+  listenLetterPresentationLD(ctx: StateContext<ReadingCourseStateModel>, action: ListenLetterPresentationLD) {
+
+    const state = ctx.getState();
+    const letter = state.data.currentLetter;
+    const letterSound = state.data.letterSounds.find(e => e.letter === letter);
+    const type = state.letterDetail.currentData.type;
+    const msg = `Esta es la letra ... ... ${letterSound.sound} ... ${type}`;
+
+    ctx.dispatch(new ListenMessage({ msg }));
+
+  }
 
   @Action(HideLetterCardLD) // prensent letter card
   hideLetterCardLD({ patchState, getState, dispatch }: StateContext<ReadingCourseStateModel>, { payload }: HideLetterCardLD) {
