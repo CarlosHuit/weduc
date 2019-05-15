@@ -16,8 +16,8 @@
           [class.showAll]="(showAllCard$ | async)"
           [class.active]="(sel1$ | async) === x || (sel2$ | async) === x"
           >
-          <div class="lado frente"></div>
-          <div [ngStyle]="calcFZ(option)" class="lado atras">{{x[0]}}</div>
+          <div class="lado front"></div>
+          <div [ngStyle]="calcFZ(option)" class="lado back">{{x[0]}}</div>
         </div>
       </div>
 
@@ -62,8 +62,8 @@
           [class.showAll]="(showAllCard$ | async)"
           [class.active]="(sel1$ | async) === x || (sel2$ | async) === x"
           >
-          <div class="lado frente"></div>
-          <div [ngStyle]="calcFZ(option)" class="lado atras">{{x[0]}}</div>
+          <div class="lado front"></div>
+          <div [ngStyle]="calcFZ(option)" class="lado back">{{x[0]}}</div>
         </div>
       </div>
 

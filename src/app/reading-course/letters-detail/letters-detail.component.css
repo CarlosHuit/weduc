@@ -79,33 +79,24 @@
 }
 
 .card-game {
-  width: 94%;
-  max-height: 720px;
-  max-width: 640px;
-  height: 96%;
-  box-sizing: border-box;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: white;
-  box-shadow: 0 2px 1px -1px rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .14), 0 1px 3px 0 rgba(0, 0, 0, .12);
+  width: 100%;
+  height: 100%;
 }
 
 .container-cards {
   -webkit-perspective: 800;
   perspective: 800;
   display: grid;
-  grid-template-columns: repeat(auto-fill, 32.5%);
-  grid-auto-rows: 32.5%;
-  padding: 2.5px 3px 3px 2.5px;
+  grid-template-columns: repeat(auto-fill, 31.5%);
+  grid-auto-rows: 31%;
+  /* padding: 2.5px 3px 3px 2.5px; */
   justify-content: space-around;
   align-content: space-around;
-  border: 6px solid #f44336;
-  border: 6px solid #1a5e7e;
-  border: 6px solid #17789e;
+  /* border: 6px solid #17789e; */
 
-  box-sizing: border-box;
-  padding: 2px;
+  /* box-sizing: border-box; */
+  /* padding: 2px; */
+
 }
 
 .carta {
@@ -116,7 +107,7 @@
   color: white;
   font-weight: bold;
   font-family: 'Roboto', sans-serif;
-  transition: 1s cubic-bezier(0.25, 0.46, 0.45, 2)
+  transition: 0.8s cubic-bezier(0.445, 0.05, 0.55, 1);
 }
 
 .active {
@@ -140,17 +131,23 @@
   justify-content: center;
   align-items: center;
   font-size: 60px;
-  /* border: 1px solid white; */
+  border-radius: 6px
 }
 
-.frente {
+.front {
   background-color: #009c4e;
-  background: linear-gradient(to bottom left, #009b4d 10%, #00b35f 64%, #08ac5a 100%)
+  background: linear-gradient(to bottom left, #009b4d 10%, #00b35f 64%, #08ac5a 100%);
+  border: 4px solid #424242;
+  box-sizing: border-box;
+  box-shadow: -2px 2px 4px rgba( 0, 0, 0, 0.30 );
 }
 
-.atras {
+.back {
   background-color: rgb(255, 90, 72);
   transform: rotateY(180deg);
+  box-sizing: border-box;
+  border: 4px solid #424242;
+  box-shadow: -2px 2px 4px rgba( 0, 0, 0, 0.30 );
 }
 
 .c-letter-presentation {
