@@ -1,27 +1,16 @@
 import { Injectable } from '@angular/core';
 
-interface IWindow extends Window {
-  SpeechSynthesisUtterance: any;
-  SpeechSynthesis: any;
-}
-
 @Injectable({ providedIn: 'root' })
 
 export class SpeechSynthesisService {
 
-  utterance: any;
-  arrayDates: string[];
 
-  constructor() { }
+  utterance: SpeechSynthesisUtterance;
 
 
-  /* Sintesis de voz Google Espanol Estados Unidos */
-  speak = (text: string, velocity?: number): SpeechSynthesisUtterance => {
+  speak(text: string, velocity?: number): SpeechSynthesisUtterance {
 
     this.cancel();
-
-    const { SpeechSynthesisUtterance }: IWindow = <IWindow>window;
-    const { speechSynthesis }: IWindow = <IWindow>window;
 
     this.utterance        = new SpeechSynthesisUtterance();
     this.utterance.text   = text;
@@ -30,22 +19,18 @@ export class SpeechSynthesisService {
     this.utterance.rate   = velocity ? velocity : 1;
     this.utterance.pitch  = 1;
 
-    (window as any).speechSynthesis.speak(this.utterance);
-    (window as any).addEventListener('beforeunload', () => this.cancel(), false);
-
-    // this.utterance.onend = () => {
-    //   (window as any).removeEventListener('beforeunload', () => this.cancel(), false );
-    // };
+    window.speechSynthesis.speak(this.utterance);
+    window.addEventListener('beforeunload', this.cancel, false);
 
     return this.utterance;
+
   }
+
+
 
   speakEs = (text: string): SpeechSynthesisUtterance => {
 
     this.cancel();
-
-    const { SpeechSynthesisUtterance }: IWindow = <IWindow>window;
-    const { speechSynthesis }: IWindow = <IWindow>window;
 
     this.utterance        = new SpeechSynthesisUtterance();
     this.utterance.text   = text;
@@ -54,37 +39,33 @@ export class SpeechSynthesisService {
     this.utterance.rate   = 1;
     this.utterance.pitch  = 1;
 
-    (window as any).speechSynthesis.speak(this.utterance);
-    (window as any).addEventListener('beforeunload', this.cancel());
+    window.speechSynthesis.speak(this.utterance);
+    window.addEventListener('beforeunload', this.cancel);
 
-    this.utterance.addEventListener('end', () => {
-      (window as any).removeEventListener('beforeunload', this.cancel());
-    });
+    this.utterance.addEventListener('end', () => window.removeEventListener('beforeunload', this.cancel) );
 
     return this.utterance;
   }
 
 
-  /* Se pauda una sintesis de voz en reproduccion */
+
+  /// Pause tts
   pause = () => {
 
-    const { SpeechSynthesisUtterance }: IWindow = <IWindow>window;
-    const { speechSynthesis }: IWindow = <IWindow>window;
-
     this.utterance = new SpeechSynthesisUtterance();
-    (window as any).speechSynthesis.pause();
+    window.speechSynthesis.pause();
 
   }
 
 
-  /* Se reanuda una sinstesis de voz previamente pausada */
+
+  /// Se reanuda tts pausado
   reanudar = () => {
 
-    const { speechSynthesis }: IWindow = <IWindow>window;
-    const state = speechSynthesis.paused;
+    const state = window.speechSynthesis.paused;
 
     if (state === true) {
-      (window as any).speechSynthesis.resume();
+      window.speechSynthesis.resume();
     } else {
       console.log('No hay audios en la cola de reproduccion');
     }
@@ -92,12 +73,12 @@ export class SpeechSynthesisService {
   }
 
 
-  /* Se Cancela la sintesis de voz en reproduccion */
+
+  /// Se Cancela la sintesis de voz en reproduccion
   cancel = () => {
 
-    const { speechSynthesis }: IWindow = <IWindow>window;
-    (window as any).speechSynthesis.pause();
-    (window as any).speechSynthesis.cancel();
+    window.speechSynthesis.pause();
+    window.speechSynthesis.cancel();
 
   }
 
