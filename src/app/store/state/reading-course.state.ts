@@ -146,6 +146,7 @@ import { ItemLetterMenu } from 'src/app/models/reading-course/item-letter-menu.m
 import { LearnedLetter } from 'src/app/models/reading-course/learned-letter.model';
 import { ReadingCourseDataModel } from '../models/reading-course/data/reading-course-data.model';
 
+
 @State<ReadingCourseStateModel>({
   name: 'readingCourse',
   defaults: {
@@ -458,6 +459,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(GetInitialDataSuccess)
   getInitialDataSuccess({ patchState, dispatch, getState }: StateContext<ReadingCourseStateModel>, { payload }: GetInitialDataSuccess) {
 
@@ -531,6 +533,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(IsLoadingDataOfReadingCourse)
   IsLoadingDataOfReadingCourse(ctx: StateContext<ReadingCourseStateModel>, { payload }: IsLoadingDataOfReadingCourse) {
 
@@ -542,6 +545,7 @@ export class ReadingCourseState {
     });
 
   }
+
 
 
   @Action(SortLearnedLettersByAlphabet)
@@ -567,6 +571,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(SortLearnedLettersByRating)
   sortLearnedLettersByRating(ctx: StateContext<ReadingCourseStateModel>, action: SortLearnedLettersByRating) {
 
@@ -585,8 +590,9 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(ResetReadingCourseData)
-  resetReadingCourseData( { patchState, getState }: StateContext<ReadingCourseStateModel>, action: ResetReadingCourseData ) {
+  resetReadingCourseData( { patchState }: StateContext<ReadingCourseStateModel>, action: ResetReadingCourseData ) {
     patchState({
       data: null,
       drawLetter: null,
@@ -597,6 +603,7 @@ export class ReadingCourseState {
       selectWords: null
     });
   }
+
 
 
   @Action( UpdateLearnedLetters )
@@ -657,6 +664,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action( UpdateLearnedLettersInStorage )
   updateLearnedLettersInStorage({ getState, patchState }: StateContext<ReadingCourseStateModel>, action: UpdateLearnedLettersInStorage) {
 
@@ -668,7 +676,9 @@ export class ReadingCourseState {
 
 
 
-  /// ---------- Reading Course Menu ----------
+
+
+  /// ---------- Reading Course Menu ---------->>
   @Action(SetInitialDataMenu)
   setInitialDataMenu({getState, patchState}: StateContext<ReadingCourseStateModel>, action: SetInitialDataSW) {
     patchState({
@@ -684,12 +694,14 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(ListenMessage)
   listenMessage(ctx: StateContext<ReadingCourseStateModel>, { payload }: ListenMessage) {
 
     this._speech.speak(payload.msg);
 
   }
+
 
 
   @Action(ChangerSorter)
@@ -701,6 +713,7 @@ export class ReadingCourseState {
       }
     });
   }
+
 
 
   @Action(ChangeActiveTab)
@@ -734,6 +747,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(SelectLetter)
   selectLetter({ patchState, getState }: StateContext<ReadingCourseStateModel>, { payload }: SelectLetter) {
 
@@ -747,6 +761,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(HighlightLetter)
   highlightLetter({ patchState, getState }: StateContext<ReadingCourseStateModel>, { payload }: HighlightLetter) {
 
@@ -758,6 +773,7 @@ export class ReadingCourseState {
     });
 
   }
+
 
 
   @Action(ActiveRedirection)
@@ -794,6 +810,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action( RedirectMenu )
   redirectMenu({ dispatch }: StateContext<ReadingCourseStateModel>, { payload }: RedirectMenu) {
 
@@ -809,12 +826,14 @@ export class ReadingCourseState {
   }
 
 
+
   @Action( ResetDataMenu )
   resetDataMenu({ patchState }: StateContext<ReadingCourseStateModel>, action: ResetDataMenu) {
     patchState({
       menu: null
     });
   }
+
 
 
   @Action( ListenSpecificLetterMenu )
@@ -837,6 +856,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action( ListenSoundLetterMenu )
   listenSoundLetterMenu({ getState, dispatch }: StateContext<ReadingCourseStateModel>, { payload }: ListenSoundLetterMenu) {
 
@@ -853,6 +873,7 @@ export class ReadingCourseState {
     });
 
   }
+
 
 
   @Action( ListenWordAndLetter )
@@ -882,6 +903,9 @@ export class ReadingCourseState {
 
     }
   }
+
+
+
 
 
   /// --------- Reading Course Letter Detail ---------
@@ -941,6 +965,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(SetCurrentData)
   setCurrentData({ patchState, getState }: StateContext<ReadingCourseStateModel>, action: SetCurrentData) {
 
@@ -964,15 +989,19 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(IsSettingDataLD)
   isSettingDataLD({ patchState, getState }: StateContext<ReadingCourseStateModel>, { payload }: IsSettingDataLD) {
+
     patchState({
       letterDetail: {
         ...getState().letterDetail,
         isSettingData: payload.state
       }
     });
+
   }
+
 
 
   @Action(ShowLetterCardLD) // prensent letter card
@@ -981,11 +1010,14 @@ export class ReadingCourseState {
     const state = getState();
 
     patchState({
-      letterDetail: { ...state.letterDetail, showLetterCard: true }
+      letterDetail: {
+        ...state.letterDetail,
+        showLetterCard: true,
+      }
     });
 
-
   }
+
 
 
   @Action(ListenLetterPresentationLD)
@@ -1000,6 +1032,8 @@ export class ReadingCourseState {
     ctx.dispatch(new ListenMessage({ msg }));
 
   }
+
+
 
   @Action(HideLetterCardLD) // prensent letter card
   hideLetterCardLD({ patchState, getState, dispatch }: StateContext<ReadingCourseStateModel>, { payload }: HideLetterCardLD) {
@@ -1027,8 +1061,10 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(ShowAllCardsLD)
   showAllCardsLD({ getState, patchState }: StateContext<ReadingCourseStateModel>, action: ShowAllCardsLD) {
+
     patchState({
       letterDetail: {
         ...getState().letterDetail,
@@ -1036,7 +1072,9 @@ export class ReadingCourseState {
         canPlayGame: false
       }
     });
+
   }
+
 
 
   @Action(HideAllCardsLD)
@@ -1057,6 +1095,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(SelectLetterLD)
   selectLetterLD({ getState, dispatch }: StateContext<ReadingCourseStateModel>, { payload }: SelectLetterLD) {
 
@@ -1073,6 +1112,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(AddFirstSelectionLD)
   addFirstSelectionLD({ getState, patchState, dispatch }: StateContext<ReadingCourseStateModel>, { payload }: AddFirstSelectionLD) {
 
@@ -1083,7 +1123,10 @@ export class ReadingCourseState {
     patchState({
       letterDetail: {
         ...stateLD,
-        selections: { ...stateLD.selections, selection1: payload.letterId }
+        selections: {
+          ...stateLD.selections,
+          selection1: payload.letterId
+        }
       }
     });
 
@@ -1099,6 +1142,7 @@ export class ReadingCourseState {
     if (!payload.isCorrect) { this._audio.playAudio(); }
 
   }
+
 
 
   @Action(AddSecondSelectionLD)
@@ -1135,6 +1179,7 @@ export class ReadingCourseState {
 
     }
 
+
     if (!payload.isCorrect) {
 
       const audio = this._audio.playAudio();
@@ -1150,13 +1195,14 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(ValidateSelectionsLD)
   validateSelectionsLD({ getState, dispatch }: StateContext<ReadingCourseStateModel>, action: ValidateSelectionsLD) {
 
-    const state = getState();
-    const sel = state.letterDetail.selections;
-    const letter = state.letterDetail.currentData.letter;
-    const same = sel.selection1[0] === letter && sel.selection2[0] === letter;
+    const state   = getState();
+    const sel     = state.letterDetail.selections;
+    const letter  = state.letterDetail.currentData.letter;
+    const same    = sel.selection1[0] === letter && sel.selection2[0] === letter;
     const notSame = sel.selection1[0] !== letter || sel.selection2[0] !== letter;
 
     return same
@@ -1168,12 +1214,14 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(LettersAreSameLD)
   lettersAreSameLD({ dispatch, getState }: StateContext<ReadingCourseStateModel>, action: LettersAreSameLD) {
 
     dispatch(new ShowSuccessScreenLD());
 
     const speech = this._speech.speak('Bien Hecho!', .90);
+
     speech.addEventListener('end', function a() {
 
       const letter = getState().data.currentLetter;
@@ -1208,6 +1256,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(LettersAreNotSameLD)
   lettersAreNotSameLD({ getState, patchState }: StateContext<ReadingCourseStateModel>, action: LettersAreSameLD) {
 
@@ -1226,6 +1275,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(ShowSuccessScreenLD)
   showSuccessScreenLD({ getState, patchState }: StateContext<ReadingCourseStateModel>, action: ShowSuccessScreenLD) {
 
@@ -1239,6 +1289,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(HideSuccessScreenLD)
   hideSuccessScreenLD({ getState, patchState }: StateContext<ReadingCourseStateModel>, action: ShowSuccessScreenLD) {
 
@@ -1250,6 +1301,7 @@ export class ReadingCourseState {
     });
 
   }
+
 
 
   @Action(ResetLetterDetailData)
@@ -1298,6 +1350,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(SetCurrentDataG)
   setCurrentDataG({ patchState, getState }: StateContext<ReadingCourseStateModel>) {
 
@@ -1320,6 +1373,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(ListenInitialMsgG)
   listenInitialMsgG({ getState, dispatch }: StateContext<ReadingCourseStateModel>, action: ListenInitialMsgG) {
 
@@ -1338,6 +1392,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(IsSettingDataG)
   IsSettingDataG({ patchState, getState }: StateContext<ReadingCourseStateModel>, { payload }: IsSettingDataG) {
     patchState({
@@ -1347,6 +1402,7 @@ export class ReadingCourseState {
       }
     });
   }
+
 
 
   @Action(RestartDataG)
@@ -1380,6 +1436,7 @@ export class ReadingCourseState {
 
 
   }
+
 
 
   @Action(SelectLetterG)
@@ -1423,6 +1480,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(RegisterLetterIdG)
   registerLetterIdG({ getState, patchState }: StateContext<ReadingCourseStateModel>, { payload }: RegisterLetterIdG) {
 
@@ -1445,6 +1503,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(IncreaseCorrectsG)
   increaseCorrectsG({ getState, patchState }: StateContext<ReadingCourseStateModel>, action: IncreaseCorrectsG) {
 
@@ -1463,6 +1522,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(IncreaseIncorrectsG)
   increaseIncorrectsG({ patchState, getState }: StateContext<ReadingCourseStateModel>, action: IncreaseIncorrectsG) {
 
@@ -1479,6 +1539,7 @@ export class ReadingCourseState {
     });
 
   }
+
 
 
   @Action(ShowCorrectLettersG)
@@ -1514,6 +1575,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(ShowSuccessScreenG)
   showSuccessScreenG({ getState, patchState }: StateContext<ReadingCourseStateModel>, action: ShowSuccessScreenG) {
     patchState({
@@ -1525,6 +1587,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(HideSuccessScreenG)
   hideSuccessScreenG({ getState, patchState }: StateContext<ReadingCourseStateModel>, action: HideSuccessScreenG) {
     patchState({
@@ -1534,6 +1597,7 @@ export class ReadingCourseState {
       }
     });
   }
+
 
 
   @Action(ChangeCurrentDataG)
@@ -1576,10 +1640,12 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(ResetDataG)
   resetDataG({ patchState }: StateContext<ReadingCourseStateModel>, action: ResetDataG) {
     patchState({ game: null });
   }
+
 
 
   @Action(UseHelpG)
@@ -1588,6 +1654,7 @@ export class ReadingCourseState {
     dispatch(new ShowCorrectLettersG({ state: true }));
     setTimeout(() => dispatch(new ShowCorrectLettersG({ state: false })), 1000);
   }
+
 
 
   genDataG = (sl: string[], letter: string, type: string, contWidth: number) => {
@@ -1674,6 +1741,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(IsSettingDataDL)
   isSettingDataDL({ patchState, getState }: StateContext<ReadingCourseStateModel>, { payload }: IsSettingDataDL) {
     patchState({
@@ -1683,6 +1751,7 @@ export class ReadingCourseState {
       }
     });
   }
+
 
 
   @Action(SetCurrentDataDL)
@@ -1707,6 +1776,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(ChangeLineWidthDL)
   changeLineWidthDL({ patchState, getState }: StateContext<ReadingCourseStateModel>, { payload }: ChangeLineWidthDL) {
     const state = getState();
@@ -1729,6 +1799,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(ChangeLineColorDL)
   changeLineColorDL({ patchState, getState }: StateContext<ReadingCourseStateModel>, { payload }: ChangeLineColorDL) {
     const state = getState().drawLetter;
@@ -1742,6 +1813,7 @@ export class ReadingCourseState {
       }
     });
   }
+
 
 
   @Action(ToggleGuideLinesDL)
@@ -1761,6 +1833,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(ShowHandwritingDL)
   showHandwritingDL({ patchState, getState }: StateContext<ReadingCourseStateModel>, action: ShowHandwritingDL) {
     const state = getState().drawLetter;
@@ -1773,6 +1846,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(HideHandwritingDL)
   hideHandwritingDL({ patchState, getState }: StateContext<ReadingCourseStateModel>, action: HideHandwritingDL) {
     const state = getState().drawLetter;
@@ -1783,6 +1857,7 @@ export class ReadingCourseState {
       }
     });
   }
+
 
 
   @Action(ListenHandwritingMsgDL)
@@ -1809,6 +1884,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(ShowSuccessScreenDL)
   showSuccessScreenDL({ patchState, getState }: StateContext<ReadingCourseStateModel>, action: ShowSuccessScreenDL) {
     patchState({
@@ -1820,6 +1896,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(HideSuccessScreenDL)
   hideSuccessScreenDL({ patchState, getState }: StateContext<ReadingCourseStateModel>, action: HideSuccessScreenDL) {
     patchState({
@@ -1829,6 +1906,7 @@ export class ReadingCourseState {
       }
     });
   }
+
 
 
   @Action(OnDoneDL)
@@ -1877,10 +1955,12 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(ResetDataDL)
   ResetDataDL({ patchState }: StateContext<ReadingCourseStateModel>, action: ResetDataDL) {
     patchState({ drawLetter: null });
   }
+
 
 
   @Action(ListenMsgBoardDL)
@@ -1929,6 +2009,7 @@ export class ReadingCourseState {
   }
 
 
+
   genDataFL(words: string[], letter: string): FLData[] {
 
     const data = [];
@@ -1952,6 +2033,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(IsSettingDataFL)
   isSettingDataFL({ patchState, getState }: StateContext<ReadingCourseStateModel>, { payload }: IsSettingDataFL) {
     patchState({
@@ -1961,6 +2043,7 @@ export class ReadingCourseState {
       }
     });
   }
+
 
 
   @Action(SetCurrentDataFL)
@@ -1982,6 +2065,7 @@ export class ReadingCourseState {
 
     }
   }
+
 
 
   @Action(SelectLetterIdFL)
@@ -2018,6 +2102,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(ShowSuccessScreenFL)
   showSuccessScreenFL({ patchState, getState }: StateContext<ReadingCourseStateModel>, action: ShowSuccessScreenFL) {
     patchState({
@@ -2029,6 +2114,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(HideSuccessScreenFL)
   hideSuccessScreenFL({ patchState, getState }: StateContext<ReadingCourseStateModel>, action: HideSuccessScreenFL) {
     patchState({
@@ -2038,6 +2124,7 @@ export class ReadingCourseState {
       }
     });
   }
+
 
 
   @Action(ChangeCurrentDataFL)
@@ -2084,6 +2171,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(ListenInstructionsFL)
   listenInstructionsFL({ getState }: StateContext<ReadingCourseStateModel>, action: ListenInstructionsFL) {
 
@@ -2099,10 +2187,12 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(ResetDataFL)
   resetDataFL({ patchState }: StateContext<ReadingCourseStateModel>, action: ResetDataFL) {
     patchState({ findLetter: null });
   }
+
 
 
   @Action(ListenWordFL)
@@ -2114,6 +2204,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action(DisableAllFL)
   disableAll({ getState, patchState }: StateContext<ReadingCourseStateModel>, { payload }: DisableAllFL) {
     patchState({
@@ -2123,6 +2214,7 @@ export class ReadingCourseState {
       }
     });
   }
+
 
 
   @Action( AddCorrectSelectionFL )
@@ -2151,6 +2243,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action( AddWrongSelectionFL )
   addWrongSelectionFL({ getState, patchState }: StateContext<ReadingCourseStateModel>, { payload }: AddWrongSelectionFL) {
 
@@ -2169,6 +2262,7 @@ export class ReadingCourseState {
     });
 
   }
+
 
 
   @Action( RegisterSelectionFL )
@@ -2193,7 +2287,8 @@ export class ReadingCourseState {
 
 
 
-  /// ---------- Reaading Course Select Words ----------
+
+  /// ---------- Reaading Course Select Words ------------>>
   @Action( IsSettingDataSW )
   isSettingDataSW({ getState, patchState }: StateContext<ReadingCourseStateModel>, { payload }: IsSettingDataSW) {
     patchState({
@@ -2203,6 +2298,7 @@ export class ReadingCourseState {
       }
     });
   }
+
 
 
   @Action( SetInitialDataSW )
@@ -2230,6 +2326,7 @@ export class ReadingCourseState {
     dispatch( new IsSettingDataSW({ state: false }) );
     dispatch( new ListenInstructionsSW() );
   }
+
 
 
   genDataSW = (corrects: string[], incorrects: string[], letter: string): SWData[] => {
@@ -2283,6 +2380,7 @@ export class ReadingCourseState {
   }
 
 
+
   generateRandomWordsSW = (max: number, words: string[]): string[] => {
 
     const usedIndexes = [];
@@ -2309,12 +2407,14 @@ export class ReadingCourseState {
   }
 
 
+
   intRandomSW = (min: number, maxi: number, length?: number): number => {
 
     const max = maxi > length ? length + 1 : maxi + 1;
     return Math.floor(Math.random() * (max - min)) + min;
 
   }
+
 
 
   @Action( SetCurrentDataSW )
@@ -2336,6 +2436,7 @@ export class ReadingCourseState {
 
     }
   }
+
 
 
   @Action( SelectWordSW )
@@ -2376,6 +2477,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action( RegisterSelectionSW )
   registerSelectionSW({ getState, patchState }: StateContext<ReadingCourseStateModel>, { payload }: RegisterSelectionSW) {
 
@@ -2396,6 +2498,7 @@ export class ReadingCourseState {
 
 
   }
+
 
 
   @Action( RegisterCorrectSelectionSW )
@@ -2420,6 +2523,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action( RegisterWrongSelectionSW )
   registerWrongSelectionSW({ getState, patchState }: StateContext<ReadingCourseStateModel>, { payload }: RegisterWrongSelectionSW) {
 
@@ -2438,6 +2542,7 @@ export class ReadingCourseState {
     });
 
   }
+
 
 
   @Action( ChangeCurrentDataSW )
@@ -2483,6 +2588,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action( ShowSuccessScreenSW )
   showSuccessScreenSW({ getState, patchState }: StateContext<ReadingCourseStateModel>, action: ShowSuccessScreenSW) {
     patchState({
@@ -2492,6 +2598,7 @@ export class ReadingCourseState {
       }
     });
   }
+
 
 
   @Action( HideSuccessScreenSW )
@@ -2505,12 +2612,14 @@ export class ReadingCourseState {
   }
 
 
+
   @Action( ResetDataSW )
   resetDataSW({ patchState }: StateContext<ReadingCourseStateModel>, action: ResetDataSW) {
 
     patchState({ selectWords: null });
 
   }
+
 
 
   @Action( ListenInstructionsSW )
@@ -2528,9 +2637,7 @@ export class ReadingCourseState {
 
 
 
-
-
-  /// ---------- Reading Course Pronounce Letter ----------
+  /// ---------- Reading Course Pronounce Letter ------------>>
   @Action( IsSettingDataPL )
   isSettingDataPL({ getState, patchState }: StateContext<ReadingCourseStateModel>, { payload }: IsSettingDataPL) {
     patchState({
@@ -2542,6 +2649,7 @@ export class ReadingCourseState {
 
     });
   }
+
 
 
   @Action( SetInitialDataPL )
@@ -2574,6 +2682,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action( SetCurrentDataPL )
   setCurrentDataPL({ getState, patchState }: StateContext<ReadingCourseStateModel>, action: SetCurrentDataPL) {
 
@@ -2595,6 +2704,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action( ListenInstructionsPL )
   listenInstructionsPL(ctx: StateContext<ReadingCourseStateModel>, action: ListenInstructionsPL) {
 
@@ -2602,6 +2712,7 @@ export class ReadingCourseState {
     const speak = this._speech.speak(msg, .96);
 
   }
+
 
 
   @Action( ListenHelpPL )
@@ -2617,6 +2728,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action( ListenMsgWrongPL )
   listenMsgWrongPL(ctx: StateContext<ReadingCourseStateModel>, action: ListenMsgWrongPL) {
 
@@ -2624,6 +2736,7 @@ export class ReadingCourseState {
     this._speech.speak(msg, .95);
 
   }
+
 
 
   @Action( StartRecordingPL )
@@ -2639,6 +2752,7 @@ export class ReadingCourseState {
         () =>  dispatch( new HandleRecognitionCompletePL() )
       );
   }
+
 
 
   @Action( HandleRecognitionResultPL )
@@ -2677,6 +2791,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action( HandleRecognitionErrorPL )
   handleRecognitionErrorPL({ dispatch }: StateContext<ReadingCourseStateModel>, { payload }: HandleRecognitionErrorPL) {
 
@@ -2688,10 +2803,12 @@ export class ReadingCourseState {
   }
 
 
+
   @Action( HandleRecognitionCompletePL )
   handleRecognitionCompletePL({ dispatch }: StateContext<ReadingCourseStateModel>, action: HandleRecognitionCompletePL) {
     dispatch( new ChangeStateRecordingPL({state: false}) );
   }
+
 
 
   @Action( ChangeStateRecordingPL )
@@ -2705,10 +2822,12 @@ export class ReadingCourseState {
   }
 
 
+
   @Action( ListenMsgNoSpeechPL )
   listenMsgNoSpeechPL(ctx: StateContext<ReadingCourseStateModel>, action: ListenMsgNoSpeechPL) {
     this._speech.speak('Si dijiste algo no se escuchó!');
   }
+
 
 
   @Action( IncreaseAttemptsPL )
@@ -2727,6 +2846,7 @@ export class ReadingCourseState {
     });
 
   }
+
 
 
   @Action( CorrectPronunciationPL )
@@ -2781,6 +2901,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action( ShowSuccessScreenPL )
   showSuccessScreenPL({ patchState, getState }: StateContext<ReadingCourseStateModel>, action: ShowSuccessScreenPL) {
     patchState({
@@ -2790,6 +2911,7 @@ export class ReadingCourseState {
       }
     });
   }
+
 
 
   @Action( HideSuccessScreenPL )
@@ -2803,6 +2925,7 @@ export class ReadingCourseState {
   }
 
 
+
   @Action( ResetDataPL )
   resetDataPL({ patchState }: StateContext<ReadingCourseStateModel>, action: ResetDataPL) {
 
@@ -2811,5 +2934,5 @@ export class ReadingCourseState {
   }
 
 
-}
 
+}
