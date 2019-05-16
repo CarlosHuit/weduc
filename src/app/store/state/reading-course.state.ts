@@ -923,7 +923,7 @@ export class ReadingCourseState {
           currentIndex:      null,
           currentData:       null,
           showLetterCard:    false,
-          showAllCards:      true,
+          showAllCards:      false,
           canPlayGame:       false,
           showSuccessScreen: false,
         }
@@ -954,7 +954,7 @@ export class ReadingCourseState {
           ...getState().letterDetail,
           currentIndex: nextIndex,
           currentData: state.data[nextIndex],
-          showAllCards: true
+          showAllCards: false
         }
       });
 
@@ -1007,7 +1007,8 @@ export class ReadingCourseState {
     patchState({
       letterDetail: {
         ...getState().letterDetail,
-        showLetterCard: false
+        showLetterCard: false,
+        showAllCards: true,
       }
     });
 

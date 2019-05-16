@@ -29,6 +29,7 @@ export class CardOptionComponent implements OnInit {
 
   ngOnInit() {
     this.sub1 = this.canPlayGame$.subscribe(state => this.canPlayGame = state);
+    this.showAllCard$.subscribe(el => console.log(el));
   }
 
   onSelect = (letterId: string) => {

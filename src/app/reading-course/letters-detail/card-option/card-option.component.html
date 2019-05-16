@@ -1,9 +1,9 @@
 <div
   #option
   [id]="id"
-  class="carta active"
+  class="carta"
   (click)="onSelect(id)"
-  [class.active-all]="(showAllCard$ | async)"
+  [class.active-all]="(showAllCard$ | async) === true"
   [class.active]="(sel1$ | async) === id || (sel2$ | async) === id"
   >
   
