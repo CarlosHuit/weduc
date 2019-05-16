@@ -7,7 +7,6 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class LetterDetailModalComponent implements OnInit {
 
-  @Input() useStartAnimation: boolean;
   @Input() letter: string;
 
   @Input() onStart: Function;

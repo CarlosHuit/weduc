@@ -1,14 +1,12 @@
 <div class="container-modal">
   <div
     class="background-modal hide-opacity"
-    [class.show-opacity]='useStartAnimation && !activeHideAnimation'
+    [class.show-opacity]='!activeHideAnimation'
     >
 
 
     <div
       class="card-modal center"
-      [class.show-card-without-animation]="!useStartAnimation"
-      [class.show-card-with-animation]="useStartAnimation"
       [class.hide-card-with-animation]="activeHideAnimation"
       >
 
