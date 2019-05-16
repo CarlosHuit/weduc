@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable, Subscription   } from 'rxjs';
 import { SpeechSynthesisService  } from '../../services/speech-synthesis.service';
 import { ReadingCourseState  } from 'src/app/store/state/reading-course.state';
@@ -21,7 +21,7 @@ import {
 
 export class LettersDetailComponent implements OnInit, OnDestroy {
 
-  @ViewChild('card') card: ElementRef;
+
   canPlayGame: boolean;
   sub1: Subscription;
 
@@ -29,13 +29,11 @@ export class LettersDetailComponent implements OnInit, OnDestroy {
   @Select(ReadingCourseState.ldShowLetterCard) showLetterCard$: Observable<boolean>;
   @Select(ReadingCourseState.ldIsSettingData)   isSettingData$: Observable<boolean>;
   @Select(ReadingCourseState.ldCanPlayGame)       canPlayGame$: Observable<boolean>;
-  @Select(ReadingCourseState.ldShowAllCards)      showAllCard$: Observable<boolean>;
   @Select(AppState.isMobile)                         isMobile$: Observable<boolean>;
   @Select(ReadingCourseState.ldCurrentData)              data$: Observable<SLData>;
-  @Select(ReadingCourseState.ldsel1)                     sel1$: Observable<string>;
-  @Select(ReadingCourseState.ldsel2)                     sel2$: Observable<string>;
   @Select(ReadingCourseState.ldshowSuccessScreen) showSuccessScreen$: Observable<boolean>;
   @Select(AppState.queryMobileMatch) queryMobileMatch$: Observable<boolean>;
+
 
   constructor( private speech: SpeechSynthesisService, private store: Store ) { }
 
@@ -43,7 +41,7 @@ export class LettersDetailComponent implements OnInit, OnDestroy {
 
     this.store.dispatch( new SetInitialDataLD() );
     this.sub1 = this.canPlayGame$.subscribe(state => this.canPlayGame = state);
-    (window).addEventListener('resize', e => this.style(this.card.nativeElement));
+
   }
 
   ngOnDestroy () {
@@ -53,11 +51,16 @@ export class LettersDetailComponent implements OnInit, OnDestroy {
 
   }
 
+
   listenLetterPresentation = () => {
+
     this.store.dispatch( new ListenLetterPresentationLD() );
+
   }
 
+
   continue = () => this.store.dispatch( new HideLetterCardLD({ listenMsg: true }));
+
 
   onSelect = (letterId: string) => {
 
@@ -65,9 +68,13 @@ export class LettersDetailComponent implements OnInit, OnDestroy {
 
   }
 
+
   showLetterDetailModal() {
+
     return this.store.dispatch(new ShowLetterCardLD() );
+
   }
+
 
   style = (el: HTMLElement) => {
 
@@ -92,8 +99,6 @@ export class LettersDetailComponent implements OnInit, OnDestroy {
     };
 
   }
-
-  calcFZ = (el: HTMLElement) => ({ 'font-size': `${el.clientWidth * .5}px` });
 
 
 }

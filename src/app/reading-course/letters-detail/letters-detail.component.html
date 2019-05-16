@@ -14,6 +14,7 @@
           [id]="item"
           [useTextStroke]="true"
           [letter]="item[0]"
+          [onSelect]="onSelect"
           *ngFor="let item of (data$ | async ).data"
           >
         </app-card-option>
@@ -56,6 +57,7 @@
           [id]="item"
           [letter]="item[0]"
           [useTextStroke]="false"
+          [onSelect]="onSelect"
           *ngFor="let item of (data$ | async ).data"
           >
         </app-card-option>
