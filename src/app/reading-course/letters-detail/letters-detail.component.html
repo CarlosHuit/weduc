@@ -80,7 +80,7 @@
     </div>
 
 
-    <!-- <div *ngIf="showLetterCard$ | async" class="m-c-letter-detail-modal" >
+    <div *ngIf="showLetterCard$ | async" class="m-c-letter-detail-modal" >
 
       <app-letter-detail-modal
         [onEnd]="continue"
@@ -90,7 +90,7 @@
         >
       </app-letter-detail-modal>
 
-    </div> -->
+    </div>
 
 
   </div>
@@ -101,10 +101,12 @@
     <app-spinner-loading></app-spinner-loading>
   </div>
 
-  <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0;">
+
+
+  <div class="container-well-done-dialog" *ngIf="showSuccessScreen$ | async">
     <app-well-done></app-well-done>
   </div>
 
-  <!-- <app-success-animation *ngIf="showSuccessScreen$ | async"></app-success-animation> -->
+
 
 </div>
