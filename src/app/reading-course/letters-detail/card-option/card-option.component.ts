@@ -8,7 +8,7 @@ import { ReadingCourseState } from 'src/app/store/state/reading-course.state';
   templateUrl: './card-option.component.html',
   styleUrls: ['./card-option.component.css']
 })
-export class CardOptionComponent implements OnInit {
+export class CardOptionComponent {
 
   @Input() letter: string;
   @Input() id: string;
@@ -18,11 +18,6 @@ export class CardOptionComponent implements OnInit {
   @Select(ReadingCourseState.ldsel1) sel1$: Observable<string>;
   @Select(ReadingCourseState.ldsel2) sel2$: Observable<string>;
   @Select(ReadingCourseState.ldShowAllCards) showAllCard$: Observable<boolean>;
-
-
-  ngOnInit() {
-    this.showAllCard$.subscribe(el => console.log(el));
-  }
 
 
   calcFZ(el: HTMLElement) {

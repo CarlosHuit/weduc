@@ -48,6 +48,7 @@ import { CommentThreadComponent } from './shared/discussion-system/comment-threa
 import { CardLetterMenuComponent } from './reading-course/letters-menu/card-letter-menu/card-letter-menu.component';
 import { LetterDetailModalComponent } from './reading-course/letters-detail/letter-detail-modal/letter-detail-modal.component';
 import { CardOptionComponent } from './reading-course/letters-detail/card-option/card-option.component';
+import { WellDoneComponent } from './shared/dialogs/well-done/well-done.component';
 
 @NgModule({
   declarations: [
@@ -87,6 +88,7 @@ import { CardOptionComponent } from './reading-course/letters-detail/card-option
     CardLetterMenuComponent,
     LetterDetailModalComponent,
     CardOptionComponent,
+    WellDoneComponent,
   ],
   imports: [
     MaterialModule,

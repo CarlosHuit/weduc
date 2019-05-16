@@ -71,14 +71,7 @@
   justify-content: center;
   align-items: center;
   z-index: 40;
-  /* animation: showContainer .7s; */
 }
-
-@keyframes showContainer {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
 
 .card-handwriting {
   min-width: 300px;
