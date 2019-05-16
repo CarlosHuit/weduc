@@ -47,6 +47,7 @@ import { DeleteCommentDialogComponent     } from './shared/discussion-system/del
 import { CommentThreadComponent } from './shared/discussion-system/comment-thread/comment-thread.component';
 import { CardLetterMenuComponent } from './reading-course/letters-menu/card-letter-menu/card-letter-menu.component';
 import { LetterDetailModalComponent } from './reading-course/letters-detail/letter-detail-modal/letter-detail-modal.component';
+import { CardOptionComponent } from './reading-course/letters-detail/card-option/card-option.component';
 
 @NgModule({
   declarations: [
@@ -85,6 +86,7 @@ import { LetterDetailModalComponent } from './reading-course/letters-detail/lett
     CommentThreadComponent,
     CardLetterMenuComponent,
     LetterDetailModalComponent,
+    CardOptionComponent,
   ],
   imports: [
     MaterialModule,

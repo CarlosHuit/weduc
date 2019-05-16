@@ -1,0 +1,21 @@
+<div
+  #option
+  [id]="id"
+  class="carta active"
+  (click)="onSelect(id)"
+  [class.active-all]="(showAllCard$ | async)"
+  [class.active]="(sel1$ | async) === id || (sel2$ | async) === id"
+  >
+  
+  <div class="lado front">
+  </div>
+  
+  <div
+    [ngStyle]="calcFZ(option)"
+    class="lado back"
+    [class.add-text-stroke]="useTextStroke"
+    >
+    {{letter}}
+  </div>
+
+</div>

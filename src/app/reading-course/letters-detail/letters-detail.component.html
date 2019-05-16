@@ -2,92 +2,96 @@
 
 
   <!-- Desktop Version -->
-  <div class="d-c-detail-letter"  *ngIf="!(isMobile$ | async) && !(isSettingData$ | async)">
-
-    <div  #card class="card-game center">
-
-      <div #cCard class="container-cards" [ngStyle]="style(card)">
-        <div
-          *ngFor="let x of (data$ | async )['data']"
-          [id]="x"
-          #option
-          (click)="onSelect(x)"
-          class="carta active"
-          [class.showAll]="(showAllCard$ | async)"
-          [class.active]="(sel1$ | async) === x || (sel2$ | async) === x"
-          >
-          <div class="lado front"></div>
-          <div [ngStyle]="calcFZ(option)" class="lado back">{{x[0]}}</div>
-        </div>
-      </div>
-
-    </div>
-
-    <div *ngIf="showLetterCard$ | async" class="d-c-letter-presentation">
-
-      <mat-card class="d-c-card-letter">
-
-        <div class="d-c-letter" (click)="listenLetter()">
-          <h1>{{(data$ | async).letter}}</h1>
-        </div>
-
-        <button
-          color="warn"
-          (click)="continue()"
-          mat-raised-button
-          class="d-c-button-next"
-          >
-          Siguiente
-        </button>
-
-      </mat-card>
-
-    </div>
-
-  </div>
-
-
-  <!-- Mobile version -->
-  <div class="c-detail-letter" *ngIf="(isMobile$ | async) && !(isSettingData$ | async)">
-
-    <div  #card class="card-game center">
-
-      <div #cCard class="container-cards" [ngStyle]="style(card)">
-        <div
-          [id]="x"
-          #option
-          class="carta active"
-          (click)="onSelect(x)"
-          *ngFor="let x of (data$ | async )['data']"
-          [class.showAll]="(showAllCard$ | async)"
-          [class.active]="(sel1$ | async) === x || (sel2$ | async) === x"
-          >
-          <div class="lado front"></div>
-          <div [ngStyle]="calcFZ(option)" class="lado back">{{x[0]}}</div>
-        </div>
-      </div>
-
-
-    </div>
-
-    <div
-      *ngIf="showLetterCard$ | async"
-      style="
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      "
+  <div
+    class="d-c-letter-detail center"
+    *ngIf="!(isMobile$ | async) && !(queryMobileMatch$ | async) && !(isSettingData$ | async)"
     >
+
+    <div  #card class="d-c-card-game center">
+
+      <div #cCard class="d-c-grids" [ngStyle]="style(card)">
+        <app-card-option
+          [id]="item"
+          [useTextStroke]="true"
+          [letter]="item[0]"
+          *ngFor="let item of (data$ | async ).data"
+          >
+        </app-card-option>
+      </div>
+
+    </div>
+
+
+
+    <div *ngIf="showLetterCard$ | async" class="d-c-letter-detail-modal" >
 
       <app-letter-detail-modal
         [onEnd]="continue"
         [letter]="(data$ | async).letter"
         [onStart]="listenLetterPresentation"
+        [useMobileVersion]="false"
         [useStartAnimation]="true"
         >
       </app-letter-detail-modal>
 
     </div>
+  
+
+
+  </div>
+
+
+  <!-- Mobile version -->
+  <div
+    class="m-c-letter-detail center"
+    *ngIf=" ((isMobile$ | async) || (queryMobileMatch$| async)) && !(isSettingData$ | async) "
+    >
+
+
+    <div #card class="m-c-card-game center">
+
+
+      <div #cCard class="m-c-grids" [ngStyle]="style(card)">
+
+        <app-card-option
+          [id]="item"
+          [letter]="item[0]"
+          [useTextStroke]="false"
+          *ngFor="let item of (data$ | async ).data"
+          >
+        </app-card-option>
+
+      </div>
+
+
+    </div>
+
+
+    <div class="m-c-button-retry" *ngIf="!(showLetterCard$ | async)">
+      <button
+        class="button-retry center"
+        [color]="primary"
+        mat-flat-button
+        (click)="showLetterDetailModal()"
+        >
+        Ayuda
+      </button>
+    </div>
+
+
+    <div *ngIf="showLetterCard$ | async" class="m-c-letter-detail-modal" >
+
+      <app-letter-detail-modal
+        [onEnd]="continue"
+        [letter]="(data$ | async).letter"
+        [onStart]="listenLetterPresentation"
+        [useMobileVersion]="true"
+        [useStartAnimation]="true"
+        >
+      </app-letter-detail-modal>
+
+    </div>
+
 
   </div>
 

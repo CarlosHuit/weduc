@@ -1,0 +1,55 @@
+.carta {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  color: white;
+  font-weight: bold;
+  font-family: 'Roboto', sans-serif;
+  transition: 0.8s cubic-bezier(0.445, 0.05, 0.55, 1);
+}
+
+.active {
+  transform: rotateY(180deg);
+}
+
+.active-all {
+  transform: rotateY(180deg);
+}
+
+.deactivate {
+  transform: rotateY(0deg);
+}
+
+.lado {
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 60px;
+  border-radius: 6px
+}
+
+.front {
+  border: 4px solid #424242;
+  background: #009c4e;
+  background: linear-gradient(to bottom left, #009b4d 10%, #00b35f 64%, #08ac5a 100%);
+  box-sizing: border-box;
+  box-shadow: -2px 2px 4px rgba( 0, 0, 0, 0.30 );
+}
+
+.back {
+  border: 4px solid #424242;
+  transform: rotateY(180deg);
+  background: rgb(255, 90, 72);
+  background: #ff8548;
+  box-sizing: border-box;
+  box-shadow: -2px 2px 4px rgba( 0, 0, 0, 0.30 );
+}
+
+.add-text-stroke {
+  -webkit-text-stroke: 2px #424242
+}

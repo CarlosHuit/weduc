@@ -12,6 +12,7 @@ export class LetterDetailModalComponent implements OnInit {
 
   @Input() onStart: Function;
   @Input() onEnd: Function;
+  @Input() useMobileVersion: boolean;
 
   activeHideAnimation = false;
 
