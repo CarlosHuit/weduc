@@ -816,7 +816,7 @@ export class ReadingCourseState {
 
     const letter = payload.letter.toLowerCase();
     // const url = `lectura/detalle-letra/${letter}`;
-    const url = `lectura/juego/${letter}`;
+    const url = `lectura/dibujar-letra/${letter}`;
     // ! TODO
 
     dispatch([
@@ -1730,14 +1730,13 @@ export class ReadingCourseState {
 
     const coordinatesLC = getState().data.coordinates.find(c => c.letter === letterLC).coordinates;
     const coordinatesUC = getState().data.coordinates.find(c => c.letter === letterUC).coordinates;
-
     const dataLowerCase = new DrawLetterData(coordinatesLC, letterLC, 'minúscula');
     const dataUpperCase = new DrawLetterData(coordinatesUC, letterLC, 'mayúscula');
 
-    const colors = ['#1976d2', '#f44336', '#009494', '#fc793c'];
+    const colors          = ['#2196f3', '#f44336', '#009494', '#fc793c'];
     const configLineWidth = { min: 1, max: 24, width: 14, step: 1 };
-    const configData = new ConfigData(colors, configLineWidth);
-    const preferences = new Preferences(14, colors[0], true, 'round');
+    const configData      = new ConfigData(colors, configLineWidth);
+    const preferences     = new Preferences(14, colors[0], true, 'round');
 
 
     const data = [dataLowerCase, dataUpperCase];
@@ -1753,10 +1752,7 @@ export class ReadingCourseState {
       }
     });
 
-    await dispatch([
-      new SetCurrentDataDL(),
-      new ShowHandwritingDL()
-    ]);
+    await dispatch([ new SetCurrentDataDL(), new ShowHandwritingDL() ]);
 
     dispatch(new IsSettingDataDL({ state: false }));
 
@@ -1766,12 +1762,14 @@ export class ReadingCourseState {
 
   @Action(IsSettingDataDL)
   isSettingDataDL({ patchState, getState }: StateContext<ReadingCourseStateModel>, { payload }: IsSettingDataDL) {
+
     patchState({
       drawLetter: {
         ...getState().drawLetter,
         isSettingData: payload.state
       }
     });
+
   }
 
 
@@ -1801,6 +1799,7 @@ export class ReadingCourseState {
 
   @Action(ChangeLineWidthDL)
   changeLineWidthDL({ patchState, getState }: StateContext<ReadingCourseStateModel>, { payload }: ChangeLineWidthDL) {
+
     const state = getState();
     patchState({
       drawLetter: {
@@ -1818,12 +1817,14 @@ export class ReadingCourseState {
         }
       }
     });
+
   }
 
 
 
   @Action(ChangeLineColorDL)
   changeLineColorDL({ patchState, getState }: StateContext<ReadingCourseStateModel>, { payload }: ChangeLineColorDL) {
+
     const state = getState().drawLetter;
     patchState({
       drawLetter: {
@@ -1834,12 +1835,14 @@ export class ReadingCourseState {
         }
       }
     });
+
   }
 
 
 
   @Action(ToggleGuideLinesDL)
   toggleGuideLinesDL({ patchState, getState }: StateContext<ReadingCourseStateModel>, action: ToggleGuideLinesDL) {
+
     const state = getState();
     const stateGuideLines = state.drawLetter.preferences.showGuideLines;
 
@@ -1852,32 +1855,39 @@ export class ReadingCourseState {
         }
       }
     });
+
   }
 
 
 
   @Action(ShowHandwritingDL)
   showHandwritingDL({ patchState, getState }: StateContext<ReadingCourseStateModel>, action: ShowHandwritingDL) {
+
     const state = getState().drawLetter;
+
     patchState({
       drawLetter: {
         ...state,
         showHandwriting: true
       }
     });
+
   }
 
 
 
   @Action(HideHandwritingDL)
   hideHandwritingDL({ patchState, getState }: StateContext<ReadingCourseStateModel>, action: HideHandwritingDL) {
+
     const state = getState().drawLetter;
+
     patchState({
       drawLetter: {
         ...state,
         showHandwriting: false
       }
     });
+
   }
 
 
@@ -1885,22 +1895,27 @@ export class ReadingCourseState {
   @Action(ListenHandwritingMsgDL)
   listenHandwritingMsgDL({ getState, dispatch }: StateContext<ReadingCourseStateModel>, action: ListenHandwritingMsgDL) {
 
-    const letter = getState().drawLetter.currentData.letter.toLowerCase();
-    const type = getState().drawLetter.currentData.type;
-    const letterSound = getState().data.letterSounds[letter];
-    const isMobile = this.store.selectSnapshot(state => state.app.isMobile);
+    const letter      = getState().drawLetter.currentData.letter.toLowerCase();
+    const type        = getState().drawLetter.currentData.type;
+    const letterSound = getState().data.letterSounds.find(e => e.letter === letter);
+    const isMobile    = this.store.selectSnapshot(state => state.app.isMobile);
     const queryMobileMatch = this.store.selectSnapshot(state => state.app.queryMobileMatch);
 
+
     if (!isMobile && !queryMobileMatch) {
-      const msg = `Mira atentamente ... y practica escribir la letra: ... ${letterSound} .... "${type}"`;
+
+      const msg = `Mira atentamente ... y practica escribir la letra: ... ${letterSound.sound} .... "${type}"`;
       dispatch(new ListenMessage({ msg }));
+
     }
+
 
     if (isMobile || queryMobileMatch) {
-      const msg = `Mira atentamente, así se escribe la letra: ... ${letterSound} .... "${type}"`;
-      dispatch(new ListenMessage({ msg }));
-    }
 
+      const msg = `Mira atentamente, así se escribe la letra: ... ${letterSound.sound} .... "${type}"`;
+      dispatch(new ListenMessage({ msg }));
+
+    }
 
 
   }
@@ -1990,9 +2005,9 @@ export class ReadingCourseState {
 
     const letter = getState().drawLetter.currentData.letter.toLowerCase();
     const type = getState().drawLetter.currentData.type;
-    const letterSound = getState().data.letterSounds[letter];
+    const letterSound = getState().data.letterSounds.find(e => e.letter === letter);
 
-    const msg = `Bien, ahora practica escribir la letra: .... ${letterSound} ..... ${type}`;
+    const msg = `Bien, ahora practica escribir la letra: .... ${letterSound.sound} ..... ${type}`;
     dispatch(new ListenMessage({ msg }));
 
   }
