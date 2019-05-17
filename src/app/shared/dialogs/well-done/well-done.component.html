@@ -1,12 +1,12 @@
 <div
   class="background-well-done-dialog"
   [class.hide-opacity]="activeHideDialog"
-  [class.show-opacity]="!activeHideDialog"
+  [class.show-opacity]="activeShowDialog"
   >
 
   <div
     class="container-well-done"
-    [class.show-well-done-dialog]="!activeHideDialog"
+    [class.show-well-done-dialog]="activeShowDialog"
     [class.hide-well-done-dialog]="activeHideDialog"
     >
 

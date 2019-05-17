@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { SpeechSynthesisService } from 'src/app/services/speech-synthesis.service';
-import { HideSuccessScreenLD } from 'src/app/store/actions/reading-course/reading-course-letter-detail.actions';
+import { HideSuccessScreenLD, ShowAllCardsLD } from 'src/app/store/actions/reading-course/reading-course-letter-detail.actions';
 
 @Component({
   selector: 'app-well-done',
@@ -13,19 +13,25 @@ export class WellDoneComponent implements OnInit, OnDestroy {
   activeHideDialog = false;
   utterance: SpeechSynthesisUtterance;
 
+  activeShowDialog = false;
+
   constructor(
     private store: Store,
     private tts: SpeechSynthesisService
   ) { }
 
   ngOnInit() {
-
+    this.show();
   }
 
   ngOnDestroy() {
 
   }
 
+  async show() {
+    await new Promise((r, re) => setTimeout(() => r(null), 1) );
+    this.activeShowDialog = true;
+  }
 
 
   async speakWellDone() {
