@@ -1,17 +1,21 @@
 /*------ styles desktop version ------*/
-.container {
-  background-image: url('/assets/background/space.svg'),linear-gradient(180deg,#0b3e71,#0d64b0);
-}
-
 .d-c-container {
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  background-image: url('/assets/background/space.svg'),linear-gradient(180deg,#0b3e71,#0d64b0);
 }
 
-.d-c-container-draw-letter {
+.d-c-board-controls {
+  width: 100%;
+  z-index: 20;
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.d-c-card {
   height: 720px;
   width: 632px;
   display: flex;
@@ -19,134 +23,64 @@
   justify-content: space-between;
 }
 
-.d-c-slider {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.d-c-control-canvas {
-  width: 100%;
-  z-index: 20;
-  box-sizing: border-box;
-  padding: 0;
-}
 
 @media(max-height: 800px) {
+
   .d-c-container {
     display: block;
   }
 
-  .d-c-container-draw-letter {
+  .d-c-card {
     margin: 10px auto;
   }
 
 }
 
-/*------ styles Mobile  version ------*/
-.container-slider-mobile {
+
+/*------ Mobile Version ------*/
+.m-c-container {
   height: 100%;
   width: 100%;
   position: relative;
   overflow: hidden;
 }
 
-.m-c-slider {
-  width: 100%;
-  transition: 450ms cubic-bezier(.17, .67, .33, .81);
-  height: calc(100% - 50px);
-  position: absolute;
-  top: 50px;
-}
-
-.container-handwriting-dialog {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, .8);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 40;
-}
-
-.card-handwriting {
-  min-width: 300px;
-  max-width: 90vw;
-  min-height: 400px;
-  max-height: 480px;
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-}
-.m-c-control-canvas {
-  height: 50px;
+.m-c-board-controls {
+  height: 56px;
   width: 100%;
   z-index: 20;
   position: absolute;
   box-shadow: 0 3px 8px 0 rgba(0, 0, 0, 0.45);
 }
-.m-c-box-handwrinting {
-  height: calc(100% - 50px)
+
+.m-c-board {
+  width: 100%;
+  height: calc(100% - 56px);
+  position: absolute;
+  top: 56px;
 }
 
-.m-c-practice {
-  height: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
+.m-c-full {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 100;
 }
 
-.m-c-practice button {
-  width: 200px;
-  height: 40px;
-  font-size: 20px;
-}
 
 @media(max-height: 500px) {
 
-  .container-slider-mobile {
+  .m-c-container {
     position: fixed;
     top: 0
   }
 
-  .card-handwriting {
-    max-height: 400px;
-    max-height: unset;
-    margin: auto;
-    margin-top: 10px;
-    height: calc(100vh - 20px);
-    margin: 10px auto;
-    min-height: unset;
-    max-width: 640px;
-  }
-
-  .container-handwriting-dialog {
-    display: block;
-    overflow: auto;
-  }
 }
 
 @media (min-width: 320px) and (orientation: landscape) {
 
-  .container-slider-mobile {
+  .m-c-container {
     min-height: 270px;
   }
-}
 
-@media (max-height: 342px) {
-  .card-handwriting {
-    height: 322px;
-    max-height: unset;
-    min-height: unset;
-  }
-}
-
-@media(max-width: 660px) {
-  .card-handwriting {
-    max-width: 95vw;
-  }
 }

@@ -1,0 +1,30 @@
+<div
+  class="background-handwriting"
+  [class.show-opacity]="activeStartAnimation"
+  (click)="closeHandwriting($event)"
+  >
+
+  <div
+    id="handWriting"
+    class="container-card-handwriting"
+    [class.show-handwriting-card]="activeStartAnimation"
+    >
+
+    <div class="card-handwriting">
+  
+
+      <div class="m-c-box-handwrinting">
+        <app-handwriting></app-handwriting>
+      </div>
+
+      <div class="m-c-practice">
+        <button mat-flat-button color="warn" (click)="hideHandwriting()">Practicar</button>
+      </div>
+
+
+    </div>
+
+  </div>
+
+
+</div>

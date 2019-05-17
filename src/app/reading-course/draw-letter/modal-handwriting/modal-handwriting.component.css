@@ -1,0 +1,100 @@
+.background-handwriting {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  opacity: 1;
+  transition: 500ms;
+}
+
+.background-handwriting.show-opacity {
+  background: rgba(0, 0, 0, 0.75);
+}
+
+.background-handwriting.hide-opacity {
+  background: rgba(0, 0, 0, 0);
+  transition: 500ms;
+}
+
+.container-card-handwriting {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  left: -100vw;
+  transition: 650ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.card-handwriting {
+  min-width: 300px;
+  max-width: 90vw;
+  min-height: 400px;
+  max-height: 480px;
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  box-sizing: border-box;
+  background: white;
+  padding: 20px 0;
+}
+
+.show-handwriting-card {
+  left: 0;
+}
+
+.hide-handwriting-card {
+  left: -100vw;
+}
+
+
+.m-c-box-handwrinting {
+  height: calc(100% - 50px)
+}
+
+.m-c-practice {
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.m-c-practice button {
+  width: 200px;
+  height: 40px;
+  font-size: 20px;
+}
+
+
+@media(max-height: 500px) {
+
+
+  .card-handwriting {
+    max-height: 400px;
+    max-height: unset;
+    margin: auto;
+    margin-top: 10px;
+    height: calc(100vh - 20px);
+    margin: 10px auto;
+    min-height: unset;
+    max-width: 640px;
+  }
+
+
+}
+
+
+@media (max-height: 342px) {
+  .card-handwriting {
+    height: 322px;
+    max-height: unset;
+    min-height: unset;
+  }
+}
+
+@media(max-width: 660px) {
+  .card-handwriting {
+    max-width: 95vw;
+  }
+}

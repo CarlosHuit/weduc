@@ -2,14 +2,16 @@
 
 
 
+
   <!-- desktop Version -->
   <div
     class="d-c-container"
     *ngIf="!(isSettingData$ | async) && !(isMobile$ | async) && !(queryMobileMatch$ | async) "
     >
 
-    <div class="d-c-container-draw-letter" >
-      <mat-card class="d-c-control-canvas">
+    <div class="d-c-card">
+
+      <mat-card class="d-c-board-controls">
         <app-control-canvas></app-control-canvas>
       </mat-card>
 
@@ -21,61 +23,48 @@
       <mat-card>
         <app-board></app-board>
       </mat-card>
+
     </div>
 
 
   </div>
+
 
 
 
   <!-- mobile version -->
-  <div class=" container-slider-mobile"
-    *ngIf="
-      !(isSettingData$ | async)
-      && ((isMobile$ | async) || (queryMobileMatch$ | async))
-      "
+  <div
+    class="m-c-container"
+    *ngIf="!(isSettingData$ | async) && ((isMobile$ | async) || (queryMobileMatch$ | async))"
     >
 
 
-    <div class="m-c-control-canvas">
+    <div class="m-c-board-controls">
       <app-control-canvas> </app-control-canvas>
     </div>
 
-    <div class="m-c-slider">
+    <div class="m-c-board">
       <app-board></app-board>
     </div>
 
-    <div
-      id="handWriting"
-      *ngIf="showHandwriting$ | async"
-      (click)="closeHandwriting($event)"
-      class="container-handwriting-dialog"
-      >
-
-      <mat-card class="card-handwriting">
-
-        <div class="m-c-box-handwrinting">
-          <app-handwriting></app-handwriting>
-        </div>
-
-        <div class="m-c-practice">
-          <button mat-flat-button color="warn" (click)="hideHandwriting()">Practicar</button>
-        </div>
-
-      </mat-card>
+    <div *ngIf="showHandwriting$ | async" class="m-c-full">
+      <app-modal-handwriting></app-modal-handwriting>
     </div>
 
+
   </div>
 
 
   
-  <app-success-animation *ngIf="showSuccessScreen$ | async">
-  </app-success-animation>
+  <div *ngIf="showSuccessScreen$ | async" class="m-c-full">
+    <app-well-done></app-well-done>
+  </div>
   
+
   <div style="height: 40px; width: 40px; position: absolute; top: 15px;" *ngIf="isSettingData$ | async" >
-    <app-spinner-loading >
-    </app-spinner-loading>
+    <app-spinner-loading> </app-spinner-loading>
   </div>
+
 
 </div>
 

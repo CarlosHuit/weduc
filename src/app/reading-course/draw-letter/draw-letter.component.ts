@@ -4,10 +4,7 @@ import { ReadingCourseState     } from 'src/app/store/state/reading-course.state
 import { Observable     } from 'rxjs';
 import { Store, Select  } from '@ngxs/store';
 import { AppState       } from 'src/app/store/state/app.state';
-import {
-  IsSettingDataDL,   SetInitialDataDL,
-  HideHandwritingDL, ListenMsgBoardDL
-} from 'src/app/store/actions/reading-course/reading-course-draw-letter.actions';
+import { IsSettingDataDL, SetInitialDataDL } from '../../store/actions/reading-course/reading-course-draw-letter.actions';
 
 @Component({
   selector: 'app-draw-letter',
@@ -23,26 +20,20 @@ export class DrawLetterComponent implements OnInit, OnDestroy {
   @Select(AppState.queryMobileMatch)               queryMobileMatch$: Observable<boolean>;
   @Select(ReadingCourseState.dlShowSuccessScreen) showSuccessScreen$: Observable<boolean>;
 
-  constructor( private store: Store, private _speech: SpeechSynthesisService ) {
+  constructor(
+    private store: Store,
+    private _speech: SpeechSynthesisService
+  ) {
     this.store.dispatch( new IsSettingDataDL({state: true}) );
   }
 
-  ngOnInit()    { this.store.dispatch(new SetInitialDataDL()); }
-  ngOnDestroy() { this._speech.cancel(); }
-
-
-  closeHandwriting = (ev: MouseEvent) => {
-    if (ev.srcElement.id === 'handWriting') {
-      this._speech.cancel();
-      this.store.dispatch( new ListenMsgBoardDL() );
-      this.store.dispatch( new HideHandwritingDL() );
-    }
+  ngOnInit() {
+    this.store.dispatch(new SetInitialDataDL());
   }
 
-  hideHandwriting = () => {
+
+  ngOnDestroy() {
     this._speech.cancel();
-    this.store.dispatch( new ListenMsgBoardDL() );
-    this.store.dispatch( new HideHandwritingDL() );
   }
 
 
