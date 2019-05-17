@@ -815,8 +815,9 @@ export class ReadingCourseState {
   redirectMenu({ dispatch }: StateContext<ReadingCourseStateModel>, { payload }: RedirectMenu) {
 
     const letter = payload.letter.toLowerCase();
-    const url = `lectura/detalle-letra/${letter}`;
-    // const url = `lectura/juego/${letter}`;
+    // const url = `lectura/detalle-letra/${letter}`;
+    const url = `lectura/juego/${letter}`;
+    // ! TODO
 
     dispatch([
       new Navigate([url]),
@@ -1218,6 +1219,7 @@ export class ReadingCourseState {
   @Action(LettersAreSameLD)
   async lettersAreSameLD({ dispatch, getState }: StateContext<ReadingCourseStateModel>, action: LettersAreSameLD) {
 
+    await new Promise((r, re) => setTimeout(() => r(null), 50) );
     dispatch(new ShowSuccessScreenLD());
 
     await new Promise((r, re) => setTimeout(() => r(null), 400) );
@@ -1606,7 +1608,7 @@ export class ReadingCourseState {
 
 
   @Action(ChangeCurrentDataG)
-  changeCurrentDataG({ getState, dispatch }: StateContext<ReadingCourseStateModel>, action: ChangeCurrentDataG) {
+  async changeCurrentDataG({ getState, dispatch }: StateContext<ReadingCourseStateModel>, action: ChangeCurrentDataG) {
 
     dispatch(new ShowSuccessScreenG());
 
@@ -1615,16 +1617,24 @@ export class ReadingCourseState {
     const index = state.currentIndex === null ? -1 : state.currentIndex;
     const nextIndex = index + 1;
 
+    await new Promise((r, e) => setTimeout(() => r(null), 450) );
+
     const speech = this._speech.speak('Bien Hecho', 0.9);
 
     /* Redirection */
     if (nextIndex >= state.data.length) {
 
-      speech.addEventListener('end', function a() {
+      speech.addEventListener('end', async function a() {
+
+        await new Promise((r, re) => setTimeout(() => r(null), 1000) );
+
         dispatch([
           new Navigate([`lectura/dibujar-letra/${letter}`]),
           new ResetDataG()
         ]);
+
+        speech.removeEventListener('end', a);
+
       });
 
     }
@@ -1632,11 +1642,18 @@ export class ReadingCourseState {
     /* Set Current Data */
     if (nextIndex < state.data.length) {
 
-      speech.addEventListener('end', function a() {
+      speech.addEventListener('end', async function a() {
+
+        await new Promise((r, re) => setTimeout(() => r(null), 1000) );
+
+
         dispatch(new SetCurrentDataG());
         dispatch(new HideSuccessScreenG());
         dispatch(new ShowCorrectLettersG({ state: true }));
         dispatch(new ListenInitialMsgG());
+
+        speech.removeEventListener('end', a);
+
       });
 
     }

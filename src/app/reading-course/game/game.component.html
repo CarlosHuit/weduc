@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" style="position: relative" >
 
 
 
@@ -138,6 +138,10 @@
 
 
 
-  <app-success-animation *ngIf="showSuccessScreen$ | async" class="modify-s"></app-success-animation>
+  <div class="container-well-done-dialog" *ngIf="showSuccessScreen$ | async">
+    <app-well-done></app-well-done>
+  </div>
+
+
 
 </div>

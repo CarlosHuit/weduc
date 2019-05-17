@@ -26,7 +26,7 @@
   box-sizing:      border-box;
   font-family:     'Roboto', sans-serif;
   transition:      100ms cubic-bezier(0.075, 0.82, 0.165, 1);
-  background-color: #fc793c;
+  background-color: #ff8548;
 }
 
 .m-circle-letter.showOpt {
