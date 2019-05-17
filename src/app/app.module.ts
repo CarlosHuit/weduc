@@ -49,6 +49,7 @@ import { CardLetterMenuComponent } from './reading-course/letters-menu/card-lett
 import { LetterDetailModalComponent } from './reading-course/letters-detail/letter-detail-modal/letter-detail-modal.component';
 import { CardOptionComponent } from './reading-course/letters-detail/card-option/card-option.component';
 import { WellDoneComponent } from './shared/dialogs/well-done/well-done.component';
+import { GameOptionComponent } from './reading-course/game/game-option/game-option.component';
 
 @NgModule({
   declarations: [
@@ -89,6 +90,7 @@ import { WellDoneComponent } from './shared/dialogs/well-done/well-done.componen
     LetterDetailModalComponent,
     CardOptionComponent,
     WellDoneComponent,
+    GameOptionComponent,
   ],
   imports: [
     MaterialModule,

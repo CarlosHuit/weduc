@@ -1,0 +1,18 @@
+<div
+  class="c-m-option"
+  [class.resize-desktop]="desktop"
+  [class.destroy]="destroy"
+  >
+
+  <button
+    class="m-circle-letter press"
+    [class.resize-desktop]="desktop"
+    (click)="onSelect(id)"
+    [disabled]="hide"
+    [class.clear]="hide"
+    [class.showOpt]="highlight" 
+    >
+    {{id[0]}}
+  </button>
+
+</div>

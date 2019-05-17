@@ -1,6 +1,8 @@
 <div class="container">
 
 
+
+
   <!-- desktop version -->
   <div #mcGame class="d-c-game" *ngIf="!(isMobile$ | async) && !(queryMobileMatch$ | async)">
 
@@ -33,31 +35,22 @@
 
 
 
-    <div style="width: 100%; height: calc(100% - 60px); background: rgb(20, 20, 20)">
+    <div class="d-c-background-game">
 
       <div class="d-c-letters" *ngIf="!(isSettingData$ | async)">
 
         <div class="d-c-letter" *ngFor="let group of gData$ | async">
   
-          <div
-            *ngFor="let letterID of group"
-            class="d-c-option center"
-            [class.destroy]="
-              (data$ | async)['letter'] === letterID[0]
-              && (selections$ | async)[letterID] === letterID
-            "
+          <app-game-option
+            [id]="item"
+            *ngFor="let item of group"
+            [hide]="(selections$ | async)[item] === item"
+            [desktop]="true"
+            [destroy]="(data$ | async)['letter'] === item[0] && (selections$ | async)[item]"
+            [onSelect]="onSelect"
+            [highlight]="item[0] === (letter$ | async) && showCorrectLetters$ | async"
             >
-            <button
-              class="m-circle-letter d-c-resize press"
-              style="cursor: pointer"
-              (click)="onSelect(letterID)"
-              [disabled]="(selections$ | async)[letterID] === letterID"
-              [class.clear]="(selections$ | async)[letterID] === letterID"
-              [class.showOpt]="letterID[0] === (letter$ | async) && (showCorrectLetters$ | async) === true"
-              >
-              {{letterID[0]}}
-            </button>
-          </div>
+          </app-game-option>
   
         </div>
 
@@ -75,11 +68,13 @@
 
 
 
+
   <!-- mobile version -->
   <div #mcGame class="m-c-game" *ngIf="(isMobile$ | async) || (queryMobileMatch$ | async)">
 
 
-    <div class="m-c-toolbar" style="position: relative;">
+
+    <div class="m-c-toolbar">
 
       <mat-progress-bar
         *ngIf="!(isSettingData$ | async)"
@@ -107,45 +102,30 @@
     </div>
 
 
-    <div style="width: 100%; height: calc(100% - 40px); background: rgb(20, 20, 20)">
+    <div class="background-game">
       
-      <div
-      class="m-c-letters"
-      *ngIf="(isSettingData$ | async) === false"
-      >
+      <div class="m-c-letters" *ngIf="!(isSettingData$ | async)">
   
-        <div
-          class="m-c-letter"
-          *ngFor="let group of gData$ | async"
-          >
-          <div
-            class="c-m-option"
-            *ngFor="let letterID of group"
-            [class.destroy]="
-              (data$ | async)['letter'] === letterID[0]
-              && (selections$ | async)[letterID] === letterID
-            "
+        <div class="m-c-letter" *ngFor="let group of gData$ | async">
+
+          <app-game-option
+            [id]="item"
+            *ngFor="let item of group"
+            [desktop]="false"
+            [hide]="(selections$ | async)[item] === item"
+            [destroy]="(data$ | async)['letter'] === item[0] && (selections$ | async)[item]"
+            [onSelect]="onSelect"
+            [highlight]="item[0] === (letter$ | async) && showCorrectLetters$ | async"
             >
+          </app-game-option>
 
-            <button
-              class="m-circle-letter press"
-              (click)="onSelect(letterID)"
-              [disabled]="(selections$ | async)[letterID] === letterID"
-              [class.clear]="(selections$ | async)[letterID] === letterID"
-              [class.showOpt]="letterID[0] === (letter$ | async) && (showCorrectLetters$ | async) === true" 
-              >
-              {{letterID[0]}}
-            </button>
-
-          </div>
         </div>
   
       </div>
 
 
       <div style="height: 40px; width: 40px; margin: 10px auto" *ngIf="isSettingData$ | async">
-        <app-spinner-loading>
-        </app-spinner-loading>
+        <app-spinner-loading></app-spinner-loading>
       </div>
 
 
@@ -156,10 +136,8 @@
   </div>
 
 
-  <app-success-animation
-    *ngIf="showSuccessScreen$ | async"
-    class="modify-s"
-    >
-  </app-success-animation>
+
+
+  <app-success-animation *ngIf="showSuccessScreen$ | async" class="modify-s"></app-success-animation>
 
 </div>
