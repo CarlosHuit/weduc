@@ -20,29 +20,28 @@ export class WellDoneComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    setTimeout(this.speakWellDone, 600);
-
   }
 
   ngOnDestroy() {
 
-    this.utterance.removeEventListener( 'end', this.activeAnimationHideDialog );
-
   }
 
 
 
-  speakWellDone(): void {
+  async speakWellDone() {
 
-
+    await new Promise((r, re) => setTimeout(() => r(null), 1000) );
     this.utterance = this.tts.speak('Bien Hecho', 0.90);
-    this.utterance.addEventListener( 'end', this.activeAnimationHideDialog );
+    await new Promise((r, re) => setTimeout(() => r(null), 1500) );
+    this.activeHideDialog = true;
+    await new Promise((r, re) => setTimeout(() => r(null), 600) );
+    this.store.dispatch( new HideSuccessScreenLD() );
 
   }
 
 
 
-  activeAnimationHideDialog(): void {
+  activeAnimationHideDialog = () => {
 
     this.activeHideDialog = true;
     setTimeout(this.hideWellDoneDialog, 600);

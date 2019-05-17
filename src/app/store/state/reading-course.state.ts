@@ -815,8 +815,8 @@ export class ReadingCourseState {
   redirectMenu({ dispatch }: StateContext<ReadingCourseStateModel>, { payload }: RedirectMenu) {
 
     const letter = payload.letter.toLowerCase();
-    // const url = `lectura/detalle-letra/${letter}`;
-    const url = `lectura/juego/${letter}`;
+    const url = `lectura/detalle-letra/${letter}`;
+    // const url = `lectura/juego/${letter}`;
 
     dispatch([
       new Navigate([url]),
@@ -1216,13 +1216,16 @@ export class ReadingCourseState {
 
 
   @Action(LettersAreSameLD)
-  lettersAreSameLD({ dispatch, getState }: StateContext<ReadingCourseStateModel>, action: LettersAreSameLD) {
+  async lettersAreSameLD({ dispatch, getState }: StateContext<ReadingCourseStateModel>, action: LettersAreSameLD) {
 
     dispatch(new ShowSuccessScreenLD());
 
+    await new Promise((r, re) => setTimeout(() => r(null), 400) );
     const speech = this._speech.speak('Bien Hecho!', .90);
 
-    speech.addEventListener('end', function a() {
+    speech.addEventListener('end', async function a() {
+
+      await new Promise((r, re) => setTimeout(() => r(null), 1000) );
 
       const letter = getState().data.currentLetter;
       const state = getState().letterDetail;
@@ -1240,11 +1243,13 @@ export class ReadingCourseState {
 
       /* Change Data */
       if (nextIndex < state.data.length) {
+
         dispatch([
           new SetCurrentData(),
           new ShowLetterCardLD(),
           new HideSuccessScreenLD(),
         ]);
+
       }
 
 
