@@ -58,7 +58,7 @@ export class HandwritingComponent implements AfterViewInit, OnDestroy, OnInit {
     this.sub1 = this.preferences$.subscribe(p => this.preferences = p);
     this.sub2 = this.currentData$.subscribe(data => {
       this.coordinates = data.coordinates,
-      setTimeout(() => this.startExample(), 50);
+      setTimeout(() => this.startExample(), 800);
     });
 
     window.addEventListener('resize', this.startExample);
