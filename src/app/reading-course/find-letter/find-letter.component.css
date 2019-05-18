@@ -422,7 +422,7 @@
 .m-c-slider {
   height: 100%;
   display: flex;
-  transition: 1s ease;
+  transition: 800ms ease-in;
 }
 
 .container-card {
