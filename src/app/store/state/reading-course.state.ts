@@ -356,7 +356,10 @@ export class ReadingCourseState {
   @Selector()
   static flWrongSelections({ findLetter }: ReadingCourseStateModel) { return findLetter.currentData.wrongSelections; }
 
-
+  @Selector()
+  static flcurrentIndex({ findLetter }: ReadingCourseStateModel) {
+    return findLetter.currentIndex;
+  }
 
 
   /* ---------- Selectors SelectWords Component ---------- */
@@ -2038,7 +2041,8 @@ export class ReadingCourseState {
         showCoincidences:  false,
         showSuccessScreen: false,
         totalOfCorrects,
-        totalOfPendings:   totalOfCorrects
+        totalOfPendings:   totalOfCorrects,
+        disableAll: false,
       }
     });
 
@@ -2119,11 +2123,15 @@ export class ReadingCourseState {
 
       await dispatch( new AddCorrectSelectionFL({ letterId }) );
 
-      const speech = this._speech.speak('correcto');
+      const letterSound = getState().data.letterSounds.find(e => e.letter === letter).sound;
+
+      const speech = this._speech.speak(letterSound);
       const pendings = getState().findLetter.currentData.corrects;
 
       if (pendings === 0) {
+
         dispatch( new DisableAllFL({state: true}) );
+
         speech.addEventListener('end', function a() {
 
           dispatch(new ChangeCurrentDataFL());
@@ -2168,46 +2176,52 @@ export class ReadingCourseState {
 
 
   @Action(ChangeCurrentDataFL)
-  changeCurrentaDataFL({ patchState, getState, dispatch }: StateContext<ReadingCourseStateModel>, action: ChangeCurrentDataFL) {
+  async changeCurrentaDataFL({ patchState, getState, dispatch }: StateContext<ReadingCourseStateModel>, action: ChangeCurrentDataFL) {
 
-    dispatch(new ShowSuccessScreenFL());
 
-    const state = getState();
-    const letter = state.data.currentLetter.toLowerCase();
-    const index = state.findLetter.currentIndex === null ? -1 : state.findLetter.currentIndex;
+    const state     = getState();
+    const letter    = state.data.currentLetter.toLowerCase();
+    const index     = state.findLetter.currentIndex === null ? -1 : state.findLetter.currentIndex;
     const nextIndex = index + 1;
 
-    const speech = this._speech.speak('Bien Hecho', 0.9);
 
-    /* Redirection */
+    /// Redirection
     if (nextIndex >= state.findLetter.data.length) {
 
-      speech.addEventListener('end', function a() {
+      dispatch(new ShowSuccessScreenFL());
+
+      const speech = this._speech.speak('Bien Hecho', 0.9);
+
+      speech.addEventListener('end', async function a() {
+
+        await new Promise((r, x) => setTimeout(() => r(null), 800));
+
         dispatch([
           new Navigate([`/lectura/seleccionar-palabras/${letter}`]),
           new ResetDataFL()
         ]);
+
         speech.removeEventListener('end', a);
+
       });
 
     }
 
-    /* Set Current Data */
+
+    /// Set Current Data
     if (nextIndex < state.findLetter.data.length) {
 
       dispatch(new SetCurrentDataFL());
-      speech.addEventListener('end', function a() {
 
-        dispatch([
-          new DisableAllFL({state: false}),
-          new HideSuccessScreenFL(),
-          new ListenInstructionsFL()
-        ]);
-        speech.removeEventListener('end', a);
+      await new Promise((r, x) => setTimeout(() => r(null), 800));
 
-      });
+      dispatch([
+        new DisableAllFL({state: false}),
+        new ListenInstructionsFL()
+      ]);
 
     }
+
   }
 
 

@@ -11,13 +11,13 @@ export class FindLetterCardComponent implements OnInit, OnDestroy {
   @Input() data: FLData;
   @Input() onPressImage: Function;
   @Input() onPressOption: Function;
+  @Input() wrongSelections: {};
+  @Input() correctSelections: {};
+  @Input() selections: {};
+  @Input() disableAll: boolean;
 
   @ViewChild('mcWord') mcWord: ElementRef;
 
-  wrongSelections: {} = {};
-  correctSelections = {};
-  selections = {};
-  disableAll = false;
   buttonStyle: {'min-width': string, 'font-size': string };
 
   constructor() { }
@@ -25,16 +25,18 @@ export class FindLetterCardComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    // console.log(this.data);
     this.setInitialStyles();
-
     window.addEventListener('resize', this.setInitialStyles);
 
   }
 
+
   ngOnDestroy() {
+
     window.removeEventListener('resize', this.setInitialStyles);
+
   }
+
 
   setInitialStyles = async () => {
 
@@ -42,6 +44,7 @@ export class FindLetterCardComponent implements OnInit, OnDestroy {
     this.buttonStyle = this.genStyles(this.mcWord.nativeElement);
 
   }
+
 
   genStyles = (el: HTMLDivElement) => {
 
