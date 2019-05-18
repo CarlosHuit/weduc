@@ -25,29 +25,29 @@ export class FindLetterComponent implements OnDestroy, OnInit {
 
   sub1: Subscription;
 
-  @Select(ReadingCourseState.flShowSuccessScreen) showSuccessScreen$: Observable<boolean>;
-  @Select(AppState.queryMobileMatch)               queryMobileMatch$: Observable<boolean>;
-  @Select(ReadingCourseState.flLettersQuantity)     lettersQuantity$: Observable<number>;
-  @Select(ReadingCourseState.flIsSettingData)         isSettingData$: Observable<boolean>;
-  @Select(ReadingCourseState.flDisableAll)               disableAll$: Observable<boolean>;
-  @Select(AppState.isMobile)                               isMobile$: Observable<boolean>;
-  @Select(ReadingCourseState.flAdvance)                     advance$: Observable<number>;
-  @Select(ReadingCourseState.flCurrentData)                    data$: Observable<FLData>;
-  @Select(ReadingCourseState.flSelections)               selections$: Observable<{}>;
-  @Select(ReadingCourseState.flCorrectSelections)      correctsSels$: Observable<{}>;
-  @Select(ReadingCourseState.flWrongSelections)           wrongSels$: Observable<{}>;
-
-  @Select(ReadingCourseState.flData) fldata$: Observable<FLData[]>;
+  @Select(AppState.isMobile)           isMobile$:          Observable<boolean>;
+  @Select(ReadingCourseState.flData)    fldata$:            Observable<FLData[]>;
+  @Select(AppState.queryMobileMatch)     queryMobileMatch$:  Observable<boolean>;
+  @Select(ReadingCourseState.flAdvance)   advance$:           Observable<number>;
+  @Select(ReadingCourseState.flDisableAll) disableAll$:        Observable<boolean>;
+  @Select(ReadingCourseState.flSelections)  selections$:        Observable<{}>;
+  @Select(ReadingCourseState.flCurrentData)  data$:              Observable<FLData>;
+  @Select(ReadingCourseState.flcurrentIndex)  index$:             Observable<number>;
+  @Select(ReadingCourseState.flIsSettingData)  isSettingData$:     Observable<boolean>;
+  @Select(ReadingCourseState.flLettersQuantity) lettersQuantity$:   Observable<number>;
+  @Select(ReadingCourseState.flWrongSelections)  wrongSels$:         Observable<{}>;
+  @Select(ReadingCourseState.flCorrectSelections) correctsSels$:      Observable<{}>;
+  @Select(ReadingCourseState.flShowSuccessScreen)  showSuccessScreen$: Observable<boolean>;
 
   isMobile:        boolean;
   word:            string;
-  lettersQuantity: number;
 
-  data = ['#ff0000', '#663399', '#20b2aa', '#ff69b4'];
+  data: FLData[];
 
   position = 0;
 
   sub2: Subscription;
+  sub3: Subscription;
 
   constructor(
     private _speech:    SpeechSynthesisService,
@@ -61,12 +61,16 @@ export class FindLetterComponent implements OnDestroy, OnInit {
 
     this.store.dispatch( new SetInitialDataFL() );
     this.sub1 = this.isMobile$.subscribe(x => this.isMobile = x);
-    this.sub2 = this.lettersQuantity$.subscribe( q => this.lettersQuantity = q );
+    this.sub2 = this.index$.subscribe(i => this.position = i);
+    this.sub3 = this.fldata$.subscribe(d => this.data = d );
 
   }
 
   ngOnDestroy() {
     this._speech.cancel();
+    this.sub1.unsubscribe();
+    this.sub2.unsubscribe();
+    this.sub3.unsubscribe();
   }
 
 
@@ -111,6 +115,22 @@ export class FindLetterComponent implements OnDestroy, OnInit {
     }
 
   }
+
+
+
+  calcPercentPosition() {
+
+    const stepLength = 100 / this.data.length;
+    const position = -(this.position * stepLength);
+
+    return { 'transform': `translateX(${position}%)` };
+
+  }
+
+}
+
+
+/*
 
   genStyles = (el: HTMLDivElement) => {
 
@@ -182,14 +202,4 @@ export class FindLetterComponent implements OnDestroy, OnInit {
   }
 
 
-  calcPercentPosition() {
-
-    const s = 100 / this.data.length;
-    const position = -(this.position * s);
-    return {
-      'transform': `translateX(${position}%)`
-    };
-
-  }
-
-}
+*/
