@@ -67,12 +67,99 @@
 
 
   <!-- Mobile Version -->
-  <div
+  <div *ngIf="!(isSettingData$ | async) && ((isMobile$ | async) || (queryMobileMatch$ | async))" class="container-mobile">
+
+    <div class="m-c-slider" [ngStyle]="calcPercentPosition()" [style.width.%]="100 * ( fldata$ | async).length">
+
+      <div
+        style="height: 100%; width: 100%"
+        *ngFor="let e of (fldata$ | async); let i=index"
+        >
+        <app-find-letter-card [data]="e"></app-find-letter-card>
+      </div>
+
+      <!-- <div
+        *ngFor="let e of data; let i=index"
+        class="container-card center"
+        [style.background]="e"
+        >
+        
+        <div>
+          <app-find-letter-card></app-find-letter-card>
+        </div> -->
+
+        <!-- <div #mcCardIdentify class="m-c-card-identify-letter" >
+
+          <mat-card class="m-c-card">
+        
+            <div class="container-circle" >
+              <div
+                #mcImage
+                matRipple
+                [matRippleColor]="'rgba(255,255,255, 0.05)'"
+                [matRippleRadius]="80"
+                class="m-c-image center"
+                >
+                <img
+                  class="m-image"
+                  (click)="listenWord()"
+                  [src]="(data$ | async).imgUrl"
+                  >
+                  <div class="shadow"></div>
+              </div>
+            </div>
+        
+            <div #mcWord class="m-c-container-word center">
+              <button
+                matRipple
+                [id]="letter"
+                class="option"
+                (click)="onSelect(letter)"
+                [ngStyle]="genStyles(mcWord)"
+                *ngFor="let letter of (data$ | async).letterIds"
+                [class.incorrect]="(wrongSels$ | async)[letter] === letter"
+                [class.correct]="(correctsSels$ | async)[letter] === letter"
+                [disabled]="(selections$ | async)[letter] === letter || (disableAll$ | async)"
+                >
+                {{letter[0]}}
+              </button>
+            </div>
+        
+            <mat-icon class="i-help" (click)="instructions()" >help</mat-icon>
+        
+          </mat-card>
+
+        </div> -->
+
+
+        <!-- <div>
+
+          <button *ngIf="i > 0" (click)="prev(i)" >prev</button>
+          <button *ngIf="i < data.length - 1" (click)="next(i)" >next</button>
+          {{e}} {{ i }}
+
+        </div> -->
+
+      <!-- </div> -->
+
+    </div>
+
+
+  </div>
+
+
+
+
+
+  <!-- <div
     #mcCardIdentify class="m-c-card-identify-letter"
     *ngIf="!(isSettingData$ | async) && ((isMobile$ | async) || (queryMobileMatch$ | async))"
-    >
+    > -->
 
-    <mat-card class="m-c-card">
+
+
+
+    <!-- <mat-card class="m-c-card">
   
       <div class="container-circle" >
         <div
@@ -109,12 +196,9 @@
   
       <mat-icon class="i-help" (click)="instructions()" >help</mat-icon>
   
-      
-      
-      
-    </mat-card>
+    </mat-card> -->
 
-    <div
+    <!-- <div
       class="m-c-container-progress-bar"
       [ngStyle]="calcPositionProgressBar(container, mcCardIdentify)"
       >
@@ -125,9 +209,9 @@
         style="height: 100%; border-radius: 50px"
         >
       </mat-progress-bar>
-    </div>
+    </div> -->
 
-  </div>
+  <!-- </div> -->
 
 
 

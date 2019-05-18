@@ -37,9 +37,15 @@ export class FindLetterComponent implements OnDestroy, OnInit {
   @Select(ReadingCourseState.flCorrectSelections)      correctsSels$: Observable<{}>;
   @Select(ReadingCourseState.flWrongSelections)           wrongSels$: Observable<{}>;
 
+  @Select(ReadingCourseState.flData) fldata$: Observable<FLData[]>;
+
   isMobile:        boolean;
   word:            string;
   lettersQuantity: number;
+
+  data = ['#ff0000', '#663399', '#20b2aa', '#ff69b4'];
+
+  position = 0;
 
   sub2: Subscription;
 
@@ -68,7 +74,7 @@ export class FindLetterComponent implements OnDestroy, OnInit {
 
   onSelect = (letterId: string) => this.store.dispatch(new SelectLetterIdFL({letterId}));
 
-  listenWord = () => this.store.dispatch( new ListenWordFL() );
+  listenWord = (word: string) => this.store.dispatch( new ListenWordFL({ word }) );
 
   calcPositionProgressBar(container: HTMLDivElement, mcCardIdentify: HTMLDivElement) {
 
@@ -154,6 +160,28 @@ export class FindLetterComponent implements OnDestroy, OnInit {
 
   }
 
+
+  prev(index: number) {
+
+    this.position = index - 1;
+
+  }
+
+  next(index: number) {
+
+    this.position = index + 1;
+
+  }
+
+  calcPercentPosition() {
+
+    const s = 100 / this.data.length;
+    const position = -(this.position * s);
+    return {
+      'transform': `translateX(${position}%)`
+    };
+
+  }
 
 }
 
