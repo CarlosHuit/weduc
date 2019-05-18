@@ -1,0 +1,52 @@
+<div class="find-letter-container">
+
+  <div class="find-letter-card">
+
+
+    <div class="container-image">
+
+      <div
+        #mcImage
+        matRipple
+        [matRippleColor]="'rgba(255,255,255, 0.05)'"
+        [matRippleRadius]="80"
+        class="circle-image center"
+        >
+        <img
+          class="m-image"
+          (click)="listenWord()"
+          [src]="data.imgUrl"
+          >
+        <div class="shadow"></div>
+      </div>
+
+    </div>
+
+
+    <div class="container-options" >
+
+      <div #mcWord class="container-options-letter center">
+        <button
+          matRipple
+          [id]="letter"
+          class="option"
+          (click)="onSelect(letter)"
+          [ngStyle]="genStyles(mcWord)"
+          *ngFor="let letter of data.letterIds"
+          [disabled]="selections[letter] === letter || disableAll"
+          [class.correct]="correctSelections[letter] === letter"
+          [class.incorrect]="wrongSelections[letter] === letter"
+          >
+          <!-- [class.incorrect]="(wrongSels$ | async)[letter] === letter"
+          [class.correct]="(correctsSels$ | async)[letter] === letter"
+          [disabled]="(selections$ | async)[letter] === letter || (disableAll$ | async)" -->
+          {{letter[0]}}
+        </button>
+      </div>
+
+    </div>
+
+
+  </div>
+
+</div>
