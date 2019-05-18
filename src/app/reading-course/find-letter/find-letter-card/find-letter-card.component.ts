@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { FLData } from 'src/app/store/models/reading-course/find-letter/reading-course-find-letter.model';
 
 @Component({
@@ -6,25 +6,42 @@ import { FLData } from 'src/app/store/models/reading-course/find-letter/reading-
   templateUrl: './find-letter-card.component.html',
   styleUrls: ['./find-letter-card.component.css']
 })
-export class FindLetterCardComponent implements OnInit {
+export class FindLetterCardComponent implements OnInit, OnDestroy {
 
   @Input() data: FLData;
+  @ViewChild('mcWord') mcWord: ElementRef;
 
   wrongSelections: {} = {};
   correctSelections = {};
   selections = {};
   disableAll = false;
+  buttonStyle: {'min-width': string, 'font-size': string };
 
   constructor() { }
 
 
   ngOnInit() {
-    console.log(this.data);
+
+    // console.log(this.data);
+    this.setInitialStyles();
+
+    window.addEventListener('resize', this.setInitialStyles);
+
+  }
+
+  ngOnDestroy() {
+    window.removeEventListener('resize', this.setInitialStyles);
+  }
+
+  setInitialStyles = async () => {
+
+    await new Promise((r, w) => setTimeout(() =>  r(null), 0));
+    this.buttonStyle = this.genStyles(this.mcWord.nativeElement);
+
   }
 
   genStyles = (el: HTMLDivElement) => {
-    console.log('this.data.word');
-    // const maxLetters  = this.lettersQuantity;
+
     const maxLetters  = this.data.word.length;
 
     const cWidth  = window.innerWidth;
@@ -46,10 +63,8 @@ export class FindLetterCardComponent implements OnInit {
       } else if ( maxLetters > 4 && maxLetters <= 6 ) {
 
         const minWidth = ((w * 0.8 ) - margin) / maxLetters;
-
         return {
           'min-width': `${minWidth}px`,
-          'max-width': '60px',
           'font-size': '50px'
         };
 

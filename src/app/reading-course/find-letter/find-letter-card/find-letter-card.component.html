@@ -31,7 +31,7 @@
           [id]="letter"
           class="option"
           (click)="onSelect(letter)"
-          [ngStyle]="genStyles(mcWord)"
+          [ngStyle]="buttonStyle"
           *ngFor="let letter of data.letterIds"
           [disabled]="selections[letter] === letter || disableAll"
           [class.correct]="correctSelections[letter] === letter"
