@@ -327,6 +327,9 @@ export class ReadingCourseState {
   static flLettersQuantity({ findLetter }: ReadingCourseStateModel) { return findLetter.currentData.word.length; }
 
   @Selector()
+  static flData({ findLetter }: ReadingCourseStateModel) { return findLetter.data; }
+
+  @Selector()
   static flShowSuccessScreen({ findLetter }: ReadingCourseStateModel) { return findLetter.showSuccessScreen; }
 
   @Selector()
@@ -816,7 +819,7 @@ export class ReadingCourseState {
 
     const letter = payload.letter.toLowerCase();
     // const url = `lectura/detalle-letra/${letter}`;
-    const url = `lectura/dibujar-letra/${letter}`;
+    const url = `lectura/encontrar-letras/${letter}`;
     // ! TODO
 
     dispatch([
@@ -2235,8 +2238,7 @@ export class ReadingCourseState {
   @Action(ListenWordFL)
   listenWordFL({ getState }: StateContext<ReadingCourseStateModel>, action: ListenWordFL) {
 
-    const word = getState().findLetter.currentData.word;
-    this._speech.speak(word);
+    this._speech.speak(action.payload.word);
 
   }
 
