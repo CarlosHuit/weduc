@@ -69,7 +69,11 @@
   <!-- Mobile Version -->
   <div *ngIf="!(isSettingData$ | async) && ((isMobile$ | async) || (queryMobileMatch$ | async))" class="container-mobile">
 
-    <div class="m-c-slider" [ngStyle]="calcPercentPosition()" [style.width.%]="100 * ( fldata$ | async).length">
+    <div
+      class="m-c-slider"
+      [ngStyle]="calcPercentPosition()"
+      [style.width.%]="100 * ( fldata$ | async).length"
+      >
 
       <div
         style="height: 100%; width: 100%"
@@ -92,6 +96,14 @@
   </div>
 
 
+  <div class="container-pagination">
+    <div
+      class="dot"
+      *ngFor="let e of (fldata$ | async); let i=index"
+      [class.active]="i === (index$ | async)"
+      >
+    </div>
+  </div>
 
 
   <!-- Animation Spinner -->
