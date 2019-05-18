@@ -51,6 +51,7 @@ import { CardOptionComponent } from './reading-course/letters-detail/card-option
 import { WellDoneComponent } from './shared/dialogs/well-done/well-done.component';
 import { GameOptionComponent } from './reading-course/game/game-option/game-option.component';
 import { ModalHandwritingComponent } from './reading-course/draw-letter/modal-handwriting/modal-handwriting.component';
+import { FindLetterCardComponent } from './reading-course/find-letter/find-letter-card/find-letter-card.component';
 
 @NgModule({
   declarations: [
@@ -93,6 +94,7 @@ import { ModalHandwritingComponent } from './reading-course/draw-letter/modal-ha
     WellDoneComponent,
     GameOptionComponent,
     ModalHandwritingComponent,
+    FindLetterCardComponent,
   ],
   imports: [
     MaterialModule,
