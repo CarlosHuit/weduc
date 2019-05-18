@@ -5,22 +5,24 @@
 
     <div class="container-image">
 
+      
       <div
         #mcImage
         matRipple
-        [matRippleColor]="'rgba(255,255,255, 0.05)'"
-        [matRippleRadius]="80"
+        [matRippleColor]="'rgba(255,255,255, 0.08)'"
+        [matRippleRadius]="120"
         class="circle-image center"
+        (click)="onPressImage(data.word)"
         >
         <img
           class="m-image"
-          (click)="listenWord()"
           [src]="data.imgUrl"
           >
         <div class="shadow"></div>
       </div>
 
     </div>
+
 
 
     <div class="container-options" >
@@ -30,7 +32,7 @@
           matRipple
           [id]="letter"
           class="option"
-          (click)="onSelect(letter)"
+          (click)="onPressOption(letter)"
           [ngStyle]="buttonStyle"
           *ngFor="let letter of data.letterIds"
           [disabled]="selections[letter] === letter || disableAll"

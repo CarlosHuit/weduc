@@ -70,11 +70,32 @@ export class FindLetterComponent implements OnDestroy, OnInit {
   }
 
 
-  instructions = () => this.store.dispatch( new ListenInstructionsFL() );
 
-  onSelect = (letterId: string) => this.store.dispatch(new SelectLetterIdFL({letterId}));
+  instructions = () => {
 
-  listenWord = (word: string) => this.store.dispatch( new ListenWordFL({ word }) );
+    this.store.dispatch( new ListenInstructionsFL() );
+
+  }
+
+
+
+  onSelect = (letterId: string) => {
+
+    console.log(letterId);
+    this.store.dispatch(new SelectLetterIdFL({letterId}));
+
+  }
+
+
+
+  listenWord = (word: string) => {
+
+    console.log(word);
+    this.store.dispatch( new ListenWordFL({ word }) );
+
+  }
+
+
 
   calcPositionProgressBar(container: HTMLDivElement, mcCardIdentify: HTMLDivElement) {
 
@@ -161,18 +182,6 @@ export class FindLetterComponent implements OnDestroy, OnInit {
   }
 
 
-  prev(index: number) {
-
-    this.position = index - 1;
-
-  }
-
-  next(index: number) {
-
-    this.position = index + 1;
-
-  }
-
   calcPercentPosition() {
 
     const s = 100 / this.data.length;
@@ -184,57 +193,3 @@ export class FindLetterComponent implements OnDestroy, OnInit {
   }
 
 }
-
-/* initUserData = (): void => {
-
-  const t  = this.genDates.generateData();
-  const id = this._storage.getElement('user')['userId'];
-  this.userData = new FindLetterData(id, t.fullDate, t.fullTime, 'N/A', this.letterParam, []);
-
-}
-
-addWordData = (word): void => {
-
-  const t = this.genDates.generateData().fullTime;
-  const x = new Options(word, t, 'N/A', 0, 0, [], [], []);
-  this.userData.words.push(x);
-
-}
-
-addCount = (word: string, code: string, letter?: string, state?: boolean): void => {
-
-  const t = this.genDates.generateData().fullTime;
-  const i = this.userData.words.findIndex(m => m.word === word );
-  const e = this.userData.words[i];
-
-  const pImg  = code === 'pressImage'   ? e.pressImage.push(t)   : null;
-  const pHelp = code === 'instructions' ? e.instructions.push(t) : null;
-
-  if (code  === 'correct' || code === 'incorrect') {
-    e[code]++;
-    e.historial.push(new Selection(letter, t, state));
-  }
-
-}
-
-addFinalTimeWord = (word: string): void => {
-
-  const t = this.genDates.generateData().fullTime;
-  const i = this.userData.words.findIndex(m => m.word === word);
-  this.userData.words[i].finalTime = t;
-
-}
-
-addFinalTimeComponent = (): void => {
-
-  this.userData.finalTime = this.genDates.generateData().fullTime;
-}
-
-send = () => {
-
-  this._sendData.sendDrawLetters(this.userData)
-    .subscribe(
-      val => { const v = val; },
-      err => { const e = err; }
-    );
-} */

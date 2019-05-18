@@ -9,6 +9,9 @@ import { FLData } from 'src/app/store/models/reading-course/find-letter/reading-
 export class FindLetterCardComponent implements OnInit, OnDestroy {
 
   @Input() data: FLData;
+  @Input() onPressImage: Function;
+  @Input() onPressOption: Function;
+
   @ViewChild('mcWord') mcWord: ElementRef;
 
   wrongSelections: {} = {};
