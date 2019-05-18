@@ -122,6 +122,7 @@ export class ListenInstructionsFL {
 export class ListenWordFL {
 
   static readonly type = ReadingCourseFindLetterActionsType.LISTEN_WORD;
+  constructor(public readonly payload: { word: string }) {}
 
 }
 
