@@ -79,6 +79,10 @@
           [data]="e"
           [onPressImage]="listenWord"
           [onPressOption]="onSelect"
+          [wrongSelections]="wrongSels$ | async"
+          [correctSelections]="correctsSels$ | async"
+          [selections]="selections$ | async"
+          [disableAll]="disableAll$ | async"
           >
         </app-find-letter-card>
       </div>
@@ -96,6 +100,8 @@
   </div>
 
   <!-- Success Animation -->
-  <app-success-animation *ngIf="showSuccessScreen$ | async"></app-success-animation>
+  <div *ngIf="showSuccessScreen$ | async" style="position: absolute; height: 100%; width: 100%" >
+    <app-well-done></app-well-done>
+  </div>
 
 </div>
