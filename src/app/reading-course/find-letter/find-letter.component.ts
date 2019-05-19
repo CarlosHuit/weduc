@@ -81,7 +81,6 @@ export class FindLetterComponent implements OnDestroy, OnInit {
 
   onSelect = (letterId: string) => {
 
-    console.log(letterId);
     this.store.dispatch(new SelectLetterIdFL({letterId}));
 
   }
@@ -90,7 +89,6 @@ export class FindLetterComponent implements OnDestroy, OnInit {
 
   listenWord = (word: string) => {
 
-    console.log(word);
     this.store.dispatch( new ListenWordFL({ word }) );
 
   }
