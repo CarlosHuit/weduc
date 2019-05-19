@@ -31,30 +31,26 @@ export class FindLetterComponent implements OnDestroy, OnInit {
   @Select(ReadingCourseState.flAdvance)   advance$:           Observable<number>;
   @Select(ReadingCourseState.flDisableAll) disableAll$:        Observable<boolean>;
   @Select(ReadingCourseState.flSelections)  selections$:        Observable<{}>;
-  @Select(ReadingCourseState.flCurrentData)  data$:              Observable<FLData>;
   @Select(ReadingCourseState.flcurrentIndex)  index$:             Observable<number>;
   @Select(ReadingCourseState.flIsSettingData)  isSettingData$:     Observable<boolean>;
-  @Select(ReadingCourseState.flLettersQuantity) lettersQuantity$:   Observable<number>;
+  @Select(ReadingCourseState.flDataLength)      dataLength$:        Observable<number>;
   @Select(ReadingCourseState.flWrongSelections)  wrongSels$:         Observable<{}>;
   @Select(ReadingCourseState.flCorrectSelections) correctsSels$:      Observable<{}>;
   @Select(ReadingCourseState.flShowSuccessScreen)  showSuccessScreen$: Observable<boolean>;
 
-  isMobile:        boolean;
-  word:            string;
-
-  data: FLData[];
+  dataLength: number;
+  isMobile: boolean;
+  word:   string;
 
   position = 0;
 
   sub2: Subscription;
   sub3: Subscription;
 
-  constructor(
-    private _speech:    SpeechSynthesisService,
-    private store: Store
-  ) {
+  constructor( private _speech: SpeechSynthesisService, private store: Store ) {
 
     this.store.dispatch( new IsSettingDataFL({state: true}) );
+
   }
 
   ngOnInit() {
@@ -62,7 +58,7 @@ export class FindLetterComponent implements OnDestroy, OnInit {
     this.store.dispatch( new SetInitialDataFL() );
     this.sub1 = this.isMobile$.subscribe(x => this.isMobile = x);
     this.sub2 = this.index$.subscribe(i => this.position = i);
-    this.sub3 = this.fldata$.subscribe(d => this.data = d );
+    this.sub3 = this.dataLength$.subscribe(d => this.dataLength = d );
 
   }
 
@@ -120,7 +116,7 @@ export class FindLetterComponent implements OnDestroy, OnInit {
 
   calcPercentPosition() {
 
-    const stepLength = 100 / this.data.length;
+    const stepLength = 100 / this.dataLength;
     const position = -(this.position * stepLength);
 
     return { 'transform': `translateX(${position}%)` };
@@ -129,77 +125,3 @@ export class FindLetterComponent implements OnDestroy, OnInit {
 
 }
 
-
-/*
-
-  genStyles = (el: HTMLDivElement) => {
-
-    const maxLetters  = this.lettersQuantity;
-
-    const cWidth  = window.innerWidth;
-    const cHeight = window.innerHeight;
-    const margin = maxLetters * 2.5;
-
-    const w       = el.clientWidth;
-    const portrait = cHeight > cWidth ? true : false;
-
-    if ( portrait && cWidth < 540 ) {
-
-      if (maxLetters <= 4) {
-
-        return {
-          'min-width': '55px',
-          'font-size': '55px'
-        };
-
-      } else if ( maxLetters > 4 && maxLetters <= 6 ) {
-
-        const minWidth = ((w * 0.8 ) - margin) / maxLetters;
-
-        return {
-          'min-width': `${minWidth}px`,
-          'font-size': '50px'
-        };
-
-      } else if (maxLetters === 7 ) {
-
-        const minWidth = ( w / 8 );
-
-        return {
-          'min-width': `${minWidth}px`,
-          'font-size': '45px'
-        };
-
-      } else if (maxLetters > 7 ) {
-
-
-        const minWidth = (w - margin) / maxLetters;
-
-        return {
-          'min-width': `${minWidth}px`,
-          'font-size': '35px'
-        };
-
-
-      }
-
-    }
-
-    if (cHeight < cWidth) {
-
-      if (maxLetters <= 6) {
-
-        return { 'min-width': `45px`, 'font-size': `${w * 0.135}px` };
-
-      } else {
-
-        return { 'min-width': `38px`, 'font-size': `${w * 0.10}px` };
-
-      }
-
-    }
-
-  }
-
-
-*/

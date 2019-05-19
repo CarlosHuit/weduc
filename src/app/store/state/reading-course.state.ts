@@ -324,10 +324,13 @@ export class ReadingCourseState {
   static flCurrentData({ findLetter }: ReadingCourseStateModel) { return findLetter.currentData; }
 
   @Selector()
-  static flLettersQuantity({ findLetter }: ReadingCourseStateModel) { return findLetter.currentData.word.length; }
+  static flLengthWord({ findLetter }: ReadingCourseStateModel) { return findLetter.currentData.word.length; }
 
   @Selector()
   static flData({ findLetter }: ReadingCourseStateModel) { return findLetter.data; }
+
+  @Selector()
+  static flDataLength({ findLetter }: ReadingCourseStateModel) { return findLetter.data.length; }
 
   @Selector()
   static flShowSuccessScreen({ findLetter }: ReadingCourseStateModel) { return findLetter.showSuccessScreen; }
