@@ -9,57 +9,28 @@
     *ngIf="!(isSettingData$ | async) && !(isMobile$ | async) && !(queryMobileMatch$ | async)"
     >
 
-    <mat-card class="d-card-identify">
-
-      <div class="d-container-circle" >
-        <div
-          matRipple
-          (click)="listenWord()"
-          [matRippleRadius]="120"
-          class="d-c-container-img center"
-          [matRippleColor]="'rgba(255,255,255, 0.035)'"
-          >
-          <img
-            class="d-c-image"
-            [src]="(data$ | async).imgUrl"
-            >
-          <div class="shadow"></div>
-        </div>
-      </div>
-  
-      <div class="container-letters center">
-        <button
-          [id]="letter"
-          class="option center press"
-          (click)="onSelect(letter)"
-          *ngFor="let letter of (data$ | async).letterIds"
-          [disabled]="(selections$ | async)[letter] === letter || (disableAll$ | async)"
-          [class.correct]="(correctsSels$ | async)[letter] === letter"
-          [class.incorrect]="(wrongSels$ | async)[letter] === letter"
-          matRipple 
-          
-          >
-          {{letter[0]}}
-        </button>
-      </div>
-  
-      <mat-icon matRipple [matRippleCentered]="true" [matRippleRadius]="16" class="d-icon-help" (click)="instructions()">help</mat-icon>
-  
-  
-    </mat-card>
-
-
     <div
-      class="d-container-progress-bar"
-      [style.top.px]="((container.clientHeight - cont.clientHeight) / 4) - 4"
+      class="m-c-slider"
+      [ngStyle]="calcPercentPosition()"
+      [style.width.%]="100 * ( fldata$ | async).length"
       >
-      <mat-progress-bar
-        color="warn"
-        [mode]="determinate"
-        [value]="advance$ | async "
-        style="height: 100%; border-radius: 50px"
+
+      <div
+        style="height: 100%; width: 100%"
+        *ngFor="let e of (fldata$ | async); let i=index"
         >
-      </mat-progress-bar>
+        <app-find-letter-card
+          [data]="e"
+          [onPressImage]="listenWord"
+          [onPressOption]="onSelect"
+          [wrongSelections]="wrongSels$ | async"
+          [correctSelections]="correctsSels$ | async"
+          [selections]="selections$ | async"
+          [disableAll]="disableAll$ | async"
+          >
+        </app-find-letter-card>
+      </div>
+
     </div>
 
   </div>
