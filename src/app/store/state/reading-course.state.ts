@@ -145,6 +145,7 @@ import { AuthState } from './auth.state';
 import { ItemLetterMenu } from 'src/app/models/reading-course/item-letter-menu.model';
 import { LearnedLetter } from 'src/app/models/reading-course/learned-letter.model';
 import { ReadingCourseDataModel } from '../models/reading-course/data/reading-course-data.model';
+import { delay } from 'src/app/utils/delay.util';
 
 
 @State<ReadingCourseStateModel>({
@@ -2602,24 +2603,26 @@ export class ReadingCourseState {
 
 
   @Action( ChangeCurrentDataSW )
-  changeCurrentDataSW({ getState, dispatch }: StateContext<ReadingCourseStateModel>, action: ChangeCurrentDataSW) {
+  async changeCurrentDataSW({ getState, dispatch }: StateContext<ReadingCourseStateModel>, action: ChangeCurrentDataSW) {
 
     dispatch(new ShowSuccessScreenSW());
 
     const state = getState();
-    const letter = state.data.currentLetter.toLowerCase();
-    const index = state.selectWords.currentIndex === null ? -1 : state.selectWords.currentIndex;
+    const index  = state.selectWords.currentIndex === null ? -1 : state.selectWords.currentIndex;
+    const letter  = state.data.currentLetter.toLowerCase();
     const nextIndex = index + 1;
+
+    await delay(400);
 
     const speech = this._speech.speak('Bien Hecho', 0.9);
 
 
-    /* Redirection */
+    /// Redirection
     if (nextIndex >= state.selectWords.data.length) {
 
       speech.addEventListener('end', async function a() {
 
-        await new Promise((r, w) => setTimeout(() => r(null), 800));
+        await delay(1000);
 
         dispatch([
           new Navigate([`/lectura/pronunciar-letra/${letter}`]),
@@ -2631,13 +2634,13 @@ export class ReadingCourseState {
 
     }
 
-    /* Set Current Data */
+
+    /// Change Current Data
     if (nextIndex < state.selectWords.data.length) {
 
-      // dispatch(new SetCurrentDataSW());
       speech.addEventListener('end', async function a() {
 
-        await new Promise((r, w) => setTimeout(() => r(null), 800));
+        await delay(1000);
 
         dispatch([
           new HideSuccessScreenSW(),
@@ -2649,6 +2652,8 @@ export class ReadingCourseState {
       });
 
     }
+
+
   }
 
 
