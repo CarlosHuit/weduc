@@ -1,15 +1,11 @@
-<div class="m-c-recognition">
+<div class="container">
 
 
-  <mat-card class="resize-recognition" *ngIf="!(isSettingData$ | async)">
+  <!-- <mat-card class="resize-recognition" *ngIf="!(isSettingData$ | async)">
 
     <div class="container-letter">
       <div #mcLetter class="m-c-letter">
 
-<!--         <hr style="top: 24px" class="divider">
-        <hr style="top: 47px" class="divider">
-        <hr style="top: 141px" class="divider">
-        <hr style="top: 175px" class="divider"> -->
 
         <button class="letter"> {{currentLetter$ | async}} </button>
 
@@ -30,21 +26,7 @@
           class="button press center"
           [disabled]="(isRecording$ | async)"
           >
-          <svg
-            version="1.1"
-            x="0px" y="0px"
-            class="mic-icon"
-            xml:space="preserve"
-            style="fill:#1E2D70"
-            viewBox="0 0 1000 1000"
-            xmlns="http://www.w3.org/2000/svg"
-            enable-background="new 0 0 1000 1000"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            >
-            <g>
-              <path d="M500,683.8c84.6,0,153.1-68.6,153.1-153.1V163.1C653.1,78.6,584.6,10,500,10c-84.6,0-153.1,68.6-153.1,153.1v367.5C346.9,615.2,415.4,683.8,500,683.8z M714.4,438.8v91.9C714.4,649,618.4,745,500,745c-118.4,0-214.4-96-214.4-214.4v-91.9h-61.3v91.9c0,141.9,107.2,258.7,245,273.9v124.2H346.9V990h306.3v-61.3H530.6V804.5c137.8-15.2,245-132.1,245-273.9v-91.9H714.4z" />
-            </g>
-          </svg>
+
         </button>
 
       </div>
@@ -59,14 +41,87 @@
       ?
     </button>
 
-  </mat-card>
+  </mat-card> -->
 
 
 
-  <div
-    class="container-loading"
-    *ngIf="isSettingData$ | async"
+  <!-- <div
+    class="d-c-pronounce-letter"
+    *ngIf="!(loading$ | async) && !(isMobile$ | async) && !(queryMobileMatch$ | async)"
     >
+
+  </div> -->
+
+
+
+  <!-- *ngIf="( !(loading$ | async) && (isMobile$ | async) ) || ( !(loading$ | async) && !(isMobile$ | async) && (queryMobileMatch$ | async) )" -->
+  <div
+    class="m-c-pronounce-letter"
+    >
+
+
+
+    <div #mcLetter class="m-c-letter center">
+      <h2
+        [style.fontSize.px]="genFontSize(mcLetter)"
+        >
+        {{currentLetter$ | async}}
+      </h2>
+    </div>
+
+
+
+    <div class="m-c-record-grid">
+
+
+      <div class="m-c-record-animation-grid center">
+        <div class="container-record-animation">
+          <div class="lerp one"  ></div>
+          <div class="lerp two"  ></div>
+          <div class="lerp three"></div>
+          <div class="lerp four" ></div>
+        </div>
+      </div>
+  
+
+      <div class="m-c-button-record-grid center">
+  
+        <button
+          mat-ripple
+          [matRippleColor]="'rgba(255, 255, 255, 0.21)'"
+          class="m-c-button-record"
+          >
+  
+          <svg
+            version="1.1"
+            x="0px" y="0px"
+            class="mic-icon"
+            xml:space="preserve"
+            style="fill: #ffffff; height: 36px;"
+            viewBox="0 0 1000 1000"
+            xmlns="http://www.w3.org/2000/svg"
+            enable-background="new 0 0 1000 1000"
+            xmlns:xlink="http://www.w3.org/1999/xlink"flex-end
+            >
+            <g>
+              <path d="M500,683.8c84.6,0,153.1-68.6,153.1-153.1V163.1C653.1,78.6,584.6,10,500,10c-84.6,0-153.1,68.6-153.1,153.1v367.5C346.9,615.2,415.4,683.8,500,683.8z M714.4,438.8v91.9C714.4,649,618.4,745,500,745c-118.4,0-214.4-96-214.4-214.4v-91.9h-61.3v91.9c0,141.9,107.2,258.7,245,273.9v124.2H346.9V990h306.3v-61.3H530.6V804.5c137.8-15.2,245-132.1,245-273.9v-91.9H714.4z" />
+            </g>
+          </svg>
+  
+        </button>
+  
+      </div>
+
+
+    </div>
+
+    
+
+  </div>
+
+
+
+  <div class="container-loading" *ngIf="isSettingData$ | async">
     <app-spinner-loading></app-spinner-loading>
   </div>
 
