@@ -67,30 +67,23 @@
     
     <div #contCard class="m-c-select-words center">
       
-      <mat-card  class="m-card-select-words center">
-        <div class="m-c-container-words center">
-          <button
-            matRipple
-            *ngFor="let word of words$ | async"
-            class="word"
-            [class.correct]="(correctSels$ | async)[word] === word"
-            [class.incorrect]="(wongSels$ | async)[word] === word"
-            [disabled]="(selections$ | async)[word] === word"
-            (click)="selectWord(word)"
-            >
-            {{word}}
-          </button>
-        </div>
-    
-        <button matRipple class="m-icon-help" (click)="repeatInstructions()">Ayuda</button>
-      </mat-card>
+      <div class="m-c-container-words center">
+        <button
+          matRipple
+          *ngFor="let word of words$ | async"
+          class="word"
+          [class.correct]="(correctSels$ | async)[word] === word"
+          [class.incorrect]="(wongSels$ | async)[word] === word"
+          [disabled]="(selections$ | async)[word] === word"
+          (click)="selectWord(word)"
+          >
+          {{word}}
+        </button>
+      </div>
     
     </div>
 
-    <div
-      #contPB class="m-c-container-progress-bar"
-      [ngStyle]="genPostion(cont, contCard, contPB)"
-      >
+    <div class="m-c-container-progress-bar">
       <mat-progress-bar
         color="warn"
         [mode]="determinate"
@@ -99,6 +92,13 @@
         >
       </mat-progress-bar>
     </div>
+
+    <button
+      matRipple
+      class="m-icon-help"
+      (click)="repeatInstructions()">
+      Ayuda
+    </button>
 
   </div>
 

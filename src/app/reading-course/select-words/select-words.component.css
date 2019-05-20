@@ -80,16 +80,11 @@
 }
 
 @media( max-height: 560px ) {
-  .d-container {
-    display: block !important;
-  }
-  .d-c-card {
-    margin: 10px auto
-  }
-  .d-c-container-progress-bar {
-    width: 100%;
-    max-width: unset;
-  }
+
+  .d-container { display: block !important; }
+  .d-c-card { margin: 10px auto; }
+  .d-c-container-progress-bar { width: 100%; max-width: unset; }
+
 }
 
 
@@ -101,36 +96,27 @@
   height:     94%;
   min-height: 420px;
   max-height: 520px;
-  background: white;
   padding: 0;
   position: relative;
 }
 
-.m-card-select-words {
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  position: relative; 
-}
-
 .m-c-container-words {
-  width:              95%;
-  flex-wrap:          wrap;
+  width:     95%;
+  flex-wrap: wrap;
 }
 
 .word {
-  font-size: calc(100vw * .07);
-  padding: 6px 20px;
+  font-size:      calc(100vw * .07);
+  padding:        6px 20px;
   letter-spacing: 0.1px;
-  color: white;
-  border-radius: 4px;
-  border: none;
-  outline: none;
-  box-shadow: none;
-  font-family: 'Roboto', sans-serif;
-  border: 2px solid white;
-  margin: 3px;
-  background: linear-gradient(180deg, #fa7e29 0%, #F6682F 80%, #F6682F 100%);
+  color:          white;
+  border-radius:  4px;
+  border:         none;
+  outline:        none;
+  font-family:    'Roboto', sans-serif;
+  border:         2px solid white;
+  margin:         3px;
+  background:     linear-gradient(180deg, #fa7e29 0%, #F6682F 80%, #F6682F 100%);
   box-shadow:     0 0 2px 2px rgba(0, 0, 0, .5);
 
 }
@@ -144,36 +130,35 @@
 }
 
 .m-icon-help {
-  width: 120px;
-  height: 40px;
-  position: absolute;
-  bottom: 20px;
-  left: calc(50% - 60px);
-  color: white;
-  border: none;
+  width:         120px;
+  height:        36px;
+  position:      absolute;
+  bottom:        20px;
+  left:          calc(50% - 60px);
+  color:         white;
   border-radius: 3px;
-  font-size: 18px;
-  outline:  none;
-  font-family: 'Roboto', sans-serif;
-  box-sizing: border-box;
-  font-weight: 500;
-  cursor: pointer;
-  background: #2196F3;
-  box-shadow: 0px 5px 0px 0px #1976D2;
-  border: none;
+  font-size:     16px;
+  outline:       none;
+  font-family:   'Roboto', sans-serif;
+  box-sizing:    border-box;
+  font-weight:   500;
+  background:    #2196F3;
+  box-shadow:    0px 5px 0px 0px #1976D2;
+  border:        none;
 }
 
 .m-c-container-progress-bar {
   height: 8px;
-  width: 90%;
+  width: 80%;
   position: absolute;
+  top: 5%;
 }
 
 @media (min-width: 320px) and (orientation: landscape) {
 
   .m-c-select-words {
     min-height: unset;
-    max-width: 640px;
+    max-width: 720px;
   }
 
   .m-c-container-words {
