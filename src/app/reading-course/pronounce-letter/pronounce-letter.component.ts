@@ -9,6 +9,7 @@ import {
   ListenHelpPL,
   StartRecordingPL
 } from 'src/app/store/actions/reading-course/reading-course-pronounce-letter';
+import { AppState } from 'src/app/store/state/app.state';
 
 
 @Component({
@@ -23,6 +24,8 @@ export class PronounceLetterComponent implements OnInit, OnDestroy {
   @Select( ReadingCourseState.plIsRecording )             isRecording$: Observable<boolean>;
   @Select( ReadingCourseState.plShowBtnHelp )             showBtnHelp$: Observable<boolean>;
   @Select( ReadingCourseState.plShowSuccessScreen ) showSuccessScreen$: Observable<boolean>;
+  @Select( AppState.isMobile )                               isMobile$: Observable<boolean>;
+  @Select( AppState.queryMobileMatch )               queryMobileMatch$: Observable<boolean>;
 
   constructor( private _synthesis:   SpeechSynthesisService, private store: Store ) {
 
@@ -34,6 +37,10 @@ export class PronounceLetterComponent implements OnInit, OnDestroy {
   ngOnDestroy() { this._synthesis.cancel(); }
   help = () => this.store.dispatch( new ListenHelpPL() );
   speak = () => this.store.dispatch( new StartRecordingPL() );
+
+  genFontSize(el: HTMLElement) {
+    return el.clientWidth * 0.56;
+  }
 
 }
 
