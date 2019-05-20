@@ -1,5 +1,8 @@
-<div class="container" [class.mobile]="(isMobile$ | async)" >
-
+<div
+  class="container"
+  [class.mobile]="(isMobile$ | async)"
+  [class.remove-scroll]="(showSuccessScreen$ | async)"
+  >
 
 
   
@@ -11,57 +14,53 @@
     *ngIf="!(isSettingData$ | async) && (!(isMobile$ | async) && !(queryMobileMatch$ | async))"
     >
 
-    <div #dContCard class="d-c-card" >
-      <mat-card class="center" style="
-        height: 100%;
-        width: 100%;
-        position: relative;
-        box-sizing: border-box;
-        padding: 0;
-        "  >
+    <div class="d-c-card center" >
+
+      <div class="d-c-container-progress-bar">
+        <mat-progress-bar
+          style="height: 100%; border-radius: 50px"
+          color="warn"
+          [mode]="determinate"
+          [value]="advance$ | async"
+          >
+        </mat-progress-bar>
+      </div>
+
+      <div class="d-c-container-words" #dcCWords>
+        <button 
+          matRipple
+          class="d-c-word correct"
+          (click)="selectWord(word)"
+          *ngFor="let word of words$ | async"
+          [disabled]="(selections$ | async)[word]"
+          [class.correct]="(correctSels$ | async)[word]"
+          [class.incorrect]="(wongSels$ | async)[word]"
+          >
+          {{word}}
+        </button>
+      </div>
+  
+      <button
+        matRipple
+        class="m-icon-help"
+        (click)="repeatInstructions()"
+        >
+        Ayuda
+      </button>
     
-        <div class="d-c-container-words" #dcCWords>
-          <button 
-            matRipple
-            *ngFor="let word of words$ | async"
-            class="d-c-word correct"
-            (click)="selectWord(word)"
-            [class.correct]="(correctSels$ | async)[word] === word"
-            [class.incorrect]="(wongSels$ | async)[word] === word"
-            [disabled]="(selections$ | async)[word] === word"
-            >
-            {{word}}
-          </button>
-        </div>
-    
-        <button matRipple class="d-icon-help" (click)="repeatInstructions()">Ayuda</button>
-    
-      </mat-card>
     </div>
 
-    <div
-      #dContPB
-      class="d-c-container-progress-bar"
-      [ngStyle]="genPostion(dcont, dContCard, dContPB)"
-      >
-      <mat-progress-bar
-        style="height: 100%; border-radius: 50px"
-        color="warn"
-        [mode]="determinate"
-        [value]="advance$ | async"
-        >
-      </mat-progress-bar>
-    </div>
 
   </div>
 
 
-  <!-- mobile version -->
+  
 
+  <!---------- mobile version ---------->
   <div
     #cont
-    style="height: 100%; width: 100%"
     class="center"
+    style="height: 100%; width: 100%"
     *ngIf="!(isSettingData$ | async) && ((isMobile$ | async) || (queryMobileMatch$ | async))"
     >
     
@@ -72,9 +71,9 @@
           matRipple
           *ngFor="let word of words$ | async"
           class="word"
-          [class.correct]="(correctSels$ | async)[word] === word"
-          [class.incorrect]="(wongSels$ | async)[word] === word"
-          [disabled]="(selections$ | async)[word] === word"
+          [class.correct]="(correctSels$ | async)[word]"
+          [class.incorrect]="(wongSels$ | async)[word]"
+          [disabled]="(selections$ | async)[word]"
           (click)="selectWord(word)"
           >
           {{word}}
@@ -95,8 +94,9 @@
 
     <button
       matRipple
-      class="m-icon-help"
-      (click)="repeatInstructions()">
+      class="m-icon-help mob"
+      (click)="repeatInstructions()"
+      >
       Ayuda
     </button>
 
@@ -104,9 +104,14 @@
 
 
 
-  <div style="height: 40px; width: 40px; margin: 10px auto; position: absolute; top: 0" *ngIf="isSettingData$ | async">
+
+  <div
+    class="container-spinner"
+    *ngIf="isSettingData$ | async"
+    >
     <app-spinner-loading></app-spinner-loading>
   </div>
+
 
   <div
     class="container-well-done-dialog"
@@ -114,5 +119,6 @@
     >
     <app-well-done></app-well-done>
   </div>
+
 
 </div>
