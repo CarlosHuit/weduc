@@ -826,7 +826,7 @@ export class ReadingCourseState {
 
     const letter = payload.letter.toLowerCase();
     // const url = `lectura/detalle-letra/${letter}`;
-    const url = `lectura/seleccionar-palabras/${letter}`;
+    const url = `lectura/pronunciar-letra/${letter}`;
     // ! TODO
 
     dispatch([
