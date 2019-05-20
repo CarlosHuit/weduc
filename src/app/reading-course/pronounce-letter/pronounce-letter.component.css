@@ -55,19 +55,19 @@
   margin: auto;
 }
 
-.lerp.one {
+.animate .lerp.one {
   animation: record 900ms cubic-bezier(0.55, 0.085, 0.68, 0.53)  infinite alternate-reverse;
 }
 
-.two {
+.animate .lerp.two {
   animation: record 900ms cubic-bezier(0.55, 0.085, 0.68, 0.53)  450ms infinite alternate-reverse;
 }
 
-.lerp.three {
+.animate .lerp.three {
   animation: record 900ms cubic-bezier(0.55, 0.085, 0.68, 0.53)  50ms infinite alternate-reverse;
 }
 
-.lerp.four {
+.animate .lerp.four {
   animation: record 900ms cubic-bezier(0.55, 0.085, 0.68, 0.53)  150ms infinite alternate-reverse;
 }
 
