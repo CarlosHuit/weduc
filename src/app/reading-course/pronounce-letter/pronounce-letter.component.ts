@@ -27,6 +27,8 @@ export class PronounceLetterComponent implements OnInit, OnDestroy {
   @Select( AppState.isMobile )                               isMobile$: Observable<boolean>;
   @Select( AppState.queryMobileMatch )               queryMobileMatch$: Observable<boolean>;
 
+  animate = false;
+
   constructor( private _synthesis:   SpeechSynthesisService, private store: Store ) {
 
     this.store.dispatch( new IsSettingDataPL({state: true}) );
@@ -35,8 +37,19 @@ export class PronounceLetterComponent implements OnInit, OnDestroy {
 
   ngOnInit() { this.store.dispatch( new SetInitialDataPL() ); }
   ngOnDestroy() { this._synthesis.cancel(); }
-  help = () => this.store.dispatch( new ListenHelpPL() );
-  speak = () => this.store.dispatch( new StartRecordingPL() );
+
+  help() {
+
+    this.store.dispatch( new ListenHelpPL() );
+
+  }
+
+
+
+  speak() {
+    this.store.dispatch( new StartRecordingPL() );
+  }
+
 
   genFontSize(el: HTMLElement) {
     return el.clientWidth * 0.56;

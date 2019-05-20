@@ -23,8 +23,8 @@
         <button
           id="circlein"
           (click)="speak()"
-          class="button press center"
           [disabled]="(isRecording$ | async)"
+          class="button press center"
           >
 
         </button>
@@ -75,7 +75,10 @@
 
 
       <div class="m-c-record-animation-grid center">
-        <div class="container-record-animation">
+        <div
+          class="container-record-animation"
+          [class.animate]="(isRecording$ | async)"
+          >
           <div class="lerp one"  ></div>
           <div class="lerp two"  ></div>
           <div class="lerp three"></div>
@@ -90,6 +93,8 @@
           mat-ripple
           [matRippleColor]="'rgba(255, 255, 255, 0.21)'"
           class="m-c-button-record"
+          (click)="speak()"
+          [disabled]="(isRecording$ | async)"
           >
   
           <svg
