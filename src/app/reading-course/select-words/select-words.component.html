@@ -108,5 +108,11 @@
     <app-spinner-loading></app-spinner-loading>
   </div>
 
-  <app-success-animation *ngIf="showSuccessScreen$ | async"></app-success-animation>
+  <div
+    class="container-well-done-dialog"
+    *ngIf="showSuccessScreen$ | async"
+    >
+    <app-well-done></app-well-done>
+  </div>
+
 </div>
