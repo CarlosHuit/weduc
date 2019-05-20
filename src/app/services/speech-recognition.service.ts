@@ -15,6 +15,8 @@ export class SpeechRecognitionService {
   speechRecognition: any;
   term = '';
 
+  recognition: SpeechRecognition;
+
   constructor(private zone: NgZone) { }
 
   record(): Observable<string> {
@@ -24,8 +26,8 @@ export class SpeechRecognitionService {
       const { webkitSpeechRecognition }: IWindow = <IWindow>window;
       this.speechRecognition = new webkitSpeechRecognition();
 
-      this.speechRecognition.lang = 'es-US';
-      this.speechRecognition.lang = 'es-ES';
+      this.speechRecognition.lang = 'es_US';
+      // this.speechRecognition.lang = 'es-ES';
       this.speechRecognition.interimResults = false;
       this.speechRecognition.maxAlternatives = 1;
       this.speechRecognition.continuous = false;
@@ -83,6 +85,85 @@ export class SpeechRecognitionService {
 
   }
 
+
+  startRecognition(): Observable<string> {
+
+    return Observable.create(( observer: {
+      next?:     (value: string) => void,
+      error?:    (error: SpeechRecognitionError) => void,
+      complete?: (ev: Event) => void,
+    }) => {
+
+
+      this.recognition = new SpeechRecognition();
+      this.recognition.lang = 'es-US';
+      this.recognition.continuous = false;
+      this.recognition.interimResults = false;
+      this.speechRecognition.maxAlternatives = 1;
+
+
+
+      this.recognition.onresult = this.onRecognitionResult;
+
+
+      this.recognition.onend = (e: Event) => {
+        this.zone.run(x => {
+
+          if (this.term === '') {
+            this.zone.run(w => observer.next('no-match'));
+          }
+
+          observer.complete(e);
+
+        });
+      };
+
+
+      this.recognition.onerror = (err: SpeechRecognitionError) => {
+
+        this.zone.run(x => observer.error(err));
+
+      };
+
+
+      this.recognition.onnomatch = (ev: SpeechRecognitionEvent) => {
+        console.log('Speech not Recognised');
+      };
+
+
+      this.recognition.start();
+
+      window.addEventListener('beforeunload', (e: BeforeUnloadEvent) => this.abortRecognition());
+
+    });
+
+
+  }
+
+  onRecognitionResult = (ev: SpeechRecognitionEvent) => {
+
+    if (ev.results) {
+
+      const result = ev.results[ev.resultIndex];
+      const transcription = result[0].transcript;
+
+      if (result.isFinal) {
+
+        if (result[0].confidence < 0.3) {
+
+          const err = 'No Secure Confidence';
+
+        } else {
+
+          this.term = transcription;
+
+        }
+
+      }
+
+    }
+
+  }
 
   stopRecognition     = () => this.speechRecognition.stop();
   abortRecognition  = () => this.speechRecognition.abort();
