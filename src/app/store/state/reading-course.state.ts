@@ -2613,15 +2613,20 @@ export class ReadingCourseState {
 
     const speech = this._speech.speak('Bien Hecho', 0.9);
 
+
     /* Redirection */
     if (nextIndex >= state.selectWords.data.length) {
 
-      speech.addEventListener('end', function a() {
+      speech.addEventListener('end', async function a() {
+
+        await new Promise((r, w) => setTimeout(() => r(null), 800));
+
         dispatch([
           new Navigate([`/lectura/pronunciar-letra/${letter}`]),
           new ResetDataSW()
         ]);
         speech.removeEventListener('end', a);
+
       });
 
     }
@@ -2629,12 +2634,15 @@ export class ReadingCourseState {
     /* Set Current Data */
     if (nextIndex < state.selectWords.data.length) {
 
-      dispatch(new SetCurrentDataSW());
-      speech.addEventListener('end', function a() {
+      // dispatch(new SetCurrentDataSW());
+      speech.addEventListener('end', async function a() {
+
+        await new Promise((r, w) => setTimeout(() => r(null), 800));
 
         dispatch([
           new HideSuccessScreenSW(),
-          new ListenInstructionsSW()
+          new SetCurrentDataSW(),
+          new ListenInstructionsSW(),
         ]);
         speech.removeEventListener('end', a);
 
