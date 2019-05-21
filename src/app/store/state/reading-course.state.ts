@@ -2788,9 +2788,9 @@ export class ReadingCourseState {
   listenHelpPL({ getState }: StateContext<ReadingCourseStateModel>, action: ListenHelpPL) {
 
     const letter = getState().pronounceLetter.currentData.letter.toLowerCase();
-    const letterSound = getState().data.letterSounds.find(e => e.letter === letter);
-    const type   = getState().pronounceLetter.currentData.type;
-    const msg    = `Esta es la letra: ${letterSound.sound} ... ${type}`;
+    const sound = getState().data.letterSounds.find(e => e.letter === letter).sound;
+    const type = getState().pronounceLetter.currentData.type;
+    const msg = `Esta es la letra: ${sound} ... ${type}`;
 
     this._speech.speak(msg, .9);
 
@@ -2831,28 +2831,34 @@ export class ReadingCourseState {
     dispatch( new ChangeStateRecordingPL({state: false}) );
     dispatch( new IncreaseAttemptsPL() );
 
-    const letter = getState().pronounceLetter.currentData.letter.toLowerCase();
-    const type   = getState().pronounceLetter.currentData.type;
+    const transcription = payload.res.toLowerCase();
+    const letter        = getState().pronounceLetter.currentData.letter.toLowerCase();
+    const type          = getState().pronounceLetter.currentData.type.toLowerCase();
 
     const msgVal    = `${letter} ${type}`;
+    const noMatch   = transcription === 'no-match';
+    const isCorrect = transcription.includes(msgVal);
 
-    if (payload.res === 'no-match') {
+    if (noMatch) {
 
       dispatch( new ListenMsgNoSpeechPL() );
+      return;
 
     }
 
 
-    if (payload.res !== 'no-match' && payload.res.toLowerCase() !== msgVal.toLowerCase() ) {
+    if ( !isCorrect ) {
 
       dispatch(new ListenMsgWrongPL());
+      return;
 
     }
 
 
-    if (payload.res.toLowerCase() === msgVal.toLowerCase()) {
+    if ( isCorrect ) {
 
       dispatch( new CorrectPronunciationPL() );
+      return;
 
     }
 
