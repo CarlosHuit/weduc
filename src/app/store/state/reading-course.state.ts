@@ -146,6 +146,7 @@ import { ItemLetterMenu } from 'src/app/models/reading-course/item-letter-menu.m
 import { LearnedLetter } from 'src/app/models/reading-course/learned-letter.model';
 import { ReadingCourseDataModel } from '../models/reading-course/data/reading-course-data.model';
 import { delay } from 'src/app/utils/delay.util';
+import { LearnedLetterForm } from 'src/app/models/forms/learned-letter-form.model';
 
 
 @State<ReadingCourseStateModel>({
@@ -624,6 +625,7 @@ export class ReadingCourseState {
     const data        = getState().data;
     const index       = data.learnedLetters.findIndex(e => e.letter === letter );
     const existLetter = index > -1 ? true : false;
+    const user = this.store.selectSnapshot(AuthState.getUser);
 
     if ( existLetter ) {
 
@@ -653,6 +655,7 @@ export class ReadingCourseState {
 
     }
 
+
     if ( !existLetter ) {
 
       const combinations = data.combinations[letter];
@@ -668,7 +671,9 @@ export class ReadingCourseState {
 
     }
 
-    return this._progress.sendUserProgress( new LearnedLetter(letter, 3) )
+    const learnedLetterForm = new LearnedLetterForm(letter, 3);
+
+    return this._progress.sendUserProgress( learnedLetterForm,  user.id, 'lectura')
       .pipe( tap(res => console.log(res)) );
 
   }
@@ -678,10 +683,11 @@ export class ReadingCourseState {
   @Action( UpdateLearnedLettersInStorage )
   updateLearnedLettersInStorage({ getState, patchState }: StateContext<ReadingCourseStateModel>, action: UpdateLearnedLettersInStorage) {
 
-    const d = JSON.parse(localStorage.getItem('initialData'));
+    const d = JSON.parse(localStorage.getItem('readingCourseData'));
     const learnedLetters = getState().data.learnedLetters;
     d.learnedLetters = learnedLetters;
-    localStorage.setItem('initialData', JSON.stringify(d));
+    localStorage.setItem('readingCourseData', JSON.stringify(d));
+
   }
 
 
@@ -2942,13 +2948,16 @@ export class ReadingCourseState {
       speech.addEventListener('end', function a() {
 
         const letter = getState().data.currentLetter;
+
         dispatch( new UpdateLearnedLetters({ letter, rating: 4 }) );
 
         dispatch([
           new Navigate([`/lectura/abecedario`]),
           new ResetDataPL()
         ]);
+
         speech.removeEventListener('end', a);
+
       });
 
 

@@ -8,6 +8,7 @@ import { UserProgress        } from '../../classes/user-progress';
 import { HandleErrorService  } from '../../shared/handle-error.service';
 import urljoin from 'url-join';
 import { LearnedLetter } from 'src/app/models/reading-course/learned-letter.model';
+import { LearnedLetterForm } from 'src/app/models/forms/learned-letter-form.model';
 
 @Injectable({
   providedIn: 'root'
@@ -23,15 +24,15 @@ export class UserProgressService {
     private _err:     HandleErrorService
   ) {
 
-    this.apiUrl = urljoin(environment.apiUrl, 'user-progress');
+    this.apiUrl = urljoin(environment.apiUrl, 'courses');
 
   }
 
-  sendUserProgress = (obj: LearnedLetter) => {
+  sendUserProgress = (learnedLetter: LearnedLetterForm, userId: string, course: string) => {
 
 
-    const url   = this.apiUrl;
-    const data  = JSON.stringify(obj);
+    const url   = urljoin(this.apiUrl, course, 'learned-letters', userId);
+    const data  = JSON.stringify(learnedLetter);
 
     return this.http.post(url, data)
       .pipe( catchError(this._err.handleError) );
@@ -49,11 +50,11 @@ export class UserProgressService {
 
   }
 
-  saveUserProgress = (obj: LearnedLetter) => {
+  saveUserProgress = (obj: LearnedLetter, userId: string, course: string) => {
     const connection = navigator.onLine ? true : false;
 
 
-    if ( connection  ) { return this.sendUserProgress(obj);          }
+    if ( connection  ) { return this.sendUserProgress(obj, userId, course);          }
     if ( !connection ) { return this.saveUserProgressOnStorage(obj); }
 
   }
