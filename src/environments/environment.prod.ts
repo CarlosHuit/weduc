@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://weduc.herokuapp.com/api/'
+  apiUrl: 'https://api-weduc.herokuapp.com/api/'
 };
