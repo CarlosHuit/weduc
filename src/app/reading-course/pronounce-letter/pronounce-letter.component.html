@@ -7,6 +7,7 @@
 
     <div #mcLetter class="m-c-letter center">
       <h2
+        (click)="help()"
         [style.fontSize.px]="genFontSize(mcLetter)"
         >
         {{currentLetter$ | async}}
@@ -74,6 +75,11 @@
     <app-spinner-loading></app-spinner-loading>
   </div>
 
-  <app-success-animation *ngIf="showSuccessScreen$ | async"></app-success-animation>
+  <div
+    class="container-well-done-dialog"
+    *ngIf="showSuccessScreen$ | async"
+    >
+    <app-well-done></app-well-done>
+  </div>
 
 </div>

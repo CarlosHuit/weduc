@@ -831,8 +831,8 @@ export class ReadingCourseState {
   redirectMenu({ dispatch }: StateContext<ReadingCourseStateModel>, { payload }: RedirectMenu) {
 
     const letter = payload.letter.toLowerCase();
-    const url = `lectura/detalle-letra/${letter}`;
-    // const url = `lectura/pronunciar-letra/${letter}`;
+    // const url = `lectura/detalle-letra/${letter}`;
+    const url = `lectura/pronunciar-letra/${letter}`;
     // ! TODO
 
     dispatch([
@@ -2807,7 +2807,7 @@ export class ReadingCourseState {
   @Action( ListenMsgWrongPL )
   listenMsgWrongPL(ctx: StateContext<ReadingCourseStateModel>, action: ListenMsgWrongPL) {
 
-    const msg = 'intenta otra vez... Presiona el botón azul para obtener ayuda';
+    const msg = 'intenta otra vez... Presiona la letra en pantalla para obtener ayuda';
     this._speech.speak(msg, .95);
 
   }

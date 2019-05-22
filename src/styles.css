@@ -46,6 +46,14 @@ h1, h2, h3, h4, h5, span {
   overflow: auto;
 }
 
+.container-well-done-dialog {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
 .quit-scroll-bar::-webkit-scrollbar {
   display: none;
 }

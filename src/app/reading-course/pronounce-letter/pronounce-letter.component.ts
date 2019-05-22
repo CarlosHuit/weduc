@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy   } from '@angular/core';
 import { SpeechSynthesisService } from '../../services/speech-synthesis.service';
 import { Store, Select } from '@ngxs/store';
 import { ReadingCourseState } from 'src/app/store/state/reading-course.state';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import {
   IsSettingDataPL,
   SetInitialDataPL,
@@ -28,6 +28,8 @@ export class PronounceLetterComponent implements OnInit, OnDestroy {
   @Select( AppState.queryMobileMatch )               queryMobileMatch$: Observable<boolean>;
 
   animate = false;
+  canGetHelp = false;
+  sub1: Subscription;
 
   constructor( private _synthesis:   SpeechSynthesisService, private store: Store ) {
 
@@ -35,12 +37,21 @@ export class PronounceLetterComponent implements OnInit, OnDestroy {
 
   }
 
-  ngOnInit() { this.store.dispatch( new SetInitialDataPL() ); }
-  ngOnDestroy() { this._synthesis.cancel(); }
+  ngOnInit() {
+    this.store.dispatch( new SetInitialDataPL() );
+    this.sub1 =  this.showBtnHelp$.subscribe(s => this.canGetHelp = s);
+  }
+
+  ngOnDestroy() {
+    this._synthesis.cancel();
+    this.sub1.unsubscribe();
+  }
 
   help() {
 
-    this.store.dispatch( new ListenHelpPL() );
+    if (this.canGetHelp) {
+      this.store.dispatch( new ListenHelpPL() );
+    }
 
   }
 
