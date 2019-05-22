@@ -14,7 +14,7 @@
     <div class="d-c-upper">
       <button
         [disabled]="!canSpeech"
-        (click)="listenLetter(data.letterUpperCase, 'u')"
+        (click)="listenLetter(data.letterUpperCase)"
         [class.highlight]="( selectedLetter$ | async ) === data.letter"
         [class.highlight]=" ( highlightLetter$ | async ) === data.letterUpperCase"
         >
@@ -25,7 +25,7 @@
     <div class="d-c-lower">
       <button
         [disabled]="!canSpeech"
-        (click)="listenLetter(data.letterLowerCase, 'l')"
+        (click)="listenLetter(data.letterLowerCase)"
         [class.highlight]=" ( selectedLetter$ | async ) === data.letter"
         [class.highlight]=" ( highlightLetter$ | async ) === data.letterLowerCase"
         >
