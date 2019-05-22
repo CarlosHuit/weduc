@@ -831,8 +831,8 @@ export class ReadingCourseState {
   redirectMenu({ dispatch }: StateContext<ReadingCourseStateModel>, { payload }: RedirectMenu) {
 
     const letter = payload.letter.toLowerCase();
-    // const url = `lectura/detalle-letra/${letter}`;
-    const url = `lectura/pronunciar-letra/${letter}`;
+    const url = `lectura/detalle-letra/${letter}`;
+    // const url = `lectura/pronunciar-letra/${letter}`;
     // ! TODO
 
     dispatch([
